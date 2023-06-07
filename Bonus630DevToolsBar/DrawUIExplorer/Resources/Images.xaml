@@ -1,0 +1,75 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:System="clr-namespace:System;assembly=mscorlib"
+                    xmlns:Converters="clr-namespace:br.com.Bonus630DevToolsBar.DrawUIExplorer.Converters">
+    <Converters:ResourceToMediaImageConverter x:Key="ResourceToMediaImageConverter" />
+    
+    <!--<System:String x:Key="light">light</System:String>
+    <Style x:Key="HighLightButtonImg" TargetType="Image">
+        <Setter Property="Source" Value="{Binding Source={StaticResource light},Converter={StaticResource ResourceToMediaImageConverter}}"/>
+    </Style>-->
+    <System:String x:Key="search">search</System:String>
+    <Style x:Key="SearchButtonImg" TargetType="Image">
+        <Setter Property="Source" Value="{Binding Source={StaticResource search},Converter={StaticResource ResourceToMediaImageConverter}}"/>
+    </Style>
+    <System:String x:Key="trash">trash</System:String>
+    <Style x:Key="ClearConsoleButtonImg" TargetType="Image">
+        <Setter Property="Source" Value="{Binding Source={StaticResource trash},Converter={StaticResource ResourceToMediaImageConverter}}"/>
+    </Style>
+    <!--<System:String x:Key="copy">copy</System:String>
+    <Style x:Key="CopyMenuItemImg" TargetType="Image">
+        <Setter Property="Source" Value="{Binding Source={StaticResource copy},Converter={StaticResource ResourceToMediaImageConverter}}"/>
+    </Style>-->
+    <System:String x:Key="paste">paste</System:String>
+    <Style x:Key="PasteMenuItemImg" TargetType="Image">
+        <Setter Property="Source" Value="{Binding Source={StaticResource paste},Converter={StaticResource ResourceToMediaImageConverter}}"/>
+    </Style>
+    <!--<System:String x:Key="setting">setting</System:String>
+    <Style x:Key="ConfigButtonImg" TargetType="Image">
+        <Setter Property="Source" Value="{Binding Source={StaticResource setting},Converter={StaticResource ResourceToMediaImageConverter}}"/>
+    </Style>-->
+    <System:String x:Key="code">code</System:String>
+    <Style x:Key="DrawUIButtonImg" TargetType="Image">
+        <Setter Property="Source" Value="{Binding Source={StaticResource code},Converter={StaticResource ResourceToMediaImageConverter}}"/>
+    </Style>
+    <System:String x:Key="workspace">workspace</System:String>
+    <Style x:Key="WorkSpaceButtonImg" TargetType="Image">
+        <Setter Property="Source" Value="{Binding Source={StaticResource workspace},Converter={StaticResource ResourceToMediaImageConverter}}"/>
+    </Style>
+    <System:String x:Key="expandArrow">expandArrow</System:String>
+    <Style x:Key="ConsoleCollapse" TargetType="Image">
+        <Setter Property="Source" Value="{Binding Source={StaticResource expandArrow},Converter={StaticResource ResourceToMediaImageConverter}}"/>
+    </Style>
+    <System:String x:Key="collapseArrow">collapseArrow</System:String>
+    <Style x:Key="ConsoleExpanded" TargetType="Image">
+        <Setter Property="Source" Value="{Binding Source={StaticResource collapseArrow},Converter={StaticResource ResourceToMediaImageConverter}}"/>
+    </Style>
+    <System:String x:Key="visibleEnable">visibleEnable</System:String>
+    <Style x:Key="ShowMenuItemImg" TargetType="Image">
+        <Setter Property="Source" Value="{Binding Source={StaticResource visibleEnable},Converter={StaticResource ResourceToMediaImageConverter}}"/>
+    </Style>
+    <System:String x:Key="visibleDisable">visibleDisable</System:String>
+    <Style x:Key="HideMenuItemImg" TargetType="Image">
+        <Setter Property="Source" Value="{Binding Source={StaticResource visibleDisable},Converter={StaticResource ResourceToMediaImageConverter}}"/>
+    </Style>
+    <System:String x:Key="flash">flash</System:String>
+    <Style x:Key="InvokeMenuItemImg" TargetType="Image">
+        <Setter Property="Source" Value="{Binding Source={StaticResource flash},Converter={StaticResource ResourceToMediaImageConverter}}"/>
+    </Style>
+    <System:String x:Key="cut">cut</System:String>
+    <Style x:Key="CutMenuItemImg" TargetType="Image">
+        <Setter Property="Source" Value="{Binding Source={StaticResource cut},Converter={StaticResource ResourceToMediaImageConverter}}"/>
+    </Style>
+    <System:String x:Key="ExtractInterface">ExtractInterface</System:String>
+    <Style x:Key="ExtractInterfaceMenuItemImg" TargetType="Image">
+        <Setter Property="Source" Value="{Binding Source={StaticResource ExtractInterface},Converter={StaticResource ResourceToMediaImageConverter}}"/>
+    </Style>
+    <System:String x:Key="ImportToCorel">338</System:String>
+    <Style x:Key="ImportToCorelMenuItemImg" TargetType="Image">
+        <Setter Property="Source" Value="{Binding Source={StaticResource ImportToCorel},Converter={StaticResource ResourceToMediaImageConverter}}"/>
+    </Style>
+    <System:String x:Key="OpenFolder">FolderOpenedNoColor</System:String>
+    <Style x:Key="OpenFolderMenuItemImg" TargetType="Image">
+        <Setter Property="Source" Value="{Binding Source={StaticResource OpenFolder},Converter={StaticResource ResourceToMediaImageConverter}}"/>
+    </Style>
+</ResourceDictionary>

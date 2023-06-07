@@ -1,0 +1,85 @@
+﻿<CheckBox x:Class="br.com.Bonus630DevToolsBar.CustomControls.IconCheckBox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:br.com.Bonus630DevToolsBar.CustomControls"
+              xmlns:System="clr-namespace:System;assembly=mscorlib"
+           xmlns:converters="clr-namespace:br.com.Bonus630DevToolsBar.Converters"
+          mc:Ignorable="d"
+           >
+    <CheckBox.Resources>
+        <converters:ImagePathConverter x:Key="mediaConverter"/>
+        <converters:ImagePathConverterD x:Key="mediaConverterD"/>
+        <System:String x:Key="Lock">Lock</System:String>
+        <System:String x:Key="Unlock">Unlock</System:String>
+        <Style x:Key="FocusVisual">
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Rectangle Margin="2" StrokeDashArray="1 2" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" SnapsToDevicePixels="true" StrokeThickness="1"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="OptionMarkFocusVisual">
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Rectangle Margin="14,0,0,0" StrokeDashArray="1 2" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" SnapsToDevicePixels="true" StrokeThickness="1"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style  TargetType="{x:Type local:IconCheckBox}">
+            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+            <Setter Property="Width" Value="20" />
+            <Setter Property="Height" Value="20" />
+            <Setter Property="Foreground" Value="{DynamicResource Default.Static.Foreground}"/>
+            <Setter Property="Background" Value="{DynamicResource Default.Static.Background}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type local:IconCheckBox}">
+                        <Grid x:Name="templateRoot" Background="Transparent" SnapsToDevicePixels="True">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Grid Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" x:Name="checkBoxBorder" Background="{TemplateBinding Background}" 
+                                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="1" VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                                <Image x:Name="img_lock" Source="{TemplateBinding IconChecked,Converter={StaticResource mediaConverter}}" 
+                                           d:Source="{TemplateBinding IconChecked,Converter={StaticResource mediaConverterD}}" Visibility="Collapsed"/>
+                                <Image x:Name="img_unlock"  Source="{TemplateBinding IconUnchecked,Converter={StaticResource mediaConverter}}" 
+                                           d:Source="{TemplateBinding IconUnchecked,Converter={StaticResource mediaConverterD}}" Visibility="Visible"/>
+                            </Grid>
+
+                            <ContentPresenter x:Name="contentPresenter" Grid.Column="1" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="Center"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="HasContent" Value="true">
+                                <Setter Property="FocusVisualStyle" Value="{StaticResource OptionMarkFocusVisual}"/>
+                                <Setter Property="Padding" Value="4,-1,0,0"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="false">
+                                <Setter TargetName="img_lock" Property="Visibility" Value="Collapsed" />
+                                <Setter TargetName="img_unlock" Property="Visibility" Value="Visible" />
+                            </Trigger>
+
+                            <Trigger Property="IsChecked" Value="true">
+                                <Setter TargetName="img_lock" Property="Visibility" Value="Visible" />
+                                <Setter TargetName="img_unlock" Property="Visibility" Value="Collapsed" />
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="{x:Null}">
+                                <Setter TargetName="img_lock" Property="Visibility" Value="Collapsed" />
+                                <Setter TargetName="img_unlock" Property="Visibility" Value="Visible" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </CheckBox.Resources>
+</CheckBox>

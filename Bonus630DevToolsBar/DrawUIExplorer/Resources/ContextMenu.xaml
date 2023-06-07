@@ -1,0 +1,195 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                     xmlns:Converters="clr-namespace:br.com.Bonus630DevToolsBar.Converters"
+                     xmlns:custom="clr-namespace:br.com.Bonus630DevToolsBar.CustomControls"
+                    >
+
+    <Converters:BoolVisibilityConverter x:Key="BoolVisibilityConverter" />
+    <Converters:IntAttVisibilityMultiConverter x:Key="IntAttVisibilityMultiConverter" />
+
+    <ContextMenu x:Key="contextMenu">
+        <MenuItem Header="Find Ref" Background="WhiteSmoke" ItemsSource="{Binding Attributes}">
+            <MenuItem.Visibility>
+                <MultiBinding Converter="{StaticResource IntAttVisibilityMultiConverter}">
+                    <Binding Path="Attributes.Count"/>
+                    <Binding Path="Items">
+                        <Binding.RelativeSource>
+                            <RelativeSource Mode="Self" />
+                        </Binding.RelativeSource>
+
+                    </Binding>
+
+                </MultiBinding>
+            </MenuItem.Visibility>
+            <MenuItem.Icon>
+                <Image Style="{DynamicResource SearchButtonImg}" />
+            </MenuItem.Icon>
+            <MenuItem.ItemContainerStyle>
+
+                <Style>
+                    <Setter Property="MenuItem.Header" Value="{Binding Name}"/>
+                    <Setter Property="MenuItem.CommandParameter" Value="{Binding}"/>
+                    <Setter Property="MenuItem.Command" Value="{Binding Path=DataContext.FindRef, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TreeView}}" />
+                    <Setter Property="MenuItem.Visibility" Value="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}" />
+
+                </Style>
+
+            </MenuItem.ItemContainerStyle>
+        </MenuItem>
+        <!--<MenuItem Header="Find Ref Item" Background="WhiteSmoke"
+		  CommandParameter="{Binding}" Command="{Binding Path=DataContext.FindRefItemCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TreeView}}"
+			   Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}">
+            <MenuItem.Icon>
+                <Image Style="{DynamicResource SearchButtonImg}" />
+            </MenuItem.Icon>
+        </MenuItem>-->
+        <!--<MenuItem Header="Find FlyoutBar" Background="WhiteSmoke"
+		  CommandParameter="{Binding}" Command="{Binding Path=DataContext.FindFlyoutBarCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TreeView}}"
+			   Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}">
+            <MenuItem.Icon>
+                <Image Style="{DynamicResource SearchButtonImg}" />
+            </MenuItem.Icon>
+        </MenuItem>-->
+        <MenuItem Header="Copy Guid" Background="WhiteSmoke"
+		  CommandParameter="{Binding}" Command="{Binding Path=DataContext.CopyGuidCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TreeView}}"
+			   Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}">
+            <MenuItem.Icon>
+                <Image Style="{DynamicResource CopyMenuItemImg}" />
+            </MenuItem.Icon>
+        </MenuItem>
+        <!--<MenuItem Header="Find Caption Ref" Background="WhiteSmoke"
+		  CommandParameter="{Binding}" Command="{Binding Path=DataContext.FindCaptionRefCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TreeView}}"
+			   Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}">
+            <MenuItem.Icon>
+                <Image Style="{DynamicResource SearchButtonImg}" />
+            </MenuItem.Icon>
+        </MenuItem>-->
+        <!--<MenuItem Header="Find Guid" Background="WhiteSmoke"
+		  CommandParameter="{Binding}" Command="{Binding Path=DataContext.FindGuidCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TreeView}}"
+			   Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}">
+            <MenuItem.Icon>
+                <Image Style="{DynamicResource SearchButtonImg}" />
+            </MenuItem.Icon>
+        </MenuItem>-->
+        <!--<MenuItem Header="Find Guid Ref" Background="WhiteSmoke"
+		  CommandParameter="{Binding}" Command="{Binding Path=DataContext.FindGuidRefCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TreeView}}"
+			   Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}">
+            <MenuItem.Icon>
+                <Image Style="{DynamicResource SearchButtonImg}" />
+            </MenuItem.Icon>
+        </MenuItem>-->
+        <MenuItem Header="XML" Background="WhiteSmoke"
+		  CommandParameter="{Binding}" Command="{Binding Path=DataContext.XmlCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TreeView}}"
+			   Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}">
+
+        </MenuItem>
+        <MenuItem Header="Try Get Caption Text" Background="WhiteSmoke"
+		  CommandParameter="{Binding}" Command="{Binding Path=DataContext.GetCaptionCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TreeView}}"
+			   Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}">
+
+        </MenuItem>
+        <MenuItem Header="Try Highlight This" Background="WhiteSmoke"
+		  CommandParameter="{Binding}" Command="{Binding Path=DataContext.HighLightCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TreeView}}"
+			   Visibility="{Binding Path=DataContext.InCorel, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TreeView}, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}">
+
+            <MenuItem.Icon>
+                <Image Style="{DynamicResource HighLightButtonImg}"/>
+            </MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="Try Show CommandBar" Background="WhiteSmoke"
+		  CommandParameter="{Binding}" Command="{Binding Path=DataContext.ShowCommandBarCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TreeView}}"
+			   Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}">
+            <MenuItem.Icon>
+                <Image Style="{DynamicResource ShowMenuItemImg}" />
+            </MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="Try Hide CommandBar" Background="WhiteSmoke"
+		  CommandParameter="{Binding}" Command="{Binding Path=DataContext.HideCommandBarCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TreeView}}"
+			   Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}">
+            <MenuItem.Icon>
+                <Image Style="{DynamicResource HideMenuItemImg}" />
+            </MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="CommandBar Mode" Background="WhiteSmoke"
+		  CommandParameter="{Binding}" Command="{Binding Path=DataContext.CommandBarModeCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TreeView}}"
+			   Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}">
+            <MenuItem.Icon>
+                <Image Style="{DynamicResource CopyMenuItemImg}" />
+            </MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="Try Show this" Background="WhiteSmoke"
+		  CommandParameter="{Binding}" Command="{Binding Path=DataContext.ShowThisCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TreeView}}"
+			   Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}">
+            <MenuItem.Icon>
+                <Image Style="{DynamicResource ShowMenuItemImg}" />
+            </MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="Try Hide this" Background="WhiteSmoke"
+		  CommandParameter="{Binding}" Command="{Binding Path=DataContext.HideThisCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TreeView}}"
+			   Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}">
+            <MenuItem.Icon>
+                <Image Style="{DynamicResource HideMenuItemImg}" />
+            </MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="Try Show Dialog" Background="WhiteSmoke"
+		  CommandParameter="{Binding}" Command="{Binding Path=DataContext.ShowDialogCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TreeView}}"
+			   Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}">
+            <MenuItem.Icon>
+                <Image Style="{DynamicResource ShowMenuItemImg}" />
+            </MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="Try Hide Dialog" Background="WhiteSmoke"
+		  CommandParameter="{Binding}" Command="{Binding Path=DataContext.HideDialogCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TreeView}}"
+			   Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}">
+            <MenuItem.Icon>
+                <Image Style="{DynamicResource HideMenuItemImg}" />
+            </MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="Try Show Docker" Background="WhiteSmoke"
+		  CommandParameter="{Binding}" Command="{Binding Path=DataContext.ShowDockerCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TreeView}}"
+			   Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}">
+            <MenuItem.Icon>
+                <Image Style="{DynamicResource ShowMenuItemImg}" />
+            </MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="Try Hide Docker" Background="WhiteSmoke"
+		  CommandParameter="{Binding}" Command="{Binding Path=DataContext.HideDockerCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TreeView}}"
+			   Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}">
+            <MenuItem.Icon>
+                <Image Style="{DynamicResource HideMenuItemImg}" />
+            </MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="Try Invoke Item" Background="WhiteSmoke"
+		  CommandParameter="{Binding}" Command="{Binding Path=DataContext.InvokeItemCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TreeView}}"
+			   Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}">
+            <MenuItem.Icon>
+                <Image Style="{DynamicResource InvokeMenuItemImg}" />
+            </MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="Get IUnknown Types" Background="WhiteSmoke"
+		  CommandParameter="{Binding}" Command="{Binding Path=DataContext.GetIUnknownTypesCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TreeView}}"
+			   Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}">
+            <MenuItem.Icon>
+                <Image Style="{DynamicResource ExtractInterfaceMenuItemImg}" />
+            </MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="Get Dockers Caption" Background="WhiteSmoke"
+		  CommandParameter="{Binding}" Command="{Binding Path=DataContext.GetDockersCaptionCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TreeView}}"
+			   Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}">
+
+        </MenuItem>
+        <MenuItem Header="Get Dockers Guids" Background="WhiteSmoke"
+		  CommandParameter="{Binding}" Command="{Binding Path=DataContext.GetDockersGuidCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TreeView}}"
+			   Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}">
+
+        </MenuItem>
+        <MenuItem Header="Remove me" Background="WhiteSmoke"
+		  CommandParameter="{Binding}" Command="{Binding Path=DataContext.RemoveMeCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TreeView}}"
+			   Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}">
+            <MenuItem.Icon>
+                <Image Style="{DynamicResource ClearConsoleButtonImg}" />
+            </MenuItem.Icon>
+        </MenuItem>
+    </ContextMenu>
+</ResourceDictionary>
+

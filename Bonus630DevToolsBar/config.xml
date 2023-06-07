@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<config>
+	<resources>
+		<resource name="Bonus630DevToolsBar" path="Bonus630DevToolsBar.dll">
+			<resourceMap>
+			
+				<!-- Run Command Docker Button icon and string resource-->
+				<resEntry id="7acb54e6-084e-494f-ad31-2718f34ddad2" string="10223" icon="110"/>
+				<!-- DrawUI Explorer Button  icon and string resource -->
+				<resEntry id="942df043-e3e2-4d0e-83ee-a456557ac093" string="10224" icon="111"/>
+				<!-- Drag GMS -->
+				<resEntry id="3b3f72b8-0129-4316-b8a3-40e4758ba9bc" string="10226" icon="113"/>
+				<!-- Shortcuts -->
+				<resEntry id="b0bc23ba-086b-46d1-ae04-ee36aa9003a4" string="10225" icon="112"/>
+      </resourceMap>
+		</resource>
+	</resources>
+</config>

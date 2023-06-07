@@ -1,0 +1,18 @@
+﻿<Image Style="{DynamicResource ImageStyle1}" x:Class="br.com.Bonus630DevToolsBar.CustomControls.ImageT"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:br.com.Bonus630DevToolsBar.CustomControls"
+             xmlns:c="clr-namespace:br.com.Bonus630DevToolsBar.Converters"
+                    
+             mc:Ignorable="d" 
+            x:Name="image" >
+    <Image.Resources>
+        <Style x:Key="ImageStyle1" TargetType="{x:Type Image}">
+        </Style>
+    </Image.Resources>
+    
+</Image>
+
+

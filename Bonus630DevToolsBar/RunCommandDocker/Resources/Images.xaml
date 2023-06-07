@@ -1,0 +1,88 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:System="clr-namespace:System;assembly=mscorlib"
+                    xmlns:Converters="clr-namespace:br.com.Bonus630DevToolsBar.RunCommandDocker.Converters">
+    <Converters:ResourceToMediaImageConverter x:Key="ResourceToMediaImageConverter" />
+    <!-- Usage exemple-->
+    <System:String x:Key="AddFolder">AddFolder</System:String>
+    <Style x:Key="AddFolderImage" TargetType="Image">
+        <Setter Property="Source" Value="{Binding Source={StaticResource AddFolder},Converter={StaticResource ResourceToMediaImageConverter}}"/>
+    </Style>
+    
+    <System:String x:Key="FolderBrowserDialogControl">FolderBrowserDialogControl</System:String>
+    <Style x:Key="FolderBrowserDialogControlImage" TargetType="Image">
+        <Setter Property="Source" Value="{Binding Source={StaticResource FolderBrowserDialogControl},Converter={StaticResource ResourceToMediaImageConverter}}"/>
+    </Style>
+    
+    <System:String x:Key="FolderOpened">FolderOpened</System:String>
+    <Style x:Key="FolderOpenedImage" TargetType="Image">
+        <Setter Property="Source" Value="{Binding Source={StaticResource FolderOpened},Converter={StaticResource ResourceToMediaImageConverter}}"/>
+    </Style>
+
+    <System:String x:Key="Add">Add</System:String>
+    <Style x:Key="AddShapeRangeImage" TargetType="Image">
+        <Setter Property="Source" Value="{Binding Source={StaticResource Add},Converter={StaticResource ResourceToMediaImageConverter}}"/>
+    </Style>
+
+    <System:String x:Key="Remove">Remove</System:String>
+    <Style x:Key="RemoveShapeRangeImage" TargetType="Image">
+        <Setter Property="Source" Value="{Binding Source={StaticResource Remove},Converter={StaticResource ResourceToMediaImageConverter}}"/>
+    </Style>
+
+    <System:String x:Key="CleanData">CleanData</System:String>
+    <Style x:Key="CleanDataShapeRangeImage" TargetType="Image">
+        <Setter Property="Source" Value="{Binding Source={StaticResource CleanData},Converter={StaticResource ResourceToMediaImageConverter}}"/>
+    </Style>
+
+    <System:String x:Key="Checkmark">Checkmark</System:String>
+    <Style x:Key="CheckmarkShapeRangeImage" TargetType="Image">
+        <Setter Property="Source" Value="{Binding Source={StaticResource Checkmark},Converter={StaticResource ResourceToMediaImageConverter}}"/>
+    </Style>
+
+    <System:String x:Key="Copy">Copy</System:String>
+    <Style x:Key="CopyImage" TargetType="Image">
+        <Setter Property="Source" Value="{Binding Source={StaticResource Copy},Converter={StaticResource ResourceToMediaImageConverter}}"/>
+    </Style>
+
+    <System:String x:Key="Play">Play</System:String>
+    <Style x:Key="PlayImage" TargetType="Image">
+        <Setter Property="Source" Value="{Binding Source={StaticResource Play},Converter={StaticResource ResourceToMediaImageConverter}}"/>
+    </Style>
+
+    <System:String x:Key="Stop">Stop</System:String>
+    <Style x:Key="StopImage" TargetType="Image">
+        <Setter Property="Source" Value="{Binding Source={StaticResource Stop},Converter={StaticResource ResourceToMediaImageConverter}}"/>
+    </Style>
+
+
+    <System:String x:Key="Pin">Pin</System:String>
+    <Style x:Key="PinImage" TargetType="Image">
+        <Setter Property="Source" Value="{Binding Source={StaticResource Pin},Converter={StaticResource ResourceToMediaImageConverter}}"/>
+    </Style>
+
+    <System:String x:Key="Unpin">Unpin</System:String>
+    <Style x:Key="UnpinImage" TargetType="Image">
+        <Setter Property="Source" Value="{Binding Source={StaticResource Unpin},Converter={StaticResource ResourceToMediaImageConverter}}"/>
+    </Style>
+
+    <System:String x:Key="Edit">Edit</System:String>
+    <Style x:Key="EditImage" TargetType="Image">
+        <Setter Property="Source" Value="{Binding Source={StaticResource Edit},Converter={StaticResource ResourceToMediaImageConverter}}"/>
+    </Style>
+
+    <System:String x:Key="Fails">Fails</System:String>
+    <Style x:Key="FailsImage" TargetType="Image">
+        <Setter Property="Source" Value="{Binding Source={StaticResource Fails},Converter={StaticResource ResourceToMediaImageConverter}}"/>
+    </Style>
+
+    <System:String x:Key="BuildSolution">BuildSolution</System:String>
+    <Style x:Key="BuildSolutionImage" TargetType="Image">
+        <Setter Property="Source" Value="{Binding Source={StaticResource BuildSolution},Converter={StaticResource ResourceToMediaImageConverter}}"/>
+    </Style>
+
+    <System:String x:Key="ArrowHeadDown">ArrowHeadDown</System:String>
+    <Style x:Key="ArrowHeadDownImage" TargetType="Image">
+        <Setter Property="Source" Value="{Binding Source={StaticResource ArrowHeadDown},Converter={StaticResource ResourceToMediaImageConverter}}"/>
+    </Style>
+
+</ResourceDictionary>

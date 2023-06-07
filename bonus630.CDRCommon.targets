@@ -1,0 +1,84 @@
+<Project DefaultTargets = "Compile" xmlns = "http://schemas.microsoft.com/developer/msbuild/2003">
+	<Choose>
+
+		<When Condition="'$(Configuration)' == 'X7 Release' or '$(Configuration)' == 'X7 Debug'">
+			<PropertyGroup>
+
+				<CurrentCorelPath></CurrentCorelPath>
+				<CurrentCorelAbr>X7</CurrentCorelAbr>
+				<CurrentCorelDebugConst>X7</CurrentCorelDebugConst>
+			</PropertyGroup>
+		</When>
+		<When Condition="'$(Configuration)' == 'X8 Release' or '$(Configuration)' == 'X8 Debug'">
+			<PropertyGroup>
+
+				<CurrentCorelPath>c:\program files\corel\coreldraw graphics suite x8\programs64\</CurrentCorelPath>
+				<CurrentCorelAbr>X8</CurrentCorelAbr>
+				<CurrentCorelDebugConst>X8</CurrentCorelDebugConst>
+			</PropertyGroup>
+		</When>
+		<When Condition="'$(Configuration)' == '2017 Release' or '$(Configuration)' == '2017 Debug'">
+			<PropertyGroup>
+
+				<CurrentCorelPath></CurrentCorelPath>
+				<CurrentCorelAbr>2017</CurrentCorelAbr>
+				<CurrentCorelDebugConst>X9</CurrentCorelDebugConst>
+			</PropertyGroup>
+		</When>
+		<When Condition="'$(Configuration)' == '2018 Release' or '$(Configuration)' == '2018 Debug'">
+			<PropertyGroup>
+
+				<CurrentCorelPath></CurrentCorelPath>
+				<CurrentCorelAbr>2018</CurrentCorelAbr>
+				<CurrentCorelDebugConst>X10</CurrentCorelDebugConst>
+			</PropertyGroup>
+		</When>
+		<When Condition="'$(Configuration)' == '2019 Release' or '$(Configuration)' == '2019 Debug'">
+			<PropertyGroup>
+
+				<CurrentCorelPath></CurrentCorelPath>
+				<CurrentCorelAbr>2019</CurrentCorelAbr>
+				<CurrentCorelDebugConst>X11</CurrentCorelDebugConst>
+			</PropertyGroup>
+		</When>
+		<When Condition="'$(Configuration)' == '2020 Release' or '$(Configuration)' == '2020 Debug'">
+			<PropertyGroup>
+
+				<CurrentCorelPath></CurrentCorelPath>
+				<CurrentCorelAbr>2020</CurrentCorelAbr>
+				<CurrentCorelDebugConst>X12</CurrentCorelDebugConst>
+			</PropertyGroup>
+		</When>
+		<When Condition="'$(Configuration)' == '2021 Release' or '$(Configuration)' == '2021 Debug'">
+			<PropertyGroup>
+
+				<CurrentCorelPath></CurrentCorelPath>
+				<CurrentCorelAbr>2021</CurrentCorelAbr>
+				<CurrentCorelDebugConst>X13</CurrentCorelDebugConst>
+			</PropertyGroup>
+		</When>
+		<When Condition="'$(Configuration)' == '2022 Release' or '$(Configuration)' == '2022 Debug'">
+			<PropertyGroup>
+
+				<CurrentCorelPath></CurrentCorelPath>
+				<CurrentCorelAbr>2022</CurrentCorelAbr>
+				<CurrentCorelDebugConst>X14</CurrentCorelDebugConst>
+			</PropertyGroup>
+		</When>
+	</Choose>
+	<PropertyGroup>
+		<VGCoreDLL>Assemblies\Corel.Interop.VGCore.dll</VGCoreDLL>
+	</PropertyGroup>
+	<!--<Target Name="RenameFile" AfterTargets="Build" Condition="'$(TemplateGuid)' == '{2005f455-f415-4dfb-a4de-d6d9562b3813}' OR '$(TemplateGuid)' == '{3c372ba8-3752-489f-87f2-df27aa4850c8}' OR '$(TemplateGuid)' == '{0AC96025-9E94-4F81-B6FD-C25731EED4A7}' OR '$(TemplateGuid)' == '{6ff803ae-8506-4b82-bf92-7c531de81189}'">
+		<Message Text="Rename '.dll' file extension to '.CorelAddon' extension" />
+		<Message Text="$(CurrentCorelPath)" />
+		<Exec Condition="Exists('$(TargetDir)$(TargetName).CorelAddon')" Command='del "$(TargetDir)$(TargetName).CorelAddon"' />
+		<Exec Command='rename "$(TargetPath)" "$(TargetName).CorelAddon"'/>
+	</Target>-->
+	<Target Name="CopyFiles" AfterTargets="Build">
+		<Message Text="CopyFiles" />
+		<Message Text="$(CurrentCorelPath)" />
+		<MakeDir Directories="$(CurrentCorelPath)Addons\$(SolutionName)" />
+		<Exec Condition="Exists('$(CurrentCorelPath)Addons\$(SolutionName)')" Command='xcopy "$(ProjectDir)$(OutDir)*.*" "$(CurrentCorelPath)Addons\$(SolutionName)" /y /d /e /c' />
+	</Target>
+</Project>
