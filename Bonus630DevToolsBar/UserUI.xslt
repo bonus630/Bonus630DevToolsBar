@@ -84,27 +84,15 @@ with F8 to reapply the changes.
 				<item guidRef="266435b4-6e53-460f-9fa7-f45be187d400"/>
 			</xsl:if>
 			<!--CQL Runner-->
-			<xsl:if test="not(./item[@guidRef='08bdac37-d2b9-42ad-a498-5335df9783c7'])">
-				<item guidRef="08bdac37-d2b9-42ad-a498-5335df9783c7"/>
+			<xsl:if test="not(./item[@guidRef='51b24cfb-b8df-411f-886c-4c5520e931a4'])">
+				<item guidRef="51b24cfb-b8df-411f-886c-4c5520e931a4"/>
 			</xsl:if>	
 			<!--Recent Files-->
 			<xsl:if test="not(./item[@guidRef='7d15e9c7-2431-4841-a5aa-9eaa5b581230'])">
 				<item dock="fill" guidRef="7d15e9c7-2431-4841-a5aa-9eaa5b581230"/>
 			</xsl:if>
 
-			
-			<!--Qrcode-->
-			<!--
-			<xsl:if test="not(./item[@guidRef='986e6c78-9b7f-4653-acef-02a6cc8e8b76'])">
-				<item guidRef="986e6c78-9b7f-4653-acef-02a6cc8e8b76"/>
-			</xsl:if>
-
-			-->
-			<!--masterShape-->
-			<!--
-			<xsl:if test="not(./item[@guidRef='118bad9e-cab3-4810-883e-843626f798ae'])">
-				<item guidRef="118bad9e-cab3-4810-883e-843626f798ae"/>
-			</xsl:if>-->
+		
 
 
 		</xsl:copy>
@@ -130,22 +118,22 @@ with F8 to reapply the changes.
 			</xsl:if>
 		</xsl:copy>
 	</xsl:template>
-	<!--<xsl:template match="uiConfig/dialogs">
+	<xsl:template match="uiConfig/dialogs">
 		<xsl:copy>
 			<xsl:apply-templates select="node()|@*"/>
 
-			<xsl:if test="not(./dialog[@guidRef='79c72097-2da1-4fbf-8436-f89abb1478b6'])">
-				<dialog guidRef="79c72097-2da1-4fbf-8436-f89abb1478b6" dock="top"/>
+			<xsl:if test="not(./dialog[@guidRef='9b6ec438-14c9-44e2-92c3-c28411f093af'])">
+				<dialog guidRef="9b6ec438-14c9-44e2-92c3-c28411f093af" dock="top"/>
 			</xsl:if>
 		</xsl:copy>
 	</xsl:template>
-	<xsl:template match="uiConfig/dialogs/dialog[@guid='79c72097-2da1-4fbf-8436-f89abb1478b6']">
+	<xsl:template match="uiConfig/dialogs/dialog[@guid='9b6ec438-14c9-44e2-92c3-c28411f093af']">
 		<xsl:copy>
 			<xsl:apply-templates select="node()|@*"/>
 
-			<xsl:if test="not(./item[@guidRef='d74ef405-5b50-46ab-80d4-a655e22ad80d'])">
-				<item guidRef="79c72097-2da1-4fbf-8436-f89abb1478b6" dock="top"/>
+			<xsl:if test="not(./item[@guidRef='8a8ca94c-cc61-4f14-b24d-cbd447d2fd56'])">
+				<item guidRef="8a8ca94c-cc61-4f14-b24d-cbd447d2fd56" dock="fill"/>
 			</xsl:if>
 		</xsl:copy>
-	</xsl:template>-->
+	</xsl:template>
 </xsl:stylesheet>

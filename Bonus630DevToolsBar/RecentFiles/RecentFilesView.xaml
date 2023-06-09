@@ -122,7 +122,7 @@
         <ItemsControl x:Name="Items" DockPanel.Dock="Right" Margin="10,0,0,0" ItemsSource="{Binding Files}" Height="20" Width="400">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Button Content="{Binding Index,FallbackValue=0}" Tag="{Binding Path}" Width="20" Height="20" Click="Button_Click" MouseEnter="Button_MouseEnter">
+                    <Button Content="{Binding Index,FallbackValue=0}" Tag="{Binding FullName}" Width="20" Height="20" Click="Button_Click" MouseEnter="Button_MouseEnter">
                         <Button.ToolTip>
 
                             <Border BorderThickness="1">

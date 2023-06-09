@@ -10,8 +10,13 @@
 				<resEntry id="942df043-e3e2-4d0e-83ee-a456557ac093" string="10224" icon="111"/>
 				<!-- Drag GMS -->
 				<resEntry id="3b3f72b8-0129-4316-b8a3-40e4758ba9bc" string="10226" icon="113"/>
+				<!-- Delete Gms-->
+				<resEntry id="571db7b2-8cae-4b99-b241-a56ecd61f90e" string="10226" icon="116"/>
 				<!-- Shortcuts -->
-				<resEntry id="b0bc23ba-086b-46d1-ae04-ee36aa9003a4" string="10225" icon="112"/>
+				<resEntry id="b0bc23ba-086b-46d1-ae04-ee36aa9003a4" string="10225" icon="114"/>
+				<!--cql-->
+				<resEntry id="51b24cfb-b8df-411f-886c-4c5520e931a4" string="10227" icon="117"/>
+				
       </resourceMap>
 		</resource>
 	</resources>

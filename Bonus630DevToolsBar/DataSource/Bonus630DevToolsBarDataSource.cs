@@ -14,6 +14,8 @@ namespace br.com.Bonus630DevToolsBar.DataSource
     {
 
         private string caption = "Bonus630 Dev ToolsBar";
+        private string cqlCaption = "Enter to Run";
+        private string cqlTooltip = "Enter to Run";
 
 
         private readonly string runCommandGuid = "5087687d-337d-4d0e-acaf-c0b1df967757";
@@ -31,6 +33,25 @@ namespace br.com.Bonus630DevToolsBar.DataSource
             get { return caption; }
             set { caption = value; NotifyPropertyChanged(); }
         }
+        public string CqlCaption
+        {
+            get { return cqlCaption; }
+            set { cqlCaption = value; NotifyPropertyChanged(); }
+        }
+        public string CqlTooltip
+        {
+            get { return cqlTooltip; }
+            set { cqlTooltip = value; NotifyPropertyChanged(); }
+        }
+
+        private string cqlSucessedList = "";
+
+        public string CQLSucessedList
+        {
+            get { return cqlSucessedList; }
+            set { cqlSucessedList = value; NotifyPropertyChanged(); }
+        }
+
 
         private void CloseDocker(string guid)
         {

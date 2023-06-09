@@ -18,6 +18,9 @@ namespace br.com.Bonus630DevToolsBar
         public static IntPtr corelHandle;
         
         private string currentTheme;
+
+        public const string DataSourceName = "Bonus630DevToolsBarDS";
+
         public ControlUI(object app)
         {
             
@@ -26,7 +29,7 @@ namespace br.com.Bonus630DevToolsBar
                 corelApp = app as corel.Application;
                 corelHandle = new IntPtr(corelApp.AppWindow.Handle);
                 var dsf = new DataSource.DataSourceFactory();
-                dsf.AddDataSource("Bonus630DevToolsBarDS", typeof(DataSource.Bonus630DevToolsBarDataSource));
+                dsf.AddDataSource(DataSourceName, typeof(DataSource.Bonus630DevToolsBarDataSource));
                 dsf.Register();
             }
             catch (Exception)

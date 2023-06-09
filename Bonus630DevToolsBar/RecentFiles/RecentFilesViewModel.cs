@@ -30,7 +30,7 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
         public RecentFileViewModel this[string fullName]
         { 
             get { 
-                return files.SingleOrDefault(r => r.Path.Equals(fullName, StringComparison.InvariantCultureIgnoreCase)); 
+                return files.SingleOrDefault(r => r.FullName.Equals(fullName, StringComparison.InvariantCultureIgnoreCase)); 
             }  }
 
         /// <summary>

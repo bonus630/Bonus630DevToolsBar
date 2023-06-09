@@ -9,9 +9,10 @@ using br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels;
 using br.com.Bonus630DevToolsBar.ControlsShorcutsCDRAddon.Models;
 using Corel.Interop.VGCore;
 
+
 namespace br.com.Bonus630DevToolsBar.ControlsShorcutsCDRAddon.ViewModels
 {
-    public class DockerUIViewModel
+    public class DockerUIViewModel : ViewModelBase
     {
         private Application corelApp;
         public ObservableCollection<Shortcut> Shortcuts { get; set; }
@@ -21,6 +22,15 @@ namespace br.com.Bonus630DevToolsBar.ControlsShorcutsCDRAddon.ViewModels
         private readonly string altAttribute = "alt";
         private Dispatcher dispatcher;
         public RunCommand RunCommand { get; set; }
+
+        private System.Windows.Visibility loadingVisible = System.Windows.Visibility.Visible;
+
+        public System.Windows.Visibility LoadingVisible
+        {
+            get { return loadingVisible; }
+            set { loadingVisible = value; OnPropertyChanged(); }
+        }
+
 
         public DockerUIViewModel(Application corelApp)
         {
@@ -75,6 +85,7 @@ namespace br.com.Bonus630DevToolsBar.ControlsShorcutsCDRAddon.ViewModels
             searchAdvancedParams.SearchParam = keyName;
             actions.Add(searchAdvancedParams);
             core.SearchEngineGet.SearchAdvanced(actions);
+            dispatcher.Invoke(() => { LoadingVisible = System.Windows.Visibility.Collapsed;} );
         }
 
         public void InvokeItem(Shortcut shortcut)
@@ -101,7 +112,8 @@ namespace br.com.Bonus630DevToolsBar.ControlsShorcutsCDRAddon.ViewModels
         }
         public void Execute(object parameter)
         {
-            contentExec?.Invoke((parameter as Shortcut));
+            if(contentExec!=null)
+                contentExec.Invoke((parameter as Shortcut));
         }
     }
 }

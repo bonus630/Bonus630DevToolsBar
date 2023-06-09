@@ -2,6 +2,7 @@
 using Corel.Interop.VGCore;
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -20,7 +21,7 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
         private StylesController stylesController;
         RecentFileModel rfm;
         RecentFilesViewModel dataContext;
-         int limit = 5;
+         int limit = 10;
 
         public RecentFilesView(object app)
         {
@@ -77,30 +78,41 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
         }
 
 
-        private void Save(string name, string FileName)
+        private void Save(string name, string fullName)
         {
             //System.Windows.Forms.MessageBox.Show(name);
-            RecentFileViewModel file = dataContext[FileName];
-            if (file == null)
+            RecentFileViewModel file = dataContext[fullName];
+            if (file == null && dataContext.Count < this.limit)
             {
                 int index = dataContext.Count;
-                file = rfm.InsertData(index, name, FileName, false, 1, 0);
+                file = rfm.InsertData(index, name, fullName, false, 1, 0);
 
                 dataContext.Add(file);
             }
             else
             {
-                rfm.UpdateFile(file.ID, file.Index, file.OpenTimes++, file.OpenedTime, file.AutoLoad);
+                if(file == null)
+                {
+                    long minTime = dataContext.Files.Min(m => m.OpenedTime);
+                    file = dataContext.Files.SingleOrDefault(r => r.OpenedTime == minTime);
+                    file.Name = name;
+                    file.FullName = fullName;
+                    file.OpenTimes = 0;
+                    file.AutoLoad = false;
+                    file.OpenedTime = 0;
+                }
+
+                rfm.UpdateFile(file.ID, file.Index,file.Name,file.FullName, file.OpenTimes++, file.OpenedTime, file.AutoLoad);
             }
             file.OpenDate = DateTime.Now;
             file.IsOpened = true;
         }
-        private void Update(string FileName)
+        private void Update(string path)
         {
-            RecentFileViewModel file = dataContext[FileName];
+            RecentFileViewModel file = dataContext[path];
             if (file != null)
             {
-                rfm.UpdateFile(file.ID, file.Index, file.OpenTimes, (DateTime.Now - file.OpenDate).Ticks, file.AutoLoad);
+                rfm.UpdateFile(file.ID, file.Index,file.Name,file.FullName, file.OpenTimes, (DateTime.Now - file.OpenDate).Ticks, file.AutoLoad);
                 file.IsOpened = false;
             }
         }
@@ -131,7 +143,7 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
             {
                 try
                 {
-                    dataContext[id].Thumb = rfm.GetThumb(dataContext[id].Path);
+                    dataContext[id].Thumb = rfm.GetThumb(dataContext[id].FullName);
                 }
                 catch { }
 
@@ -156,14 +168,14 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
             for (int i = 0; i < dataContext.Count; i++)
             {
                 if (dataContext[i].AutoLoad)
-                    corelApp.OpenDocument(dataContext[i].Path);
+                    corelApp.OpenDocument(dataContext[i].FullName);
             }
         }
         private void CheckFileExits()
         {
             for (int i = 0; i < dataContext.Count; i++)
             {
-                if (!File.Exists(dataContext[i].Path))
+                if (!File.Exists(dataContext[i].FullName))
                     rfm.DeleteFile(dataContext[i].ID);
             }
         }
@@ -193,7 +205,7 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
             if (r != null)
             {
                 r.AutoLoad = autoLoad;
-                rfm.UpdateFile(r.ID, r.Index, r.OpenTimes, r.OpenedTime, autoLoad);
+                rfm.UpdateFile(r.ID, r.Index,r.Name,r.FullName, r.OpenTimes, r.OpenedTime, autoLoad);
             }
         }
 

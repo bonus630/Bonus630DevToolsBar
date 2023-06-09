@@ -97,7 +97,7 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
             }
             catch { }
         }// int openTimes, long openedTime,
-        public RecentFileViewModel InsertData(int index, string name, string path, bool autoload = false, int openTimes = 1, long openedTime = 0)
+        public RecentFileViewModel InsertData(int index, string name, string fullName, bool autoload = false, int openTimes = 1, long openedTime = 0)
         {
             try
             {
@@ -110,7 +110,7 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
                     command.Parameters.AddWithValue(":name", name);
                     command.Parameters.AddWithValue(":index", index);
                     command.Parameters.AddWithValue(":count", openTimes);
-                    command.Parameters.AddWithValue(":path", path);
+                    command.Parameters.AddWithValue(":path", fullName);
                     command.Parameters.AddWithValue(":time", openedTime);
                     command.Parameters.AddWithValue(":autoload", autoload ? 1 : 0);
 
@@ -118,7 +118,7 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
 
                     command.ExecuteNonQuery();
                 }
-                return new RecentFileViewModel(id) { Name = name, Index = index, Path = path, OpenTimes = openTimes, OpenDate = DateTime.Now };
+                return new RecentFileViewModel(id) { Name = name, Index = index, FullName = fullName, OpenTimes = openTimes, OpenDate = DateTime.Now };
             }
             catch { }
             return null;
@@ -148,7 +148,7 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
                             k.OpenTimes = dataReader.GetInt32(2);
                             k.AutoLoad = dataReader.GetBoolean(3);
                             k.Name = dataReader.GetString(4);
-                            k.Path = dataReader.GetString(5);
+                            k.FullName = dataReader.GetString(5);
                             k.OpenedTime = dataReader.GetInt64(6);
                             datas.Add(k);
                         }
@@ -180,19 +180,22 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
             catch { }
             return result;
         }
-
-        public void UpdateFile(int id, int index, int openTimes, long openedTime, bool autoload)
+       // bool autoload = false, int openTimes = 1, long openedTime = 0
+        public void UpdateFile(int id, int index,string name,string fullName, int openTimes =1, long openedTime=0, bool autoload=false)
         {
             try
             {
                 using (SQLiteCommand command = CreateConnection().CreateCommand())
                 {
-                    command.CommandText = "UPDATE files SET _index=:index,count=:count,time=:time,autoload=:autoload WHERE id=:id";
+                    command.CommandText = "UPDATE files SET _index=:index,count=:count,time=:time,autoload=:autoload,name=:name,path=:path WHERE id=:id";
 
                     command.Parameters.AddWithValue(":count", openTimes);
                     command.Parameters.AddWithValue(":index", index);
                     command.Parameters.AddWithValue(":time", openedTime);
                     command.Parameters.AddWithValue(":id", id);
+                    command.Parameters.AddWithValue(":path", fullName);
+                    command.Parameters.AddWithValue(":name", name);
+
                     //command.Parameters.AddWithValue(":id", id);
                     command.Parameters.AddWithValue(":autoload", autoload ? 1 : 0);
                     command.ExecuteNonQuery();
@@ -201,7 +204,7 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
             catch { }
         }
 
-        public bool CheckExits(string filePath)
+        public bool CheckExits(string fullName)
         {
             try
             {
@@ -210,7 +213,7 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
                 using (SQLiteCommand command = CreateConnection().CreateCommand())
                 {
                     command.CommandText = "SELECT id FROM files ORDER BY id WHERE path=:path DESC LIMIT 1;";
-                    command.Parameters.AddWithValue(":path", filePath);
+                    command.Parameters.AddWithValue(":path", fullName);
 
                     using (SQLiteDataReader dataReader = command.ExecuteReader())
                     {
@@ -274,11 +277,11 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
 
 
 
-        public BitmapSource GetThumb(string filePath)
+        public BitmapSource GetThumb(string fullName)
         {
             BitmapSource preview = null;
             Bitmap b = null;
-            using (ZipArchive zipFile = new ZipArchive(File.Open(filePath, FileMode.Open)))
+            using (ZipArchive zipFile = new ZipArchive(File.Open(fullName, FileMode.Open)))
             {
                 foreach (ZipArchiveEntry entry in zipFile.Entries)
                 {

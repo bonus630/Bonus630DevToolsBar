@@ -91,33 +91,34 @@ This file defines new UI elements that all workspaces will contain
 					  onInvoke="*Bind(DataSource=Bonus630DevToolsBarDS;Path=UnloadNDeleteUserGMS)"
 					  icon="guid://571db7b2-8cae-4b99-b241-a56ecd61f90e"
 					  type="button"  enable="true"/>
+			
 			<!--CQL Runner-->
-			<itemData guid="08bdac37-d2b9-42ad-a498-5335df9783c7"
+			<!--<itemData guid="08bdac37-d2b9-42ad-a498-5335df9783c7"
+					type="wpfhost"
+					hostedType="Addons\Bonus630DevToolsBar\Bonus630DevToolsBar.dll,br.com.Bonus630DevToolsBar.CQLRunner.CQLRunner"
+					enable="true"/>-->	
+			
+			<!--DropdownButton CqL-->
+			<itemData guid='51b24cfb-b8df-411f-886c-4c5520e931a4' type='dropDownDlgBtn' arrowStyle='down'
+					  caption='*Bind(DataSource=Bonus630DevToolsBarDS;Path=CQLCaption)'
+					  toolTip='*Bind(DataSource=Bonus630DevToolsBarDS;Path=CQLTooltip)'
+					  dropDownRef='8a8ca94c-cc61-4f14-b24d-cbd447d2fd56'
+					  icon="guid://51b24cfb-b8df-411f-886c-4c5520e931a4"
+					  length='100' enable='true'/>
+
+			<!--PopUp CQL-->
+			<itemData guid="8a8ca94c-cc61-4f14-b24d-cbd447d2fd56"
 					type="wpfhost"
 					hostedType="Addons\Bonus630DevToolsBar\Bonus630DevToolsBar.dll,br.com.Bonus630DevToolsBar.CQLRunner.CQLRunner"
 					enable="true"/>
+			
 			<!--Recent Files-->
 			<itemData guid="7d15e9c7-2431-4841-a5aa-9eaa5b581230"
 					type="wpfhost"
 					hostedType="Addons\Bonus630DevToolsBar\Bonus630DevToolsBar.dll,br.com.Bonus630DevToolsBar.RecentFiles.RecentFilesView"
 					enable="true"/>
 
-			<!--DropdownButton-->
-			<!--
-			<itemData guid='7e6b5490-14f6-475e-8dce-49d0176acdeb' type='dropDownDlgBtn' arrowStyle='down'
-					  caption='*Bind(DataSource=ProjectTimerCloneDS;Path=FormatedTime)'
-					  toolTip='*Bind(DataSource=ProjectTimerCloneDS;Path=FormatedTime)'
-					  dropDownRef='d74ef405-5b50-46ab-80d4-a655e22ad80d'
-					  length='100' enable='true'/>
 
-
-			-->
-			<!--PopUp-->
-			<!--
-			<itemData guid="d74ef405-5b50-46ab-80d4-a655e22ad80d"
-					type="wpfhost"
-					hostedType="Addons\ProjectTimerClone\ProjectTimerClone.dll,ProjectTimerClone.PopUp"
-					enable="true"/>-->
 
 
 		</xsl:copy>
@@ -156,7 +157,7 @@ This file defines new UI elements that all workspaces will contain
 						<item guidRef="266435b4-6e53-460f-9fa7-f45be187d400" />
 					
 						<!--CqlRunner -->
-						<item  guidRef="08bdac37-d2b9-42ad-a498-5335df9783c7" />	
+						<item  guidRef="51b24cfb-b8df-411f-886c-4c5520e931a4" />	
 						<!--Separator-->
 						<item guidRef="266435b4-6e53-460f-9fa7-f45be187d400" />
 						<!--Recent Files -->
@@ -208,19 +209,20 @@ This file defines new UI elements that all workspaces will contain
 			</dockerData>
 		</xsl:copy>
 	</xsl:template>
-	<!--<xsl:template match="uiConfig/dialogs">
+	<!-- Pop up CQL Runner-->
+	<xsl:template match="uiConfig/dialogs">
 		<xsl:copy>
 			<xsl:apply-templates select="node()|@*"/>
 
-			<dialog guid="79c72097-2da1-4fbf-8436-f89abb1478b6"
+			<dialog guid="9b6ec438-14c9-44e2-92c3-c28411f093af"
 						   popUp="true"
                       >
 
-				<item  guidRef="d74ef405-5b50-46ab-80d4-a655e22ad80d" dock="top"/>
+				<item  guidRef="8a8ca94c-cc61-4f14-b24d-cbd447d2fd56" dock="fill"/>
 
 			</dialog>
 
 		</xsl:copy>
-	</xsl:template>-->
+	</xsl:template>
 
 </xsl:stylesheet>

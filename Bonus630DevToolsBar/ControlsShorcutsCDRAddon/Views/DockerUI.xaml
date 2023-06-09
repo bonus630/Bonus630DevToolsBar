@@ -19,7 +19,15 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        <ListView ItemsSource="{Binding Shortcuts}" >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Height="28"  HorizontalAlignment="Stretch" VerticalAlignment="Center"  Visibility="{Binding LoadingVisible}">
+            <Label Content="Loading" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+            <ProgressBar Height="2" Background="Red" IsIndeterminate="True" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" />
+        </Grid>
+        <ListView Grid.Row="1" ItemsSource="{Binding Shortcuts}" >
             <ListView.ItemTemplate>
                 <DataTemplate>
 

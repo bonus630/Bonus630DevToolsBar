@@ -4,7 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:br.com.Bonus630DevToolsBar.CQLRunner"
-             mc:Ignorable="d" >
+             xmlns:forms="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
+             mc:Ignorable="d" Width="440" Height="160">
     <UserControl.Resources>
 
         <ResourceDictionary>
@@ -16,7 +17,7 @@
 </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
 </UserControl.Resources>
-<Button Width="20" Height="20" Click="Button_Click" BorderThickness="0">
+<!--<Button Width="20" Height="20" Click="Button_Click" BorderThickness="0">
         <Button.Background>
             <ImageBrush ImageSource="/Bonus630DevToolsBar;component/Images/cql.png"/>
         </Button.Background>
@@ -25,13 +26,15 @@
             <Label Content="CQL Box" />
             <Label Content="Esc|Close Enter|Evaluate" FontWeight="SemiBold" />
         </StackPanel>
-    </Button.ToolTip>
-    <Popup x:Name="popup_button" IsOpen="False" StaysOpen="True" Placement="Left" >
+    </Button.ToolTip>-->
+    <!--<Popup x:Name="popup_button" IsOpen="False" StaysOpen="True" Placement="Left" >-->
         <Border BorderThickness="1">
-            <Grid Width="400">
+            <Grid >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="10"/>
                     <ColumnDefinition />
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="20"/>
                     <ColumnDefinition Width="10"/>
 
                 </Grid.ColumnDefinitions>
@@ -42,7 +45,10 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
                 <Label Grid.Row="0" Grid.Column="1" Content="Type your cql" />
-                <TextBox Grid.Row="1" Grid.Column="1" x:Name="txt_cql" VerticalAlignment="Center" />
+                    <WindowsFormsHost Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" VerticalAlignment="Center">
+                        <forms:TextBox x:Name="txt_cql" AutoCompleteMode="SuggestAppend" ></forms:TextBox>
+                    </WindowsFormsHost>
+              
                 <GroupBox Grid.Row="2" Grid.Column="1" Header="Context">
                     <StackPanel Orientation="Horizontal">
                         <RadioButton Content="Application" IsChecked="True" Tag="0" Click="RadioButton_Click"/>
@@ -51,10 +57,13 @@
                         <RadioButton Content="Shape Evaluate"  Tag="3"  Click="RadioButton_Click"/>
                     </StackPanel>
                 </GroupBox>
-                <Label Grid.Row="3" Grid.Column="1" x:Name="lba_console" Content="" />
+            <Button Grid.Row="2" Grid.Column="3" Background="{x:Null}"  BorderThickness="0"  Width="20" Height="20" ToolTip="Copy list" Click="Button_Click" Margin="0,8,0,0">
+                <Image Width="18" Height="18" Source="/Bonus630DevToolsBar;component/Images/CopyBig.png" />
+            </Button>
+                <Label Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" x:Name="lba_console" Content="" />
 
             </Grid>
         </Border>
-    </Popup>
-</Button>
+    <!--</Popup>
+</Button>-->
 </UserControl>

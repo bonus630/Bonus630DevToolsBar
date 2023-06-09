@@ -3,9 +3,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:br.com.Bonus630DevToolsBar.GMSDragger"
-             mc:Ignorable="d" 
-            Height="20" Width="20" AllowDrop="True" Background="Red" Click="Button_Click">
+    
+            mc:Ignorable="d" 
+            AllowDrop="True"  Width="20" Height="20" Background="Transparent"  BorderThickness="0" Click="Button_Click" >
+    <Image Source="/Bonus630DevToolsBar;component/Images/drag.png" >
+     
+    </Image>
+
     <Button.ToolTip>
         <Label Content="Drag a GMS file" />
     </Button.ToolTip>

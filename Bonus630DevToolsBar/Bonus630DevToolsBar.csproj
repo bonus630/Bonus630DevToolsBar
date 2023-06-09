@@ -514,6 +514,7 @@
     <Content Include="Images\Cut.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Images\drag.png" />
     <!--<Resource Include="DrawUIExplorer\Assets\baseline_code_black_18dp.png" />
     <Resource Include="DrawUIExplorer\Assets\baseline_dashboard_black_18dp.png" />
     <Resource Include="DrawUIExplorer\Assets\collapseArrow.png" />
@@ -565,9 +566,9 @@
     <Content Include="Images\copy.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\CopyBig.png">
+    <Resource Include="Images\CopyBig.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    </Resource>
     <Content Include="Images\copy_icon.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -646,9 +647,8 @@
     <Content Include="Images\xmltag.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="resources - Copy %282%29.rct" />
-    <Content Include="resources.rct" />
     <Content Include="resources - Copy.rct" />
+    <Content Include="resources.rct" />
     <Content Include="RunCommandDocker\MSBuildLogger.dll" />
     <Content Include="RunCommandDocker\resources.rct" />
     <Content Include="UserUI.xslt">

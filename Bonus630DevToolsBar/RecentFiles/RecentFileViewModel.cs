@@ -39,7 +39,7 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
 		}
         private string filePath;
 
-        public string Path
+        public string FullName
         {
             get { return filePath; }
             set { filePath = value; OnPropertyChanged(); }
