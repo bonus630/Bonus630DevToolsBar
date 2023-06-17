@@ -173,10 +173,20 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
         }
         private void CheckFileExits()
         {
-            for (int i = 0; i < dataContext.Count; i++)
+            int count = dataContext.Count;
+            int current = 0;
+            while(current < count)
             {
-                if (!File.Exists(dataContext[i].FullName))
-                    rfm.DeleteFile(dataContext[i].ID);
+                if (!File.Exists(dataContext[current].FullName))
+                {
+                    rfm.DeleteFile(dataContext[current].ID);
+                    dataContext.Remove(dataContext[current]);
+                }
+                else
+                {
+                    current++;
+                }
+                count = dataContext.Count;
             }
         }
 

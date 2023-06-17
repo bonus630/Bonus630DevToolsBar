@@ -87,6 +87,10 @@ with F8 to reapply the changes.
 			<xsl:if test="not(./item[@guidRef='51b24cfb-b8df-411f-886c-4c5520e931a4'])">
 				<item guidRef="51b24cfb-b8df-411f-886c-4c5520e931a4"/>
 			</xsl:if>	
+			<!--Cql help button-->
+			<xsl:if test="not(./item[@guidRef='d61f1ede-79aa-4255-8f96-307e6f63c204'])">
+				<item guidRef="d61f1ede-79aa-4255-8f96-307e6f63c204"/>
+			</xsl:if>	
 			<!--Recent Files-->
 			<xsl:if test="not(./item[@guidRef='7d15e9c7-2431-4841-a5aa-9eaa5b581230'])">
 				<item dock="fill" guidRef="7d15e9c7-2431-4841-a5aa-9eaa5b581230"/>

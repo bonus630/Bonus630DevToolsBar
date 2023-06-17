@@ -212,7 +212,7 @@
                                         </Button.ToolTip>
                                         <Image Style="{DynamicResource PlayImage}" />
                                     </Button>
-                                    <custom:IconButton Icon="Stop.png" Style="{StaticResource NoBorderButton}" Width="16" Height="16"  HorizontalAlignment="Left"  
+                                    <custom:IconButton Icon="Stop.png"  Width="16" Height="16"  HorizontalAlignment="Left"  
                         CommandParameter="{Binding SelectedCommand}" Command="{Binding Path=StopCommand}"
                                         Visibility="{Binding SelectedCommand.CanStop,Converter={StaticResource BoolToVisibilityConverter}}">
                                         <custom:IconButton.ToolTip>

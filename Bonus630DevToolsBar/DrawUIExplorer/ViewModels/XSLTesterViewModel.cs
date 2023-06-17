@@ -154,14 +154,32 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
         {
 
             XmlContainerVisible = !XmlContainerVisible;
-
+            ChangeColumnWidth();
         }
         private void hideShowXslt()
         {
 
             XsltContainerVisible = !XsltContainerVisible;
-
+            ChangeColumnWidth();
         }
+        private void ChangeColumnWidth()
+        {
+           
+          
+            if (!XsltContainerVisible)
+                XsltColumnWidth = "0";
+            if (!XmlContainerVisible)
+                XmlColumnWidth = "0";
+            if (XsltContainerVisible)
+                XsltColumnWidth = "Auto";
+            if (XmlContainerVisible)
+                XmlColumnWidth = "Auto";
+            if (XsltContainerVisible && XmlContainerVisible)
+            {
+                XmlColumnWidth = "*";
+                XsltColumnWidth = "*";
+            }
+        }  
         private bool xmlContainerVisible = true;
 
         public bool XmlContainerVisible
@@ -175,6 +193,20 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
         {
             get { return xsltContainerVisible; }
             set { xsltContainerVisible = value; OnPropertyChanged(); }
+        }
+        private string xmlColumnWidth = "*";
+
+        public string XmlColumnWidth
+        {
+            get { return xmlColumnWidth; }
+            set { xmlColumnWidth = value; OnPropertyChanged(); }
+        }
+        private string xsltColumnWidth = "*";
+
+        public string XsltColumnWidth
+        {
+            get { return xsltColumnWidth; }
+            set { xsltColumnWidth = value; OnPropertyChanged(); }
         }
 
     }

@@ -20,7 +20,7 @@ namespace br.com.Bonus630DevToolsBar
         private string currentTheme;
 
         public const string DataSourceName = "Bonus630DevToolsBarDS";
-
+        
         public ControlUI(object app)
         {
             

@@ -511,6 +511,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Resource Include="Images\cql.png" />
+    <Content Include="IconsExtractor.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Images\Cut.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -666,6 +669,7 @@
     <None Include="DrawUIExplorer\app.config" />
     <None Include="DrawUIExplorer\Design\projectGuides.guides" />
     <None Include="packages.config" />
+    <None Include="Resources\CQL Reference.pdf" />
     <None Include="RunCommandDocker\app.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

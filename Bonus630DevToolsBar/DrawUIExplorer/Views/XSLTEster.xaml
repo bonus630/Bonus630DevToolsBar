@@ -68,8 +68,8 @@
             </Grid.RowDefinitions>
             <Grid Grid.Row="0"  DockPanel.Dock="Top">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
+                    <ColumnDefinition Width="{Binding XmlColumnWidth}"/>
+                    <ColumnDefinition Width="{Binding XsltColumnWidth}"/>
                 </Grid.ColumnDefinitions>
                 <DockPanel  Visibility="{Binding XmlContainerVisible,Converter={StaticResource BoolVisibilityConverter}}" 
                             LastChildFill="True" Grid.Column="0">
@@ -82,7 +82,7 @@
 
                 </DockPanel>
                 <!--<GridSplitter VerticalAlignment="Stretch" Width="2" Grid.Column="1" Background="Black" />-->
-                <DockPanel Visibility="{Binding XmlContainerVisible,Converter={StaticResource BoolVisibilityConverter}}" 
+                <DockPanel Visibility="{Binding XsltContainerVisible,Converter={StaticResource BoolVisibilityConverter}}" 
                            LastChildFill="True" Grid.Column="1">
 
                     <Label Content="XSL Text Viewer" DockPanel.Dock="Top"/>

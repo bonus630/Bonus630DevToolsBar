@@ -112,6 +112,12 @@ This file defines new UI elements that all workspaces will contain
 					hostedType="Addons\Bonus630DevToolsBar\Bonus630DevToolsBar.dll,br.com.Bonus630DevToolsBar.CQLRunner.CQLRunner"
 					enable="true"/>
 			
+			<!--cql reference guid-->
+			<itemData guid="d61f1ede-79aa-4255-8f96-307e6f63c204"
+			  onInvoke="*Bind(DataSource=Bonus630DevToolsBarDS;Path=OpenCQLGuide)"
+			  icon="guid://d61f1ede-79aa-4255-8f96-307e6f63c204"
+			  type="button"  enable="true"/>
+			
 			<!--Recent Files-->
 			<itemData guid="7d15e9c7-2431-4841-a5aa-9eaa5b581230"
 					type="wpfhost"
@@ -158,6 +164,8 @@ This file defines new UI elements that all workspaces will contain
 					
 						<!--CqlRunner -->
 						<item  guidRef="51b24cfb-b8df-411f-886c-4c5520e931a4" />	
+						<!--CqlHelp -->
+						<item  guidRef="d61f1ede-79aa-4255-8f96-307e6f63c204" />	
 						<!--Separator-->
 						<item guidRef="266435b4-6e53-460f-9fa7-f45be187d400" />
 						<!--Recent Files -->

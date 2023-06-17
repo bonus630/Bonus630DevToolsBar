@@ -59,5 +59,15 @@ namespace br.com.Bonus630DevToolsBar.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] CQL_Reference {
+            get {
+                object obj = ResourceManager.GetObject("CQL_Reference", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }

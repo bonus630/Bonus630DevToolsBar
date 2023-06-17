@@ -453,7 +453,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
         private void SaveIcons()
         {
             IconsFolder = Path.Combine(workerFolder, string.Format("Icons_CDR{0}", CorelApp.VersionMajor));
-            string fileName = Path.Combine(CorelApp.AddonPath, "DrawUIExplorer\\IconsExtractor.exe");
+            string fileName = Path.Combine(CorelApp.AddonPath, "Bonus630DevToolsBar\\IconsExtractor.exe");
             if(!File.Exists(fileName))
             {
                 DispactchNewMessage("You missing IconsExtractor.exe!", MsgType.Console);
