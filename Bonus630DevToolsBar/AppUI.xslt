@@ -223,8 +223,7 @@ This file defines new UI elements that all workspaces will contain
 			<xsl:apply-templates select="node()|@*"/>
 
 			<dialog guid="9b6ec438-14c9-44e2-92c3-c28411f093af"
-						   popUp="true"
-                      >
+						   popUp="true">
 
 				<item  guidRef="8a8ca94c-cc61-4f14-b24d-cbd447d2fd56" dock="fill"/>
 

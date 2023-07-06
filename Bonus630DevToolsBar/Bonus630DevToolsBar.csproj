@@ -187,6 +187,7 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Build" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -510,6 +511,9 @@
     <Content Include="AppUI.xslt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="vswhere.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Resource Include="Images\cql.png" />
     <Content Include="IconsExtractor.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -675,8 +679,12 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings1.Designer.cs</LastGenOutput>
     </None>
-    <None Include="RunCommandDocker\Templates\MacroClassLibraryCS.zip" />
-    <None Include="RunCommandDocker\Templates\MacroClassLibraryVB.zip" />
+    <Content Include="RunCommandDocker\Templates\MacroClassLibraryCS.zip">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="RunCommandDocker\Templates\MacroClassLibraryVB.zip">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="DrawUIExplorer\OverlayForm.resx">

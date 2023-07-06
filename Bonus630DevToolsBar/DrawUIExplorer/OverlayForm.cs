@@ -88,7 +88,11 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
                 this.Close();
             base.OnMouseMove(e);
         }
-
+        protected override void OnLostFocus(EventArgs e)
+        {
+            base.OnLostFocus(e);
+            this.Close();
+        }
         [DllImport("User32.dll")]
         private static extern bool SetCursorPos(int X, int Y);
         private void OverlayForm_KeyUp(object sender, KeyEventArgs e)
@@ -105,5 +109,6 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
         {
             this.Close();
         }
+
     }
 }

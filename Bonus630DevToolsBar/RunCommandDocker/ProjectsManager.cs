@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -26,6 +27,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         public BindingCommand<Command> StopCommand { get; set; }
         public BindingCommand<Command> TogglePinCommand { get; set; }
         public BindingCommand<Module> EditModuleCommand { get; set; }
+        public BindingCommand<Command> EditCommandCommand { get; set; }
         public BindingCommand<Command> SetCommandToValueCommand { get; set; }
         public BindingCommand<Reflected> CopyValueCommand { get; set; }
         public BindingCommand<object> CopyReturnsValueCommand { get; set; }
@@ -86,7 +88,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                 OnPropertyChanged("SelectedCommand");
             }
         }
-   
+
 
         string dir = "";
         public string Dir { get { return dir; } set { dir = value; OnPropertyChanged("Dir"); } }
@@ -108,11 +110,13 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             pinnedCommands = new ObservableCollection<Command>();
             Dir = Properties.Settings.Default.FolderPath;
             this.proxyManager = proxyManager;
+            VSDetection();
             ExecuteCommand = new BindingCommand<Command>(RunCommandAsync);
             ExecutePinCommand = new BindingCommand<Command>(RunPinCommandAsync);
             StopCommand = new BindingCommand<Command>(StopCommandAsync);
             TogglePinCommand = new BindingCommand<Command>(PinCommand, CanPin);
             EditModuleCommand = new BindingCommand<Module>(EditModule, CanEditModule);
+            EditCommandCommand = new BindingCommand<Command>(EditMethod, VisualStudioFounded);
             CopyValueCommand = new BindingCommand<Reflected>(CopyValue);
             CopyReturnsValueCommand = new BindingCommand<object>(CopyReturnsValue);
             SetCommandToValueCommand = new BindingCommand<Command>(SetCommandReturnArgumentValue, CanRunSetCommandReturnArgVal);
@@ -165,7 +169,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             return null;
         }
 
-  
+
         /// <summary>
         /// Use this to fill parameters in command
         /// </summary>
@@ -247,6 +251,78 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         //devenv.exe "caminho\para\a\solucao.sln" /edit "caminho\para\o\arquivo.extensão":linha
         //devenv.exe "caminho\para\o\arquivo.extensão" /command "Edit.GoTo nomeDoMétodo"
         //devenv.exe "caminho\para\o\arquivo.extensão" /command "Edit.GoToDefinition nomeDoMétodo"
+
+        private bool vsFounded = false;
+        private string vsExecutablePath;
+        private bool VisualStudioFounded(Command command)
+        {
+            bool canEdit = false;
+            if (command != null)
+            {
+                if (CanEditModule(command.Parent))
+                {
+                    canEdit = vsFounded;
+                }
+            }
+            return canEdit;
+        }
+
+        private void VSDetection()
+        {
+            return;
+           
+            Process process = new Process();
+            ProcessStartInfo startInfo = new ProcessStartInfo();
+
+           
+            startInfo.FileName = "vswhere.exe";
+            startInfo.RedirectStandardOutput = true;
+            startInfo.UseShellExecute = false;
+            startInfo.CreateNoWindow = true;
+            startInfo.Arguments = "-latest -property installationPath";
+
+            process.StartInfo = startInfo;
+            process.Start();
+         
+            string vsInstallationPath = process.StandardOutput.ReadToEnd().Trim();
+
+            process.WaitForExit();
+
+            if (!string.IsNullOrEmpty(vsInstallationPath))
+            {
+             
+                 vsExecutablePath = System.IO.Path.Combine(vsInstallationPath, "Common7\\IDE\\devenv.exe");
+                vsFounded = true;
+            }
+            else
+            {
+                vsFounded = false;
+            }
+         
+            
+        }
+
+        private void EditMethod(Command command)
+        {
+            string file = command.Parent.ModulePath;
+            string method = command.Name;
+
+            Process process = new Process();
+            ProcessStartInfo startInfo = new ProcessStartInfo();
+
+      
+            // startInfo.FileName = "devenv.exe";
+            startInfo.FileName = this.vsExecutablePath;
+        
+            startInfo.Arguments = string.Format("\"{0}\" /command \"Edit.GoToDefinition {1}\"",file,method);
+
+            process.StartInfo = startInfo;
+            process.Start();
+
+
+       
+        }
+
         private void EditModule(Module module)
         {
             Process.Start(module.ModulePath);
@@ -255,7 +331,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         {
             if (module == null)
                 return false;
-            if(!string.IsNullOrEmpty(module.ModulePath))
+            if (!string.IsNullOrEmpty(module.ModulePath))
                 return File.Exists(module.ModulePath);
             return false;
         }
@@ -284,11 +360,11 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                     argument.Value = new FuncToParam()
                     {
                         Name = "GetShapes",
-                        FullPath ="br.com.Bonus630DevToolsBar.RunCommandDocker.GetShapes",
+                        FullPath = "br.com.Bonus630DevToolsBar.RunCommandDocker.GetShapes",
                         MyFunc = new Func<Command, object>(shapeRangeManager.GetShapes)
                     };
 
-                
+
             }
         }
         //private bool CanRunSetShapeRangeArgumentValue(object o)
@@ -297,7 +373,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         //    {
         //        Argument argument = this.SelectedCommand.Items.FirstOrDefault(r => r.IsSelectedBase);
         //        return (argument != null);
-                 
+
 
 
         //    }
@@ -373,7 +449,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                 }
                 if (lastCommand != null && lastCommand[0].Equals(project.Name))
                     project.IsExpanded = true;
-                Tuple<string, string,string>[] typesNames = proxy.GetTypesNames();
+                Tuple<string, string, string>[] typesNames = proxy.GetTypesNames();
                 ObservableCollection<Module> tempList = new ObservableCollection<Module>();
                 for (int i = 0; i < typesNames.Length; i++)
                 {

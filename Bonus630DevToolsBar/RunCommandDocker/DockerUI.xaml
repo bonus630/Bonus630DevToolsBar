@@ -393,6 +393,7 @@
                                         <Image Style="{StaticResource EditImage}"/>
                                     </MenuItem.Icon>
                                 </MenuItem>
+                             
                             </ContextMenu>
                         </Grid.ContextMenu>
                         <Label Content="{Binding Path=Name}" Focusable="False"/>
@@ -413,6 +414,13 @@
                             </Grid.ColumnDefinitions>
                             <Grid.ContextMenu>
                                 <ContextMenu>
+                                    <MenuItem Header="Edit" CommandParameter="{Binding}"
+                                          Command="{Binding Path=PlacementTarget.DataContext.Parent.Parent.Parent.EditCommandCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}"
+                                          Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+                                        <MenuItem.Icon>
+                                            <Image Style="{StaticResource EditImage}"/>
+                                        </MenuItem.Icon>
+                                    </MenuItem>
                                     <MenuItem Header="Pin" CommandParameter="{Binding}"
                                           Command="{Binding Path=PlacementTarget.DataContext.Parent.Parent.Parent.TogglePinCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}"
                                          Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
@@ -420,6 +428,7 @@
                                             <Image Style="{StaticResource PinImage}"/>
                                         </MenuItem.Icon>
                                     </MenuItem>
+                                    
                                 </ContextMenu>
                             </Grid.ContextMenu>
                             <custom:IconButton Icon="Play.png" Grid.Column="0"  Width="16" Height="16"  

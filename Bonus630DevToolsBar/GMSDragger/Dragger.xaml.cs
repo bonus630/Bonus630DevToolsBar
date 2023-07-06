@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using Corel.Interop.VGCore;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,6 +7,9 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
+
+
 using c = Corel.Interop.VGCore;
 
 namespace br.com.Bonus630DevToolsBar.GMSDragger
@@ -27,6 +31,7 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
 
                 this.corelApp = app as c.Application;
                 gmsPath = corelApp.GMSManager.UserGMSPath;
+               ;
             }
             catch
             {
@@ -178,5 +183,84 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
                 processFiles(of.FileNames);
             }
         }
+   
+       
     }
+
+        //public  class Form1 
+        //{
+        //    private Microsoft.Vbe.Interop.VBProject vb;
+
+
+
+        //    private void Form1_Load(object sender, EventArgs e)
+        //    {
+        //        Microsoft.Vbe.Interop.VBE vbe = Microsoft.VisualBasic.Interaction.CreateObject("VBE", "");
+
+        //        foreach (Microsoft.Vbe.Interop.VBProject vbp in vbe.VBProjects)
+        //        {
+        //            list.Items.Add(vbp.Name);
+        //        }
+        //    }
+
+        //    private void CreateDir(string path)
+        //    {
+        //        string exist = Directory.Exists(path) ? path : string.Empty;
+        //        if (exist == string.Empty)
+        //        {
+        //            Directory.CreateDirectory(path);
+        //        }
+        //    }
+
+        //    private void exp_Click(object sender, EventArgs e)
+        //    {
+        //        if (list.SelectedIndex == -1)
+        //        {
+        //            return;
+        //        }
+
+        //        Microsoft.Vbe.Interop.VBProject vbp = (Microsoft.Vbe.Interop.VBProject)vbe.VBProjects.Item(list.SelectedIndex + 1);
+
+        //        string path = CorelScriptTools.GetFolder();
+        //        if (path.Length == 0)
+        //        {
+        //            return;
+        //        }
+
+        //        if (cbIntoNewFolder.Checked)
+        //        {
+        //            path = path + "\\" + vbp.Name;
+        //            CreateDir(path);
+        //        }
+
+        //        string srcPath = path + "\\source";
+        //        CreateDir(srcPath);
+
+        //        foreach (Microsoft.Vbe.Interop.VBComponent vc in vbp.VBComponents)
+        //        {
+        //            string fileName = vc.Name;
+
+        //            switch (vc.Type)
+        //            {
+        //                case Microsoft.Vbe.Interop.vbext_ComponentType.vbext_ct_StdModule:
+        //                    fileName = fileName + ".bas";
+        //                    break;
+        //                case Microsoft.Vbe.Interop.vbext_ComponentType.vbext_ct_ClassModule:
+        //                case Microsoft.Vbe.Interop.vbext_ComponentType.vbext_ct_Document:
+        //                    fileName = fileName + ".cls";
+        //                    break;
+        //                case Microsoft.Vbe.Interop.vbext_ComponentType.vbext_ct_MSForm:
+        //                    fileName = fileName + ".frm";
+        //                    break;
+        //            }
+
+        //            vc.Export(srcPath + "\\" + fileName);
+        //        }
+
+        //        FileSystem.FileCopy(vbp.FileName, path + "\\" + vbp.Name + ".gms");
+        //        MessageBox.Show("Done!");
+        //    }
+        //}
+    
+
 }

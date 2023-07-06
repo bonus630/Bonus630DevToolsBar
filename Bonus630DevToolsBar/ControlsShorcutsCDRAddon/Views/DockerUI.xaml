@@ -27,7 +27,8 @@
             <Label Content="Loading" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top"/>
             <ProgressBar Height="2" Background="Red" IsIndeterminate="True" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" />
         </Grid>
-        <ListView Grid.Row="1" ItemsSource="{Binding Shortcuts}" >
+        <ListView  Grid.Row="1" ItemsSource="{Binding Shortcuts}" Name="lv_shortcuts"  >
+            
             <ListView.ItemTemplate>
                 <DataTemplate>
 
@@ -46,7 +47,7 @@
                         <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal">
                             <StackPanel Orientation="Horizontal">
                                 <Label Content="Key:" FontSize="11"/>
-                                <Label Content="{Binding Key}" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource Footer.Static.Background}"/>
+                                <Label Content="{Binding Key}" FontSize="11" FontWeight="Bold" />
                             </StackPanel>
                          
                         </StackPanel>

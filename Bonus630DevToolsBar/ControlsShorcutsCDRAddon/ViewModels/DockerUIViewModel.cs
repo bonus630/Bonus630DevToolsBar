@@ -23,6 +23,44 @@ namespace br.com.Bonus630DevToolsBar.ControlsShorcutsCDRAddon.ViewModels
         private Dispatcher dispatcher;
         public RunCommand RunCommand { get; set; }
 
+        //private IComparer<Shortcut> shortcutOrder;
+
+        //public IComparer<Shortcut> ShortcutOrder
+        //{
+        //    get { return shortcutOrder; }
+        //    set { shortcutOrder = value; OnPropertyChanged(nameof(ShortcutOrder)); }
+        //}
+
+        //private bool orderByName;
+
+        //public bool OrderByName
+        //{
+        //    get { return orderByName; }
+        //    set
+        //    {
+        //        orderByName = value;
+        //        OnPropertyChanged(nameof(OrderByName));
+        //        if (value)
+        //            ShortcutOrder = new ComparerName();
+        //    }
+        //}
+        //private bool orderByKey;
+
+        //public bool OrderByKey
+        //{
+        //    get { return orderByName; }
+        //    set
+        //    {
+        //        orderByName = value;
+        //        OnPropertyChanged(nameof(OrderByKey));
+        //        if (value)
+        //            ShortcutOrder = new ComparerKey();
+        //    }
+        //}
+
+
+
+
         private System.Windows.Visibility loadingVisible = System.Windows.Visibility.Visible;
 
         public System.Windows.Visibility LoadingVisible
@@ -39,7 +77,7 @@ namespace br.com.Bonus630DevToolsBar.ControlsShorcutsCDRAddon.ViewModels
             this.corelApp = corelApp;
             this.dispatcher = Dispatcher.CurrentDispatcher;
             core = new Core();
-            core.StartCore(Path.Combine(this.corelApp.Path,"UIConfig\\DrawUI.xml"),this.corelApp);
+            core.StartCore(Path.Combine(this.corelApp.Path, "UIConfig\\DrawUI.xml"), this.corelApp);
             core.LoadListsFinish += Core_LoadListsFinish;
             core.SearchResultEvent += Core_SearchResultEvent;
         }
@@ -52,16 +90,16 @@ namespace br.com.Bonus630DevToolsBar.ControlsShorcutsCDRAddon.ViewModels
             bool control = false;
             for (int i = 0; i < obj.Childrens.Count; i++)
             {
-                if(obj.Childrens[i].TagName == keyName)
+                if (obj.Childrens[i].TagName == keyName)
                 {
                     s = new Shortcut();
-                    
+
                     if (obj.Childrens[i].Childrens.Count > 0)
                     {
                         Boolean.TryParse(obj.Childrens[i].Childrens[0].GetAttribute(altAttribute), out alt);
                         s.Alt = alt;
-                        if(obj.Childrens[i].Childrens[0].Childrens.Count > 0)
-                            s.Key = obj.Childrens[i].Childrens[0].Childrens[0].Text.Replace("VK","");
+                        if (obj.Childrens[i].Childrens[0].Childrens.Count > 0)
+                            s.Key = obj.Childrens[i].Childrens[0].Childrens[0].Text.Replace("VK", "");
                     }
                     s.Shift = shift;
                     s.Control = control;
@@ -85,7 +123,7 @@ namespace br.com.Bonus630DevToolsBar.ControlsShorcutsCDRAddon.ViewModels
             searchAdvancedParams.SearchParam = keyName;
             actions.Add(searchAdvancedParams);
             core.SearchEngineGet.SearchAdvanced(actions);
-            dispatcher.Invoke(() => { LoadingVisible = System.Windows.Visibility.Collapsed;} );
+            dispatcher.Invoke(() => { LoadingVisible = System.Windows.Visibility.Collapsed; });
         }
 
         public void InvokeItem(Shortcut shortcut)
@@ -112,7 +150,7 @@ namespace br.com.Bonus630DevToolsBar.ControlsShorcutsCDRAddon.ViewModels
         }
         public void Execute(object parameter)
         {
-            if(contentExec!=null)
+            if (contentExec != null)
                 contentExec.Invoke((parameter as Shortcut));
         }
     }

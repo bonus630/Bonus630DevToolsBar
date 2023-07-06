@@ -121,7 +121,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                     template = "MacroClassLibraryVB.zip";
                     break;
             }
-            templatePath = Path.Combine(AddonFolder, "Templates", template);
+            templatePath = Path.Combine(AddonFolder, "RunCommandDocker\\Templates", template);
             string tempPath = Path.Combine(Path.GetTempPath(), template);
             if (File.Exists(tempPath))
             {

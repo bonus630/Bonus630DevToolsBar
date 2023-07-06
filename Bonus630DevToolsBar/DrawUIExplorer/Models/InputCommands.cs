@@ -35,6 +35,10 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
         {
             core.HighLightItemHelper.ShowHighLightItem(itemGuid, itemParentGuid);
         }
+        public void RunMacro(string macro) 
+        {
+            core.CorelAutomation.RunMacro(macro);
+        }
         /// <summary>
         /// 
         /// </summary>

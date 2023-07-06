@@ -133,7 +133,8 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
         {
             for (int i = 0; i < dataContext.Count; i++)
             {
-                LoadThumb(dataContext[i].ID);
+                //LoadThumb(dataContext[i].ID);
+                LoadThumb(i);
             }
         }
         private void LoadThumb(int id)
