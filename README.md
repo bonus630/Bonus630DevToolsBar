@@ -53,7 +53,7 @@ Utilize the core functionality of the DrawUIExplorer tool to perform searches wi
 
 The Shortcuts Docker is a powerful tool that generates a comprehensive list of shortcuts present in the DrawUI.xml file. It utilizes the core functionality of the DrawUIExplorer tool to provide an intuitive interface for viewing and managing shortcuts. In addition to visualizing the shortcuts, this docker allows you to execute commands directly from within the tool.
 
-![Shortcuts Docker](Screenshots/shortcuts-docker.PNG)
+![Shortcuts Docker](Screenshots/Shortcuts-docker.PNG)
 
 Key Features:
 
