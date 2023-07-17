@@ -129,5 +129,27 @@ namespace br.com.Bonus630DevToolsBar.Properties {
                 this["AutoLoad"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Collections.Specialized.StringCollection foldersPath {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["foldersPath"]));
+            }
+            set {
+                this["foldersPath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Collections.Specialized.StringCollection imagesPath {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["imagesPath"]));
+            }
+            set {
+                this["imagesPath"] = value;
+            }
+        }
     }
 }

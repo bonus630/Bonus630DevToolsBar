@@ -15,7 +15,9 @@ namespace br.com.Bonus630DevToolsBar.DataSource
 
         private string caption = "Bonus630 Dev ToolsBar";
         private string cqlCaption = "Enter to Run";
-        private string cqlTooltip = "Enter to Run";
+        private string cqlTooltip = "Enter to Run";     
+        private string foldersCaption = "Open a folder";
+        private string foldersTooltip = "Open a folder";
 
 
         private readonly string runCommandGuid = "5087687d-337d-4d0e-acaf-c0b1df967757";
@@ -42,6 +44,16 @@ namespace br.com.Bonus630DevToolsBar.DataSource
         {
             get { return cqlTooltip; }
             set { cqlTooltip = value; NotifyPropertyChanged(); }
+        }  
+        public string FoldersCaption
+        {
+            get { return foldersCaption; }
+            set { foldersCaption = value; NotifyPropertyChanged(); }
+        }
+        public string FoldersTooltip
+        {
+            get { return foldersTooltip; }
+            set { foldersTooltip = value; NotifyPropertyChanged(); }
         }
 
         private string cqlSucessedList = "";

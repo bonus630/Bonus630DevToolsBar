@@ -112,11 +112,29 @@ This file defines new UI elements that all workspaces will contain
 					hostedType="Addons\Bonus630DevToolsBar\Bonus630DevToolsBar.dll,br.com.Bonus630DevToolsBar.CQLRunner.CQLRunner"
 					enable="true"/>
 			
+					
 			<!--cql reference guid-->
 			<itemData guid="d61f1ede-79aa-4255-8f96-307e6f63c204"
 			  onInvoke="*Bind(DataSource=Bonus630DevToolsBarDS;Path=OpenCQLGuide)"
 			  icon="guid://d61f1ede-79aa-4255-8f96-307e6f63c204"
 			  type="button"  enable="true"/>
+
+			<!--DropdownButton Folders-->
+			<itemData guid='680d03b3-2da0-4314-bc79-fa6b26471e22' type='dropDownDlgBtn' arrowStyle='down'
+					  caption='*Bind(DataSource=Bonus630DevToolsBarDS;Path=FoldersCaption)'
+					  toolTip='*Bind(DataSource=Bonus630DevToolsBarDS;Path=FoldersTooltip)'
+					  dropDownRef='d13b83a4-3ef6-4ead-b95d-44d467dc47f5'
+					  icon="guid://680d03b3-2da0-4314-bc79-fa6b26471e22"
+					  length='100' enable='true'/>
+
+			<!--PopUp Folders-->
+			<itemData guid="d13b83a4-3ef6-4ead-b95d-44d467dc47f5"
+					type="wpfhost"
+					hostedType="Addons\Bonus630DevToolsBar\Bonus630DevToolsBar.dll,br.com.Bonus630DevToolsBar.Folders.Folders"
+					enable="true"/>
+			
+			
+			
 			
 			<!--Recent Files-->
 			<itemData guid="7d15e9c7-2431-4841-a5aa-9eaa5b581230"
@@ -157,6 +175,8 @@ This file defines new UI elements that all workspaces will contain
 						<item guidRef="266435b4-6e53-460f-9fa7-f45be187d400" />
 						<!--GMS Dragger-->
 						<item  guidRef="3b3f72b8-0129-4316-b8a3-40e4758ba9bc" dock="top"/>
+						<!--Macro Manager-->
+						<item guidRef="13d17830-0ba8-4f71-85e0-6df0a1051eee" dock="top" />
 						<!--Unload and Delete GMS -->
 						<item  guidRef="571db7b2-8cae-4b99-b241-a56ecd61f90e" dock="top"/>
 						<!--Separator-->
@@ -166,6 +186,10 @@ This file defines new UI elements that all workspaces will contain
 						<item  guidRef="51b24cfb-b8df-411f-886c-4c5520e931a4" />	
 						<!--CqlHelp -->
 						<item  guidRef="d61f1ede-79aa-4255-8f96-307e6f63c204" />	
+						<!--Separator-->
+						<item guidRef="266435b4-6e53-460f-9fa7-f45be187d400" />
+						<!--Folders-->
+						<item guidRef="680d03b3-2da0-4314-bc79-fa6b26471e22" />
 						<!--Separator-->
 						<item guidRef="266435b4-6e53-460f-9fa7-f45be187d400" />
 						<!--Recent Files -->
@@ -226,6 +250,12 @@ This file defines new UI elements that all workspaces will contain
 						   popUp="true">
 
 				<item  guidRef="8a8ca94c-cc61-4f14-b24d-cbd447d2fd56" dock="fill"/>
+
+			</dialog>
+			<dialog guid="b83ecdef-7b82-46ee-bef3-d874902e031a"
+						   popUp="true">
+
+				<item  guidRef="d13b83a4-3ef6-4ead-b95d-44d467dc47f5" dock="fill"/>
 
 			</dialog>
 

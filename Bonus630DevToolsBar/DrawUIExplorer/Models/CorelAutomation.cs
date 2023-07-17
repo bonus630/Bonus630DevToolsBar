@@ -253,6 +253,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
                 if (invoke)
                 {
                     dsp.InvokeMethod(path);
+                    
                 }
                 else
                 {
