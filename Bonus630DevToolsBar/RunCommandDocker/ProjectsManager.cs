@@ -90,10 +90,12 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         }
 
 
-        string dir = "";
-        public string Dir { get { return dir; } set { dir = value; OnPropertyChanged("Dir"); } }
-
-
+        string assemblyDirectory = "";
+        public string AssemblyDirectory { 
+            get { return assemblyDirectory; } 
+            set { assemblyDirectory = value; 
+                OnPropertyChanged("AssemblyDirectory");
+            } }
 
         FileSystemWatcher fsw;
         Thread startUpThread;
@@ -102,13 +104,12 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         public ProjectsManager(Dispatcher dispatcher)
         {
             this.dispatcher = dispatcher;
-
         }
         public void Start(ProxyManager proxyManager)
         {
             projects = new ObservableCollection<Project>();
             pinnedCommands = new ObservableCollection<Command>();
-            Dir = Properties.Settings.Default.FolderPath;
+            AssemblyDirectory = Properties.Settings.Default.FolderPath;
             this.proxyManager = proxyManager;
             VSDetection();
             ExecuteCommand = new BindingCommand<Command>(RunCommandAsync);
@@ -121,7 +122,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             CopyReturnsValueCommand = new BindingCommand<object>(CopyReturnsValue);
             SetCommandToValueCommand = new BindingCommand<Command>(SetCommandReturnArgumentValue, CanRunSetCommandReturnArgVal);
             SetShapeRangeToValueCommand = new SimpleCommand(SetShapeRangeArgumentValue);
-            startFolderMonitor(dir);
+            startFolderMonitor(assemblyDirectory);
         }
         public void LoadPinnedCommands()
         {
@@ -337,14 +338,14 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         }
         private bool CanRunSetCommandReturnArgVal(Command command)
         {
-            if (command.ReturnsType == null || command.ReturnsType == typeof(void))
+            if (command.ReturnsType == null || command.ReturnsType == typeof(void) )
                 return false;
             return true;
         }
         private Argument GetArgument(Command command)
         {
 
-            if (this.SelectedCommand != null)
+            if (this.SelectedCommand != null && this.SelectedCommand.Items != null)
             {
                 return this.SelectedCommand.Items.FirstOrDefault(r => r.IsSelectedBase);
 
@@ -393,7 +394,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
             if (fbd.ShowDialog().Equals(System.Windows.Forms.DialogResult.OK))
             {
-                if (fbd.SelectedPath.Equals(Dir))
+                if (fbd.SelectedPath.Equals(AssemblyDirectory))
                     return;
                 this.dispatcher.Invoke(new Action(() =>
                 {
@@ -406,16 +407,16 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                     startUpThread = null;
                 }
                 catch { }
-                Dir = fbd.SelectedPath;
-                Properties.Settings.Default.FolderPath = dir;
+                AssemblyDirectory = fbd.SelectedPath;
+                Properties.Settings.Default.FolderPath = assemblyDirectory;
                 Properties.Settings.Default.Save();
-                startFolderMonitor(dir);
+                startFolderMonitor(assemblyDirectory);
             }
         }
         public void OpenFolder()
         {
-            if (Directory.Exists(dir))
-                System.Diagnostics.Process.Start(dir);
+            if (Directory.Exists(assemblyDirectory))
+                System.Diagnostics.Process.Start(assemblyDirectory);
         }
         private void startFolderMonitor(string dir)
         {
@@ -511,7 +512,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         }
         private void ReadFiles()
         {
-            FileInfo[] files = (new DirectoryInfo(dir)).GetFiles();
+            FileInfo[] files = (new DirectoryInfo(assemblyDirectory)).GetFiles();
 
             foreach (var item in files)
             {

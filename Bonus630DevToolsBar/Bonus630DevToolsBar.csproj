@@ -677,8 +677,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <Content Include="CQLReference.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="DrawUIExplorer\app.config" />
     <None Include="DrawUIExplorer\Design\projectGuides.guides" />
+    <Content Include="MSBuild.zip">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="packages.config" />
     <None Include="Resources\CQL Reference.pdf" />
     <None Include="RunCommandDocker\app.config" />

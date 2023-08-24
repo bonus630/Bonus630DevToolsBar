@@ -153,7 +153,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
             if (!string.IsNullOrEmpty(basicData.Icon))
             {
                 return;
-            } 
+            }
             string guid = basicData.GetAnyGuidAttribute();
             if (string.IsNullOrEmpty(guid))
             {
@@ -163,7 +163,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
                     throw new Exception("The guid is empty!");
             }
             Dispatcher dispatcher = Dispatcher.CurrentDispatcher;
-            if(!ignoreError && guids == null)
+            if (!ignoreError && guids == null)
                 throw new Exception("Guids list is null");
             if (!ignoreError && string.IsNullOrEmpty(IconsFolder))
                 throw new Exception("IconsFolders is invalid!");
@@ -454,12 +454,12 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
         {
             IconsFolder = Path.Combine(workerFolder, string.Format("Icons_CDR{0}", CorelApp.VersionMajor));
             string fileName = Path.Combine(CorelApp.AddonPath, "Bonus630DevToolsBar\\IconsExtractor.exe");
-            if(!File.Exists(fileName))
+            if (!File.Exists(fileName))
             {
                 DispactchNewMessage("You missing IconsExtractor.exe!", MsgType.Console);
                 return;
             }
-         
+
             if (!Directory.Exists(IconsFolder))
                 Directory.CreateDirectory(IconsFolder);
             DispactchNewMessage("Save icons in: " + IconsFolder, MsgType.Console);
@@ -522,8 +522,18 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
         //}
         public void DispactchNewMessage(string message, MsgType msgType)
         {
+
             if (NewMessage != null)
                 NewMessage(message, msgType);
+        }
+        public void DispactchNewMessage(string message, MsgType msgType, params object[] args)
+        {
+            if (args != null && args.Length > 0)
+            {
+                message = string.Format(message, args);
+                DispactchNewMessage(message, msgType);
+            }
+
         }
         private void SearchEngine_SearchMessage(string obj)
         {
@@ -549,18 +559,18 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
         public string TryGetAnyCaption(IBasicData basicData)
         {
             string caption = "";
-           
+
             if (!string.IsNullOrEmpty(basicData.Caption))
             {
                 caption = basicData.Caption;
-              
+
                 if (!string.IsNullOrEmpty(caption))
                     return caption;
             }
             if (InCorel)
             {
                 caption = this.CorelAutomation.GetItemCaption(basicData.Guid);
-               
+
                 if (!string.IsNullOrEmpty(caption))
                     return caption;
             }
@@ -573,7 +583,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
                     if (!string.IsNullOrEmpty(guid))
                     {
                         caption = TryGetAnyCaption(this.SearchItemFromGuidRef(this.ListPrimaryItens, guid));
-                      
+
                     }
                 }
                 if (!string.IsNullOrEmpty(caption))
@@ -583,7 +593,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
             if (basicData.ContainsAttribute(search))
             {
                 caption = basicData.GetAttribute(search);
-              
+
                 if (!string.IsNullOrEmpty(caption))
                     return caption;
             }

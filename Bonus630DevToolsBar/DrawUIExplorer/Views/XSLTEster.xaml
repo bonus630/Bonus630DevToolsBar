@@ -20,7 +20,7 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <DockPanel Background="Blue" x:Name="mainContentHolder" LastChildFill="True">
+    <DockPanel Background="White" x:Name="mainContentHolder" LastChildFill="True">
 
         <ToolBar Background="#FF024D02" Foreground="White" DockPanel.Dock="Top">
             <StackPanel Orientation="Horizontal" >
@@ -29,7 +29,8 @@
                     <Button Command="{Binding XmlContainerHideShowCommand}" BorderBrush="{x:Null}" >
                         <Image Style="{StaticResource HideMenuItemImg}"/>
                     </Button>
-                    <Button Command="{Binding XmlContainerHideShowCommand}" BorderBrush="{x:Null}" Visibility="{Binding XmlContainerVisible,Converter={StaticResource BoolVisibilityConverter}}">
+                    <Button Command="{Binding XmlContainerHideShowCommand}" BorderBrush="{x:Null}" 
+                            Visibility="{Binding XmlContainerVisible,Converter={StaticResource BoolVisibilityConverter}}">
                         <Image Style="{StaticResource ShowMenuItemImg}"/>
                     </Button>
                 </Grid>
@@ -44,7 +45,8 @@
                     <Button Command="{Binding XsltContainerHideShowCommand}" BorderBrush="{x:Null}" >
                         <Image Style="{StaticResource HideMenuItemImg}"/>
                     </Button>
-                    <Button Command="{Binding XsltContainerHideShowCommand}" BorderBrush="{x:Null}" Visibility="{Binding XsltContainerVisible,Converter={StaticResource BoolVisibilityConverter}}">
+                    <Button Command="{Binding XsltContainerHideShowCommand}" BorderBrush="{x:Null}" 
+                            Visibility="{Binding XsltContainerVisible,Converter={StaticResource BoolVisibilityConverter}}">
                         <Image Style="{StaticResource ShowMenuItemImg}"/>
                     </Button>
                 </Grid>
@@ -75,8 +77,10 @@
                             LastChildFill="True" Grid.Column="0">
 
                     <Label Content="XML Text Viewer" DockPanel.Dock="Top"/>
-                    <ScrollViewer DockPanel.Dock="Bottom" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="0,0,0,0" Template="{DynamicResource ScrollViewerControlTemplate}">
-                        <TextBox FontSize="{Binding FontSize}"  x:Name="txt_xml" Text="{Binding XmlText}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" AcceptsReturn="True" AcceptsTab="True" />
+                    <ScrollViewer DockPanel.Dock="Bottom" HorizontalScrollBarVisibility="Auto" 
+                                  VerticalScrollBarVisibility="Auto" Margin="0,0,0,0" Template="{DynamicResource ScrollViewerControlTemplate}">
+                        <TextBox FontSize="{Binding FontSize}"  x:Name="txt_xml" Text="{Binding XmlText}" 
+                                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch" AcceptsReturn="True" AcceptsTab="True" />
 
                     </ScrollViewer>
 
@@ -86,9 +90,12 @@
                            LastChildFill="True" Grid.Column="1">
 
                     <Label Content="XSL Text Viewer" DockPanel.Dock="Top"/>
-                    <ScrollViewer DockPanel.Dock="Bottom" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="0,0,0,0" Template="{DynamicResource ScrollViewerControlTemplate}" Visibility="{Binding XsltContainerVisible,Converter={StaticResource BoolVisibilityConverter}}" >
+                    <ScrollViewer DockPanel.Dock="Bottom" HorizontalScrollBarVisibility="Auto"
+                                  VerticalScrollBarVisibility="Auto" Margin="0,0,0,0" Template="{DynamicResource ScrollViewerControlTemplate}" 
+                                  Visibility="{Binding XsltContainerVisible,Converter={StaticResource BoolVisibilityConverter}}" >
 
-                        <TextBox FontSize="{Binding FontSize}"  x:Name="txt_xsl" Text="{Binding XslText}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" AcceptsReturn="True" AcceptsTab="True"  
+                        <TextBox FontSize="{Binding FontSize}"  x:Name="txt_xsl" Text="{Binding XslText}"
+                                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch" AcceptsReturn="True" AcceptsTab="True"  
                       ScrollViewer.CanContentScroll="True"             />
 
                     </ScrollViewer>
@@ -101,8 +108,11 @@
             <DockPanel Grid.Row="1" LastChildFill="True" >
 
                 <Label Content="Result Viewer"  DockPanel.Dock="Top"/>
-                <ScrollViewer DockPanel.Dock="Bottom" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="0,0,0,0" Template="{DynamicResource ScrollViewerControlTemplate}" >
-                    <TextBox FontSize="{Binding FontSize}"  x:Name="txt_result"  Text="{Binding ResultText}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" AcceptsReturn="True" AcceptsTab="True" />
+                <ScrollViewer DockPanel.Dock="Bottom" HorizontalScrollBarVisibility="Auto" 
+                              VerticalScrollBarVisibility="Auto" Margin="0,0,0,0" 
+                              Template="{DynamicResource ScrollViewerControlTemplate}" >
+                    <TextBox FontSize="{Binding FontSize}"  x:Name="txt_result"  Text="{Binding ResultText}" 
+                             HorizontalAlignment="Stretch" VerticalAlignment="Stretch" AcceptsReturn="True" AcceptsTab="True" />
                 </ScrollViewer>
             </DockPanel>
         </Grid>

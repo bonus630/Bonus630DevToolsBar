@@ -20,6 +20,7 @@ namespace br.com.Bonus630DevToolsBar
         private string currentTheme;
 
         public const string DataSourceName = "Bonus630DevToolsBarDS";
+        public const string AddonFolderName = "Bonus630DevToolsBar";
         
         public ControlUI(object app)
         {
@@ -27,6 +28,7 @@ namespace br.com.Bonus630DevToolsBar
             try
             {
                 corelApp = app as corel.Application;
+                
                 corelHandle = new IntPtr(corelApp.AppWindow.Handle);
                 var dsf = new DataSource.DataSourceFactory();
                 dsf.AddDataSource(DataSourceName, typeof(DataSource.Bonus630DevToolsBarDataSource));

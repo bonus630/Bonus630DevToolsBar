@@ -165,9 +165,11 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                 pc.Index = index;
                 pc.SetProjectName(txt_projectName.Text);
                 pc.ProjectFolder = txt_projectFolder.Text;
-                pc.AssembliesFolder = this.projectsManager.Dir;
+                if (string.IsNullOrEmpty(this.projectsManager.AssemblyDirectory))
+                    this.projectsManager.SelectFolder();
+                pc.AssembliesFolder = this.projectsManager.AssemblyDirectory;
                
-                pc.ExtractFiles();
+                pc.ExtractTemplate();
                 
 
                 pc.ReplaceFiles();

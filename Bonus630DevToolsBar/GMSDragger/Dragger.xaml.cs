@@ -3,6 +3,7 @@ using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Windows;
@@ -25,13 +26,14 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
         private readonly string VBAEditorGuid = "28e16db6-6339-440d-af0d-f58ac27c115d";
         public Dragger(object app)
         {
+    
             InitializeComponent();
             try
             {
 
                 this.corelApp = app as c.Application;
                 gmsPath = corelApp.GMSManager.UserGMSPath;
-               ;
+               
             }
             catch
             {
@@ -67,12 +69,19 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
             bool r = false;
             for (int i = 0; i < files.Length; i++)
             {
-                 
-                if(processFile(files[i],out result))
+                var project = this.corelApp.GMSManager.Projects.Load(files[i]);
+                if (project.PasswordProtected)
                 {
-                    var project =  this.corelApp.GMSManager.Projects.Load(result);
-                    r = true;
+                    project.Unload();
+                    if (processFile(files[i], out result))
+                    {
+                        project = this.corelApp.GMSManager.Projects.Load(result);
+                        
+                        r = true;
+                    }
                 }
+                else
+                    r = true;
             }
             if (r)
                 this.corelApp.FrameWork.Automation.InvokeItem(VBAEditorGuid);

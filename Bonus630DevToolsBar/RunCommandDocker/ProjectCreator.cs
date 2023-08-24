@@ -108,7 +108,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             string[] fileList = { "Main.vb", "ProjFile.vbproj", "My Project\\AssemblyInfo.vb" };
             return fileList;
         }
-        public void ExtractFiles()
+        public void ExtractTemplate()
         {
             string templatePath = "";
             string template = "";
@@ -136,28 +136,29 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                 File.Copy(templatePath, tempPath);
             }
             catch { }
+            ExtractFiles(tempPath, ProjectFolder);
+        }
+        public void ExtractFiles(string zipPath,string destFolder)
+        {
             try
             {
-                using (FileStream fs = new FileStream(tempPath, FileMode.Open))
+                using (FileStream fs = new FileStream(zipPath, FileMode.Open))
                 {
                     ZipArchive z = new ZipArchive(fs);
                     var entries = z.Entries;
                     for (int i = 0; i < entries.Count; i++)
                     {
-
-                        string folder = ProjectFolder;
-
                         string[] folders = entries[i].FullName.Split('/');
                         for (int f = 0; f < folders.Length; f++)
                         {
                             if (folders[f] != entries[i].Name)
                             {
-                                folder = Path.Combine(folder, folders[f]);
-                                Directory.CreateDirectory(folder);
+                                destFolder = Path.Combine(destFolder, folders[f]);
+                                Directory.CreateDirectory(destFolder);
                             }
 
                         }
-                        string fileName = Path.Combine(folder, entries[i].Name);
+                        string fileName = Path.Combine(destFolder, entries[i].Name);
                         using (MemoryStream ms = new MemoryStream())
                         {
                             entries[i].Open().CopyTo(ms);
@@ -217,6 +218,12 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
 
             path = string.Format("{0}\\{1}\\v{2}.{3}.{4}", path, frame, ver.Major, ver.Minor, ver.Build);
 
+
+            if (!File.Exists(string.Format("{0}\\MSBuild.exe", path)))
+            {
+                ExtractMsBuild(path);
+            }
+
             if (!File.Exists(string.Format("{0}\\MSBuild.exe", path)))
                 throw new Exception("MSBuild not found");
             else
@@ -230,6 +237,15 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
 
 
 
+        }
+        private void ExtractMsBuild(string path)
+        {
+            try 
+            {
+                string zip = string.Format("{0}\\MSBuild.zip",AddonFolder);
+                ExtractFiles(zip, path);
+            }
+            catch { }
         }
         public void StartMSBuild(string arguments)
         {

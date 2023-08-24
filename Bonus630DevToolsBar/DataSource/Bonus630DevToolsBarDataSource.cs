@@ -111,11 +111,12 @@ namespace br.com.Bonus630DevToolsBar.DataSource
         }
         public void OpenCQLGuide()
         {
-            string path = Path.Combine(Path.GetTempPath(), "CQL Reference.pdf");
-
+            
             try
             {
-                File.WriteAllBytes(path, Properties.Resources.CQL_Reference);
+                string path = Path.Combine(ControlUI.corelApp.AddonPath,
+                    ControlUI.AddonFolderName, "CQLReference.pdf");
+
                 System.Diagnostics.Process.Start(path);
             }
             catch { }

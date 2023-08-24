@@ -262,6 +262,10 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
                     else
                     {
                         object j = dsp.GetProperty(path);
+                        if(j==null)
+                        {
+                            core.DispactchNewMessage("Path:{0} returns null", MsgType.Console,path);
+                        }
                         type = j.GetType();
                         o = j.ToString();
                         if (type == typeof(string) && core.IsXMLString(o))
@@ -426,13 +430,14 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
         //    }
         //    return 0;
         //}
-        public void RunMacro(string value)
+        public void RunMacro(string value,params object[] args)
         {
             try
             {
                 string module = value.Substring(0, value.LastIndexOf("."));
                 string macro = value.Substring(value.LastIndexOf(".") + 1, value.Length - (module.Length + 1));
-                this.corelApp.GMSManager.RunMacro(module, macro, null);
+                object o = this.corelApp.GMSManager.RunMacro(module, macro, args);
+                core.DispactchNewMessage("{0}", MsgType.Console, o);
             }
             catch (Exception e)
             {
