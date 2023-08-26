@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -64,14 +65,33 @@ namespace br.com.Bonus630DevToolsBar.CQLRunner
             if (!string.IsNullOrEmpty(list))
             {
 
-                CQLSucessedList.AddRange(list.Split(separator,StringSplitOptions.RemoveEmptyEntries));
+                CQLSucessedList.AddRange(list.Split(separator, StringSplitOptions.RemoveEmptyEntries));
             }
+            txt_cql.Text = dsp.GetProperty("CQLTempText").ToString();
+            context = (int)dsp.GetProperty("CQLContext");
+            switch (context)
+            {
+                case 0:
+                    rb_app.IsChecked = true;
+                    break;
+                case 1:
+                    rb_page.IsChecked = true;
+                    break;
+                case 2:
+                    rb_range.IsChecked = true;
+                    break;
+                case 3:
+                    rb_shape.IsChecked = true;
+                    break;
+            }
+
         }
 
         private void Txt_cql_KeyUp1(object sender, System.Windows.Forms.KeyEventArgs e)
         {
             //if (e.KeyCode.Equals(System.Windows.Forms.Keys.Escape))
             //    popup_button.IsOpen = false;
+            dsp.SetProperty("CQLTempText", txt_cql.Text);
             if (e.KeyCode.Equals(System.Windows.Forms.Keys.Enter))
                 RunCQL();
         }
@@ -87,7 +107,7 @@ namespace br.com.Bonus630DevToolsBar.CQLRunner
         private int context = 0;
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-          
+
             System.Windows.Forms.Clipboard.SetText(GenString());
         }
         private string GenString()
@@ -135,11 +155,27 @@ namespace br.com.Bonus630DevToolsBar.CQLRunner
                         break;
                     case 2:
                         ShapeRange sr = this.corelApp.ActiveSelectionRange;
+                        this.corelApp.ActiveWindow.ActiveView.SetViewArea(sr.LeftX, sr.BottomY, sr.SizeWidth, sr.SizeHeight);
                         if (sr != null)
                         {
                             sr.Sort(cql);
                             lba_console.Content = "Sucess";
                             SaveCQL(cql);
+                            sr.RemoveFromSelection();
+                            Thread th = new Thread(new ThreadStart(
+                                () =>
+                                {
+                                    for (int i = 1; i <= sr.Count; i++)
+                                    {
+                                        sr[i].AddToSelection();
+                                        Thread.Sleep(200);
+                                        sr[i].RemoveFromSelection();
+                                    }
+                                }
+                                ));
+                            th.IsBackground = true;
+                            th.Start();
+
                         }
                         break;
                     case 3:
@@ -166,12 +202,14 @@ namespace br.com.Bonus630DevToolsBar.CQLRunner
         private void SaveCQL(string cql)
         {
             CQLSucessedList.Add(cql);
-            dsp.SetProperty("CQLSucessedList", GenString()) ;
+            dsp.SetProperty("CQLSucessedList", GenString());
+            dsp.SetProperty("CQLTempText", "");
         }
 
         private void RadioButton_Click(object sender, RoutedEventArgs e)
         {
             context = Int32.Parse((sender as RadioButton).Tag.ToString());
+            dsp.SetProperty("CQLContext", context);
         }
     }
 

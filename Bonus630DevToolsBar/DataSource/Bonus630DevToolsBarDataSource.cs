@@ -61,7 +61,25 @@ namespace br.com.Bonus630DevToolsBar.DataSource
         public string CQLSucessedList
         {
             get { return cqlSucessedList; }
-            set { cqlSucessedList = value; NotifyPropertyChanged(); }
+            set { cqlSucessedList = value;
+                NotifyPropertyChanged(); }
+        }
+        private string cqlTempText = "";
+
+        public string CQLTempText
+        {
+            get { return cqlTempText; }
+            set { cqlTempText = value; 
+                NotifyPropertyChanged(); }
+        }
+              private int cqlContext = 0;
+
+        public int CQLContext
+        {
+            get { return cqlContext; }
+            set {
+                cqlContext = value; 
+                NotifyPropertyChanged(); }
         }
 
 

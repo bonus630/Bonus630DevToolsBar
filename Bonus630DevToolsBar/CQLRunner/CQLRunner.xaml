@@ -51,10 +51,38 @@
 
             <GroupBox Grid.Row="2" Grid.Column="1" Header="Context">
                 <StackPanel Orientation="Horizontal">
-                    <RadioButton Content="Application" IsChecked="True" Tag="0" Click="RadioButton_Click"/>
-                    <RadioButton Content="Page Find"  Tag="1"  Click="RadioButton_Click"/>
-                    <RadioButton Content="ShapeRange Order" Tag="2"  Click="RadioButton_Click"/>
-                    <RadioButton Content="Shape Evaluate"  Tag="3"  Click="RadioButton_Click"/>
+                    <RadioButton Content="Application" IsChecked="True" Tag="0" Click="RadioButton_Click" Name="rb_app">
+                        <RadioButton.ToolTip>
+                            <StackPanel>
+                                <Label Content="Evaluate CQL in Application object" FontWeight="Bold" />
+                                <Label Content="Exemple: 2 + 2" />
+                            </StackPanel>
+                        </RadioButton.ToolTip>
+                    </RadioButton>
+                    <RadioButton Content="Page Find"  Tag="1"  Click="RadioButton_Click" Name="rb_page">
+                        <RadioButton.ToolTip>
+                            <StackPanel>
+                                <Label Content="Find Shapes in Active Page" FontWeight="Bold"/>
+                                <Label Content="Exemple: @com.Shapes.ForEach(0,$item.type = 'symbol')" />
+                            </StackPanel>
+                        </RadioButton.ToolTip>
+                    </RadioButton>
+                    <RadioButton Content="ShapeRange Order" Tag="2"  Click="RadioButton_Click"  Name="rb_range">
+                        <RadioButton.ToolTip>
+                            <StackPanel>
+                                <Label Content="Sort ShapeRange" FontWeight="Bold"/>
+                                <Label Content="Exemple: @shape1.com.positionx &lt; @shape2.com.positionx" />
+                            </StackPanel>
+                        </RadioButton.ToolTip>
+                    </RadioButton>
+                    <RadioButton Content="Shape Evaluate"  Tag="3"  Click="RadioButton_Click"  Name="rb_shape">
+                        <RadioButton.ToolTip>
+                            <StackPanel>
+                                <Label Content="Evaluate CQL in Active Shape object" FontWeight="Bold"/>
+                                <Label Content="Exemple: @fill.Color" />
+                            </StackPanel>
+                        </RadioButton.ToolTip>
+                    </RadioButton>
                 </StackPanel>
             </GroupBox>
             <Button Grid.Row="2" Grid.Column="3" Background="{x:Null}"  BorderThickness="0"  Width="20" Height="20" ToolTip="Copy list" Click="Button_Click" Margin="0,8,0,0">
