@@ -67,6 +67,21 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             if (name.Contains(".resources"))
                 name = name.Replace(".resources", "");
             asm = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(r => string.Equals(r.FullName.Split(',')[0], name.Split(',')[0]));
+            //string resourceName = new AssemblyName(args.Name).Name + ".resource";
+            //string resourcePath = "CaminhoDoRecurso." + resourceName; // Substitua pelo caminho real do recurso
+
+            //using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourcePath))
+            //{
+            //    if (stream != null)
+            //    {
+            //        byte[] assemblyData = new byte[stream.Length];
+            //        stream.Read(assemblyData, 0, assemblyData.Length);
+            //        return Assembly.Load(assemblyData);
+            //    }
+            //}
+
+
+
             if (asm == null)
                 asm = Assembly.LoadFrom(Name);
             return asm;

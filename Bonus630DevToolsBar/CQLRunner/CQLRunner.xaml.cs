@@ -47,7 +47,7 @@ namespace br.com.Bonus630DevToolsBar.CQLRunner
                 txt_cql.AutoCompleteCustomSource = CQLSucessedList;
                 txt_cql.KeyUp += Txt_cql_KeyUp1;
                 this.Loaded += CQLRunner_Loaded;
-                txt_cql.Focus();
+               
 
             }
             catch
@@ -84,7 +84,7 @@ namespace br.com.Bonus630DevToolsBar.CQLRunner
                     rb_shape.IsChecked = true;
                     break;
             }
-
+            txt_cql.Focus();
         }
 
         private void Txt_cql_KeyUp1(object sender, System.Windows.Forms.KeyEventArgs e)
@@ -125,8 +125,8 @@ namespace br.com.Bonus630DevToolsBar.CQLRunner
         {
             string cql = txt_cql.Text;
             object result = null;
-            lba_console.Content = "";
-            lba_console.Foreground = Brushes.Green;
+            SetConsoleMessage("");
+          
             if (string.IsNullOrEmpty(cql))
                 return;
             try
@@ -135,8 +135,8 @@ namespace br.com.Bonus630DevToolsBar.CQLRunner
                 {
 
                     case 0:
-                        result = this.corelApp.Evaluate(cql).ToString();
-                        lba_console.Content = result.ToString();
+                        result = this.corelApp.Evaluate(cql);
+                        SetConsoleMessage(result);
                         if (result != null)
                             SaveCQL(cql);
                         break;
@@ -148,18 +148,23 @@ namespace br.com.Bonus630DevToolsBar.CQLRunner
                             if (sr1 != null)
                             {
                                 sr1.Sort(cql);
-                                lba_console.Content = "Sucess";
+                                if (sr1.Count == 0)
+                                    SetConsoleMessage("nothing selected!");
+                                else
+                                    SetConsoleMessage(string.Format("{0} selected!",sr1.Count));
                                 SaveCQL(cql);
                             }
                         }
                         break;
                     case 2:
                         ShapeRange sr = this.corelApp.ActiveSelectionRange;
-                        this.corelApp.ActiveWindow.ActiveView.SetViewArea(sr.LeftX, sr.BottomY, sr.SizeWidth, sr.SizeHeight);
+                        if (sr.Count == 0)
+                            return;
+                      //  this.corelApp.ActiveWindow.ActiveView.SetViewArea(sr.LeftX, sr.BottomY, sr.SizeWidth , sr.SizeHeight  );
                         if (sr != null)
                         {
                             sr.Sort(cql);
-                            lba_console.Content = "Sucess";
+                            SetConsoleMessage("Sucess");
                             SaveCQL(cql);
                             sr.RemoveFromSelection();
                             Thread th = new Thread(new ThreadStart(
@@ -181,8 +186,8 @@ namespace br.com.Bonus630DevToolsBar.CQLRunner
                     case 3:
                         if (this.corelApp.ActiveShape != null)
                         {
-                            result = this.corelApp.ActiveShape.Evaluate(cql).ToString();
-                            lba_console.Content = result.ToString();
+                            result = this.corelApp.ActiveShape.Evaluate(cql);
+                           SetConsoleMessage(result);
                             if (result != null)
                                 SaveCQL(cql);
                         }
@@ -193,12 +198,23 @@ namespace br.com.Bonus630DevToolsBar.CQLRunner
             }
             catch (COMException ex)
             {
-                lba_console.Foreground = Brushes.Red;
-                lba_console.Content = ex.Message;
+               
+                SetConsoleMessage(ex.Message,false);
             }
         }
 
-
+        private void SetConsoleMessage(string msg,bool sucess = true)
+        {
+            if(sucess)
+                lba_console.Foreground = Brushes.Green;
+            else
+                lba_console.Foreground = Brushes.Red;
+            lba_console.Content = msg;
+        }
+        private void SetConsoleMessage(object obj,bool sucess = true)
+        {
+            SetConsoleMessage(obj.ToString(), sucess);
+        }
         private void SaveCQL(string cql)
         {
             CQLSucessedList.Add(cql);
