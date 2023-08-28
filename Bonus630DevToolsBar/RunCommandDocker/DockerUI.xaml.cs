@@ -25,10 +25,10 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         public DockerUI(object app)
         {
             InitializeComponent();
-           
+
             try
             {
-                
+
                 proxyManager = new ProxyManager(app, System.IO.Path.Combine((app as corel.Application).AddonPath, "Bonus630DevToolsBar"));
                 this.corelApp = app as corel.Application;
                 stylesController = new Styles.StylesController(this.Resources, this.corelApp);
@@ -38,7 +38,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                 global::System.Windows.MessageBox.Show("VGCore Erro");
             }
             this.Loaded += DockerUI_Loaded;
-            
+
             shapeRangeManager = new ShapeRangeManager(this.corelApp);
 
             AppDomain.CurrentDomain.AssemblyLoad += LoadDomain_AssemblyLoad;
@@ -62,29 +62,45 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
 
         private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
         {
+            if (args.RequestingAssembly != null)
+                return args.RequestingAssembly;
             Assembly asm = null;
             string name = args.Name;
             if (name.Contains(".resources"))
                 name = name.Replace(".resources", "");
             asm = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(r => string.Equals(r.FullName.Split(',')[0], name.Split(',')[0]));
-            //string resourceName = new AssemblyName(args.Name).Name + ".resource";
-            //string resourcePath = "CaminhoDoRecurso." + resourceName; // Substitua pelo caminho real do recurso
-
-            //using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourcePath))
-            //{
-            //    if (stream != null)
-            //    {
-            //        byte[] assemblyData = new byte[stream.Length];
-            //        stream.Read(assemblyData, 0, assemblyData.Length);
-            //        return Assembly.Load(assemblyData);
-            //    }
-            //}
-
-
-
+            if (args.Name.Contains(".resources"))
+                asm = LoadResourceAssembly(asm);
             if (asm == null)
                 asm = Assembly.LoadFrom(Name);
             return asm;
+        }
+        private Assembly LoadResourceAssembly(Assembly executingAsm)
+        {
+            if (executingAsm == null)
+                return executingAsm;
+            string[] resourcesName = executingAsm.GetManifestResourceNames();
+            string resourceName = string.Empty;
+            for (int i = 0; i < resourcesName.Length; i++)
+            {
+                if (!resourcesName[i].Contains(".g."))
+                {
+                    resourceName = resourcesName[i];
+                    break;
+                }
+            }
+            if (string.IsNullOrEmpty(resourceName))
+                return executingAsm;
+            using (var stream = executingAsm.GetManifestResourceStream(resourceName))
+            {
+                if (stream != null)
+                {
+                    byte[] assemblyData = new byte[stream.Length];
+                    stream.Read(assemblyData, 0, assemblyData.Length);
+                    return Assembly.Load(assemblyData);
+                }
+            }
+            return executingAsm;
         }
         private void LoadDomain_AssemblyLoad(object sender, AssemblyLoadEventArgs args)
         {
@@ -93,7 +109,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-           
+
             stylesController.LoadThemeFromPreference();
             pc.DataReceived += Pc_DataReceived;
             pc.VgCore = corelApp.ProgramPath + "Assemblies\\Corel.Interop.VGCore.dll";
@@ -162,12 +178,12 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             popup_newProject.IsOpen = !popup_newProject.IsOpen;
         }
         ProjectCreator pc = new ProjectCreator();
-       
+
         private void btn_buildProject_Click(object sender, RoutedEventArgs e)
         {
             popup_log.IsOpen = true;
             pc.Build();
-            
+
         }
 
         private void btn_createProject_Click(object sender, RoutedEventArgs e)
@@ -183,9 +199,9 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                 if (string.IsNullOrEmpty(this.projectsManager.AssemblyDirectory))
                     this.projectsManager.SelectFolder();
                 pc.AssembliesFolder = this.projectsManager.AssemblyDirectory;
-               
+
                 pc.ExtractTemplate();
-                
+
 
                 pc.ReplaceFiles();
                 pc.Build();
@@ -212,7 +228,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                     txt_projectFolder.Text = fbd.SelectedPath;
                     File.Delete(testDir);
                 }
-                catch(IOException ioe)
+                catch (IOException ioe)
                 {
                     corelApp.MsgShow("Directory access limited, please choose another!");
                 }
