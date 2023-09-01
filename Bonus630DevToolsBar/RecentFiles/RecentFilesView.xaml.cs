@@ -85,7 +85,7 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
             if (file == null && dataContext.Count < this.limit)
             {
                 int index = dataContext.Count;
-                file = rfm.InsertData(index, name, fullName, false, 1, 0);
+                file = rfm.InsertData(index, name, fullName, false, 1, DateTime.Now.Ticks);
 
                 dataContext.Add(file);
             }
@@ -112,7 +112,7 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
             RecentFileViewModel file = dataContext[path];
             if (file != null)
             {
-                rfm.UpdateFile(file.ID, file.Index,file.Name,file.FullName, file.OpenTimes, (DateTime.Now - file.OpenDate).Ticks, file.AutoLoad);
+                rfm.UpdateFile(file.ID, file.Index,file.Name,file.FullName, file.OpenTimes, DateTime.Now.Ticks , file.AutoLoad);
                 file.IsOpened = false;
             }
         }
@@ -198,7 +198,9 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
-            rfm.DeleteFile((int)(sender as MenuItem).Tag);
+            int ID = (int)(sender as MenuItem).Tag;
+            rfm.DeleteFile(ID);
+            dataContext.Remove(ID);
         }
 
         private void MenuItem_Click_1(object sender, RoutedEventArgs e)

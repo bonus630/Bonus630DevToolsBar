@@ -59,9 +59,16 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
         }
         public void Remove(RecentFileViewModel file)
         {
-            this.files.RemoveAt(file.ID);
+            this.files.Remove(file);
             OnPropertyChanged("Files");
             OnPropertyChanged("ItemsWidth");
+        }
+        public void Remove(int id)
+        {
+            RecentFileViewModel file = this.files.SingleOrDefault(r => r.ID == id);
+            if (file == null)
+                return;
+            this.Remove(file);
         }
     }
 }

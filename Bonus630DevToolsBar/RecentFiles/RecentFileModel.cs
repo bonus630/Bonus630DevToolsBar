@@ -123,7 +123,7 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
             catch { }
             return null;
         }
-
+        //SELECT * FROM sua_tabela ORDER BY datetime(seu_campo_de_tempo_texto) DESC
         public ObservableCollection<RecentFileViewModel> Fill(int id = -1)
         {
             //   0  |    1    |    2    |      3     |       4        |        5        |    6
@@ -131,7 +131,7 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
             ObservableCollection<RecentFileViewModel> datas = new ObservableCollection<RecentFileViewModel>();
             try
             {
-                string condition = " ORDER BY time ASC";
+                string condition = " ORDER BY time DESC";
                 if (id != -1)
                     condition = " LIMIT " + id;
                 using (SQLiteCommand command = CreateConnection().CreateCommand())
