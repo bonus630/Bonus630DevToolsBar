@@ -181,8 +181,15 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
 
         private void btn_buildProject_Click(object sender, RoutedEventArgs e)
         {
-            popup_log.IsOpen = true;
-            pc.Build();
+            if(string.IsNullOrEmpty(pc.LastProject))
+            {
+                btn_setProject_Click(null, null);
+            }
+            if (!string.IsNullOrEmpty(pc.LastProject))
+            {
+                popup_log.IsOpen = true;
+                pc.Build();
+            }
 
         }
 
@@ -204,6 +211,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
 
 
                 pc.ReplaceFiles();
+                popup_log.IsOpen = true;
                 pc.Build();
 
             }
