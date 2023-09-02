@@ -70,7 +70,7 @@
                     <RadioButton Content="ShapeRange Order" Tag="2"  Click="RadioButton_Click"  Name="rb_range">
                         <RadioButton.ToolTip>
                             <StackPanel>
-                                <Label Content="Sort ShapeRange" FontWeight="Bold"/>
+                                <Label Content="Sort ShapeRange from Active Selection" FontWeight="Bold"/>
                                 <Label Content="Exemple: @shape1.com.positionx &lt; @shape2.com.positionx" />
                             </StackPanel>
                         </RadioButton.ToolTip>

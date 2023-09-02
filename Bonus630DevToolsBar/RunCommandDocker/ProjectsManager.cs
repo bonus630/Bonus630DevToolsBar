@@ -29,6 +29,9 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         public BindingCommand<Module> EditModuleCommand { get; set; }
         public BindingCommand<Command> EditCommandCommand { get; set; }
         public BindingCommand<Command> SetCommandToValueCommand { get; set; }
+        public BindingCommand<Project> UnloadProjectCommand { get; set; }
+
+
         public BindingCommand<Reflected> CopyValueCommand { get; set; }
         public BindingCommand<object> CopyReturnsValueCommand { get; set; }
         public SimpleCommand SetShapeRangeToValueCommand { get; set; }
@@ -118,12 +121,27 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             TogglePinCommand = new BindingCommand<Command>(PinCommand, CanPin);
             EditModuleCommand = new BindingCommand<Module>(EditModule, CanEditModule);
             EditCommandCommand = new BindingCommand<Command>(EditMethod, VisualStudioFounded);
+            UnloadProjectCommand = new BindingCommand<Project>(UnloadProject);
             CopyValueCommand = new BindingCommand<Reflected>(CopyValue);
             CopyReturnsValueCommand = new BindingCommand<object>(CopyReturnsValue);
             SetCommandToValueCommand = new BindingCommand<Command>(SetCommandReturnArgumentValue, CanRunSetCommandReturnArgVal);
             SetShapeRangeToValueCommand = new SimpleCommand(SetShapeRangeArgumentValue);
             startFolderMonitor(assemblyDirectory);
         }
+
+        private void UnloadProject(Project project)
+        {
+            try
+            {
+                projects.Remove(project);
+                File.Move(project.Path,Path.ChangeExtension(project.Path, ".bak"));
+            }
+            catch
+            {
+
+            }
+        }
+
         public void LoadPinnedCommands()
         {
             try
@@ -392,6 +410,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         public void SelectFolder()
         {
             System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
+            fbd.Description = "Select a destination folder for your Command Assemblies (DLL)!";
             if (fbd.ShowDialog().Equals(System.Windows.Forms.DialogResult.OK))
             {
                 if (fbd.SelectedPath.Equals(AssemblyDirectory))

@@ -175,8 +175,14 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
 
         private void btn_newProject_Click(object sender, RoutedEventArgs e)
         {
+            if (string.IsNullOrEmpty(projectsManager.AssemblyDirectory))
+            {
+                projectsManager.SelectFolder();
+                return;
+            }
             popup_newProject.IsOpen = !popup_newProject.IsOpen;
         }
+
         ProjectCreator pc = new ProjectCreator();
 
         private void btn_buildProject_Click(object sender, RoutedEventArgs e)
@@ -226,7 +232,9 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         }
         private void btn_selectProjectFolder_Click(object sender, RoutedEventArgs e)
         {
+            popup_newProject.IsOpen = !popup_newProject.IsOpen;
             System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
+            fbd.Description = "Select a  folder for your Project!";
             if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 try
@@ -241,6 +249,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                     corelApp.MsgShow("Directory access limited, please choose another!");
                 }
             }
+            popup_newProject.IsOpen = !popup_newProject.IsOpen;
         }
 
         private void btn_cancelProject_Click(object sender, RoutedEventArgs e)
