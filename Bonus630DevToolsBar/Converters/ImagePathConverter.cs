@@ -14,8 +14,10 @@ namespace br.com.Bonus630DevToolsBar.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            string path = ControlUI.corelApp.AddonPath;
-            path = string.Format("{0}Bonus630DevToolsBar\\Images\\{1}", path, value);
+            string path = "D:\\C# Ed26-08-22\\Bonus630DevToolsBar\\";
+            if(ControlUI.corelApp!=null)
+                 path = ControlUI.corelApp.AddonPath;
+           path = string.Format("{0}Bonus630DevToolsBar\\Images\\{1}", path, value);
             return path;
         }
 

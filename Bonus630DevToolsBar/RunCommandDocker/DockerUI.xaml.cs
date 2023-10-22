@@ -122,6 +122,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             {
                 txt_log.AppendText(obj);
                 txt_log.AppendText(Environment.NewLine);
+                txt_log.ScrollToEnd();
             });
         }
 

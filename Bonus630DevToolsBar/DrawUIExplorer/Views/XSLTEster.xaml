@@ -16,11 +16,11 @@
                 <ResourceDictionary Source="../Resources/Colors.xaml"/>
                 <ResourceDictionary Source="../Resources/Styles.xaml"/>
                 <ResourceDictionary Source="../../Images/Images.xaml"/>
-              
+
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <DockPanel Background="White" x:Name="mainContentHolder" LastChildFill="True">
+    <DockPanel Background="Transparent" x:Name="mainContentHolder" LastChildFill="True">
 
         <ToolBar Background="#FF024D02" Foreground="White" DockPanel.Dock="Top">
             <StackPanel Orientation="Horizontal" >
@@ -36,7 +36,8 @@
                 </Grid>
                 <Label Content="XML Text Viewer" Foreground="White"/>
                 <Button  Content="Get XML" Command="{Binding GenXmlCommand}" 
-                             VerticalAlignment="Center" Margin="4,0,4,0"/>
+                             VerticalAlignment="Center" Margin="4,0,4,0"
+                         ToolTip="Get XML from selected node and childrens"/>
             </StackPanel>
             <Separator/>
             <StackPanel Orientation="Horizontal">
@@ -66,55 +67,66 @@
         <Grid DockPanel.Dock="Bottom">
             <Grid.RowDefinitions>
                 <RowDefinition/>
+                <RowDefinition Height="Auto" />
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <Grid Grid.Row="0"  DockPanel.Dock="Top">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="{Binding XmlColumnWidth}"/>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="{Binding XsltColumnWidth}"/>
                 </Grid.ColumnDefinitions>
-                <DockPanel  Visibility="{Binding XmlContainerVisible,Converter={StaticResource BoolVisibilityConverter}}" 
-                            LastChildFill="True" Grid.Column="0">
+                <Border Grid.Column="0" BorderThickness="1" BorderBrush="Gray" >
+                    <DockPanel  Visibility="{Binding XmlContainerVisible,Converter={StaticResource BoolVisibilityConverter}}" 
+                            LastChildFill="True">
 
-                    <Label Content="XML Text Viewer" DockPanel.Dock="Top"/>
-                    <ScrollViewer DockPanel.Dock="Bottom" HorizontalScrollBarVisibility="Auto" 
-                                  VerticalScrollBarVisibility="Auto" Margin="0,0,0,0" Template="{DynamicResource ScrollViewerControlTemplate}">
-                        <TextBox FontSize="{Binding FontSize}"  x:Name="txt_xml" Text="{Binding XmlText}" 
-                                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch" AcceptsReturn="True" AcceptsTab="True" />
+                        <Label Content="XML Text Viewer" DockPanel.Dock="Top" Background="#A5D18C" />
+                        <Label DockPanel.Dock="Bottom" Content="{Binding ElementName=txt_xml,Path=CaretIndex}" />
+                        <ScrollViewer DockPanel.Dock="Bottom" HorizontalScrollBarVisibility="Auto" 
+                                  VerticalScrollBarVisibility="Visible" Margin="0,0,0,0" Template="{DynamicResource ScrollViewerControlTemplate}">
+                            <TextBox FontSize="{Binding FontSize}"  x:Name="txt_xml" Text="{Binding XmlText}" 
+                                 HorizontalAlignment="Stretch" BorderThickness="0" Background="Transparent" VerticalAlignment="Stretch" AcceptsReturn="True" AcceptsTab="True" Margin="10,0,0,0"/>
 
-                    </ScrollViewer>
+                        </ScrollViewer>
 
-                </DockPanel>
-                <!--<GridSplitter VerticalAlignment="Stretch" Width="2" Grid.Column="1" Background="Black" />-->
-                <DockPanel Visibility="{Binding XsltContainerVisible,Converter={StaticResource BoolVisibilityConverter}}" 
-                           LastChildFill="True" Grid.Column="1">
+                    </DockPanel>
+                </Border>
+                <GridSplitter VerticalAlignment="Stretch" HorizontalAlignment="Center" Width="4" Grid.Column="1" ShowsPreview="True" Background="#E3FDD4"  />
 
-                    <Label Content="XSL Text Viewer" DockPanel.Dock="Top"/>
-                    <ScrollViewer DockPanel.Dock="Bottom" HorizontalScrollBarVisibility="Auto"
+                <Border Grid.Column="2" BorderThickness="1" BorderBrush="Gray" >
+                    <DockPanel Visibility="{Binding XsltContainerVisible,Converter={StaticResource BoolVisibilityConverter}}" 
+                           LastChildFill="True" >
+
+                        <Label Content="XSL Text Viewer" DockPanel.Dock="Top" Background="#A5D18C" />
+                        <ScrollViewer DockPanel.Dock="Bottom" HorizontalScrollBarVisibility="Auto"
                                   VerticalScrollBarVisibility="Auto" Margin="0,0,0,0" Template="{DynamicResource ScrollViewerControlTemplate}" 
                                   Visibility="{Binding XsltContainerVisible,Converter={StaticResource BoolVisibilityConverter}}" >
 
-                        <TextBox FontSize="{Binding FontSize}"  x:Name="txt_xsl" Text="{Binding XslText}"
+                            <TextBox FontSize="{Binding FontSize}"  x:Name="txt_xsl" Text="{Binding XslText}"
                                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" AcceptsReturn="True" AcceptsTab="True"  
-                      ScrollViewer.CanContentScroll="True"             />
+                      ScrollViewer.CanContentScroll="True" Background="Transparent" BorderThickness="0" Margin="10,0,0,0"           />
 
-                    </ScrollViewer>
+                        </ScrollViewer>
 
-                </DockPanel>
-
+                    </DockPanel>
+                </Border>
                 <!--<GridSplitter HorizontalAlignment="Stretch" Height="2"  Grid.Row="1" Background="Black" />-->
                 <!--<Grid Grid.Row="1">-->
             </Grid>
-            <DockPanel Grid.Row="1" LastChildFill="True" >
+            <GridSplitter VerticalAlignment="Center" HorizontalAlignment="Stretch" Height="4" Grid.Row="1" ShowsPreview="True" Background="#E3FDD4"  />
 
-                <Label Content="Result Viewer"  DockPanel.Dock="Top"/>
-                <ScrollViewer DockPanel.Dock="Bottom" HorizontalScrollBarVisibility="Auto" 
+            <Border Grid.Row="2" BorderThickness="1" BorderBrush="Gray" >
+                <DockPanel LastChildFill="True" >
+
+                    <Label Content="Result Viewer"  DockPanel.Dock="Top" Background="#A5D18C"/>
+                    <ScrollViewer DockPanel.Dock="Bottom" HorizontalScrollBarVisibility="Auto" 
                               VerticalScrollBarVisibility="Auto" Margin="0,0,0,0" 
                               Template="{DynamicResource ScrollViewerControlTemplate}" >
-                    <TextBox FontSize="{Binding FontSize}"  x:Name="txt_result"  Text="{Binding ResultText}" 
-                             HorizontalAlignment="Stretch" VerticalAlignment="Stretch" AcceptsReturn="True" AcceptsTab="True" />
-                </ScrollViewer>
-            </DockPanel>
+                        <TextBox FontSize="{Binding FontSize}"  x:Name="txt_result"  Text="{Binding ResultText}" 
+                             HorizontalAlignment="Stretch" Background="Transparent" BorderThickness="0" Margin="10,0,0,0" VerticalAlignment="Stretch" AcceptsReturn="True" AcceptsTab="True" />
+                    </ScrollViewer>
+                </DockPanel>
+            </Border>
         </Grid>
         <!--</Grid>-->
     </DockPanel>

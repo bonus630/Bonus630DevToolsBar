@@ -274,6 +274,9 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
             if (core.CurrentBasicData != null)
                 core.CurrentBasicData.SetSelected(false, false, false, true);
             core.CurrentBasicData = data;
+            
+            if (core.HighLightItemHelper.LayoutMode)
+                core.HighLightItemHelper.UpdateLayoutMode(data);
             core.SetIcon(data);
             data.SetSelected(true, true, false, true);
             if (parent != null && (parent == "treeView_Nodes" || parent == "treeView_Search"))

@@ -136,5 +136,9 @@
     <Style x:Key="CqlImg" TargetType="Image">
         <Setter Property="Source" Value="{Binding Source={StaticResource cql},Converter={StaticResource ResourceToMediaImageConverter}}"/>
     </Style>
+    <System:String x:Key="ShowLayout">ShowLayout.png</System:String>
+    <Style x:Key="ShowLayoutImg" TargetType="Image">
+        <Setter Property="Source" Value="{Binding Source={StaticResource ShowLayout},Converter={StaticResource ResourceToMediaImageConverter}}"/>
+    </Style>
 
 </ResourceDictionary>

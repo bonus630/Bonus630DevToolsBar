@@ -20,6 +20,9 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
         Rectangle rectWindow;
         Pen redPen;
         SolidBrush transparentBlackBrush;
+        //Pen bluePen;
+       // SolidBrush transparentBlueBrush;
+        public bool NormalMode { get; set; } = true;
 
         public OverlayForm(System.Windows.Rect rect)
         {
@@ -27,6 +30,15 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
             this.Size = Screen.PrimaryScreen.Bounds.Size;
             this.Location = new Point(0, 0);
             this.rectWindow = new Rectangle(this.Location, this.Size);
+ 
+        }
+        public OverlayForm(System.Windows.Rect corelRect, System.Windows.Rect itemRect,bool normalMode = false)
+        {
+            NormalMode = normalMode;
+            start(itemRect);
+            this.rectWindow = new Rectangle((int)corelRect.X, (int)corelRect.Y, (int)corelRect.Width, (int)corelRect.Height);
+           // transparentBlueBrush = new SolidBrush(Color.FromArgb(255, 226, 246, 239));
+           // bluePen = new Pen(new SolidBrush(Color.FromArgb(255, 168, 221, 246)), 1);
         }
 
         public OverlayForm(System.Windows.Rect rect, System.Windows.Rect rect2)
@@ -76,39 +88,62 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            e.Graphics.FillRectangle(transparentBlackBrush, this.rectWindow);
-            e.Graphics.FillRectangle(Brushes.White, this.rectOverlay);
+            if (NormalMode)
+            {
+                e.Graphics.FillRectangle(transparentBlackBrush, this.rectWindow);
+                e.Graphics.FillRectangle(Brushes.White, this.rectOverlay);
+                SetCursorPos(this.rectOverlay.X + (this.rectOverlay.Width / 2), this.rectOverlay.Y + (this.rectOverlay.Height / 2));
+            }
+            
             e.Graphics.DrawRectangle(redPen, rectOverlay);
-            SetCursorPos(this.rectOverlay.X + (this.rectOverlay.Width / 2), this.rectOverlay.Y + (this.rectOverlay.Height / 2));
+            //else
+            //{
+            //    e.Graphics.FillRectangle(transparentBlueBrush, this.rectOverlay);
+            //    e.Graphics.DrawLine(bluePen, this.rectWindow.Left, this.rectOverlay.Top, this.rectWindow.Right, this.rectOverlay.Top);
+            //    e.Graphics.DrawLine(bluePen, this.rectWindow.Left, this.rectOverlay.Bottom, this.rectWindow.Right, this.rectOverlay.Bottom);
+            //    e.Graphics.DrawLine(bluePen, this.rectOverlay.Left, this.rectWindow.Top,this.rectOverlay.Left, this.rectWindow.Bottom);
+            //    e.Graphics.DrawLine(bluePen, this.rectOverlay.Right, this.rectWindow.Top, this.rectOverlay.Right, this.rectWindow.Bottom);
+            //}
+           
+       
             base.OnPaint(e);
         }
         protected override void OnMouseMove(MouseEventArgs e)
         {
-            if (!this.rectOverlay.Contains(e.Location))
+            if (!this.rectOverlay.Contains(e.Location) && NormalMode)
                 this.Close();
             base.OnMouseMove(e);
         }
         protected override void OnLostFocus(EventArgs e)
         {
             base.OnLostFocus(e);
-            this.Close();
+            if(NormalMode)
+                this.Close();
         }
         [DllImport("User32.dll")]
         private static extern bool SetCursorPos(int X, int Y);
         private void OverlayForm_KeyUp(object sender, KeyEventArgs e)
         {
-            this.Close();
+            if (NormalMode)
+                this.Close();
         }
 
         private void OverlayForm_MouseClick(object sender, MouseEventArgs e)
         {
-            this.Close();
+            if (NormalMode)
+                this.Close();
         }
 
         private void OverlayForm_Leave(object sender, EventArgs e)
         {
-            this.Close();
+            if (NormalMode)
+                this.Close();
         }
 
+        internal void UpdateLayoutMode(System.Windows.Rect rect)
+        {
+            this.rectOverlay = new Rectangle((int)rect.X, (int)rect.Y, (int)rect.Width, (int)rect.Height);
+            Invalidate();
+        }
     }
 }

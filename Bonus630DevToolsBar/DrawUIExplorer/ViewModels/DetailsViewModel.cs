@@ -131,6 +131,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
             //TreeLevel = basicData.TreeLevel;
            // Attributes = basicData.Attributes;
             TryGetAnyCaption();
+            //Quando comentar algo que não está certo, colocar o pq!!!!
             //Index = basicData.XmlChildreID;
             //IndexRef = basicData.XmlChildreParentID;
             //Text = basicData.Text;

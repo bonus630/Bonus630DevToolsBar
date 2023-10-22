@@ -222,7 +222,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
                 string eventName = EventName;
                 for (int i = 0; i < Parameters.Length; i++)
                 {
-                    EventName += " Param" + i + "|Type:" + Parameters[i].GetType() + "Value:" + Parameters[i].ToString();
+                    eventName += "\n\t Param[" + i + "] => " + Parameters[i].GetType() + " = " + Parameters[i].ToString()+";";
                 }
                 DispactchNewMessage(eventName, MsgType.Event);
             }
@@ -422,7 +422,8 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
             sb = null;
             fs.Close();
             fs.Dispose();
-
+            if(workspaceUnzip!=null)
+                workspaceUnzip.Dispose();
             try
             {
                 xmlDecoder.Process(file.FullName);

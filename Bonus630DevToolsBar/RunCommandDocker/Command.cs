@@ -16,6 +16,16 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         private string name;
         public virtual string Name { get { return name; } set { name = value; OnPropertyChanged("Name"); } }
 
+        private int index;
+
+        public int Index
+        {
+            get { return index; }
+            set { index = value; OnPropertyChanged("Index"); }
+        }
+
+
+
         //Lets uses this flag for now
         public bool MarkToDelete = false;
         protected bool isSelected;
@@ -73,12 +83,23 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                 OnPropertyChanged("Items");
             }
         }
-
+        //Precisamos mudar este métodos de ordenação, utilizando CollectionViewSource
+        //https://learn.microsoft.com/en-us/dotnet/desktop/wpf/data/how-to-sort-and-group-data-using-a-view-in-xaml?view=netframeworkdesktop-4.8
         public virtual void Order()
         {
-            Items.OrderBy(r => r.Name);
+            this.Items = new ObservableCollection<T>(Items.OrderBy(r => r.Name));
+            OnPropertyChanged("Items");
         }
-
+        public virtual void OrderDesc()
+        {
+            this.Items = new ObservableCollection<T>(Items.OrderByDescending(r => r.Name));
+            OnPropertyChanged("Items");
+        }
+        public virtual void OrderOriginal()
+        {
+            this.Items = new ObservableCollection<T>(Items.OrderBy(r => r.Index));
+            OnPropertyChanged("Items");
+        }
         public int Count
         {
             get

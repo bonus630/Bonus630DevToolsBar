@@ -28,6 +28,9 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         public BindingCommand<Command> TogglePinCommand { get; set; }
         public BindingCommand<Module> EditModuleCommand { get; set; }
         public BindingCommand<Command> EditCommandCommand { get; set; }
+        public BindingCommand<Module> OrderModuleCommand { get; set; }
+        public BindingCommand<Module> OrderOriginalModuleCommand { get; set; }
+        public BindingCommand<Module> OrderDescModuleCommand { get; set; }
         public BindingCommand<Command> SetCommandToValueCommand { get; set; }
         public BindingCommand<Project> UnloadProjectCommand { get; set; }
 
@@ -120,6 +123,9 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             StopCommand = new BindingCommand<Command>(StopCommandAsync);
             TogglePinCommand = new BindingCommand<Command>(PinCommand, CanPin);
             EditModuleCommand = new BindingCommand<Module>(EditModule, CanEditModule);
+            OrderModuleCommand = new BindingCommand<Module>(OrderByName);
+           OrderDescModuleCommand = new BindingCommand<Module>(OrderByNameDesc);
+            OrderOriginalModuleCommand = new BindingCommand<Module>(OrderOriginal);
             EditCommandCommand = new BindingCommand<Command>(EditMethod, VisualStudioFounded);
             UnloadProjectCommand = new BindingCommand<Project>(UnloadProject);
             CopyValueCommand = new BindingCommand<Reflected>(CopyValue);
@@ -344,7 +350,22 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
 
         private void EditModule(Module module)
         {
+            //teste apagar
+           // module.Order();
             Process.Start(module.ModulePath);
+        }
+  
+        private void OrderByName(Module module)
+        {
+            module.Order();
+        }
+        private void OrderByNameDesc(Module module)
+        {
+            module.OrderDesc();
+        }
+        private void OrderOriginal(Module module)
+        {
+            module.OrderOriginal();
         }
         private bool CanEditModule(Module module)
         {
@@ -491,7 +512,8 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                         {
                             Method = commandNames[k],
                             Name = commandNames[k],
-                            Parent = m
+                            Parent = m,
+                            Index = k
                         };
                         m.Add(command);
                         var arguments = proxy.GetArguments(command);
@@ -508,6 +530,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
 
                 }
                 project.AddAndCheckRange(tempList);
+           
             }
             catch (Exception e)
             {

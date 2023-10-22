@@ -55,6 +55,7 @@
                             </StackPanel>
                         </Button.ToolTip>
                     </Button>-->
+                
                     <custom:IconButton Icon="light.png" Visibility="{Binding InCorel,Converter={StaticResource BoolVisibilityConverter}}" x:Name="btn_tryHighLightThis"  HorizontalAlignment="Left" Margin="7,0,2,0" Width="20" 
                                        Command="{Binding HighLightCommand}" Height="20" HorizontalContentAlignment="Left" VerticalContentAlignment="Top" Padding="1,0" BorderBrush="{x:Null}" Background="{x:Null}" VerticalAlignment="Top" >
                         <custom:IconButton.ToolTip>

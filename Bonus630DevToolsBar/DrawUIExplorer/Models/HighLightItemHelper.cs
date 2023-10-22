@@ -17,6 +17,8 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
         private Application corelApp;
         private OverlayForm overlayForm;
         private PrintScreenForm printScreenForm;
+        public bool LayoutMode { get; set; } = false;
+        
         public HighLightItemHelper(CorelAutomation automation,Application corelApp)
         {
             this.automation = automation;
@@ -181,6 +183,75 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
         {
             PrepareForm(itemGuid, itemParentGuid, false, restoration, restorationData, v, firstTime);
         }
+        public void InitializeLayoutMode(string itemParentGuid)
+        {
+            LayoutMode = !LayoutMode;
+            parentGuid = itemParentGuid;
+            if(LayoutMode)
+            {
+                if (overlayForm != null)
+                {
+                    overlayForm.NormalMode = true;
+                    overlayForm.Close();
+                    corelApp.OnApplicationEvent -= CorelApp_OnApplicationEvent;
+                }
+                System.Windows.Rect itemRect = automation.GetItemRect(itemParentGuid, itemParentGuid);
+                System.Windows.Rect corelRect = automation.GetCorelRect();
+
+
+                if (!corelRect.IsZero() &&!itemRect.IsZero())
+                {
+                    overlayForm = new OverlayForm(corelRect,itemRect,false);
+                    corelApp.OnApplicationEvent += CorelApp_OnApplicationEvent;
+                    overlayForm.Show();
+                }
+            }
+            else
+            {
+                if (overlayForm != null)
+                {
+                    overlayForm.NormalMode = true;
+                    overlayForm.Close();
+                    corelApp.OnApplicationEvent -= CorelApp_OnApplicationEvent;
+                }
+            }
+        }
+
+        private void CorelApp_OnApplicationEvent(string EventName, ref object[] Parameters)
+        {
+            if (overlayForm == null)
+                return;
+          
+            if (EventName == "AppActivationChange" )
+            {
+                if ((bool)Parameters[0])
+                    overlayForm.Show();
+                else
+                    overlayForm.Hide();
+            } 
+            if(EventName == "MainWindowMoved")
+            {
+
+            }
+
+        }
+
+        private string parentGuid;
+        public void UpdateLayoutMode(IBasicData data)
+        {
+            if(overlayForm==null)
+                return;
+            string itemGuid = string.Empty;
+
+            if (!string.IsNullOrEmpty(data.Guid))
+                itemGuid = data.Guid;
+            else
+                itemGuid = data.GuidRef;
+            if (string.IsNullOrEmpty(itemGuid))
+                return;
+            System.Windows.Rect rect = automation.GetItemRect(parentGuid, itemGuid);
+            overlayForm.UpdateLayoutMode(rect);
+        }
         public void PrintScreenItem(string itemGuid, string itemParentGuid, Action<IBasicData, bool> restoration = null, IBasicData restorationData = null, bool v = false, bool firstTime = true)
         {
             PrepareForm(itemGuid, itemParentGuid, false, restoration, restorationData, v, firstTime);
@@ -275,7 +346,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
             }
             else
             {
-                //overlayForm.Show();
+                overlayForm.NormalMode = true;
                 overlayForm.Show();
                 overlayForm.FormClosed += (s, e) =>
                 {

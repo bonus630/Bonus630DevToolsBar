@@ -21,8 +21,8 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.DataClass
                 if (this.Childrens.Count > 0)
                 {
                     string s = "VK";
-                    if (this.Childrens[0].Text.Contains("_")) ;
-                    s += "_";
+                    if (this.Childrens[0].Text.Contains("_")) 
+                        s += "_";
                     Enum.TryParse<Key>(this.Childrens[0].Text.Replace(s, "").UCFirst(), out key);
                 } 
                 return key; } }

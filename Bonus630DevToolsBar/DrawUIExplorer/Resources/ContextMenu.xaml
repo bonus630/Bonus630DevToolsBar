@@ -88,6 +88,15 @@
 			   Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}">
 
         </MenuItem>
+       
+        <MenuItem Header="Layout Mode" Background="WhiteSmoke"
+		  CommandParameter="{Binding}" Command="{Binding Path=DataContext.LayoutCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TreeView}}"
+			   Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TreeView}, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}">
+
+            <MenuItem.Icon>
+                <Image Style="{DynamicResource ShowLayoutImg}"/>
+            </MenuItem.Icon>
+        </MenuItem>
         <MenuItem Header="Try Highlight This" Background="WhiteSmoke"
 		  CommandParameter="{Binding}" Command="{Binding Path=DataContext.HighLightCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TreeView}}"
 			   Visibility="{Binding Path=DataContext.InCorel, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TreeView}, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}">

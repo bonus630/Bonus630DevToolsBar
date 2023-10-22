@@ -7,19 +7,22 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Reflection;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
 {
     class XMLTagWindowViewModel : ViewModelDataBase
     {
         private bool incorel = false;
+        private Dispatcher dispatcher;
         public CorelAutomation CorelCmd { get; set; }
         public event Action<IBasicData> XmlDecode;
 
         public XMLTagWindowViewModel(Core core) : base(core)
         {
+            dispatcher = Dispatcher.CurrentDispatcher;
             autoCompleteInputCommand();
-            this.mainList = new BlockingCollection<IBasicData>();
+            this.mainList = new ObservableCollection<IBasicData>();
             this.refList = new ObservableCollection<IBasicData>();
             this.searchList = new ObservableCollection<IBasicData>();
             core.LoadListsFinish += Core_LoadListsFinish;
@@ -34,8 +37,13 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
         }
         private void Core_LoadListsFinish()
         {
-            mainList.Add(core.ListPrimaryItens);
-            OnPropertyChanged("MainList");
+            //tenho que fazer o merge aqui?
+            //Preciso verificar as tags que já estão carregadas e entao adicionar somente as nao carregadas nas posiçoes corretas
+            //mainList.Add(core.ListPrimaryItens);
+            dispatcher.Invoke(new Action(()=>{
+                mainList.Add(core.ListPrimaryItens);
+                OnPropertyChanged("MainList");
+            }));
         }
         public bool InCorel
         {
@@ -77,6 +85,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
         public SimpleCommand ExpandConsoleCommand { get { return new SimpleCommand(expandConsole); } }
         public SimpleCommand ActiveGuidCommand { get { return new SimpleCommand(activeGuid); } }
         public SimpleCommand HighLightCommand { get; protected set; }
+        public BaseDataCommand LayoutCommand { get; protected set; }
 
         public AttributeCommand FindRef { get; protected set; }
         public BaseDataCommand CopyGuidCommand { get; protected set; }
@@ -117,6 +126,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
             GetDockersGuidCommand = new BaseDataCommand(GetDockersGuidExec, IsDockers);
             RemoveMeCommand = new BaseDataCommand(RemoveMeExec, IsSearchData);
             HighLightCommand = new SimpleCommand(showHighLightItem);
+            LayoutCommand = new BaseDataCommand(layoutAdorms,IsComplexLayout);
         }
         private bool IsDockers(IBasicData basicData)
         {
@@ -306,8 +316,8 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
         }
 
 
-        private BlockingCollection<IBasicData> mainList;
-        public BlockingCollection<IBasicData> MainList
+        private ObservableCollection<IBasicData> mainList;
+        public ObservableCollection<IBasicData> MainList
         {
             get { return mainList; }
             protected set
@@ -356,6 +366,15 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
         private void showHighLightItem()
         {
             core.HighLightItemHelper.ShowHighLightItem(core.Route);
+        }   
+        private void layoutAdorms(IBasicData basicData)
+        {
+            core.HighLightItemHelper.InitializeLayoutMode(core.CurrentBasicData.Guid);
+        }
+        private bool IsComplexLayout(IBasicData basicData)
+        {
+            return basicData is DockerData || basicData is CommandBarData;
+     
         }
         private void activeGuid()
         {

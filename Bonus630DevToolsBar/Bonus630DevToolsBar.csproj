@@ -17,7 +17,7 @@
     <AssemblyName>Bonus630DevToolsBar</AssemblyName>
     <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    </PropertyGroup>
+  </PropertyGroup>
   <Import Project="$(CdrTargetPath)" Condition="Exists('$(CdrTargetPath)')" />
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -227,6 +227,7 @@
     <Compile Include="CustomControls\Image.xaml.cs">
       <DependentUpon>Image.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DrawUIExplorer\Models\BlockingObservableCollection.cs" />
     <Compile Include="Folders\Folder.cs" />
     <Compile Include="Folders\Folders.xaml.cs">
       <DependentUpon>Folders.xaml</DependentUpon>
@@ -503,7 +504,9 @@
     <Content Include="AppUI.xslt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-   
+    <Content Include="Images\ShowLayout.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="SQLite.Interop.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

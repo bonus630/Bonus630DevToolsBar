@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Reflection;
 
+
 namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
 {
     public class CorelAutomation
@@ -57,6 +58,12 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
             core.DispactchNewMessage(string.Format("X:{0},Y:{1},W:{2},H:{3}", left, top, width, height), MsgType.Console);
             return new System.Windows.Rect() { X = left, Y = top, Width = width, Height = height };
 
+        }
+        internal System.Windows.Rect GetCorelRect()
+        {
+            ScreenRect sr = corelApp.FrameWork.MainFrameWindow.Position;
+            core.DispactchNewMessage(string.Format("X:{0},Y:{1},W:{2},H:{3}", sr.Left, sr.Top, sr.Width, sr.Height), MsgType.Console);
+            return new System.Windows.Rect() { X = sr.Left,Y = sr.Top, Width = sr.Width, Height = sr.Height };
         }
         public string GetCaption(string guid)
         {
@@ -446,5 +453,6 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
             }
         }
 
+       
     }
 }

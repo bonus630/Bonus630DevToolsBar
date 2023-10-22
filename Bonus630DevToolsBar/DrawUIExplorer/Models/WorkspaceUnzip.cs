@@ -14,14 +14,16 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
         private StreamReader xmlStreamReader;
         public StreamReader XmlStreamReader { get { return this.xmlStreamReader; } }
         private ZipArchive zipArchive;
+        private Stream mainStream;
         public WorkspaceUnzip(Stream fileStream)
         {
             processZip(fileStream);
         }
         public WorkspaceUnzip(FileInfo file)
         {
-            Stream sr = new FileStream(file.FullName, FileMode.Open);
-            processZip(sr);
+            mainStream = new FileStream(file.FullName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            processZip(mainStream);
+           
            
         }
         private void processZip(Stream fileStream)
@@ -68,6 +70,8 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
             xmlStreamReader.Close();
             xmlStreamReader.Dispose();
             zipArchive.Dispose();
+            mainStream.Close();
+            mainStream.Dispose();
         }
     }
 }

@@ -129,7 +129,10 @@
                                 <StackPanel>
                                     <Image  Width="256" Height="256" Source="{Binding Thumb}" Visibility="{Binding IsOpened,Converter={StaticResource InvertBoolVisibilityConverter}}"/>
                                     <Label Content="File is Opened!" Visibility="{Binding IsOpened,Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                                    <Label Content="{Binding Name,FallbackValue=Nome do arquivo.cdr}" />
+                                    <StackPanel Orientation="Horizontal">
+                                        <Ellipse Fill="Green" Width="6" Height="6" VerticalAlignment="Center" Visibility="{Binding AutoLoad,Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                       <Label Content="{Binding Name,FallbackValue=Nome do arquivo.cdr}" /> 
+                                    </StackPanel>
                                 </StackPanel>
                             </Border>
                         </Button.ToolTip>
@@ -138,6 +141,7 @@
                                 <MenuItem Header="Remove" Click="MenuItem_Click" Tag="{Binding ID}" />
                                 <MenuItem Header="Add to Auto Load" Click="MenuItem_Click_1" Tag="{Binding ID}" />
                                 <MenuItem Header="Remove Auto Load" Click="MenuItem_Click_2" Tag="{Binding ID}" Visibility="{Binding AutoLoad,Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                <MenuItem Header="Copy Path" Click="MenuItem_Click_3" Tag="{Binding ID}" />
                             </ContextMenu>
                         </Button.ContextMenu>
                     </Button>

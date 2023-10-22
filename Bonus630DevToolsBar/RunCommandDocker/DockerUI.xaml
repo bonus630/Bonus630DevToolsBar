@@ -371,7 +371,9 @@
 
         </Grid>
         <TreeView DockPanel.Dock="Top" ItemsSource="{Binding Projects}" Name="treeViewCommands"
-                  VirtualizingStackPanel.IsVirtualizing="True" VirtualizingStackPanel.VirtualizationMode="Recycling" TreeViewItem.Selected="TreeView_Selected">
+                  VirtualizingStackPanel.IsVirtualizing="True" VirtualizingStackPanel.VirtualizationMode="Recycling"
+                  TreeViewItem.Selected="TreeView_Selected" 
+            IsTextSearchCaseSensitive="False" IsTextSearchEnabled="True" TextSearch.TextPath="Name">
             <!-- //Ref.:01 
             // Compare to another Ref.:01
              TreeViewItem.Selected="TreeView_Selected">-->
@@ -405,7 +407,22 @@
                                         <Image Style="{StaticResource EditImage}"/>
                                     </MenuItem.Icon>
                                 </MenuItem>
+                                <MenuItem Header="Order by Name" CommandParameter="{Binding}"
+                                          Command="{Binding Path=PlacementTarget.DataContext.Parent.Parent.OrderModuleCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}"
+                                          Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
 
+                                </MenuItem>
+                                <MenuItem Header="Order by Name Descending" CommandParameter="{Binding}"
+                                          Command="{Binding Path=PlacementTarget.DataContext.Parent.Parent.OrderDescModuleCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}"
+                                          Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+
+                                </MenuItem>
+                                <MenuItem Header="Order by Methods" CommandParameter="{Binding}"
+                                          Command="{Binding Path=PlacementTarget.DataContext.Parent.Parent.OrderOriginalModuleCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}"
+                                          Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+
+                                </MenuItem>
+                            
                             </ContextMenu>
                         </Grid.ContextMenu>
                         <Label Content="{Binding Path=Name}" Focusable="False"/>
@@ -443,7 +460,7 @@
 
                                 </ContextMenu>
                             </Grid.ContextMenu>
-                            <custom:IconButton Icon="Play.png" Grid.Column="0"  Width="16" Height="16"  
+                            <custom:IconButton Icon="Play.png" Grid.Column="0"  Width="16" Height="16" IsTabStop="False"  
                                 Visibility="{Binding Path=HasParam,  Converter={StaticResource ReverseBoolVisibilityConverter}}"
                         CommandParameter="{Binding}" Command="{Binding Path=DataContext.ExecuteCommand,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=TreeView}}"
                                     KeyboardNavigation.DirectionalNavigation="None" KeyboardNavigation.TabNavigation="Continue">
@@ -457,7 +474,7 @@
                             </custom:IconButton>
                             <!--Visibility="{Binding Path=HasParam,  Converter={StaticResource ReverseBoolVisibilityConverter}}"-->
 
-                            <custom:IconButton Icon="Checkmark.png" Grid.Column="1"  Width="16" Height="16" 
+                            <custom:IconButton Icon="Checkmark.png" Grid.Column="1"  Width="16" Height="16" IsTabStop="False"
                                 Visibility="{Binding ReturnsType,ConverterParameter={x:Type System:Void},Converter={StaticResource TypeToVisibilityConverter}}"
                                 CommandParameter="{Binding}" 
                                 Command="{Binding Path=DataContext.SetCommandToValueCommand,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=TreeView}}"

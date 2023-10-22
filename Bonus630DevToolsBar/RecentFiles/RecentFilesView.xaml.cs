@@ -19,7 +19,7 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
     {
         private corel.Application corelApp;
         private StylesController stylesController;
-        RecentFileModel rfm;
+        RecentFileModel recentFileModel;
         RecentFilesViewModel dataContext;
          int limit = 10;
 
@@ -31,7 +31,7 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
 
                 this.corelApp = app as corel.Application;
                 stylesController = new StylesController(this.Resources, this.corelApp);
-                rfm = new RecentFileModel(this.corelApp.VersionMajor);
+                recentFileModel = new RecentFileModel(this.corelApp.VersionMajor);
                 dataContext = new RecentFilesViewModel();
           
                 ck_autoLoad.IsChecked = Properties.Settings.Default.AutoLoad;
@@ -85,7 +85,7 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
             if (file == null && dataContext.Count < this.limit)
             {
                 int index = dataContext.Count;
-                file = rfm.InsertData(index, name, fullName, false, 1, DateTime.Now.Ticks);
+                file = recentFileModel.InsertData(index, name, fullName, false, 1, DateTime.Now.Ticks);
 
                 dataContext.Add(file);
             }
@@ -102,7 +102,7 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
                     file.OpenedTime = 0;
                 }
 
-                rfm.UpdateFile(file.ID, file.Index,file.Name,file.FullName, file.OpenTimes++, file.OpenedTime, file.AutoLoad);
+                recentFileModel.UpdateFile(file.ID, file.Index,file.Name,file.FullName, file.OpenTimes++, file.OpenedTime, file.AutoLoad);
             }
             file.OpenDate = DateTime.Now;
             file.IsOpened = true;
@@ -112,13 +112,13 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
             RecentFileViewModel file = dataContext[path];
             if (file != null)
             {
-                rfm.UpdateFile(file.ID, file.Index,file.Name,file.FullName, file.OpenTimes, DateTime.Now.Ticks , file.AutoLoad);
+                recentFileModel.UpdateFile(file.ID, file.Index,file.Name,file.FullName, file.OpenTimes, DateTime.Now.Ticks , file.AutoLoad);
                 file.IsOpened = false;
             }
         }
         private void Load()
         {
-            dataContext.Files = rfm.Fill(limit);
+            dataContext.Files = recentFileModel.Fill(limit);
 
             CheckFileExits();
             if ((bool)ck_autoLoad.IsChecked)
@@ -144,7 +144,7 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
             {
                 try
                 {
-                    dataContext[id].Thumb = rfm.GetThumb(dataContext[id].FullName);
+                    dataContext[id].Thumb = recentFileModel.GetThumb(dataContext[id].FullName);
                 }
                 catch { }
 
@@ -180,7 +180,7 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
             {
                 if (!File.Exists(dataContext[current].FullName))
                 {
-                    rfm.DeleteFile(dataContext[current].ID);
+                    recentFileModel.DeleteFile(dataContext[current].ID);
                     dataContext.Remove(dataContext[current]);
                 }
                 else
@@ -199,7 +199,7 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
             int ID = (int)(sender as MenuItem).Tag;
-            rfm.DeleteFile(ID);
+            recentFileModel.DeleteFile(ID);
             dataContext.Remove(ID);
         }
 
@@ -218,7 +218,7 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
             if (r != null)
             {
                 r.AutoLoad = autoLoad;
-                rfm.UpdateFile(r.ID, r.Index,r.Name,r.FullName, r.OpenTimes, r.OpenedTime, autoLoad);
+                recentFileModel.UpdateFile(r.ID, r.Index,r.Name,r.FullName, r.OpenTimes, r.OpenedTime, autoLoad);
             }
         }
 
@@ -230,8 +230,11 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
 
         }
 
-
-      
+        private void MenuItem_Click_3(object sender, RoutedEventArgs e)
+        {
+            RecentFileViewModel r = dataContext[(sender as MenuItem).Tag.ToString()];
+            System.Windows.Clipboard.SetText(r.FullName);
+        }
     }
 
 }

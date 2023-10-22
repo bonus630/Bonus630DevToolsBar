@@ -54,6 +54,9 @@
     </Style>
     <Style x:Key="TreeViewItemCustomStyle" TargetType="TreeViewItem">
         <Setter Property="KeyboardNavigation.TabNavigation" Value="Continue"/>
+        <!--<Setter Property="IsTextSearchCaseSensitive" Value="False" />
+        <Setter Property="IsTextSearchEnabled" Value="True" />
+        <Setter Property="TextSearch.Text" Value="Name" />-->
         <Setter Property="FocusVisualStyle" Value="{StaticResource TreeViewItemFocusVisual}"/>
         <Setter Property="HorizontalAlignment" Value="Stretch"/>
         <Setter Property="Background" Value="{DynamicResource Default.Static.Background}"/>
