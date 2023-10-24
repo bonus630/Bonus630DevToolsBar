@@ -83,10 +83,12 @@
 			   Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}">
 
         </MenuItem>
-        <MenuItem Header="Open on this line" Background="WhiteSmoke"
+        <MenuItem Header="Open on this tag" Background="WhiteSmoke"
 		  CommandParameter="{Binding}" Command="{Binding Path=DataContext.OpenLineCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TreeView}}"
 			   Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}">
-
+            <MenuItem.Icon>
+                <Image Style="{DynamicResource EditTagImg}"/>
+            </MenuItem.Icon>
         </MenuItem>
         <MenuItem Header="Try Get Caption Text" Background="WhiteSmoke"
 		  CommandParameter="{Binding}" Command="{Binding Path=DataContext.GetCaptionCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TreeView}}"

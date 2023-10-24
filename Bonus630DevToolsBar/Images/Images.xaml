@@ -140,5 +140,25 @@
     <Style x:Key="ShowLayoutImg" TargetType="Image">
         <Setter Property="Source" Value="{Binding Source={StaticResource ShowLayout},Converter={StaticResource ResourceToMediaImageConverter}}"/>
     </Style>
+    <System:String x:Key="SortAscending">SortAscending.png</System:String>
+    <Style x:Key="SortAscendingImg" TargetType="Image">
+        <Setter Property="Source" Value="{Binding Source={StaticResource SortAscending},Converter={StaticResource ResourceToMediaImageConverter}}"/>
+    </Style>
+    <System:String x:Key="SortDescending">SortDescending.png</System:String>
+    <Style x:Key="SortDescendingImg" TargetType="Image">
+        <Setter Property="Source" Value="{Binding Source={StaticResource SortDescending},Converter={StaticResource ResourceToMediaImageConverter}}"/>
+    </Style>
+    <System:String x:Key="ClearSort">ClearSort.png</System:String>
+    <Style x:Key="ClearSortImg" TargetType="Image">
+        <Setter Property="Source" Value="{Binding Source={StaticResource ClearSort},Converter={StaticResource ResourceToMediaImageConverter}}"/>
+    </Style>
+    <System:String x:Key="EditTag">EditTag.png</System:String>
+    <Style x:Key="EditTagImg" TargetType="Image">
+        <Setter Property="Source" Value="{Binding Source={StaticResource EditTag},Converter={StaticResource ResourceToMediaImageConverter}}"/>
+    </Style>
+    <System:String x:Key="AddImage">AddImage.png</System:String>
+    <Style x:Key="AddImageImg" TargetType="Image">
+        <Setter Property="Source" Value="{Binding Source={StaticResource AddImage},Converter={StaticResource ResourceToMediaImageConverter}}"/>
+    </Style>
 
 </ResourceDictionary>

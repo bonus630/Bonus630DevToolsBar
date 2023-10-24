@@ -54,7 +54,7 @@
                     </ContextMenu>
                 </Image.ContextMenu>
             </Image>
-            <Label Content="{Binding CaptionLocalization}" Name="lba_captionLoc" HorizontalAlignment="Right" Height="29" VerticalAlignment="Top" />
+            <Label Content="{Binding CaptionLocalization}" Name="lba_captionLoc" HorizontalAlignment="Right" Height="29" VerticalAlignment="Top" ToolTip="Method used to crawler Caption" />
             <Label Margin="36,0,0,0" Content="{Binding Caption}" Name="lba_caption" FontWeight="Bold" HorizontalAlignment="Left" Width="454" Height="29" VerticalAlignment="Top" >
                 <Label.ToolTip>
                     <Label Content="Caption" />
@@ -82,9 +82,9 @@
 
         <StackPanel Orientation="Horizontal">
             <Label Content="Index:" Margin="0" Height="26" VerticalAlignment="Top" HorizontalAlignment="Left" Width="41" />
-            <Label Content="{Binding CurrentBasicData.Index}" x:Name="lba_index" Margin="2,0,0,0" Height="26" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+            <Label Content="{Binding CurrentBasicData.XmlChildrenID}" x:Name="lba_index" Margin="2,0,0,0" Height="26" VerticalAlignment="Top" HorizontalAlignment="Left"/>
             <Label Content="Parent Index:" Margin="2,0,0,0" Height="26" VerticalAlignment="Top" HorizontalAlignment="Left" Width="79" />
-            <Label Content="{Binding CurrentBasicData.IndexRef}" x:Name="lba_indexRef" Margin="2,0,0,0" Height="26"/>
+            <Label Content="{Binding CurrentBasicData.XmlChildrenParentID}" x:Name="lba_indexRef" Margin="2,0,0,0" Height="26"/>
             <Label Content="Tree level:" Margin="2,0,0,0" HorizontalAlignment="Left" Width="61" Height="26" VerticalAlignment="Top" />
 
             <Label Content="{Binding CurrentBasicData.TreeLevel}" x:Name="lba_treeLevel" Margin="2,0,0,0" Height="26" VerticalAlignment="Top" HorizontalAlignment="Left"/>
@@ -116,7 +116,7 @@
                     </Label.ToolTip>
                 </Label>
             </ScrollViewer>
-            <Label Content="Path:" Height="26" VerticalAlignment="Top" HorizontalAlignment="Left" Width="36" />
+            <Label Content="xPath:" Height="26" VerticalAlignment="Top" HorizontalAlignment="Left" Width="40" />
         </Grid>
 
 

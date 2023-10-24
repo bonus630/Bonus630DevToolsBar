@@ -11,14 +11,23 @@
         
         <ResourceDictionary>
             <ContextMenu x:Key="FolderMenuContext">
-                <MenuItem Header="Select a icone" CommandParameter="{Binding}" Command="{Binding Parent.PastIconeCommand}"/>
-                <MenuItem Header="Remove" CommandParameter="{Binding}" Command="{Binding Parent.RemoveCommand}" />
+                <MenuItem Header="Select a icone" CommandParameter="{Binding}" Command="{Binding Parent.PastIconeCommand}">
+                    <MenuItem.Icon>
+                        <Image Style="{DynamicResource AddImageImg}"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Remove" CommandParameter="{Binding}" Command="{Binding Parent.RemoveCommand}" >
+                    <MenuItem.Icon>
+                        <Image Style="{DynamicResource ClearConsoleButtonImg}"/>
+                    </MenuItem.Icon>
+                </MenuItem>
             </ContextMenu>
             <converters:NullVisibilityConverter x:Key="NullVisibilityConverter" />
 		
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/RunCommandDocker/Styles/Colors.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/RunCommandDocker/Styles/Styles.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/Images/Images.xaml"/>
             </ResourceDictionary.MergedDictionaries>
            
         </ResourceDictionary>

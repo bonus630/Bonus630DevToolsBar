@@ -139,12 +139,12 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
             string route = "";
             for (int i = 0; i < temp.Count; i++)
             {
-                if (temp[i].XmlChildreID > 0 && !temp[i].IAmUniqueTag())
+                if (temp[i].XmlChildrenID > 0 && !temp[i].IAmUniqueTag())
                 {
                     if (!string.IsNullOrEmpty(temp[i].Guid))
                         route += string.Format("/{0}[@guid='{1}']", temp[i].TagName, temp[i].Guid);
                     else
-                        route += string.Format("/{0}[{1}]", temp[i].TagName, temp[i].XmlChildreID);
+                        route += string.Format("/{0}[{1}]", temp[i].TagName, temp[i].XmlChildrenID);
                 }
                 else
                     route += string.Format("/{0}", temp[i].TagName);

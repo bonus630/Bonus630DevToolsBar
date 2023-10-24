@@ -19,8 +19,8 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.DataClass
         public string TagValue { get { if (Childrens == null || Childrens.Count == 0) return TagName; else return string.Format("{0} [{1}]", TagName, Childrens.Count); } }
         public string Caption { get; set; }
         private Type type;
-        private int xmlChildreID;
-        private int xmlChildreParentID;
+        private int xmlChildrenID;
+        private int xmlChildrenParentID;
         private int treeLevel = 0;
         private bool isSelected = false;
         private bool isSpecialType = false;
@@ -39,8 +39,8 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.DataClass
             get { return icon; }
             set { icon = value; OnPropertyChanged(); }
         }
-        public int XmlChildreID { get { return this.xmlChildreID; } }
-        public int XmlChildreParentID { get { return this.xmlChildreParentID; } }
+        public int XmlChildrenID { get { return this.xmlChildrenID; } }
+        public int XmlChildrenParentID { get { return this.xmlChildrenParentID; } }
         public int TreeLevel { get { return this.treeLevel; } }
 
         private List<Attribute> attributes;
@@ -200,11 +200,11 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.DataClass
         }
         public void SetXmlChildreID(int id)
         {
-            this.xmlChildreID = id;
+            this.xmlChildrenID = id;
         }
         public void SetXmlChildreParentID(int id = -1)
         {
-            this.xmlChildreParentID = id;
+            this.xmlChildrenParentID = id;
         }
         public void Add(IBasicData basicData)
         {
@@ -222,7 +222,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.DataClass
                 return false;
            
             //This comparison can't still work in merge case
-            if (this.TagName == basicData.TagName && this.Guid == basicData.Guid && this.XmlChildreID == basicData.XmlChildreID )
+            if (this.TagName == basicData.TagName && this.Guid == basicData.Guid && this.XmlChildrenID == basicData.XmlChildrenID )
                 return true;
             return false;
         }
@@ -237,9 +237,14 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.DataClass
 
         public void SetSelected(bool isSelected, bool? isExpands, bool update, bool recursive = false)
         {
+           
             this.isSelected = isSelected;
+
+            
             if (SelectedEvent != null)
+            {
                 SelectedEvent(this.isSelected, isExpands, update);
+            }
             OnPropertyChanged("IsSelected");
             if (recursive && this.Parent != null)
                 this.Parent.SetSelected(isSelected, isExpands, update, recursive);
@@ -256,7 +261,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.DataClass
         }
         public override string ToString()
         {
-            return string.Format("{0}[{1}]", this.TagName, this.XmlChildreID);
+            return string.Format("{0}[{1}]", this.TagName, this.XmlChildrenID);
         }
 
         //public IEnumerator<T> GetEnumerator()

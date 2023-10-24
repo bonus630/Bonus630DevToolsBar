@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.DataClass
 {
@@ -19,9 +17,9 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.DataClass
         bool IsContainer { get; }
         void SetSelected(bool isSelected,bool? isExpands, bool update, bool recursive = false);
         string Caption { get; set; }
-        int XmlChildreID { get; }
+        int XmlChildrenID { get; }
         int PathIndex { get; }
-        int XmlChildreParentID { get; }
+        int XmlChildrenParentID { get; }
         int TreeLevel {  get; }
         List<Attribute> Attributes { get; set; }
         IBasicData Parent { get; set; }

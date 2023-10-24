@@ -22,7 +22,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
         SolidBrush transparentBlackBrush;
         //Pen bluePen;
        // SolidBrush transparentBlueBrush;
-        public bool NormalMode { get; set; } = true;
+        public bool NormalMode = true;
 
         public OverlayForm(System.Windows.Rect rect)
         {

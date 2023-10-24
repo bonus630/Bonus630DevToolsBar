@@ -17,10 +17,10 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
         private Application corelApp;
         private OverlayForm overlayForm;
         private PrintScreenForm printScreenForm;
-        public bool LayoutMode { get; set; } = false;
+        public bool LayoutMode { get; set; } 
       
 
-        private readonly Type[] SupportedLayoutTypes = { typeof(DockerData), typeof(DialogData) };
+        private readonly Type[] SupportedLayoutTypes = { typeof(DockerData), typeof(DialogData),typeof(CommandBarData) };
         
         public HighLightItemHelper(CorelAutomation automation,Application corelApp)
         {
@@ -197,7 +197,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
             if(LayoutMode)
             {
                 if(triggerMSG)
-                    automation.Core.DispactchNewMessage("Enter in Layout Mode", MsgType.Console);
+                    automation.Core.DispactchNewMessage("Layout Mode \"ON\"", MsgType.Console);
                 parentDataLayout = parentData;
                 System.Windows.Rect itemRect = automation.GetItemRect(itemParentGuid, itemParentGuid);
                 System.Windows.Rect corelRect = automation.GetCorelRect();
@@ -218,7 +218,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
         private void ExitLayoutMode(bool triggerMSG = true)
         {
             if(triggerMSG)
-                automation.Core.DispactchNewMessage("Exit Layout Mode", MsgType.Console);
+                automation.Core.DispactchNewMessage("Layout Mode \"OFF\"", MsgType.Console);
             LayoutMode = false;
             if (overlayForm != null)
             {
@@ -250,14 +250,22 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
         private IBasicData parentDataLayout;
         public void UpdateLayoutMode(IBasicData data)
         {
-            if(overlayForm==null || !LayoutMode)
+            if(overlayForm == null || !LayoutMode)
                 return;
 
             if(data.TreeLevel <= parentDataLayout.TreeLevel)
             {
-                ExitLayoutMode();
+                
                 if (IsLayoutTypeSupported(data))
-                    InitializeLayoutMode(data);
+                {
+                    ExitLayoutMode(false);
+                    InitializeLayoutMode(data,false);
+                }
+                else
+                {
+                    ExitLayoutMode();
+                    automation.Core.DispactchNewMessage("LayoutMode dont support the \"{0}\" type", MsgType.Erro, data.TagName);
+                }
             }
             else
             {
@@ -266,6 +274,8 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
                 parentFromData = data.GetParentByType<DockerData>(2);
                 if(parentFromData == null)
                     parentFromData = data.GetParentByType<DialogData>(2);
+                if (parentFromData == null)
+                    parentFromData = data.GetParentByType<CommandBarData>(2);
                 if (parentFromData != null)
                 {
                     if (!parentFromData.Equals(parentDataLayout))

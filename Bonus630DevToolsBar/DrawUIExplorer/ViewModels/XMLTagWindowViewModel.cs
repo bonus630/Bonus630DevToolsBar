@@ -252,7 +252,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
                     r += "," + types[i].Name;
             }
             r = string.Format("Types:{0}", r);
-            core.DispactchNewMessage(r, MsgType.Console);
+            core.DispactchNewMessage(r, MsgType.Result);
 
         }
         private void GetDockersCaptionExec(IBasicData basicData)
@@ -296,14 +296,14 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
                     guid += "\"" + temp.Guid + "\",";
                 }
             }
-            core.DispactchNewMessage("Dockers Guids copied!", MsgType.Console);
+            core.DispactchNewMessage("Dockers Guids copied!", MsgType.Result);
             Clipboard.SetText(guid);
         }
 
         private void CopyGuidExec(IBasicData basicData)
         {
             System.Windows.Clipboard.SetText(basicData.Guid);
-            core.DispactchNewMessage(string.Format("Copied    {0}", basicData.Guid), MsgType.Console);
+            core.DispactchNewMessage(string.Format("Copied    {0}", basicData.Guid), MsgType.Result);
         }
         private void RemoveMeExec(IBasicData basicData)
         {

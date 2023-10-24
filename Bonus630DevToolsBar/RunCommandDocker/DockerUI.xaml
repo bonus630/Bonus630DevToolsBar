@@ -407,20 +407,26 @@
                                         <Image Style="{StaticResource EditImage}"/>
                                     </MenuItem.Icon>
                                 </MenuItem>
-                                <MenuItem Header="Order by Name" CommandParameter="{Binding}"
+                                <MenuItem Header="Sort Ascending" CommandParameter="{Binding}"
                                           Command="{Binding Path=PlacementTarget.DataContext.Parent.Parent.OrderModuleCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}"
                                           Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
-
+                                    <MenuItem.Icon>
+                                        <Image Style="{StaticResource SortAscendingImg}"/>
+                                    </MenuItem.Icon>
                                 </MenuItem>
-                                <MenuItem Header="Order by Name Descending" CommandParameter="{Binding}"
+                                <MenuItem Header="Sort Descending" CommandParameter="{Binding}"
                                           Command="{Binding Path=PlacementTarget.DataContext.Parent.Parent.OrderDescModuleCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}"
                                           Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
-
+                                    <MenuItem.Icon>
+                                        <Image Style="{StaticResource SortDescendingImg}"/>
+                                    </MenuItem.Icon>
                                 </MenuItem>
-                                <MenuItem Header="Order by Methods" CommandParameter="{Binding}"
+                                <MenuItem Header="Clear Sort" CommandParameter="{Binding}"
                                           Command="{Binding Path=PlacementTarget.DataContext.Parent.Parent.OrderOriginalModuleCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}"
                                           Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
-
+                                    <MenuItem.Icon>
+                                        <Image Style="{StaticResource ClearSortImg}"/>
+                                    </MenuItem.Icon>
                                 </MenuItem>
                             
                             </ContextMenu>

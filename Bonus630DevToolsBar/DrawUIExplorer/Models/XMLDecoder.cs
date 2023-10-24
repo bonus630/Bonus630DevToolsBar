@@ -108,7 +108,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
                 {
                     tempBasicData.TagName = tagName;
                     tempBasicData.SetXmlChildreID(index);
-                    tempBasicData.SetXmlChildreParentID(parentBasicData.XmlChildreID);
+                    tempBasicData.SetXmlChildreParentID(parentBasicData.XmlChildrenID);
                     tempBasicData.Parent = parentBasicData;
                     index++;
                     try {
@@ -148,12 +148,12 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
         private void GetXPath(IBasicData basicData, bool intern)
         {
 
-            if (basicData.XmlChildreID > 0 && !basicData.IAmUniqueTag())
+            if (basicData.XmlChildrenID > 0 && !basicData.IAmUniqueTag())
             {
                 if (!string.IsNullOrEmpty(basicData.Guid))
                     xPath = string.Format("/{0}[@guid='{1}']{2}", basicData.TagName, basicData.Guid, xPath);
                 else
-                    xPath = string.Format("/{0}[{1}]{2}", basicData.TagName, basicData.XmlChildreID, xPath);
+                    xPath = string.Format("/{0}[{1}]{2}", basicData.TagName, basicData.XmlChildrenID, xPath);
             }
             else
                 xPath = string.Format("/{0}{1}", basicData.TagName, xPath);
