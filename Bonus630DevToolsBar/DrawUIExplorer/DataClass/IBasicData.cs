@@ -33,7 +33,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.DataClass
         bool ContainsAttributeValuePartial(string AttributeValue);
         string GetAttribute(string AttributeName);
         void SetXmlChildreID(int id);
-
+        IBasicData GetParentByType<T>(int treeLevel = -1);
         string GetAnyGuidAttribute();
 
         void SetPathIndex(int index);

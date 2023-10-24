@@ -8,6 +8,7 @@
         xmlns:controls="clr-namespace:br.com.Bonus630DevToolsBar.DrawUIExplorer.Controls"
         xmlns:custom="clr-namespace:br.com.Bonus630DevToolsBar.CustomControls"
         xmlns:dt="clr-namespace:br.com.Bonus630DevToolsBar.DrawUIExplorer.DataClass"
+         xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms" 
         Title="{Binding Title}" Height="560" Width="840" MinWidth="840" HorizontalAlignment="Center" VerticalAlignment="Center"  
         WindowStartupLocation="CenterScreen" WindowState="Maximized" MinHeight="560" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto"
         >
@@ -222,7 +223,7 @@
                     </Grid>
                 </TabItem>-->
                 <TabItem Header="Xml Viewer" Style="{DynamicResource TabItemStyle}">
-                    <Grid Background="#FFE5E5E5">
+                    <Grid Background="#FFE5E5E5" >
                         <ScrollViewer  VerticalScrollBarVisibility="Auto" Template="{DynamicResource ScrollViewerControlTemplate}">
                             <TextBox ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" x:Name="txt_xmlViewer"/>
                         </ScrollViewer>
@@ -231,7 +232,11 @@
                 <TabItem Header="Console" Style="{DynamicResource TabItemStyle}">
                     <Grid Background="#FFF2F5EA">
                         <ScrollViewer  VerticalScrollBarVisibility="Auto"  Template="{DynamicResource ScrollViewerControlTemplate}">
-                            <TextBox ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" x:Name="txt_consoleFull" />
+                            <!--<WindowsFormsHost Visibility="{Binding ConsoleExpanded,Converter={StaticResource BoolVisibilityConverter}}">
+                                <wf:RichTextBox  x:Name="txt_consoleFull" ForeColor="Black"/>
+                            </WindowsFormsHost>-->
+                            <RichTextBox ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto"  x:Name="txt_consoleFull" />
+
                         </ScrollViewer>
                     </Grid>
                 </TabItem>

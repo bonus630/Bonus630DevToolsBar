@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Xml;
+using System.Xml.XPath;
 using br.com.Bonus630DevToolsBar.DrawUIExplorer.DataClass;
 
 namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
@@ -30,6 +33,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
                 FilePath = new List<string>();
             FilePath.Add(filePath);
             xmlDocument = new XmlDocument();
+          
             try
             {
                 xmlDocument.LoadXml(this.xmlString);
@@ -221,6 +225,27 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
             catch
             {
                 return false;
+            }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="basicData"></param>
+        /// <returns>Return -1 if fails!</returns>
+        internal int GetLineNumber(IBasicData basicData)
+        {
+            try
+            {
+                string path = this.GetXPath(basicData);
+                XPathDocument xpDco = new XPathDocument(FilePath[0]);
+                XPathNavigator navigator = xpDco.CreateNavigator();
+                var element = navigator.SelectSingleNode(path);
+                return (IXmlLineInfo)element != null ? ((IXmlLineInfo)element).LineNumber : -1;
+            }
+            catch(Exception ex) 
+            { 
+                
+                return -1;
             }
         }
     }

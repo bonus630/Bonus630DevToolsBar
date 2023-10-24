@@ -35,5 +35,11 @@
     <Setting Name="imagesPath" Type="System.Collections.Specialized.StringCollection" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="Editor" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\Program Files (x86)\Notepad++\notepad++.exe</Value>
+    </Setting>
+    <Setting Name="EditorArguments" Type="System.String" Scope="User">
+      <Value Profile="(Default)">{0} -n{1}</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

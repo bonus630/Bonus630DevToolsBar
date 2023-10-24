@@ -3,6 +3,7 @@ using br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels.Commands;
 using br.com.Bonus630DevToolsBar.DrawUIExplorer.Views;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -47,6 +48,18 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
             set { lastFilePath = value; OnPropertyChanged(); }
         }
 
+        private string editorArguments;
+        public string EditorArguments
+        {
+            get { return editorArguments; }
+            set { editorArguments = value; OnPropertyChanged(); }
+        }
+        private string editor;
+        public string Editor
+        {
+            get { return editor; }
+            set { editor = value; OnPropertyChanged(); }
+        }
         private SimpleCommand saveCommmand;
         private SimpleCommand closeCommand;
         
@@ -66,6 +79,8 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
             saveLoad.XslTesterFontSize = xslTesterFontSize;
             saveLoad.AutoOpenLastFile = autoOpenLastFile;
             saveLoad.LastFilePath = lastFilePath;
+            saveLoad.Editor = editor;
+            saveLoad.EditorArguments = editorArguments;
             saveLoad.Save();
             close();
         }
@@ -75,6 +90,8 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
             XslTesterFontSize = saveLoad.XslTesterFontSize;
             AutoOpenLastFile = saveLoad.AutoOpenLastFile;
             LastFilePath = saveLoad.LastFilePath;
+            Editor = saveLoad.Editor;
+            EditorArguments = saveLoad.EditorArguments;
         }
         private void close()
         {

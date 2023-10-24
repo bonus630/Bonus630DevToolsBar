@@ -30,6 +30,18 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
             get { lastFilePath = Properties.Settings.Default.LastFilePath; return lastFilePath; }
             set { lastFilePath = value; }
         }
+        private string editorArguments;
+        public string EditorArguments
+        {
+            get { return editorArguments; }
+            set { editorArguments = value;  }
+        }
+        private string editor;
+        public string Editor
+        {
+            get { return editor; }
+            set { editor = value; }
+        }
         public SaveLoadConfig()
         {
             load();
@@ -40,6 +52,8 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
             Properties.Settings.Default.XslTesterFontSize = xslTesterFontSize;
             Properties.Settings.Default.LastFilePath = lastFilePath;
             Properties.Settings.Default.AutoOpenLastFile = autoOpenLastFile;
+            Properties.Settings.Default.Editor = editor;
+            Properties.Settings.Default.EditorArguments = editorArguments;
             Properties.Settings.Default.Save();
         }
         private void load()
@@ -48,6 +62,8 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
             XslTesterFontSize = Properties.Settings.Default.XslTesterFontSize;
             AutoOpenLastFile = Properties.Settings.Default.AutoOpenLastFile;
             LastFilePath = Properties.Settings.Default.LastFilePath;
+            Editor = Properties.Settings.Default.Editor;
+            EditorArguments = Properties.Settings.Default.EditorArguments;
         }
     }
 }

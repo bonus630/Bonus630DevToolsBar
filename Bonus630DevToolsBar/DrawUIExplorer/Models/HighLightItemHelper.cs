@@ -18,6 +18,9 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
         private OverlayForm overlayForm;
         private PrintScreenForm printScreenForm;
         public bool LayoutMode { get; set; } = false;
+      
+
+        private readonly Type[] SupportedLayoutTypes = { typeof(DockerData), typeof(DialogData) };
         
         public HighLightItemHelper(CorelAutomation automation,Application corelApp)
         {
@@ -38,7 +41,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
             th.Start();
             return th;
         }
-
+        
         private void LoadHighLightForm(IBasicData itemData, IBasicData parentItemData, IBasicData specialData, win.DependencyObject dependencyObject)
         {
             WinAPI.SetFocus(br.com.Bonus630DevToolsBar.ControlUI.corelHandle);
@@ -146,7 +149,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
                     catch (Exception e)
                     {
                         Debug.WriteLine(e.Message, "showhilite");
-                        automation.Core.DispactchNewMessage(e.Message, MsgType.Console);
+                        automation.Core.DispactchNewMessage(e.Message, MsgType.Erro);
                     }
                     ShowHighLightItem(guidItem, guidParent, restoration, parentBasicData, visible);
                     return;
@@ -183,18 +186,19 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
         {
             PrepareForm(itemGuid, itemParentGuid, false, restoration, restorationData, v, firstTime);
         }
-        public void InitializeLayoutMode(string itemParentGuid)
+        public bool IsLayoutTypeSupported(IBasicData basicData)
+        {
+            return SupportedLayoutTypes.Contains(basicData.GetType());
+        }
+        public void InitializeLayoutMode(IBasicData parentData,bool triggerMSG = true)
         {
             LayoutMode = !LayoutMode;
-            parentGuid = itemParentGuid;
+            string itemParentGuid  = parentData.Guid;
             if(LayoutMode)
             {
-                if (overlayForm != null)
-                {
-                    overlayForm.NormalMode = true;
-                    overlayForm.Close();
-                    corelApp.OnApplicationEvent -= CorelApp_OnApplicationEvent;
-                }
+                if(triggerMSG)
+                    automation.Core.DispactchNewMessage("Enter in Layout Mode", MsgType.Console);
+                parentDataLayout = parentData;
                 System.Windows.Rect itemRect = automation.GetItemRect(itemParentGuid, itemParentGuid);
                 System.Windows.Rect corelRect = automation.GetCorelRect();
 
@@ -208,15 +212,21 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
             }
             else
             {
-                if (overlayForm != null)
-                {
-                    overlayForm.NormalMode = true;
-                    overlayForm.Close();
-                    corelApp.OnApplicationEvent -= CorelApp_OnApplicationEvent;
-                }
+                ExitLayoutMode();
             }
         }
-
+        private void ExitLayoutMode(bool triggerMSG = true)
+        {
+            if(triggerMSG)
+                automation.Core.DispactchNewMessage("Exit Layout Mode", MsgType.Console);
+            LayoutMode = false;
+            if (overlayForm != null)
+            {
+                overlayForm.NormalMode = true;
+                overlayForm.Close();
+                corelApp.OnApplicationEvent -= CorelApp_OnApplicationEvent;
+            }
+        }
         private void CorelApp_OnApplicationEvent(string EventName, ref object[] Parameters)
         {
             if (overlayForm == null)
@@ -231,16 +241,41 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
             } 
             if(EventName == "MainWindowMoved")
             {
-
+                ExitLayoutMode(false);
+                InitializeLayoutMode(parentDataLayout,false);
             }
 
         }
 
-        private string parentGuid;
+        private IBasicData parentDataLayout;
         public void UpdateLayoutMode(IBasicData data)
         {
-            if(overlayForm==null)
+            if(overlayForm==null || !LayoutMode)
                 return;
+
+            if(data.TreeLevel <= parentDataLayout.TreeLevel)
+            {
+                ExitLayoutMode();
+                if (IsLayoutTypeSupported(data))
+                    InitializeLayoutMode(data);
+            }
+            else
+            {
+               
+                IBasicData parentFromData = null;
+                parentFromData = data.GetParentByType<DockerData>(2);
+                if(parentFromData == null)
+                    parentFromData = data.GetParentByType<DialogData>(2);
+                if (parentFromData != null)
+                {
+                    if (!parentFromData.Equals(parentDataLayout))
+                    {
+                        ExitLayoutMode(false);
+                        InitializeLayoutMode(parentFromData,false);
+                    }
+                }
+
+            }
             string itemGuid = string.Empty;
 
             if (!string.IsNullOrEmpty(data.Guid))
@@ -249,7 +284,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
                 itemGuid = data.GuidRef;
             if (string.IsNullOrEmpty(itemGuid))
                 return;
-            System.Windows.Rect rect = automation.GetItemRect(parentGuid, itemGuid);
+            System.Windows.Rect rect = automation.GetItemRect(parentDataLayout.Guid, itemGuid);
             overlayForm.UpdateLayoutMode(rect);
         }
         public void PrintScreenItem(string itemGuid, string itemParentGuid, Action<IBasicData, bool> restoration = null, IBasicData restorationData = null, bool v = false, bool firstTime = true)

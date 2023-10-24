@@ -90,6 +90,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
         public AttributeCommand FindRef { get; protected set; }
         public BaseDataCommand CopyGuidCommand { get; protected set; }
         public BaseDataCommand XmlCommand { get; protected set; }
+        public BaseDataCommand OpenLineCommand { get; protected set; }
         public BaseDataCommand GetCaptionCommand { get; protected set; }
         public BaseDataCommand ShowCommandBarCommand { get; protected set; }
         public BaseDataCommand HideCommandBarCommand { get; protected set; }
@@ -110,6 +111,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
             CopyGuidCommand = new BaseDataCommand(CopyGuidExec, HasGuid);
             FindRef = new AttributeCommand(FindRefExec, IsAttributeRef);
             XmlCommand = new BaseDataCommand(XmlExec, IsTrue);
+            OpenLineCommand = new BaseDataCommand(OpenEditor, IsTrue);
             GetCaptionCommand = new BaseDataCommand(GetCaptionTextExec, HasGuid);
             ShowCommandBarCommand = new BaseDataCommand(ShowCommandBarExec, IsCommandBarData);
             HideCommandBarCommand = new BaseDataCommand(HideCommandBarExec, IsCommandBarData);
@@ -313,6 +315,10 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
             //Precisa fixar
             if (XmlDecode != null)
                 XmlDecode(basicData);
+        }  
+        private void OpenEditor(IBasicData basicData)
+        {
+            core.RunEditor(basicData);
         }
 
 
@@ -369,7 +375,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
         }   
         private void layoutAdorms(IBasicData basicData)
         {
-            core.HighLightItemHelper.InitializeLayoutMode(core.CurrentBasicData.Guid);
+            core.HighLightItemHelper.InitializeLayoutMode(core.CurrentBasicData);
         }
         private bool IsComplexLayout(IBasicData basicData)
         {

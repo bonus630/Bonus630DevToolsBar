@@ -20,6 +20,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
         XMLDecoder xmlDecoder;
         WorkspaceUnzip workspaceUnzip;
         string workerFolder;
+      
 
         Thread t;
 
@@ -29,7 +30,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
         public event Action<bool, string> LoadStarting;
         public event Action<string> LoadFinish;
         public event Action<int> FilePorcentLoad;
-        public event Action<string> ErrorFound;
+        //public event Action<string> ErrorFound;
         public event Action<IBasicData> SearchResultEvent;
         //public event Action<List<object>> GenericSearchResultEvent;
         public event Action<string, MsgType> NewMessage;
@@ -58,6 +59,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
         {
             get { return app; }
         }
+        public string FilePath { get; private set; }
         public bool InCorel { get; private set; }
         public string Title { get; private set; }
         public string IconsFolder { get; private set; }
@@ -118,8 +120,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
                 }
                 catch (IOException ioE)
                 {
-                    if (ErrorFound != null)
-                        ErrorFound("Erro - " + ioE.Message);
+                    DispactchNewMessage(ioE.Message, MsgType.Erro);
                     return;
                 }
                 string newPath = workerFolder + "\\" + fileOri.Name;
@@ -129,8 +130,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
             }
             catch (IOException ioErro)
             {
-                if (ErrorFound != null)
-                    ErrorFound("Erro - " + ioErro.Message);
+                DispactchNewMessage(ioErro.Message, MsgType.Erro);
                 return;
             }
             inputCommands = new InputCommands(this);
@@ -196,8 +196,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
                 }
                 catch (IOException ioE)
                 {
-                    if (ErrorFound != null)
-                        ErrorFound("Erro - " + ioE.Message);
+                    DispactchNewMessage(ioE.Message, MsgType.Erro);
                     return;
                 }
                 string newPath = workerFolder + "\\" + fileOri.Name;
@@ -207,8 +206,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
             }
             catch (IOException ioErro)
             {
-                if (ErrorFound != null)
-                    ErrorFound("Erro - " + ioErro.Message);
+                DispactchNewMessage(ioErro.Message, MsgType.Erro);
                 return;
             }
             Thread thread = new Thread(new ParameterizedThreadStart(LoadFile));
@@ -387,8 +385,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
             StreamReader fs;
             if (file == null)
             {
-                if (ErrorFound != null)
-                    ErrorFound("Load file erro");
+                DispactchNewMessage("Load file erro", MsgType.Erro); 
                 return;
             }
             if (LoadStarting != null)
@@ -430,8 +427,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
             }
             catch (Exception erro)
             {
-                if (ErrorFound != null)
-                    ErrorFound("Erro - " + erro.Message);
+                DispactchNewMessage(erro.Message, MsgType.Erro);
                 return;
             }
 
@@ -445,6 +441,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
 
             if (LoadListsFinish != null)
                 LoadListsFinish();
+            FilePath = file.FullName;
             //Teste para pegar os guids do RCDATA
             ResourcesExtractor.GetGuids();
             //listIsLoaded = true;
@@ -614,13 +611,44 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
                 return FindParentControl<T>(parent);
             }
         }
+
+        internal void RunEditor(IBasicData basicData)
+        {
+            try
+            {
+                int line = xmlDecoder.GetLineNumber(basicData);
+                if(line == -1)
+                {
+                    DispactchNewMessage("Error when trying to find the line number", MsgType.Erro);
+                    return;
+                }
+                var process = new Process();
+                if (!File.Exists(Properties.Settings.Default.Editor))
+                {
+                    DispactchNewMessage("Editor File not found", MsgType.Erro);
+                    return;
+                }
+                process.StartInfo.FileName = Properties.Settings.Default.Editor;
+                //"{0} -n{1}"
+                object[] args = { FilePath, line };
+                process.StartInfo.Arguments = string.Format(Properties.Settings.Default.EditorArguments, args);
+                process.Start();
+            }
+            catch(Exception erro)
+            {
+                DispactchNewMessage(erro.Message, MsgType.Erro);
+            }
+            
+        }
     }
 
     public enum MsgType
     {
         Console,
         Event,
-        Xml
+        Xml,
+        Erro,
+        Result
     }
 
 }

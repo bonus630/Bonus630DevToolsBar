@@ -55,14 +55,14 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
         {
             int left, top, width, height = 0;
             bool data = corelApp.FrameWork.Automation.GetItemScreenRect(guidParent, guidItem, out left, out top, out width, out height);
-            core.DispactchNewMessage(string.Format("X:{0},Y:{1},W:{2},H:{3}", left, top, width, height), MsgType.Console);
+            core.DispactchNewMessage(string.Format("X:{0},Y:{1},W:{2},H:{3}", left, top, width, height), MsgType.Result);
             return new System.Windows.Rect() { X = left, Y = top, Width = width, Height = height };
 
         }
         internal System.Windows.Rect GetCorelRect()
         {
             ScreenRect sr = corelApp.FrameWork.MainFrameWindow.Position;
-            core.DispactchNewMessage(string.Format("X:{0},Y:{1},W:{2},H:{3}", sr.Left, sr.Top, sr.Width, sr.Height), MsgType.Console);
+            core.DispactchNewMessage(string.Format("X:{0},Y:{1},W:{2},H:{3}", sr.Left, sr.Top, sr.Width, sr.Height), MsgType.Result);
             return new System.Windows.Rect() { X = sr.Left,Y = sr.Top, Width = sr.Width, Height = sr.Height };
         }
         public string GetCaption(string guid)
@@ -90,7 +90,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
             }
             catch (Exception e)
             {
-                core.DispactchNewMessage(e.Message, MsgType.Console);
+                core.DispactchNewMessage(e.Message, MsgType.Erro);
             }
         }
 
@@ -131,7 +131,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
             }
             catch (Exception e)
             {
-                core.DispactchNewMessage(e.Message, MsgType.Console);
+                core.DispactchNewMessage(e.Message, MsgType.Erro);
             }
 
         }
@@ -177,7 +177,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
             }
             catch (Exception e)
             {
-                core.DispactchNewMessage(e.Message, MsgType.Console);
+                core.DispactchNewMessage(e.Message, MsgType.Erro);
             }
 
         }
@@ -199,12 +199,12 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
                     CommandBarModes modes = commandBar.Modes;
                     // string guid = corelApp.FrameWork.Automation.GetActiveMenuItemGuid(0);
                     //corelApp.FrameWork.Automation.InvokeDialogItem(GuidDialog, guiditem);
-                    core.DispactchNewMessage("CommandBarMode: " + commandBar.Controls.Count.ToString(), MsgType.Console);
+                    core.DispactchNewMessage("CommandBarMode: " + commandBar.Controls.Count.ToString(), MsgType.Result);
                 }
             }
             catch (Exception e)
             {
-                core.DispactchNewMessage(e.Message, MsgType.Console);
+                core.DispactchNewMessage(e.Message, MsgType.Erro);
             }
         }
         public string GetItemCaption(string guid)
@@ -217,7 +217,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
             }
             catch (Exception e)
             {
-                core.DispactchNewMessage(e.Message, MsgType.Console);
+                core.DispactchNewMessage(e.Message, MsgType.Erro);
             }
             return "";
         }
@@ -233,7 +233,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
             }
             catch (Exception e)
             {
-                core.DispactchNewMessage(e.Message, MsgType.Console);
+                core.DispactchNewMessage(e.Message, MsgType.Erro);
             }
             return "";
         }
@@ -271,7 +271,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
                         object j = dsp.GetProperty(path);
                         if(j==null)
                         {
-                            core.DispactchNewMessage("Path:{0} returns null", MsgType.Console,path);
+                            core.DispactchNewMessage("Path:{0} returns null", MsgType.Result,path);
                         }
                         type = j.GetType();
                         o = j.ToString();
@@ -289,12 +289,12 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
                                 r += "," + typer[i].Name;
                             }
                             o = string.Format("Type:{0}", r);
-                            core.DispactchNewMessage(o, MsgType.Console);
+                            core.DispactchNewMessage(o, MsgType.Result);
                         }
                         else
                         {
                             o = string.Format("Type:{0} Value:{1}", type, o);
-                            core.DispactchNewMessage(o, MsgType.Console);
+                            core.DispactchNewMessage(o, MsgType.Result);
                         }
                     }
                 }
@@ -302,7 +302,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
             catch (Exception erro)
             {
                 o = erro.Message;
-                core.DispactchNewMessage(o, MsgType.Console);
+                core.DispactchNewMessage(o, MsgType.Erro);
             }
         }
         public void RunBindWithParamDataSource(string value, bool invoke = false, string param = "")
@@ -362,7 +362,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
             }
             catch (Exception erro)
             {
-                core.DispactchNewMessage(erro.Message, MsgType.Console);
+                core.DispactchNewMessage(erro.Message, MsgType.Erro);
             }
 
 
@@ -378,7 +378,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
             }
             catch (Exception erro)
             {
-                core.DispactchNewMessage(erro.Message, MsgType.Console);
+                core.DispactchNewMessage(erro.Message, MsgType.Erro);
             }
 
 
@@ -393,7 +393,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
             }
             catch (Exception erro)
             {
-                core.DispactchNewMessage(erro.Message, MsgType.Console);
+                core.DispactchNewMessage(erro.Message, MsgType.Erro);
             }
 
 
@@ -409,7 +409,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
             }
             catch (Exception erro)
             {
-                core.DispactchNewMessage(erro.Message, MsgType.Console);
+                core.DispactchNewMessage(erro.Message, MsgType.Erro);
             }
 
 
@@ -448,7 +448,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
             }
             catch (Exception e)
             {
-                core.DispactchNewMessage(e.Message, MsgType.Console);
+                core.DispactchNewMessage(e.Message, MsgType.Erro);
 
             }
         }

@@ -6,12 +6,15 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+//using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
+using System.Windows.Media;
 
 namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
 {
@@ -64,7 +67,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
             core.FilePorcentLoad += Core_FilePorcentLoad;
             core.LoadListsFinish += Core_LoadListsFinish;
             core.LoadStarting += Core_LoadStarting;
-            core.ErrorFound += Core_ErrorFound;
+            //core.ErrorFound += Core_ErrorFound;
             core.SearchResultEvent += Core_SearchResultEvent;
             core.LoadFinish += Core_LoadFinish1;
             core.NewMessage += Core_NewMessage;
@@ -172,8 +175,8 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
             saveLoad.Save();
             this.Dispatcher.Invoke(new Action(() =>
            {
-                //InflateTreeView(core.ListPrimaryItens, treeView_Nodes);
-                tabControl_details.Visibility = Visibility.Visible;
+               //InflateTreeView(core.ListPrimaryItens, treeView_Nodes);
+               tabControl_details.Visibility = Visibility.Visible;
                search = new Search(core);
                grid_search.Children.Add(search);
                details = new Details(core);
@@ -222,19 +225,13 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
                     switch (msgType)
                     {
                         case MsgType.Console:
-                            string s = "";
-                            if (saveLoad.ConsoleCounter)
-                                s = (string.Format("{0}. {1}\r\n", msgCount, msg));
-                            else
-                                s = (string.Format("{0}\r\n", msg));
-                            txt_console.Text = s;
-                            txt_consoleFull.AppendText(s);
-                            try
-                            {
-                                txt_consoleFull.ScrollToLine(txt_consoleFull.LineCount - 1);
-                            }
-                            catch { }
-                            msgCount++;
+                            ConsoleSetMsg(msg, Brushes.Black);
+                            break;
+                        case MsgType.Erro:
+                            ConsoleSetMsg(msg, Brushes.Crimson);
+                            break;
+                        case MsgType.Result:
+                            ConsoleSetMsg(msg, Brushes.CadetBlue);
                             break;
                         case MsgType.Event:
                             txt_CorelEventViewer.AppendText(string.Format("{0}\r\n", msg));
@@ -252,13 +249,41 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
                             }
                             catch { }
                             break;
+
                     }
                 }
 
             }
           ));
         }
-
+        private void ConsoleSetMsg(string msg, Brush color)
+        {
+            string a = "";
+            if (saveLoad.ConsoleCounter)
+                a = (string.Format("{0}. {1}\r", msgCount, msg));
+            else
+                a = (string.Format("{0}\r", msg));
+            txt_console.Text = a;
+          
+            TextRange tr;
+            if(saveLoad.ConsoleCounter)
+            {
+                tr =  new TextRange(txt_consoleFull.Document.ContentEnd, txt_consoleFull.Document.ContentEnd);
+                tr.Text = string.Format("{0}. ",msgCount);
+                tr.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.DarkGray);
+                msgCount++;
+            }
+            tr = new TextRange(txt_consoleFull.Document.ContentEnd, txt_consoleFull.Document.ContentEnd);
+            tr.Text = string.Format("{0}\r", msg);
+            tr.ApplyPropertyValue(TextElement.ForegroundProperty, color);
+            //}
+            try
+            {
+                Rect r = txt_consoleFull.Document.ContentEnd.GetCharacterRect(LogicalDirection.Backward);
+                txt_consoleFull.ScrollToVerticalOffset(r.Y);
+            }
+            catch { }
+        }
 
 
 
@@ -274,7 +299,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
             if (core.CurrentBasicData != null)
                 core.CurrentBasicData.SetSelected(false, false, false, true);
             core.CurrentBasicData = data;
-            
+
             if (core.HighLightItemHelper.LayoutMode)
                 core.HighLightItemHelper.UpdateLayoutMode(data);
             core.SetIcon(data);
@@ -566,7 +591,8 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
                     txt_xmlViewer.Text = "";
                     break;
                 case 2:
-                    txt_consoleFull.Text = "";
+                    //txt_consoleFull.Text = "";
+                    txt_consoleFull.Document.Blocks.Clear();
                     break;
                 case 3:
                     txt_CorelEventViewer.Text = "";
@@ -581,7 +607,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
             }
             catch (System.Exception erro)
             {
-                core.DispactchNewMessage(erro.Message, MsgType.Console);
+                core.DispactchNewMessage(erro.Message, MsgType.Erro);
             }
 
         }

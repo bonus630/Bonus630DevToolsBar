@@ -74,7 +74,38 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.DataClass
             Attributes = new List<Attribute>();
             setSpecialType();
         }
+        /// <summary>
+        /// Está função procura um pai de um certo tipo ou no range do treeLevel
+        /// </summary>
+        /// <typeparam name="T">Tipo do parente para encontrar</typeparam>
+        /// <param name="treeLevel">Passe um valor para encontrar nesse range</param>
+        /// <returns>Retorna nulo se nenhum parente do tipo ou no range for encontrado</returns>
+        public IBasicData GetParentByType<T>(int treeLevel = - 1)
+        {
+            bool searching = true;
+            IBasicData parent = this.Parent;
+            while(searching)
+            {
 
+                if (parent == null)
+                {
+                    searching = false;
+                    break;
+                }
+                if (parent.GetType().Equals(typeof(T)) && treeLevel == -1)
+                {
+                    searching = false;
+                    break;
+                }
+                if(treeLevel > -1 && treeLevel == parent.TreeLevel)
+                {
+                    searching = false;
+                    break;
+                }
+               parent = parent.Parent;
+            }
+            return parent;
+        }
         private void setSpecialType()
         {
             if (type == typeof(DockerData) || type == typeof(CommandBarData) || type == typeof(DialogData))
