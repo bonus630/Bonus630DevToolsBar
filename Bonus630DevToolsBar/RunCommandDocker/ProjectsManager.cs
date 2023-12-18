@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Data.SqlTypes;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -95,6 +96,16 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             }
         }
 
+        private CommandSearch commandSearch;
+
+        public CommandSearch CommandSearch
+        {
+            get { return commandSearch; }
+            set { commandSearch = value;
+                OnPropertyChanged("CommandSearch");
+            }
+        }
+
 
         string assemblyDirectory = "";
         public string AssemblyDirectory { 
@@ -124,7 +135,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             TogglePinCommand = new BindingCommand<Command>(PinCommand, CanPin);
             EditModuleCommand = new BindingCommand<Module>(EditModule, CanEditModule);
             OrderModuleCommand = new BindingCommand<Module>(OrderByName);
-           OrderDescModuleCommand = new BindingCommand<Module>(OrderByNameDesc);
+            OrderDescModuleCommand = new BindingCommand<Module>(OrderByNameDesc);
             OrderOriginalModuleCommand = new BindingCommand<Module>(OrderOriginal);
             EditCommandCommand = new BindingCommand<Command>(EditMethod, VisualStudioFounded);
             UnloadProjectCommand = new BindingCommand<Project>(UnloadProject);
@@ -177,6 +188,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             }
             catch { }
         }
+  
         private Command FindCommandByXPath(string commandXPath)
         {
             string[] pierces = commandXPath.Split('/');
@@ -631,5 +643,20 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                 ChangesProject(e.Name, e.FullPath);
         }
 
+        internal void PrepareSearch()
+        {
+            if (this.CommandSearch == null)
+            {
+                this.CommandSearch = new CommandSearch();
+                this.CommandSearch.projects = this.projects;
+            }
+            
+
+        }
+
+        internal void CloseSearch()
+        {
+            this.CommandSearch = null;
+        }
     }
 }

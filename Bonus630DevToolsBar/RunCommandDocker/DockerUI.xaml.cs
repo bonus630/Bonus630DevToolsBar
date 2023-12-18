@@ -1,4 +1,4 @@
-﻿using Corel.Interop.VGCore;
+﻿
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -9,6 +9,7 @@ using System.Windows.Controls;
 using br.com.Bonus630DevToolsBar;
 using corel = Corel.Interop.VGCore;
 using Bonus630DevToolsBar;
+using System.Windows.Media;
 
 namespace br.com.Bonus630DevToolsBar.RunCommandDocker
 {
@@ -167,12 +168,64 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             try
             {
                 projectsManager.SelectedCommand = (sender as TreeView).SelectedItem as Command;
+
+                //if(Application.Current.Dispatcher.che)
+                //    ((sender as TreeView).SelectedItem as TreeViewItem).BringIntoView();
+                //else
+                //{
+                //Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+                //     {
+                //        ((sender as TreeView).SelectedItem as TreeViewItem).BringIntoView();
+                //    }));
+                ////}
+               
             }
             catch (Exception ex)
             {
                 System.Windows.MessageBox.Show(ex.ToString());
             }
         }
+   
+        private void ScrollToSelectedItem()
+        {
+            var selectedItem = treeViewCommands.SelectedItem as Command; // Substitua YourItemType pelo tipo real dos itens no seu TreeView
+            if (selectedItem != null)
+            {
+                // Encontrar o item correspondente no TreeView
+                var container = treeViewCommands.ItemContainerGenerator.ContainerFromItem(selectedItem) as FrameworkElement;
+
+                if (container != null)
+                {
+                    // Obter o ScrollViewer interno do TreeView
+                    var scrollViewer = FindVisualChild<ScrollViewer>(treeViewCommands);
+
+                    if (scrollViewer != null)
+                    {
+                        // Calcular o deslocamento para rolar até o item
+                        var offset = container.TranslatePoint(new System.Windows.Point(0, 0), scrollViewer);
+
+                        // Rolar para o item
+                        scrollViewer.ScrollToVerticalOffset(offset.Y);
+                    }
+                }
+            }
+        }
+
+        private T FindVisualChild<T>(DependencyObject visual) where T : DependencyObject
+        {
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(visual); i++)
+            {
+                DependencyObject child = VisualTreeHelper.GetChild(visual, i);
+                if (child != null && child is T)
+                    return (T)child;
+
+                T childItem = FindVisualChild<T>(child);
+                if (childItem != null)
+                    return childItem;
+            }
+            return null;
+        }
+
 
         private void btn_newProject_Click(object sender, RoutedEventArgs e)
         {
@@ -276,5 +329,74 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             popup_log.IsOpen = false;
             txt_log.Document.Blocks.Clear();
         }
+
+
+        #region Search Events
+
+        private void textBoxSearch_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            projectsManager.CommandSearch.Search(textBoxSearch.Text);
+        }
+
+        private void buttonPreview_Click(object sender, RoutedEventArgs e)
+        {
+            projectsManager.CommandSearch.Navegate(-1);
+        }
+
+        private void buttonNext_Click(object sender, RoutedEventArgs e)
+        {
+            projectsManager.CommandSearch.Navegate(1);
+        }
+
+       
+
+        private void buttonClose_Click(object sender, RoutedEventArgs e)
+        {
+            projectsManager.CloseSearch();
+            gridSearchBox.Visibility = Visibility.Collapsed;
+        }
+
+        private void RadioButtonCondition_Click(object sender, RoutedEventArgs e)
+        {
+            projectsManager.CommandSearch.termPosition = Int32.Parse((string)(sender as RadioButton).Tag);
+            projectsManager.CommandSearch.Search(textBoxSearch.Text,true);
+        }
+        private void OpenSearch()
+        {
+            gridSearchBox.Visibility = Visibility.Visible;
+            textBoxSearch.Focus();
+            projectsManager.PrepareSearch();
+            if(!string.IsNullOrEmpty(textBoxSearch.Text))
+                projectsManager.CommandSearch.Search(textBoxSearch.Text,true);
+        }
+        bool control = false;
+        private void treeViewCommands_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == System.Windows.Input.Key.LeftCtrl)
+                control = true;
+        }
+
+        private void treeViewCommands_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == System.Windows.Input.Key.LeftCtrl)
+                control = false;
+            if (control && e.Key == System.Windows.Input.Key.F)
+                OpenSearch();
+        }
+
+        private void checkBoxWholeWord_Click(object sender, RoutedEventArgs e)
+        {
+            projectsManager.CommandSearch.wholeWord = (bool)checkBoxWholeWord.IsChecked;
+            projectsManager.CommandSearch.Search(textBoxSearch.Text,  true);
+        }
+
+        private void checkBoxMatchCase_Click(object sender, RoutedEventArgs e)
+        {
+            projectsManager.CommandSearch.matchCase = (bool)checkBoxMatchCase.IsChecked;
+            projectsManager.CommandSearch.Search(textBoxSearch.Text, true);
+        }
+        #endregion
+
+      
     }
 }

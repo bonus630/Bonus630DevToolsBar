@@ -48,11 +48,11 @@ This file defines new UI elements that all workspaces will contain
 					  hostedType="Addons\Bonus630DevToolsBar\Bonus630DevToolsBar.dll,br.com.Bonus630DevToolsBar.ControlUI"
 					  enable="true"/>
 
-			<!-- Run Command Docker Button-->
+			<!-- Run Command Docker Button onInvoke="*Bind(DataSource=Bonus630DevToolsBarDS;Path=RunCommandDocker)"-->
 			<itemData guid="7acb54e6-084e-494f-ad31-2718f34ddad2"
-					  onInvoke="*Bind(DataSource=Bonus630DevToolsBarDS;Path=RunCommandDocker)"
+					 check="*Docker('5087687d-337d-4d0e-acaf-c0b1df967757')"
 					  icon="guid://7acb54e6-084e-494f-ad31-2718f34ddad2"
-					  type="button"  enable="true"/>
+					  type="checkButton"  enable="true"/>
 
 
 
@@ -62,11 +62,11 @@ This file defines new UI elements that all workspaces will contain
 					  icon="guid://942df043-e3e2-4d0e-83ee-a456557ac093"
 					  type="button"  enable="true"/>
 
-			<!-- Shortcuts Button-->
+			<!-- Shortcuts Button onInvoke="*Bind(DataSource=Bonus630DevToolsBarDS;Path=RunShortcutsDocker)"-->
 			<itemData guid="b0bc23ba-086b-46d1-ae04-ee36aa9003a4"
-					  onInvoke="*Bind(DataSource=Bonus630DevToolsBarDS;Path=RunShortcutsDocker)"
+					  check="*Docker('512194ae-a540-4979-8991-bcadded6726e')"
 					  icon="guid://b0bc23ba-086b-46d1-ae04-ee36aa9003a4"
-					  type="button"  enable="true"/>
+					  type="checkButton"  enable="true"/>
 
 			<!--Run command docker-->
 			<itemData guid="2ee3372b-f6b5-47fe-aa81-4ecd2c4771e2"

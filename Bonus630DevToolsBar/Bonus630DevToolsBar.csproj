@@ -218,6 +218,7 @@
     <Compile Include="CQLRunner\CQLRunner.xaml.cs">
       <DependentUpon>CQLRunner.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CustomControls\BringSelectedItemIntoViewBehavior.cs" />
     <Compile Include="CustomControls\IconButton.xaml.cs">
       <DependentUpon>IconButton.xaml</DependentUpon>
     </Compile>
@@ -247,12 +248,14 @@
     </Compile>
     <Compile Include="RecentFiles\RecentFilesViewModel.cs" />
     <Compile Include="RecentFiles\RecentFileViewModel.cs" />
+    <Compile Include="RecentFiles\SQLiteManager.cs" />
     <Compile Include="RunCommandDocker\BindingCommand.cs" />
     <Compile Include="RunCommandDocker\Command.cs" />
     <Compile Include="RunCommandDocker\CommandProxy.cs" />
     <Compile Include="Converters\EmptyStringToVisibilityConverter.cs" />
     <Compile Include="Converters\TypeToStringConverter.cs" />
     <Compile Include="Converters\TypeToVisibilityConverter.cs" />
+    <Compile Include="RunCommandDocker\CommandSearch.cs" />
     <Compile Include="RunCommandDocker\DockerUI.xaml.cs">
       <DependentUpon>DockerUI.xaml</DependentUpon>
     </Compile>
@@ -511,6 +514,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\EditTag.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\SearchConfig.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\SearchConfigChecked.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\ShowLayout.png">

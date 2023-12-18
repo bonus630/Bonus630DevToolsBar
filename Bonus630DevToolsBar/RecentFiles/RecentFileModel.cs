@@ -10,93 +10,19 @@ using System.Windows.Media.Imaging;
 
 namespace br.com.Bonus630DevToolsBar.RecentFiles
 {
-    public class RecentFileModel
+    public class RecentFileModel : SQLiteManager
     {
         private readonly string thumbEntry1 = "previews/thumbnail.png";
         private readonly string thumbEntry2 = "metadata/thumbnails/thumbnail.bmp";
-        private string DbFilePath;
-        public SQLiteConnection sqliteConnection;
 
+        public RecentFileModel(int corelVersion):base("RecentFiles", "recent-files",corelVersion)
 
-        public RecentFileModel(int corelVersion)
         {
-            checkFile(corelVersion);
-        }
-        private static string GetDBFDirPath()
-        {
-            string path = Path.Combine(
-                 Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "RecentFiles");
-            if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
-            return path;
-        }
-        private SQLiteConnection CreateConnection()
-        {
-            try
-            {
-                sqliteConnection = new SQLiteConnection(string.Format("Data Source={0}; Version=3;", DbFilePath));
-                sqliteConnection.Open();
-                return sqliteConnection;
-            }
-            catch (SQLiteException erro)
-            {
-                throw erro;
-            }
-        }
-        private void checkFile(int corelVersion)
-        {
-            try
-            {
-                string path = GetDBFDirPath();
-                DbFilePath = string.Format("{0}\\recent-files-{1}.sqlite", path, corelVersion);
-                CreateDbFile();
-                CreateTable();
-
-
-            }
-            catch (IOException erro)
-            {
-                throw erro;
-            }
-        }
-        private void CreateDbFile()
-        {
-            try
-            {
-                if (!File.Exists(DbFilePath))
-                    SQLiteConnection.CreateFile(DbFilePath);
-            }
-            catch (SQLiteException erro)
-            {
-                throw erro;
-            }
-        }
-        private void CreateTable()
-        {
-            try
-            {
-                using (SQLiteCommand command = CreateConnection().CreateCommand())
-                {
-                    command.CommandText = "CREATE TABLE IF NOT EXISTS files(id INTEGER PRIMARY KEY,_index INTEGER,count INTEGER,autoload INTEGER,name Varchar(50),path Varchar(256),time INTEGER);";
-                    command.ExecuteNonQuery();
-                }
-            }
-            catch { }
+            this.table = "files";
+            this.CreateTable("CREATE TABLE IF NOT EXISTS files(id INTEGER PRIMARY KEY,_index INTEGER,count INTEGER,autoload INTEGER,name Varchar(50),path Varchar(256),time INTEGER);");
         }
 
-        public void DeleteFile(int id)
-        {
-            try
-            {
-                using (SQLiteCommand command = CreateConnection().CreateCommand())
-                {
-                    command.CommandText = "DELETE FROM files WHERE id=:id";
-                    command.Parameters.AddWithValue(":id", id);
-                    command.ExecuteNonQuery();
-                }
-            }
-            catch { }
-        }// int openTimes, long openedTime,
+        // int openTimes, long openedTime,
         public RecentFileViewModel InsertData(int index, string name, string fullName, bool autoload = false, int openTimes = 1, long openedTime = 0)
         {
             try
@@ -159,27 +85,7 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
             catch { }
             return datas;
         }
-        private int GetLastId()
-        {
-            int result = -1;
-            try
-            {
 
-                using (SQLiteCommand command = CreateConnection().CreateCommand())
-                {
-                    command.CommandText = "SELECT * FROM files ORDER BY id DESC LIMIT 1;";
-
-                    using (SQLiteDataReader dataReader = command.ExecuteReader())
-                    {
-                        if (dataReader.Read())
-                            result = dataReader.GetInt32(0);
-                    }
-                }
-
-            }
-            catch { }
-            return result;
-        }
        // bool autoload = false, int openTimes = 1, long openedTime = 0
         public void UpdateFile(int id, int index,string name,string fullName, int openTimes =1, long openedTime=0, bool autoload=false)
         {
@@ -204,33 +110,7 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
             catch { }
         }
 
-        public bool CheckExits(string fullName)
-        {
-            try
-            {
-                int id = -1;
-
-                using (SQLiteCommand command = CreateConnection().CreateCommand())
-                {
-                    command.CommandText = "SELECT id FROM files ORDER BY id WHERE path=:path DESC LIMIT 1;";
-                    command.Parameters.AddWithValue(":path", fullName);
-
-                    using (SQLiteDataReader dataReader = command.ExecuteReader())
-                    {
-                        if (dataReader.Read())
-                            id = dataReader.GetInt32(0);
-                        if (id > -1)
-                        {
-                            return true;
-                        }
-
-                    }
-                }
-
-            }
-            catch { }
-            return false;
-        }
+      
         //public void InsertOrIncrementCount(string name, string path, int index, long time)
         //{
 

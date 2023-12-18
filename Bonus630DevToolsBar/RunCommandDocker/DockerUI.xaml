@@ -370,150 +370,210 @@
             </ItemsControl>
 
         </Grid>
-        <TreeView DockPanel.Dock="Top" ItemsSource="{Binding Projects}" Name="treeViewCommands"
-                  VirtualizingStackPanel.IsVirtualizing="True" VirtualizingStackPanel.VirtualizationMode="Recycling"
-                  TreeViewItem.Selected="TreeView_Selected" 
-            IsTextSearchCaseSensitive="False" IsTextSearchEnabled="True" TextSearch.TextPath="Name">
-            <!-- //Ref.:01 
+
+        <Grid DockPanel.Dock="Top">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <!--<Popup IsOpen="True" StaysOpen="True" Placement="Bottom">-->
+            <Grid  Grid.Row="0" Name="gridSearchBox" Visibility="Collapsed">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="40"/>
+                    <ColumnDefinition Width="6"/>
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="20" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <TextBox Grid.Row="0" Grid.Column="0" x:Name="textBoxSearch" TextChanged="textBoxSearch_TextChanged" VerticalAlignment="Center" VerticalContentAlignment="Center" BorderBrush="{x:Null}"/>
+                <Label Grid.Row="0" Grid.Column="1" Content="{Binding CommandSearch.CurrentAndFounds}"  FontWeight="Bold" FontSize="9" VerticalAlignment="Center"/>
+                <Rectangle Grid.Row="0"  Width="1" Height="28" Grid.Column="2" />
+                <Button  Grid.Row="0" Grid.Column="3" Content="▲" Name="buttonPreview" Click="buttonPreview_Click" Width="20" Height="20"  Style="{DynamicResource NoBorderButton}" />
+                <Button  Grid.Row="0" Grid.Column="4" Content="▼" Name="buttonNext" Click="buttonNext_Click"  Width="20" Height="20"  Style="{DynamicResource NoBorderButton}" />
+                <custom:IconCheckBox  Grid.Row="0" Grid.Column="5" Content="C" IsChecked="False" IconChecked="SearchConfigChecked.png" IconUnchecked="SearchConfig.png"  Width="20" Height="20" x:Name="buttonConfig"  />
+                <Button  Grid.Row="0" Grid.Column="6" Content="X" Name="buttonClose" Click="buttonClose_Click"  Width="20" Height="20"  Style="{DynamicResource NoBorderButton}" />
+
+                <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="6" 
+                      Visibility="{Binding ElementName=buttonConfig,Path=IsChecked, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="20" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Label Grid.Row="0" Grid.Column="0" Content="Match case" VerticalAlignment="Center"/>
+                    <CheckBox Grid.Row="0" Grid.Column="1" x:Name="checkBoxMatchCase" Click="checkBoxMatchCase_Click" VerticalAlignment="Center"/>
+                    <Label Grid.Row="1" Grid.Column="0" Content="Match whole word" VerticalAlignment="Center"/>
+                    <CheckBox Grid.Row="1" Grid.Column="1" x:Name="checkBoxWholeWord" Click="checkBoxWholeWord_Click" VerticalAlignment="Center"/>
+                    <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="0,2,0,2"
+                                Visibility="{Binding ElementName=checkBoxWholeWord,Path=IsChecked,Converter={StaticResource ReverseBoolVisibilityConverter}}">
+                        <RadioButton Content="Start with" Click="RadioButtonCondition_Click" Tag="0" IsChecked="True"/>
+                        <RadioButton Content="Contains" Click="RadioButtonCondition_Click" Tag="1" />
+                        <RadioButton Content="End with" Click="RadioButtonCondition_Click" Tag="2" />
+                    </StackPanel>
+
+                </Grid>
+                      
+                
+            </Grid>
+            <!--</Popup>-->
+            <TreeView Grid.Row="1"  ItemsSource="{Binding Projects}" Name="treeViewCommands" TreeViewItem.Selected="TreeView_Selected" 
+                      IsTextSearchCaseSensitive="False" IsTextSearchEnabled="True" TextSearch.TextPath="Name" KeyDown="treeViewCommands_KeyDown" KeyUp="treeViewCommands_KeyUp">
+                        <!--Reciclar ou focar o item?-->
+                      <!--VirtualizingStackPanel.IsVirtualizing="True" VirtualizingStackPanel.VirtualizationMode="Recycling"--> 
+
+                <!-- //Ref.:01 
             // Compare to another Ref.:01
              TreeViewItem.Selected="TreeView_Selected">-->
 
-            <TreeView.Resources>
-                <Style BasedOn="{StaticResource TreeViewItemCustomStyle}" TargetType="{x:Type TreeViewItem}">
-                    <Setter Property="TreeViewItem.IsExpanded" Value="{Binding IsExpanded,Mode=TwoWay}"/>
-                    <Setter Property="TreeViewItem.IsSelected" Value="{Binding IsSelectedBase,Mode=TwoWay}"/>
-                </Style>
-                <HierarchicalDataTemplate  ItemsSource="{Binding Path=Items}" DataType="{x:Type local:Project}">
-                    <Grid>
-                        <Grid.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Header="Unload" CommandParameter="{Binding}"
+                <TreeView.Resources>
+                    <Style BasedOn="{StaticResource TreeViewItemCustomStyle}" TargetType="{x:Type TreeViewItem}">
+                        <Setter Property="TreeViewItem.IsExpanded" Value="{Binding IsExpanded,Mode=TwoWay}"/>
+                        <Setter Property="custom:BringSelectedItemIntoViewBehavior.IsBringSelectedIntoView" Value="True" />
+                        <Setter Property="TreeViewItem.IsSelected" Value="{Binding IsSelectedBase,Mode=TwoWay}"/>
+                    </Style>
+                    <HierarchicalDataTemplate  ItemsSource="{Binding Path=Items}" DataType="{x:Type local:Project}">
+                        <Grid>
+                            <Grid.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="Unload" CommandParameter="{Binding}" 
                                           Command="{Binding Path=PlacementTarget.DataContext.Parent.UnloadProjectCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}" >
 
-                                </MenuItem>
+                                    </MenuItem>
 
-                            </ContextMenu>
-                        </Grid.ContextMenu>
-                        <Label Content="{Binding Path=Name}" Focusable="False" />
-                    </Grid>
-                </HierarchicalDataTemplate>
-                <HierarchicalDataTemplate  ItemsSource="{Binding Path=Items}" DataType="{x:Type local:Module}" >
-                    <Grid>
-                        <Grid.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Header="Edit" CommandParameter="{Binding}"
-                                          Command="{Binding Path=PlacementTarget.DataContext.Parent.Parent.EditModuleCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}" >
-                                    <MenuItem.Icon>
-                                        <Image Style="{StaticResource EditImage}"/>
-                                    </MenuItem.Icon>
-                                </MenuItem>
-                                <MenuItem Header="Sort Ascending" CommandParameter="{Binding}"
-                                          Command="{Binding Path=PlacementTarget.DataContext.Parent.Parent.OrderModuleCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}"
-                                          Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
-                                    <MenuItem.Icon>
-                                        <Image Style="{StaticResource SortAscendingImg}"/>
-                                    </MenuItem.Icon>
-                                </MenuItem>
-                                <MenuItem Header="Sort Descending" CommandParameter="{Binding}"
-                                          Command="{Binding Path=PlacementTarget.DataContext.Parent.Parent.OrderDescModuleCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}"
-                                          Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
-                                    <MenuItem.Icon>
-                                        <Image Style="{StaticResource SortDescendingImg}"/>
-                                    </MenuItem.Icon>
-                                </MenuItem>
-                                <MenuItem Header="Clear Sort" CommandParameter="{Binding}"
-                                          Command="{Binding Path=PlacementTarget.DataContext.Parent.Parent.OrderOriginalModuleCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}"
-                                          Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
-                                    <MenuItem.Icon>
-                                        <Image Style="{StaticResource ClearSortImg}"/>
-                                    </MenuItem.Icon>
-                                </MenuItem>
-                            
-                            </ContextMenu>
-                        </Grid.ContextMenu>
-                        <Label Content="{Binding Path=Name}" Focusable="False"/>
-                    </Grid>
-                </HierarchicalDataTemplate>
-                <DataTemplate DataType="{x:Type local:Command}">
-                    <!--<DataTemplate.Triggers >
-                        <DataTrigger Binding="{Binding IsSelected}" Value="True">
-                            <Setter TargetName="treeViewItemRun" Property="b"
-                        </DataTrigger>
-                    </DataTemplate.Triggers>-->
-                    <StackPanel>
-                        <Grid Height="28" x:Name="treeViewItemRun">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="20"/>
-                                <ColumnDefinition Width="20"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
+                                </ContextMenu>
+                            </Grid.ContextMenu>
+                            <Label Content="{Binding Path=Name}" Focusable="False" />
+                        </Grid>
+                    </HierarchicalDataTemplate>
+                    <HierarchicalDataTemplate  ItemsSource="{Binding Path=Items}" DataType="{x:Type local:Module}" >
+                        <Grid>
                             <Grid.ContextMenu>
                                 <ContextMenu>
                                     <MenuItem Header="Edit" CommandParameter="{Binding}"
-                                          Command="{Binding Path=PlacementTarget.DataContext.Parent.Parent.Parent.EditCommandCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}"
-                                          Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+                                          Command="{Binding Path=PlacementTarget.DataContext.Parent.Parent.EditModuleCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}" >
                                         <MenuItem.Icon>
                                             <Image Style="{StaticResource EditImage}"/>
                                         </MenuItem.Icon>
                                     </MenuItem>
-                                    <MenuItem Header="Pin" CommandParameter="{Binding}"
-                                          Command="{Binding Path=PlacementTarget.DataContext.Parent.Parent.Parent.TogglePinCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}"
-                                         Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+                                    <MenuItem Header="Sort Ascending" CommandParameter="{Binding}"
+                                          Command="{Binding Path=PlacementTarget.DataContext.Parent.Parent.OrderModuleCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}"
+                                          Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
                                         <MenuItem.Icon>
-                                            <Image Style="{StaticResource PinImage}"/>
+                                            <Image Style="{StaticResource SortAscendingImg}"/>
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                    <MenuItem Header="Sort Descending" CommandParameter="{Binding}"
+                                          Command="{Binding Path=PlacementTarget.DataContext.Parent.Parent.OrderDescModuleCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}"
+                                          Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+                                        <MenuItem.Icon>
+                                            <Image Style="{StaticResource SortDescendingImg}"/>
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                    <MenuItem Header="Clear Sort" CommandParameter="{Binding}"
+                                          Command="{Binding Path=PlacementTarget.DataContext.Parent.Parent.OrderOriginalModuleCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}"
+                                          Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+                                        <MenuItem.Icon>
+                                            <Image Style="{StaticResource ClearSortImg}"/>
                                         </MenuItem.Icon>
                                     </MenuItem>
 
                                 </ContextMenu>
                             </Grid.ContextMenu>
-                            <custom:IconButton Icon="Play.png" Grid.Column="0"  Width="16" Height="16" IsTabStop="False"  
+                            <Label Content="{Binding Path=Name}" Focusable="False"/>
+                        </Grid>
+                    </HierarchicalDataTemplate>
+                    <DataTemplate DataType="{x:Type local:Command}">
+                        <!--<DataTemplate.Triggers >
+                        <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                            <Setter TargetName="treeViewItemRun" Property="b"
+                        </DataTrigger>
+                    </DataTemplate.Triggers>-->
+                        <StackPanel>
+                            <Grid Height="28" x:Name="treeViewItemRun">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="20"/>
+                                    <ColumnDefinition Width="20"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Header="Edit" CommandParameter="{Binding}"
+                                          Command="{Binding Path=PlacementTarget.DataContext.Parent.Parent.Parent.EditCommandCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}"
+                                          Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+                                            <MenuItem.Icon>
+                                                <Image Style="{StaticResource EditImage}"/>
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                        <MenuItem Header="Pin" CommandParameter="{Binding}"
+                                          Command="{Binding Path=PlacementTarget.DataContext.Parent.Parent.Parent.TogglePinCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}"
+                                         Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+                                            <MenuItem.Icon>
+                                                <Image Style="{StaticResource PinImage}"/>
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+
+                                    </ContextMenu>
+                                </Grid.ContextMenu>
+                                <custom:IconButton Icon="Play.png" Grid.Column="0"  Width="16" Height="16" IsTabStop="False"  
                                 Visibility="{Binding Path=HasParam,  Converter={StaticResource ReverseBoolVisibilityConverter}}"
                         CommandParameter="{Binding}" Command="{Binding Path=DataContext.ExecuteCommand,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=TreeView}}"
                                     KeyboardNavigation.DirectionalNavigation="None" KeyboardNavigation.TabNavigation="Continue">
-                                <Button.ToolTip>
-                                    <StackPanel Orientation="Horizontal">
-                                        <Label>Run</Label>
-                                        <Label Content="{Binding Name}"/>
-                                    </StackPanel>
-                                </Button.ToolTip>
-                                <!--<Image Style="{DynamicResource PlayImage}" />-->
-                            </custom:IconButton>
-                            <!--Visibility="{Binding Path=HasParam,  Converter={StaticResource ReverseBoolVisibilityConverter}}"-->
+                                    <Button.ToolTip>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Label>Run</Label>
+                                            <Label Content="{Binding Name}"/>
+                                        </StackPanel>
+                                    </Button.ToolTip>
+                                    <!--<Image Style="{DynamicResource PlayImage}" />-->
+                                </custom:IconButton>
+                                <!--Visibility="{Binding Path=HasParam,  Converter={StaticResource ReverseBoolVisibilityConverter}}"-->
 
-                            <custom:IconButton Icon="Checkmark.png" Grid.Column="1"  Width="16" Height="16" IsTabStop="False"
+                                <custom:IconButton Icon="Checkmark.png" Grid.Column="1"  Width="16" Height="16" IsTabStop="False"
                                 Visibility="{Binding ReturnsType,ConverterParameter={x:Type System:Void},Converter={StaticResource TypeToVisibilityConverter}}"
                                 CommandParameter="{Binding}" 
                                 Command="{Binding Path=DataContext.SetCommandToValueCommand,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=TreeView}}"
                                     KeyboardNavigation.DirectionalNavigation="None">
-                                <Button.ToolTip>
-                                    <Label Content="Set returns value to selected argument"/>
-                                </Button.ToolTip>
+                                    <Button.ToolTip>
+                                        <Label Content="Set returns value to selected argument"/>
+                                    </Button.ToolTip>
 
-                                <!--<Image Style="{DynamicResource CheckmarkShapeRangeImage}" />-->
+                                    <!--<Image Style="{DynamicResource CheckmarkShapeRangeImage}" />-->
 
-                            </custom:IconButton>
-                            <Grid  Grid.Column="1"  Background="{Binding RelativeSource={RelativeSource AncestorType=Border,Mode=FindAncestor},Path=Background}" Width="16" Height="16" 
+                                </custom:IconButton>
+                                <Grid  Grid.Column="1"  Background="{Binding RelativeSource={RelativeSource AncestorType=Border,Mode=FindAncestor},Path=Background}" Width="16" Height="16" 
                                    Visibility="{Binding LastRunFails,Converter={StaticResource BoolToVisibilityConverter}}">
-                                <Image Style="{StaticResource FailsImage}">
-                                    <Image.ToolTip>
-                                        <StackPanel>
-                                            <Label Content="Fails" FontWeight="Bold"/>
-                                            <Label Content="The last run fails, try check your code!" />
-                                        </StackPanel>
-                                    </Image.ToolTip>
-                                </Image>
+                                    <Image Style="{StaticResource FailsImage}">
+                                        <Image.ToolTip>
+                                            <StackPanel>
+                                                <Label Content="Fails" FontWeight="Bold"/>
+                                                <Label Content="The last run fails, try check your code!" />
+                                            </StackPanel>
+                                        </Image.ToolTip>
+                                    </Image>
+                                </Grid>
+                                <Label Grid.Column="2" VerticalAlignment="Center" Content="{Binding Name}" />
+
                             </Grid>
-                            <Label Grid.Column="2" VerticalAlignment="Center" Content="{Binding Name}" />
+                            <ProgressBar Height="2" IsIndeterminate="True"  Visibility="{Binding CanStop,Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            <StackPanel.ToolTip>
+                                <Label Content="{Binding Name}" />
+                            </StackPanel.ToolTip>
+                        </StackPanel>
 
-                        </Grid>
-                        <ProgressBar Height="2" IsIndeterminate="True"  Visibility="{Binding CanStop,Converter={StaticResource BoolToVisibilityConverter}}"/>
-                        <StackPanel.ToolTip>
-                            <Label Content="{Binding Name}" />
-                        </StackPanel.ToolTip>
-                    </StackPanel>
-
-                </DataTemplate>
-            </TreeView.Resources>
-        </TreeView>
+                    </DataTemplate>
+                </TreeView.Resources>
+            </TreeView>
+        </Grid>
     </DockPanel>
 </UserControl>

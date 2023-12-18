@@ -3,12 +3,99 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-    
+                xmlns:local="clr-namespace:br.com.Bonus630DevToolsBar.GMSDragger"
             mc:Ignorable="d" 
-            AllowDrop="True"  Width="20" Height="20" Background="Transparent"  BorderThickness="0" Click="Button_Click" >
-    <Image Source="/Bonus630DevToolsBar;component/Images/drag.png" >
-     
-    </Image>
+            AllowDrop="True"  Width="20" Height="20" Background="{DynamicResource ControlUI.Button.Static.Background}" Padding="1" BorderThickness="0" Click="Button_Click" >
+    <Button.Resources>
+
+            <SolidColorBrush x:Key="ControlUI.Button.MouseOver.Background" Color="#ffe0f0ff"/>
+            <SolidColorBrush x:Key="ControlUI.Button.MouseOver.Border" Color="#ff00adfe"/>
+            <SolidColorBrush x:Key="ControlUI.Button.Static.Border" Color="#ffb2b2b2" />
+            <SolidColorBrush x:Key="ControlUI.Button.Static.Background" Color="#ffeaeaea" />
+            <SolidColorBrush x:Key="ControlUI.Button.Pressed.Background" Color="#FFC4E5F6"/>
+            <SolidColorBrush x:Key="ControlUI.Button.Pressed.Border" Color="#FF2C628B"/>
+           
+
+            <SolidColorBrush x:Key="LightestGrey.ControlUI.Button.MouseOver.Background" Color="#ffe0f0ff"/>
+            <SolidColorBrush x:Key="LightestGrey.ControlUI.Button.MouseOver.Border" Color="#ff00adfe"/>
+            <SolidColorBrush x:Key="LightestGrey.ControlUI.Button.Static.Border" Color="#ffb2b2b2" />
+            <SolidColorBrush x:Key="LightestGrey.ControlUI.Button.Static.Background" Color="#ffeaeaea" />
+            <SolidColorBrush x:Key="LightestGrey.ControlUI.Button.Pressed.Background" Color="#FFC4E5F6"/>
+            <SolidColorBrush x:Key="LightestGrey.ControlUI.Button.Pressed.Border" Color="#FF2C628B"/>
+           
+       
+            <SolidColorBrush x:Key="MediumGrey.ControlUI.Button.MouseOver.Background" Color="#ffe0f0ff"/>
+            <SolidColorBrush x:Key="MediumGrey.ControlUI.Button.MouseOver.Border" Color="#ff00adfe"/>
+            <SolidColorBrush x:Key="MediumGrey.ControlUI.Button.Static.Border" Color="#ffb2b2b2" />
+            <SolidColorBrush x:Key="MediumGrey.ControlUI.Button.Static.Background" Color="#ffe2e2e2" />
+            <SolidColorBrush x:Key="MediumGrey.ControlUI.Button.Pressed.Background" Color="#FFC4E5F6"/>
+            <SolidColorBrush x:Key="MediumGrey.ControlUI.Button.Pressed.Border" Color="#FF2C628B"/>
+            
+
+            <SolidColorBrush x:Key="DarkGrey.ControlUI.Button.MouseOver.Background" Color="#ff003c78"/>
+            <SolidColorBrush x:Key="DarkGrey.ControlUI.Button.MouseOver.Border" Color="#ff3399ff"/>
+            <SolidColorBrush x:Key="DarkGrey.ControlUI.Button.Static.Border" Color="#ff000000" />
+            <SolidColorBrush x:Key="DarkGrey.ControlUI.Button.Static.Background" Color="#ff323232" />
+            <SolidColorBrush x:Key="DarkGrey.ControlUI.Button.Pressed.Background" Color="#FFC4E5F6"/>
+            <SolidColorBrush x:Key="DarkGrey.ControlUI.Button.Pressed.Border" Color="#FF2C628B"/>
+        
+
+
+            <SolidColorBrush x:Key="Black.ControlUI.Button.MouseOver.Background" Color="#ff003c78"/>
+            <SolidColorBrush x:Key="Black.ControlUI.Button.MouseOver.Border" Color="#ff3399ff"/>
+            <SolidColorBrush x:Key="Black.ControlUI.Button.Static.Border" Color="#ff5a5a5a" />
+            <SolidColorBrush x:Key="Black.ControlUI.Button.Static.Background" Color="#ff323232" />
+            <SolidColorBrush x:Key="Black.ControlUI.Button.Pressed.Background" Color="#FFC4E5F6"/>
+            <SolidColorBrush x:Key="Black.ControlUI.Button.Pressed.Border" Color="#FF2C628B"/>
+        <Style x:Key="FocusVisual">
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Rectangle Margin="2" SnapsToDevicePixels="true" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" StrokeThickness="1" StrokeDashArray="1 2"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style  TargetType="{x:Type local:Dragger}">
+            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+            <Setter Property="Background" Value="{DynamicResource ControlUI.Button.Static.Background}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource ControlUI.Button.Static.Border}"/>
+         
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+           
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type local:Dragger}">
+                        <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
+                            <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsDefaulted" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="Transparent"/>
+                                <Setter Property="Background" TargetName="border" Value="{DynamicResource ControlUI.Button.Static.Background}"/>
+                            </Trigger>
+                         
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Background" TargetName="border" Value="{DynamicResource ControlUI.Button.MouseOver.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource ControlUI.Button.MouseOver.Border}"/>
+                                <Setter Property="BorderThickness" TargetName="border" Value="1"/>
+                            </Trigger>
+                          
+
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
+    </Button.Resources>
+    <Image Source="/Bonus630DevToolsBar;component/Images/drag.png" />
+
+
 
     <Button.ToolTip>
         <Label Content="Drag a GMS file" />

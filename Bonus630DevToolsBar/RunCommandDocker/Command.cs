@@ -100,6 +100,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             this.Items = new ObservableCollection<T>(Items.OrderBy(r => r.Index));
             OnPropertyChanged("Items");
         }
+   
         public int Count
         {
             get
@@ -197,6 +198,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         {
             return 467214278 + EqualityComparer<string>.Default.GetHashCode(Path);
         }
+  
         public void AddAndCheckRange(ObservableCollection<Module> moduleList)
         {
             if (Items == null)
@@ -280,6 +282,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             }
             Items.RemoveAt(commandIndex);
         }
+       
         public override int GetHashCode()
         {
             return 733961487 + EqualityComparer<string>.Default.GetHashCode(this.ToString());
@@ -546,7 +549,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             }
 
         }
-
+     
         public override bool Equals(object obj)
         {
 

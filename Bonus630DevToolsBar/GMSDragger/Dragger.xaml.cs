@@ -33,7 +33,7 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
 
                 this.corelApp = app as c.Application;
                 gmsPath = corelApp.GMSManager.UserGMSPath;
-               
+                this.corelApp.OnApplicationEvent += CorelApp_OnApplicationEvent;
             }
             catch
             {
@@ -192,9 +192,65 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
                 processFiles(of.FileNames);
             }
         }
-   
-       
+        #region controle style
+        //Keys resources name follow the resource order to add a new value, order to works you need add 5 resources colors and Resources/Colors.xaml
+        //1º is default, is the same name of StyleKeys string array
+        //2º add LightestGrey. in start name of 1º for LightestGrey style in corel
+        //3º MediumGrey
+        //4º DarkGrey
+        //5º Black
+        private readonly string[] StyleKeys = new string[] {
+        
+          "ControlUI.Button.MouseOver.Background" ,
+         "ControlUI.Button.MouseOver.Border",
+         "ControlUI.Button.Static.Border" ,
+         "ControlUI.Button.Static.Background" ,
+         "ControlUI.Button.Pressed.Background" ,
+         "ControlUI.Button.Pressed.Border",
+      
+        };
+        string currentTheme = "";
+        private void LoadStyle(string name)
+        {
+
+            string style = name.Substring(name.LastIndexOf("_") + 1);
+            for (int i = 0; i < StyleKeys.Length; i++)
+            {
+                this.Resources[StyleKeys[i]] = this.Resources[string.Format("{0}.{1}", style, StyleKeys[i])];
+            }
+        }
+        private void CorelApp_OnApplicationEvent(string EventName, ref object[] Parameters)
+        {
+            if (EventName.Equals("WorkspaceChanged") || EventName.Equals("OnColorSchemeChanged"))
+            {
+                LoadThemeFromPreference();
+            }
+        }
+        public void LoadThemeFromPreference()
+        {
+            try
+            {
+                string result = string.Empty;
+#if !X7
+                result = corelApp.GetApplicationPreferenceValue("WindowScheme", "Colors").ToString();
+#endif
+
+                if (!result.Equals(currentTheme))
+                {
+                    if (!result.Equals(string.Empty))
+                    {
+                        currentTheme = result;
+                        LoadStyle(currentTheme);
+                    }
+                }
+            }
+            catch { }
+        }
+        #endregion
     }
+
+
+}
 
         //public  class Form1 
         //{
@@ -272,4 +328,3 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
         //}
     
 
-}

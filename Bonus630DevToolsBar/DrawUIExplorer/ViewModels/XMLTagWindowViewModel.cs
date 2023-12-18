@@ -255,6 +255,12 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
             core.DispactchNewMessage(r, MsgType.Result);
 
         }
+        readonly List<string> guidDockersNotOpen = new List<string>()
+        {
+            "1b65813d-c4b8-46f7-b596-d5b17d13fda2",
+            "e328ca81-0c4e-4109-9208-cc4dfcc018b0",
+            "0799f357-efd9-45b0-acf5-1e2915bcdc1a"
+        };
         private void GetDockersCaptionExec(IBasicData basicData)
         {
 
@@ -263,8 +269,9 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
             for (int i = 0; i < basicData.Childrens.Count; i++)
             {
                 IBasicData temp = basicData.Childrens[i];
-                if (temp.GetType() == typeof(DockerData))
+                if (temp.GetType() == typeof(DockerData) && !guidDockersNotOpen.Contains(temp.Guid))
                 {
+                    Clipboard.SetText(temp.Guid);
                     if (string.IsNullOrEmpty(temp.Caption))
                     {
                         temp.Caption = core.CorelApp.FrameWork.Automation.GetCaptionText(temp.Guid);
@@ -273,6 +280,8 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
                     {
                         try
                         {
+                            
+                            //System.Windows.MessageBox.Show("Test");
                             core.CorelApp.FrameWork.ShowDocker(temp.Guid);
                             temp.Caption = core.CorelApp.FrameWork.Automation.GetCaptionText(temp.Guid);
                             core.CorelApp.FrameWork.HideDocker(temp.Guid);
