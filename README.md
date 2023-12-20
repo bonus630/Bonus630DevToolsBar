@@ -3,6 +3,8 @@
 
 This repository provides you with a comprehensive codebase for creating an addon for CorelDRAW. The solution, built using Visual Studio, compiles into a powerful addon that incorporates a set of tools to enhance your CorelDRAW experience.
 
+![Bonus630DevToolsBar](Screenshots/bonus60DevTools-Bar.PNG)
+
 Whether you're an experienced developer or just starting with CorelDRAW addons, this toolkit offers a solid foundation to streamline your workflow and expand the capabilities of the software. With a range of meticulously crafted tools, you'll be equipped to develop innovative addons that boost productivity and unleash your creativity.
 
 ## Tools Set:
