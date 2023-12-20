@@ -3,27 +3,28 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using System.Windows;
 using System.Windows.Data;
+using br.com.Bonus630DevToolsBar.RunCommandDocker;
+
 
 namespace br.com.Bonus630DevToolsBar.Converters
 {
-    public class TypeToVisibilityConverter : IValueConverter
+    public class TypeToBoolConverter : IValueConverter
     {
+
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value == null || parameter == null)
-                return System.Windows.Visibility.Collapsed;
-            if (value.Equals(typeof(void)))
-                return System.Windows.Visibility.Collapsed;
-            else
-                return System.Windows.Visibility.Visible;
+            if (value == null)
+                return false;
+            if(value is bool)
+                    return (bool)value;
+            return false;
 
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return typeof(void);
+            return value;
         }
     }
 }

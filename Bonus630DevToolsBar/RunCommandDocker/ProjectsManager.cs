@@ -39,6 +39,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         public BindingCommand<Reflected> CopyValueCommand { get; set; }
         public BindingCommand<object> CopyReturnsValueCommand { get; set; }
         public SimpleCommand SetShapeRangeToValueCommand { get; set; }
+        public SimpleCommand CreateSelectionShapeRangeCommand { get; set; }
 
         private bool myPopupIsOpen;
 
@@ -143,6 +144,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             CopyReturnsValueCommand = new BindingCommand<object>(CopyReturnsValue);
             SetCommandToValueCommand = new BindingCommand<Command>(SetCommandReturnArgumentValue, CanRunSetCommandReturnArgVal);
             SetShapeRangeToValueCommand = new SimpleCommand(SetShapeRangeArgumentValue);
+            CreateSelectionShapeRangeCommand = new SimpleCommand(CreateSelectionShapeRange);
             startFolderMonitor(assemblyDirectory);
         }
 
@@ -418,6 +420,12 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
 
 
             }
+        }
+        private void CreateSelectionShapeRange()
+        {
+            
+                shapeRangeManager.SetSelection();
+         
         }
         //private bool CanRunSetShapeRangeArgumentValue(object o)
         //{

@@ -74,5 +74,15 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             ShapesIds.Clear();
             OnPropertyChanged("Count");
         }
+        public void SetSelection()
+        {
+            try
+            {
+                ShapeRange sr = this.GetShapes();
+                sr.CreateSelection();
+            }
+            catch
+            { }
+        }
     }
 }

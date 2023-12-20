@@ -73,7 +73,7 @@
                     <Button Margin="4,0,0,0" Padding="0"  BorderThickness="0" HorizontalAlignment="Left" x:Name="btn_buildProject" Click="btn_buildProject_Click">
                         <Button.ToolTip>
                             <StackPanel Orientation="Horizontal">
-                                <Label>Build a project</Label>
+                                <Label>Build selected project</Label>
                                 <!--<Label Content="{Binding LastProject}"/>-->
                             </StackPanel>
                         </Button.ToolTip>
@@ -187,9 +187,15 @@
                         </custom:IconButton.ToolTip>
                         <!--<Image Style="{DynamicResource CleanDataShapeRangeImage}" />-->
                     </custom:IconButton>
+                    <custom:IconButton Icon="createSelection.png" Grid.Column="3"   Width="22" Height="22" Command="{Binding Path=CreateSelectionShapeRangeCommand}">
+                        <custom:IconButton.ToolTip>
+                            <Label Content="Create a Selection from this ShapeRange"/>
+                        </custom:IconButton.ToolTip>
+                        <!--<Image Style="{DynamicResource CheckmarkShapeRangeImage}" />-->
+                    </custom:IconButton>
                     <custom:IconButton Icon="Checkmark.png" Grid.Column="5"   Width="22" Height="22" Command="{Binding Path=SetShapeRangeToValueCommand}">
                         <custom:IconButton.ToolTip>
-                            <Label Content="Set ShapeRange Reference to this param"/>
+                            <Label Content="Set ShapeRange Reference to selected param"/>
                         </custom:IconButton.ToolTip>
                         <!--<Image Style="{DynamicResource CheckmarkShapeRangeImage}" />-->
                     </custom:IconButton>
@@ -298,8 +304,9 @@
                                                     <Label Grid.Row="0" Grid.Column="0" Content="{Binding Name}" />
                                                     <Label Grid.Row="0" Grid.Column="1" Content="{Binding ArgumentType.Name}" ToolTip="{Binding ArgumentType.FullName}"/>
                                                     <Label Grid.Row="1" Grid.Column="0" Content="Value:" />
-                                                    <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Value,Converter={StaticResource TypeToStringConverter}}" 
-                                                             
+                                                    <!--<TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Value,Converter={StaticResource TypeToStringConverter}}" 
+                                                             VerticalContentAlignment="Center" Width="144"  />-->
+                                                    <custom:ParamControl Grid.Row="1" Grid.Column="1" ParamValue="{Binding Value}" ParamType="{Binding ArgumentType}"
                                                              VerticalContentAlignment="Center" Width="144"  />
                                                 </Grid>
                                             </DataTemplate>

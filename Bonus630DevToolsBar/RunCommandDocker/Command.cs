@@ -419,7 +419,9 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         }
 
         private Type returnsType;
-        public Type ReturnsType { get { return returnsType; } set { returnsType = value; OnPropertyChanged("ReturnsType"); } }
+        public Type ReturnsType { 
+            get { return returnsType; } 
+            set { returnsType = value; OnPropertyChanged("ReturnsType"); } }
         private Reflected reflected;
 
         public Reflected ReflectedProp
@@ -534,7 +536,15 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                 if (range[i] is Argument)
                 {
                     arguments.Name = (range[i] as Argument).Name;
-                    arguments.ArgumentType = (range[i] as Argument).ArgumentType;
+                    //Tipos customizados não são carregador nessa etapa, sendo que são carregados corretamente na etapa anterior, no proxy, vamos lidar com a exception por enquanto
+                    try
+                    {
+                        arguments.ArgumentType = (range[i] as Argument).ArgumentType;
+                    }
+                    catch(ArgumentException e)
+                    {
+                        arguments.ArgumentType = typeof(object);
+                    }
                     arguments.Value = (range[i] as Argument).Value;
                 }
                 else
@@ -625,7 +635,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                 OnPropertyChanged("Value");
             }
         }
-  
+        
         public override bool Equals(object obj)
         {
             bool equals = false;
@@ -650,4 +660,5 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             return hashCode;
         }
     }
+   
 }

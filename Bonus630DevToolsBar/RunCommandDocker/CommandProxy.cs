@@ -150,10 +150,18 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             Type type = AssemblyTypes.FirstOrDefault(
                 r => r.FullName.Equals(command.Parent.FullName));
             MethodInfo methodInfo = GetMethodInfo(type,command);
-         
-                //type.GetMethods().FirstOrDefault(r=>r.Name.Equals(command.Name));
+
+            //type.GetMethods().FirstOrDefault(r=>r.Name.Equals(command.Name));
             //.GetMembers().FirstOrDefault(u => u.Name.Equals(command.Name));
-            command.ReturnsType = methodInfo.ReturnType;
+            //Aqui temos o mesmo problema dos argumentos com tipo customizado, vamos tratar a excesão
+            try
+            {
+                command.ReturnsType = methodInfo.ReturnType;
+            }
+            catch(ArgumentException e)
+            {
+                command.ReturnsType = typeof(object);
+            }
             ParameterInfo[] parameters = methodInfo.GetParameters();
             if (parameters == null)
                 return null;

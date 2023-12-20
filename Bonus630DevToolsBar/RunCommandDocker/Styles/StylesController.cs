@@ -69,7 +69,10 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker.Styles
          "ScrollBar.Disabled.Background",
          "ScrollBar.Disabled.Border",
          "ScrollBar.Disabled.Glyph",
-        "Footer.Static.Background"
+        "Footer.Static.Background",
+          "NumericTextBox.Static.Background",
+        "NumericTextBox.Static.Border",
+        "NumericTextBox.Selected.Border"
         };
 
         private void LoadStyle(string name)
