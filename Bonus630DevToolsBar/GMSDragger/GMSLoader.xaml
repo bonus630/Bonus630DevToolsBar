@@ -1,0 +1,76 @@
+﻿<UserControl x:Class="br.com.Bonus630DevToolsBar.GMSDragger.GMSLoader"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:br.com.Bonus630DevToolsBar.GMSDragger"
+            xmlns:c="clr-namespace:br.com.Bonus630DevToolsBar.CustomControls"
+             xmlns:converters="clr-namespace:br.com.Bonus630DevToolsBar.Converters"
+             mc:Ignorable="d" Width="440" Height="600">
+    <UserControl.Resources>
+
+        <ResourceDictionary>
+
+            <converters:FileExtensionToVisibilityConverter x:Key="FileExtensionToVisibilityConverter" />
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/Images/Images.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/RunCommandDocker/Styles/Colors.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/RunCommandDocker/Styles/Styles.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/RunCommandDocker/Styles/ScrollComponentsStyles.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/RunCommandDocker/Styles/ListComponentsStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <!--<Button Width="20" Height="20" Click="Button_Click" BorderThickness="0">
+        <Button.Background>
+            <ImageBrush ImageSource="/Bonus630DevToolsBar;component/Images/cql.png"/>
+        </Button.Background>
+        <Button.ToolTip>
+        <StackPanel>
+            <Label Content="CQL Box" />
+            <Label Content="Esc|Close Enter|Evaluate" FontWeight="SemiBold" />
+        </StackPanel>
+    </Button.ToolTip>-->
+    <!--<Popup x:Name="popup_button" IsOpen="False" StaysOpen="True" Placement="Left" >-->
+    <Border BorderThickness="1">
+        <ListView ItemsSource="{Binding Files}" HorizontalAlignment="Stretch" SelectionMode="Single" >
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <EventSetter Event="MouseDoubleClick" Handler="ListView_MouseDoubleClick"/>
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Height="24" Margin="0,2,0,2" Width="414">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="10"/>
+                            <ColumnDefinition Width="24"/>
+
+
+
+                        </Grid.ColumnDefinitions>
+
+                        <Rectangle Fill="{DynamicResource Footer.Static.Background}" Grid.Column="0" />
+                        <Label Grid.Column="1" Content="{Binding Name}" HorizontalAlignment="Stretch" ToolTip="{Binding FullName}" />
+                        
+                            <c:IconButton Grid.Column="3" ToolTip="Unload GMS" Icon="trash.png"  
+                                CommandParameter="{Binding FullName}"  Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}, Path=DataContext.UnloadGMSCommand}"
+                                      Visibility="{Binding Extension,Converter={StaticResource FileExtensionToVisibilityConverter},ConverterParameter=.gms}"
+                                 />
+                            <c:IconButton Grid.Column="3" Margin="2,0,0,0" ToolTip="Load GMS"  Icon="VbeReload.png"
+                                CommandParameter="{Binding FullName}"  Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}, Path=DataContext.LoadGMSCommand}"
+                                      Visibility="{Binding Extension,Converter={StaticResource FileExtensionToVisibilityConverter},ConverterParameter=.bak}"
+                                 />
+                       
+
+
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Border>
+    <!--</Popup>
+</Button>-->
+</UserControl>

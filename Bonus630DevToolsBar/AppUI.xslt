@@ -90,7 +90,14 @@ This file defines new UI elements that all workspaces will contain
 			<itemData guid="9b07d7af-da14-4cd8-9db9-7da214ee1d4a"
 					  onInvoke="*Bind(DataSource=Bonus630DevToolsBarDS;Path=ReloadNRestoreUserGMS)"
 					  icon="guid://9b07d7af-da14-4cd8-9db9-7da214ee1d4a"
-					  type="button"  enable="true"/>
+					  dropDownRef='b0a4b2ff-7bf5-47c3-a92a-16e2a4520746'
+					  type="dropDownDlgBtn"  enable="true" arrowStyle='down'/>
+			
+			<!--PopUp GMS-->
+			<itemData guid="b0a4b2ff-7bf5-47c3-a92a-16e2a4520746"
+					type="wpfhost"
+					hostedType="Addons\Bonus630DevToolsBar\Bonus630DevToolsBar.dll,br.com.Bonus630DevToolsBar.GMSDragger.GMSLoader"
+					enable="true"/>
 			
 			<!-- Unload and Delete GMS-->
 			<itemData guid="571db7b2-8cae-4b99-b241-a56ecd61f90e"
@@ -249,21 +256,29 @@ This file defines new UI elements that all workspaces will contain
 			</dockerData>
 		</xsl:copy>
 	</xsl:template>
-	<!-- Pop up CQL Runner-->
+	
 	<xsl:template match="uiConfig/dialogs">
 		<xsl:copy>
 			<xsl:apply-templates select="node()|@*"/>
-
+			<!-- Pop up CQL Runner-->
 			<dialog guid="9b6ec438-14c9-44e2-92c3-c28411f093af"
 						   popUp="true">
 
 				<item  guidRef="8a8ca94c-cc61-4f14-b24d-cbd447d2fd56" dock="fill"/>
 
 			</dialog>
+			<!-- Pop up Folder-->
 			<dialog guid="b83ecdef-7b82-46ee-bef3-d874902e031a"
 						   popUp="true">
 
 				<item  guidRef="d13b83a4-3ef6-4ead-b95d-44d467dc47f5" dock="fill"/>
+
+			</dialog>
+			<!-- Pop up GMS Load-->
+			<dialog guid="acdc8c23-25cb-49a7-9346-0a6b69bbf5c9"
+						   popUp="true">
+
+				<item  guidRef="b0a4b2ff-7bf5-47c3-a92a-16e2a4520746" dock="fill"/>
 
 			</dialog>
 

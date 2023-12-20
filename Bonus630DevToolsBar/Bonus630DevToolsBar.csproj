@@ -212,6 +212,7 @@
     <Compile Include="ControlsShorcutsCDRAddon\Views\DockerUI.xaml.cs">
       <DependentUpon>DockerUI.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\FileExtensionToVisibilityConverter.cs" />
     <Compile Include="Converters\DoubleToStringConverter.cs" />
     <Compile Include="Converters\ImagePathConverter.cs" />
     <Compile Include="Converters\ImagePathConverterD.cs" />
@@ -241,6 +242,9 @@
     <Compile Include="Folders\Folder.cs" />
     <Compile Include="Folders\Folders.xaml.cs">
       <DependentUpon>Folders.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GMSDragger\GMSLoader.xaml.cs">
+      <DependentUpon>GMSLoader.xaml</DependentUpon>
     </Compile>
     <Compile Include="GMSDragger\Dragger.xaml.cs">
       <DependentUpon>Dragger.xaml</DependentUpon>
@@ -470,6 +474,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="GMSDragger\GMSLoader.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="GMSDragger\Dragger.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -552,6 +560,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\SortDescending.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\VbeReload.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="SQLite.Interop.dll">

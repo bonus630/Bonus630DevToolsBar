@@ -118,7 +118,7 @@ namespace br.com.Bonus630DevToolsBar.DataSource
                 try
 
                 {
-                    if (!files[i].EndsWith(".bak"))
+                    if (files[i].ToLower().EndsWith(".gms"))
                         File.Move(files[i], files[i]+".bak");
                 }
                 catch

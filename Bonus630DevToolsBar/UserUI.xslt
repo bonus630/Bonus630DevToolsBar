@@ -138,15 +138,21 @@ with F8 to reapply the changes.
 	<xsl:template match="uiConfig/dialogs">
 		<xsl:copy>
 			<xsl:apply-templates select="node()|@*"/>
-
+			<!-- Pop up CQL Runner-->
 			<xsl:if test="not(./dialog[@guidRef='9b6ec438-14c9-44e2-92c3-c28411f093af'])">
 				<dialog guidRef="9b6ec438-14c9-44e2-92c3-c28411f093af" dock="top"/>
 			</xsl:if>
+			<!-- Pop up Folder-->
 			<xsl:if test="not(./dialog[@guidRef='b83ecdef-7b82-46ee-bef3-d874902e031a'])">
 				<dialog guidRef="b83ecdef-7b82-46ee-bef3-d874902e031a" dock="top"/>
 			</xsl:if>
+			<!-- Pop up GMS Loader-->
+			<xsl:if test="not(./dialog[@guidRef='acdc8c23-25cb-49a7-9346-0a6b69bbf5c9'])">
+				<dialog guidRef="acdc8c23-25cb-49a7-9346-0a6b69bbf5c9" dock="top"/>
+			</xsl:if>
 		</xsl:copy>
 	</xsl:template>
+	<!-- Pop up CQL Runner-->
 	<xsl:template match="uiConfig/dialogs/dialog[@guid='9b6ec438-14c9-44e2-92c3-c28411f093af']">
 		<xsl:copy>
 			<xsl:apply-templates select="node()|@*"/>
@@ -157,6 +163,7 @@ with F8 to reapply the changes.
 
 		</xsl:copy>
 	</xsl:template>
+	<!-- Pop up Folder-->
 		<xsl:template match="uiConfig/dialogs/dialog[@guid='b83ecdef-7b82-46ee-bef3-d874902e031a']">
 		<xsl:copy>
 			<xsl:apply-templates select="node()|@*"/>
@@ -165,6 +172,17 @@ with F8 to reapply the changes.
 				<item guidRef="d13b83a4-3ef6-4ead-b95d-44d467dc47f5" dock="fill"/>
 			</xsl:if>	
 		
+		</xsl:copy>
+	</xsl:template>
+	<!-- Pop up  GMS Loader-->
+	<xsl:template match="uiConfig/dialogs/dialog[@guid='acdc8c23-25cb-49a7-9346-0a6b69bbf5c9']">
+		<xsl:copy>
+			<xsl:apply-templates select="node()|@*"/>
+
+			<xsl:if test="not(./item[@guidRef='b0a4b2ff-7bf5-47c3-a92a-16e2a4520746'])">
+				<item guidRef="b0a4b2ff-7bf5-47c3-a92a-16e2a4520746" dock="fill"/>
+			</xsl:if>
+
 		</xsl:copy>
 	</xsl:template>
 </xsl:stylesheet>
