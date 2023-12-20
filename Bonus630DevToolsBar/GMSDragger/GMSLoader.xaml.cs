@@ -49,7 +49,7 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
         private void OnFilesChanged()
         {
             if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(nameof(Files)));
+                PropertyChanged(this, new PropertyChangedEventArgs("Files"));
         }
         public GMSLoader(object app)
         {
