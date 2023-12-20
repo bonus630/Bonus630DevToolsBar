@@ -107,9 +107,9 @@ namespace br.com.Bonus630DevToolsBar.DataSource
             string path = ControlUI.corelApp.GMSManager.UserGMSPath;
             GMSProjects gp = ControlUI.corelApp.GMSManager.Projects;
 
-            for (int i = 1; i <= gp.Count; i++)
+            while(gp.Count>0)
             {
-                gp[i].Unload();
+                gp[1].Unload();
 
             }
             string[] files = Directory.GetFiles(path);
@@ -118,7 +118,44 @@ namespace br.com.Bonus630DevToolsBar.DataSource
                 try
 
                 {
-                    File.Delete(files[i]);
+                    if (!files[i].EndsWith(".bak"))
+                        File.Move(files[i], files[i]+".bak");
+                }
+                catch
+                {
+
+                }
+            }
+
+        }
+        public void ReloadNRestoreUserGMS()
+        {
+            string path = ControlUI.corelApp.GMSManager.UserGMSPath;  
+            
+            string[] files = Directory.GetFiles(path);
+            for (int i = 0; i < files.Length; i++)
+            {
+                try
+
+                {
+                    if (files[i].EndsWith(".bak"))
+                        File.Move(files[i], files[i].Replace(".bak",""));
+                }
+                catch
+                {
+
+                }
+            }
+            GMSProjects gp = ControlUI.corelApp.GMSManager.Projects;
+            files = Directory.GetFiles(path);
+            for (int i = 0; i < files.Length; i++)
+            {
+                try
+
+                {
+                    if (files[i].ToLower().EndsWith(".gms"))
+                        
+                        gp.Load(files[i], false, false);
                 }
                 catch
                 {

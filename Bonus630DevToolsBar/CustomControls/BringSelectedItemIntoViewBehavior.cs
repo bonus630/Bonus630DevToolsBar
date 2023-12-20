@@ -54,7 +54,8 @@ namespace br.com.Bonus630DevToolsBar.CustomControls
         private static void TreeViewItemOnSelected(object sender, RoutedEventArgs routedEventArgs)
         {
             var treeViewItem = sender as TreeViewItem;
-            treeViewItem?.BringIntoView();
+            if(treeViewItem!=null)
+                treeViewItem.BringIntoView();
         }
     }
 }

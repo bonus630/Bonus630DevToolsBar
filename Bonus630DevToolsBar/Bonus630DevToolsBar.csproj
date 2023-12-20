@@ -217,7 +217,6 @@
     <Compile Include="Converters\ImagePathConverterD.cs" />
     <Compile Include="Converters\NormalizeImagePathConverter.cs" />
     <Compile Include="Converters\StringLenToVisibilityConverter.cs" />
-    <Compile Include="Converters\TypeConverter.cs" />
     <Compile Include="Converters\TypeToBoolConverter.cs" />
     <Compile Include="CQLRunner\CQLRunner.xaml.cs">
       <DependentUpon>CQLRunner.xaml</DependentUpon>
@@ -705,7 +704,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="RunCommandDocker\MSBuildLogger.dll" />
-    <Content Include="RunCommandDocker\resources.rct" />
     <Content Include="UserUI.xslt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

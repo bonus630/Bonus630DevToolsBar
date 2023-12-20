@@ -86,6 +86,12 @@ This file defines new UI elements that all workspaces will contain
 					hostedType="Addons\Bonus630DevToolsBar\Bonus630DevToolsBar.dll,br.com.Bonus630DevToolsBar.GMSDragger.Dragger"
 					enable="true"/>
 
+			<!--Reload GMS-->
+			<itemData guid="9b07d7af-da14-4cd8-9db9-7da214ee1d4a"
+					  onInvoke="*Bind(DataSource=Bonus630DevToolsBarDS;Path=ReloadNRestoreUserGMS)"
+					  icon="guid://9b07d7af-da14-4cd8-9db9-7da214ee1d4a"
+					  type="button"  enable="true"/>
+			
 			<!-- Unload and Delete GMS-->
 			<itemData guid="571db7b2-8cae-4b99-b241-a56ecd61f90e"
 					  onInvoke="*Bind(DataSource=Bonus630DevToolsBarDS;Path=UnloadNDeleteUserGMS)"
@@ -177,6 +183,8 @@ This file defines new UI elements that all workspaces will contain
 						<item  guidRef="3b3f72b8-0129-4316-b8a3-40e4758ba9bc" dock="top"/>
 						<!--Macro Manager-->
 						<item guidRef="13d17830-0ba8-4f71-85e0-6df0a1051eee" dock="top" />
+						<!--Reload Gms -->
+						<item  guidRef="9b07d7af-da14-4cd8-9db9-7da214ee1d4a" dock="top"/>
 						<!--Unload and Delete GMS -->
 						<item  guidRef="571db7b2-8cae-4b99-b241-a56ecd61f90e" dock="top"/>
 						<!--Separator-->

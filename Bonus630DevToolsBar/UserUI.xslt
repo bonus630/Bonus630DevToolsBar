@@ -79,11 +79,16 @@ with F8 to reapply the changes.
 				<xsl:if test="not(./item[@guidRef='13d17830-0ba8-4f71-85e0-6df0a1051eee'])">
 				<item guidRef="13d17830-0ba8-4f71-85e0-6df0a1051eee"/>
 			</xsl:if>
+			<!--Reload GMS-->
+			<xsl:if test="not(./item[@guidRef='9b07d7af-da14-4cd8-9db9-7da214ee1d4a'])">
+				<item guidRef="9b07d7af-da14-4cd8-9db9-7da214ee1d4a"/>
+			</xsl:if>
+			
 			<!--Unload and Delete GMS-->
 			<xsl:if test="not(./item[@guidRef='571db7b2-8cae-4b99-b241-a56ecd61f90e'])">
 				<item guidRef="571db7b2-8cae-4b99-b241-a56ecd61f90e"/>
-			</xsl:if>	
-		
+			</xsl:if>
+
 			<xsl:if test="not(./item[@guidRef='266435b4-6e53-460f-9fa7-f45be187d400'])">
 				<item guidRef="266435b4-6e53-460f-9fa7-f45be187d400"/>
 			</xsl:if>
