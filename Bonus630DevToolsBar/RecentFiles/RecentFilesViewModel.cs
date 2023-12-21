@@ -1,13 +1,17 @@
 ﻿using br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels;
 using System;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
+using System.Windows.Input;
 
 namespace br.com.Bonus630DevToolsBar.RecentFiles
 {
     public class RecentFilesViewModel : ViewModelBase
     {
-    
+
+       // public ICommand OpenFolderCommand { get; set; }
+
         private ObservableCollection<RecentFileViewModel> files;
 
         public ObservableCollection<RecentFileViewModel> Files
@@ -53,7 +57,7 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
 
         public void Add(RecentFileViewModel file)
         {
-            this.files.Add(file);
+            this.files.Insert(0,file);
             OnPropertyChanged("Files");
             OnPropertyChanged("IteMsWidth");
         }
@@ -70,5 +74,14 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
                 return;
             this.Remove(file);
         }
+        //public RecentFilesViewModel()
+        //{
+        //    OpenFolderCommand = new br.com.Bonus630DevToolsBar.RunCommandDocker.BindingCommand<string>(OpenFolder);
+        //}
+        //private void OpenFolder(string filePath)
+        //{
+
+        //    System.Diagnostics.Process.Start(filePath.Substring(0, filePath.LastIndexOf("\\"));
+        //}
     }
 }

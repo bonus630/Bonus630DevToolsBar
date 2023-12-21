@@ -8,7 +8,7 @@
              mc:Ignorable="d" 
              >
     <UserControl.Resources>
-        
+
         <ResourceDictionary>
             <ContextMenu x:Key="FolderMenuContext">
                 <MenuItem Header="Select a icone" CommandParameter="{Binding}" Command="{Binding Parent.PastIconeCommand}">
@@ -23,13 +23,13 @@
                 </MenuItem>
             </ContextMenu>
             <converters:NullVisibilityConverter x:Key="NullVisibilityConverter" />
-		
+
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/RunCommandDocker/Styles/Colors.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/RunCommandDocker/Styles/Styles.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/Images/Images.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-           
+
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
@@ -37,7 +37,11 @@
             <ItemsControl.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Past Folder" 
-                          Command="{Binding DataContext.PastFolderCommand,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ItemsControl}}" />
+                          Command="{Binding DataContext.PastFolderCommand,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ItemsControl}}" >
+                        <MenuItem.Icon>
+                            <Image Style="{DynamicResource PasteMenuItemImg}" />
+                        </MenuItem.Icon>
+                    </MenuItem>
                 </ContextMenu>
             </ItemsControl.ContextMenu>
             <ItemsControl.ItemTemplate>
@@ -50,7 +54,7 @@
                             <Image Source="{Binding Icone,TargetNullValue={x:Null}}" Width="28" Height="28" 
                                Visibility="{Binding RelativeSource={RelativeSource Mode=Self},Path=Source,Converter={StaticResource NullVisibilityConverter}}"/>
                         </Grid>
-                    
+
                         <Button.Style>
                             <Style>
                                 <Setter Property="Button.ContextMenu" Value="{StaticResource FolderMenuContext}" />

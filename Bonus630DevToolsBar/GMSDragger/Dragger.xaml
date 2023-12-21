@@ -7,46 +7,12 @@
             mc:Ignorable="d" 
             AllowDrop="True"  Width="20" Height="20" Background="{DynamicResource ControlUI.Button.Static.Background}" Padding="1" BorderThickness="0" Click="Button_Click" >
     <Button.Resources>
-
-            <SolidColorBrush x:Key="ControlUI.Button.MouseOver.Background" Color="#ffe0f0ff"/>
-            <SolidColorBrush x:Key="ControlUI.Button.MouseOver.Border" Color="#ff00adfe"/>
-            <SolidColorBrush x:Key="ControlUI.Button.Static.Border" Color="#ffb2b2b2" />
-            <SolidColorBrush x:Key="ControlUI.Button.Static.Background" Color="#ffeaeaea" />
-            <SolidColorBrush x:Key="ControlUI.Button.Pressed.Background" Color="#FFC4E5F6"/>
-            <SolidColorBrush x:Key="ControlUI.Button.Pressed.Border" Color="#FF2C628B"/>
-           
-
-            <SolidColorBrush x:Key="LightestGrey.ControlUI.Button.MouseOver.Background" Color="#ffe0f0ff"/>
-            <SolidColorBrush x:Key="LightestGrey.ControlUI.Button.MouseOver.Border" Color="#ff00adfe"/>
-            <SolidColorBrush x:Key="LightestGrey.ControlUI.Button.Static.Border" Color="#ffb2b2b2" />
-            <SolidColorBrush x:Key="LightestGrey.ControlUI.Button.Static.Background" Color="#ffeaeaea" />
-            <SolidColorBrush x:Key="LightestGrey.ControlUI.Button.Pressed.Background" Color="#FFC4E5F6"/>
-            <SolidColorBrush x:Key="LightestGrey.ControlUI.Button.Pressed.Border" Color="#FF2C628B"/>
-           
-       
-            <SolidColorBrush x:Key="MediumGrey.ControlUI.Button.MouseOver.Background" Color="#ffe0f0ff"/>
-            <SolidColorBrush x:Key="MediumGrey.ControlUI.Button.MouseOver.Border" Color="#ff00adfe"/>
-            <SolidColorBrush x:Key="MediumGrey.ControlUI.Button.Static.Border" Color="#ffb2b2b2" />
-            <SolidColorBrush x:Key="MediumGrey.ControlUI.Button.Static.Background" Color="#ffe2e2e2" />
-            <SolidColorBrush x:Key="MediumGrey.ControlUI.Button.Pressed.Background" Color="#FFC4E5F6"/>
-            <SolidColorBrush x:Key="MediumGrey.ControlUI.Button.Pressed.Border" Color="#FF2C628B"/>
-            
-
-            <SolidColorBrush x:Key="DarkGrey.ControlUI.Button.MouseOver.Background" Color="#ff003c78"/>
-            <SolidColorBrush x:Key="DarkGrey.ControlUI.Button.MouseOver.Border" Color="#ff3399ff"/>
-            <SolidColorBrush x:Key="DarkGrey.ControlUI.Button.Static.Border" Color="#ff000000" />
-            <SolidColorBrush x:Key="DarkGrey.ControlUI.Button.Static.Background" Color="#ff323232" />
-            <SolidColorBrush x:Key="DarkGrey.ControlUI.Button.Pressed.Background" Color="#FFC4E5F6"/>
-            <SolidColorBrush x:Key="DarkGrey.ControlUI.Button.Pressed.Border" Color="#FF2C628B"/>
-        
-
-
-            <SolidColorBrush x:Key="Black.ControlUI.Button.MouseOver.Background" Color="#ff003c78"/>
-            <SolidColorBrush x:Key="Black.ControlUI.Button.MouseOver.Border" Color="#ff3399ff"/>
-            <SolidColorBrush x:Key="Black.ControlUI.Button.Static.Border" Color="#ff5a5a5a" />
-            <SolidColorBrush x:Key="Black.ControlUI.Button.Static.Background" Color="#ff323232" />
-            <SolidColorBrush x:Key="Black.ControlUI.Button.Pressed.Background" Color="#FFC4E5F6"/>
-            <SolidColorBrush x:Key="Black.ControlUI.Button.Pressed.Border" Color="#FF2C628B"/>
+        <ResourceDictionary>
+        <ResourceDictionary.MergedDictionaries>
+            <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/Images/Images.xaml"/>
+            <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/RunCommandDocker/Styles/Colors.xaml"/>
+            <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/RunCommandDocker/Styles/Styles.xaml"/>
+        </ResourceDictionary.MergedDictionaries>
         <Style x:Key="FocusVisual">
             <Setter Property="Control.Template">
                 <Setter.Value>
@@ -90,7 +56,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
-
+        </ResourceDictionary>
 
     </Button.Resources>
     <Image Source="/Bonus630DevToolsBar;component/Images/drag.png" />
@@ -100,4 +66,18 @@
     <Button.ToolTip>
         <Label Content="Drag a GMS file" />
     </Button.ToolTip>
+    <Button.ContextMenu>
+        <ContextMenu>
+            <MenuItem Header="Open User GMS Folder" Click="MenuItemUserGMS_Click" >
+                <MenuItem.Icon>
+                    <Image Style="{DynamicResource FolderOpenedImage}" />
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Open Program GMS Folder" Click="MenuItemGMS_Click">
+                <MenuItem.Icon>
+                    <Image Style="{DynamicResource FolderOpenedImage}" />
+                </MenuItem.Icon>
+            </MenuItem>
+        </ContextMenu>
+    </Button.ContextMenu>
 </Button>

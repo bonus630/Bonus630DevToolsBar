@@ -92,8 +92,8 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
 
                 using (SQLiteCommand command = CreateConnection().CreateCommand())
                 {
-                    command.CommandText = "SELECT * FROM :table ORDER BY id DESC LIMIT 1;";
-                    command.Parameters.AddWithValue(":table", table);
+                    command.CommandText = "SELECT * FROM files ORDER BY id DESC LIMIT 1;";
+                  
                     using (SQLiteDataReader dataReader = command.ExecuteReader())
                     {
                         if (dataReader.Read())
@@ -113,10 +113,9 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
 
                 using (SQLiteCommand command = CreateConnection().CreateCommand())
                 {
-                    command.CommandText = "SELECT id FROM :table ORDER BY id WHERE path=:path DESC LIMIT 1;";
+                    command.CommandText = "SELECT id FROM files ORDER BY id WHERE path=:path DESC LIMIT 1;";
                     command.Parameters.AddWithValue(":path", fullName);
-                    command.Parameters.AddWithValue(":table", table);
-
+                 
                     using (SQLiteDataReader dataReader = command.ExecuteReader())
                     {
                         if (dataReader.Read())
@@ -139,9 +138,8 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
             {
                 using (SQLiteCommand command = CreateConnection().CreateCommand())
                 {
-                    command.CommandText = "DELETE FROM :table WHERE id=:id";
+                    command.CommandText = "DELETE FROM files WHERE id=:id";
                     command.Parameters.AddWithValue(":id", id);
-                    command.Parameters.AddWithValue(":table", table);
                     command.ExecuteNonQuery();
                 }
             }

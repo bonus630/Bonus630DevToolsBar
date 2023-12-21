@@ -4,13 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels;
 
 namespace br.com.Bonus630DevToolsBar.RecentFiles
 {
     public class RecentFileViewModel : ViewModelBase
+
     {
+       
         public RecentFileViewModel(int id)
         {
             this.ID = id; 
@@ -88,5 +91,6 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
             get { return isOpened; }
             set { isOpened = value; OnPropertyChanged(); }
         }
+        
     }
 }

@@ -21,12 +21,13 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
     public partial class Dragger : Button
     {
         c.Application corelApp;
+        string currentTheme = "";
         string gmsPath = "";
         List<string> resultList = new List<string>();
         public readonly string VBAEditorGuid = "28e16db6-6339-440d-af0d-f58ac27c115d";
         public Dragger(object app)
         {
-    
+
             InitializeComponent();
             try
             {
@@ -76,7 +77,7 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
                     if (processFile(files[i], out result))
                     {
                         project = this.corelApp.GMSManager.Projects.Load(result);
-                        
+
                         r = true;
                     }
                 }
@@ -86,7 +87,7 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
             if (r)
                 this.corelApp.FrameWork.Automation.InvokeItem(VBAEditorGuid);
         }
-        private bool processFile(string arquivo,out string result)
+        private bool processFile(string arquivo, out string result)
         {
             string toReplace = "5351FFE607030703F8FD0803BECFCA6AB7796054D8A2E61F539CAD491169CD680FA4C6D26A";
             // string arquivo = @"D:\CDRGMS\Shaping-X64-2020.gms";
@@ -200,16 +201,29 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
         //4º DarkGrey
         //5º Black
         private readonly string[] StyleKeys = new string[] {
-        
+
           "ControlUI.Button.MouseOver.Background" ,
          "ControlUI.Button.MouseOver.Border",
          "ControlUI.Button.Static.Border" ,
          "ControlUI.Button.Static.Background" ,
          "ControlUI.Button.Pressed.Background" ,
          "ControlUI.Button.Pressed.Border",
-      
+          "Default.Static.Foreground" ,
+         "Default.Static.Background",
+         "Container.Text.Static.Background" ,
+         "Container.Text.Static.Foreground" ,
+         "Container.Static.Background" ,
+         "Default.Static.Inverted.Foreground", "Button.MouseOver.Background" ,
+         "Button.MouseOver.Border",
+         "Button.Static.Border" ,
+         "Button.Static.Background" ,
+         "Button.Pressed.Background" ,
+         "Button.Pressed.Border" ,
+         "Button.Disabled.Foreground",
+         "Button.Disabled.Background",
+
         };
-        string currentTheme = "";
+      
         private void LoadStyle(string name)
         {
 
@@ -247,84 +261,94 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
             catch { }
         }
         #endregion
+
+        private void MenuItemUserGMS_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start(this.corelApp.GMSManager.UserGMSPath);
+        }
+
+        private void MenuItemGMS_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start(this.corelApp.GMSManager.GMSPath);
+        }
     }
 
 
 }
 
-        //public  class Form1 
-        //{
-        //    private Microsoft.Vbe.Interop.VBProject vb;
+//public  class Form1 
+//{
+//    private Microsoft.Vbe.Interop.VBProject vb;
 
 
 
-        //    private void Form1_Load(object sender, EventArgs e)
-        //    {
-        //        Microsoft.Vbe.Interop.VBE vbe = Microsoft.VisualBasic.Interaction.CreateObject("VBE", "");
+//    private void Form1_Load(object sender, EventArgs e)
+//    {
+//        Microsoft.Vbe.Interop.VBE vbe = Microsoft.VisualBasic.Interaction.CreateObject("VBE", "");
 
-        //        foreach (Microsoft.Vbe.Interop.VBProject vbp in vbe.VBProjects)
-        //        {
-        //            list.Items.Add(vbp.Name);
-        //        }
-        //    }
+//        foreach (Microsoft.Vbe.Interop.VBProject vbp in vbe.VBProjects)
+//        {
+//            list.Items.Add(vbp.Name);
+//        }
+//    }
 
-        //    private void CreateDir(string path)
-        //    {
-        //        string exist = Directory.Exists(path) ? path : string.Empty;
-        //        if (exist == string.Empty)
-        //        {
-        //            Directory.CreateDirectory(path);
-        //        }
-        //    }
+//    private void CreateDir(string path)
+//    {
+//        string exist = Directory.Exists(path) ? path : string.Empty;
+//        if (exist == string.Empty)
+//        {
+//            Directory.CreateDirectory(path);
+//        }
+//    }
 
-        //    private void exp_Click(object sender, EventArgs e)
-        //    {
-        //        if (list.SelectedIndex == -1)
-        //        {
-        //            return;
-        //        }
+//    private void exp_Click(object sender, EventArgs e)
+//    {
+//        if (list.SelectedIndex == -1)
+//        {
+//            return;
+//        }
 
-        //        Microsoft.Vbe.Interop.VBProject vbp = (Microsoft.Vbe.Interop.VBProject)vbe.VBProjects.Item(list.SelectedIndex + 1);
+//        Microsoft.Vbe.Interop.VBProject vbp = (Microsoft.Vbe.Interop.VBProject)vbe.VBProjects.Item(list.SelectedIndex + 1);
 
-        //        string path = CorelScriptTools.GetFolder();
-        //        if (path.Length == 0)
-        //        {
-        //            return;
-        //        }
+//        string path = CorelScriptTools.GetFolder();
+//        if (path.Length == 0)
+//        {
+//            return;
+//        }
 
-        //        if (cbIntoNewFolder.Checked)
-        //        {
-        //            path = path + "\\" + vbp.Name;
-        //            CreateDir(path);
-        //        }
+//        if (cbIntoNewFolder.Checked)
+//        {
+//            path = path + "\\" + vbp.Name;
+//            CreateDir(path);
+//        }
 
-        //        string srcPath = path + "\\source";
-        //        CreateDir(srcPath);
+//        string srcPath = path + "\\source";
+//        CreateDir(srcPath);
 
-        //        foreach (Microsoft.Vbe.Interop.VBComponent vc in vbp.VBComponents)
-        //        {
-        //            string fileName = vc.Name;
+//        foreach (Microsoft.Vbe.Interop.VBComponent vc in vbp.VBComponents)
+//        {
+//            string fileName = vc.Name;
 
-        //            switch (vc.Type)
-        //            {
-        //                case Microsoft.Vbe.Interop.vbext_ComponentType.vbext_ct_StdModule:
-        //                    fileName = fileName + ".bas";
-        //                    break;
-        //                case Microsoft.Vbe.Interop.vbext_ComponentType.vbext_ct_ClassModule:
-        //                case Microsoft.Vbe.Interop.vbext_ComponentType.vbext_ct_Document:
-        //                    fileName = fileName + ".cls";
-        //                    break;
-        //                case Microsoft.Vbe.Interop.vbext_ComponentType.vbext_ct_MSForm:
-        //                    fileName = fileName + ".frm";
-        //                    break;
-        //            }
+//            switch (vc.Type)
+//            {
+//                case Microsoft.Vbe.Interop.vbext_ComponentType.vbext_ct_StdModule:
+//                    fileName = fileName + ".bas";
+//                    break;
+//                case Microsoft.Vbe.Interop.vbext_ComponentType.vbext_ct_ClassModule:
+//                case Microsoft.Vbe.Interop.vbext_ComponentType.vbext_ct_Document:
+//                    fileName = fileName + ".cls";
+//                    break;
+//                case Microsoft.Vbe.Interop.vbext_ComponentType.vbext_ct_MSForm:
+//                    fileName = fileName + ".frm";
+//                    break;
+//            }
 
-        //            vc.Export(srcPath + "\\" + fileName);
-        //        }
+//            vc.Export(srcPath + "\\" + fileName);
+//        }
 
-        //        FileSystem.FileCopy(vbp.FileName, path + "\\" + vbp.Name + ".gms");
-        //        MessageBox.Show("Done!");
-        //    }
-        //}
-    
+//        FileSystem.FileCopy(vbp.FileName, path + "\\" + vbp.Name + ".gms");
+//        MessageBox.Show("Done!");
+//    }
+//}
+
 

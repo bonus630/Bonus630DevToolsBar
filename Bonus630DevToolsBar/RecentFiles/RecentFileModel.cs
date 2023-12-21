@@ -57,7 +57,7 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
             ObservableCollection<RecentFileViewModel> datas = new ObservableCollection<RecentFileViewModel>();
             try
             {
-                string condition = " ORDER BY time DESC";
+                string condition = " ORDER BY time ASC";
                 if (id != -1)
                     condition = " LIMIT " + id;
                 using (SQLiteCommand command = CreateConnection().CreateCommand())

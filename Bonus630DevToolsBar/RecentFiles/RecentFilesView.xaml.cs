@@ -50,7 +50,11 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
 
         private void CorelApp_DocumentAfterSave(Document Doc, bool SaveAs, string FileName)
         {
-            Save(Doc.FileName, FileName);
+            string name = Doc.FileName;
+            if (string.IsNullOrEmpty(name))
+                name = FileName.Substring(FileName.LastIndexOf("\\") + 1);
+
+            Save(name, FileName);
         }
 
         private void RecentFilesView_Unloaded(object sender, RoutedEventArgs e)
@@ -232,8 +236,14 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
 
         private void MenuItem_Click_3(object sender, RoutedEventArgs e)
         {
-            RecentFileViewModel r = dataContext[(sender as MenuItem).Tag.ToString()];
+            RecentFileViewModel r = dataContext[(int)(sender as MenuItem).Tag];
             System.Windows.Clipboard.SetText(r.FullName);
+        }
+
+        private void MenuItem_Click_4(object sender, RoutedEventArgs e)
+        {
+            RecentFileViewModel r = dataContext[(int)(sender as MenuItem).Tag];
+            System.Diagnostics.Process.Start(r.FullName.Substring(0, r.FullName.LastIndexOf("\\")));
         }
     }
 

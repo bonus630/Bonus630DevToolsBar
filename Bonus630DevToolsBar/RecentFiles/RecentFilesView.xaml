@@ -9,13 +9,13 @@
              mc:Ignorable="d" 
              d:Background="White" >
     <UserControl.Resources>
-        
+
         <ResourceDictionary>
-            
+
             <ResourceDictionary.MergedDictionaries>
-                
-                <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/RunCommandDocker/Styles/Colors.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/RunCommandDocker/Styles/Styles.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/Images/Images.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/RunCommandDocker/Styles/Colors.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/RunCommandDocker/Styles/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
             <converters:InvertBoolVisibilityConverter x:Key="InvertBoolVisibilityConverter" />
@@ -118,7 +118,6 @@
     </UserControl.Resources>
     <DockPanel LastChildFill="True">
         <CheckBox x:Name="ck_autoLoad" DockPanel.Dock="Left" ToolTip="Auto Load Files" VerticalAlignment="Center" Click="CheckBox_Click"/>
-      
         <ItemsControl x:Name="Items" DockPanel.Dock="Right" Margin="10,0,0,0" ItemsSource="{Binding Files}" Height="20" Width="400">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
@@ -131,17 +130,38 @@
                                     <Label Content="File is Opened!" Visibility="{Binding IsOpened,Converter={StaticResource BooleanToVisibilityConverter}}"/>
                                     <StackPanel Orientation="Horizontal">
                                         <Ellipse Fill="Green" Width="6" Height="6" VerticalAlignment="Center" Visibility="{Binding AutoLoad,Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                                       <Label Content="{Binding Name,FallbackValue=Nome do arquivo.cdr}" /> 
+                                        <Label Content="{Binding Name,FallbackValue=Nome do arquivo.cdr}" ToolTip="{Binding FullName}" />
                                     </StackPanel>
                                 </StackPanel>
                             </Border>
                         </Button.ToolTip>
                         <Button.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Header="Remove" Click="MenuItem_Click" Tag="{Binding ID}" />
-                                <MenuItem Header="Add to Auto Load" Click="MenuItem_Click_1" Tag="{Binding ID}" />
-                                <MenuItem Header="Remove Auto Load" Click="MenuItem_Click_2" Tag="{Binding ID}" Visibility="{Binding AutoLoad,Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                                <MenuItem Header="Copy Path" Click="MenuItem_Click_3" Tag="{Binding ID}" />
+                            <ContextMenu >
+                                <MenuItem Header="Remove" Click="MenuItem_Click" Tag="{Binding ID}" >
+                                    <MenuItem.Icon>
+                                        <Image Style="{DynamicResource ClearConsoleButtonImg}" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="Add to Auto Load" Click="MenuItem_Click_1" Tag="{Binding ID}" >
+                                    <MenuItem.Icon>
+                                        <Image Style="{DynamicResource AddShapeRangeImage}" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="Remove Auto Load" Click="MenuItem_Click_2" Tag="{Binding ID}" Visibility="{Binding AutoLoad,Converter={StaticResource BooleanToVisibilityConverter}}">
+                                    <MenuItem.Icon>
+                                        <Image Style="{DynamicResource RemoveShapeRangeImage}" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="Copy Path" Click="MenuItem_Click_3" Tag="{Binding ID}">
+                                    <MenuItem.Icon>
+                                        <Image Style="{DynamicResource CopyMenuItemImg}" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="Open Directory" Click="MenuItem_Click_4" Tag="{Binding ID}" >
+                                    <MenuItem.Icon>
+                                        <Image Style="{DynamicResource CopyMenuItemImg}" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
                             </ContextMenu>
                         </Button.ContextMenu>
                     </Button>
@@ -153,6 +173,6 @@
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
         </ItemsControl>
-      
+
     </DockPanel>
 </UserControl>
