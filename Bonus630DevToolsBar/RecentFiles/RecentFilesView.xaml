@@ -154,12 +154,12 @@
                                 </MenuItem>
                                 <MenuItem Header="Copy Path" Click="MenuItem_Click_3" Tag="{Binding ID}">
                                     <MenuItem.Icon>
-                                        <Image Style="{DynamicResource CopyMenuItemImg}" />
+                                        <Image Style="{DynamicResource CopyBigImg}" />
                                     </MenuItem.Icon>
                                 </MenuItem>
                                 <MenuItem Header="Open Directory" Click="MenuItem_Click_4" Tag="{Binding ID}" >
                                     <MenuItem.Icon>
-                                        <Image Style="{DynamicResource CopyMenuItemImg}" />
+                                        <Image Style="{DynamicResource OpenFolderImg}" />
                                     </MenuItem.Icon>
                                 </MenuItem>
                             </ContextMenu>

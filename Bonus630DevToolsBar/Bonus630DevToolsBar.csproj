@@ -547,6 +547,12 @@
     <Content Include="Images\EditTag.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Images\OpenFolder.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\PastBig.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Images\SearchConfig.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -633,9 +639,9 @@
     <Content Include="Images\copy.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Resource Include="Images\CopyBig.png">
+    <Content Include="Images\CopyBig.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
+    </Content>
     <Content Include="Images\copy_icon.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

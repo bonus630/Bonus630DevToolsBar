@@ -70,12 +70,12 @@
         <ContextMenu>
             <MenuItem Header="Open User GMS Folder" Click="MenuItemUserGMS_Click" >
                 <MenuItem.Icon>
-                    <Image Style="{DynamicResource FolderOpenedImage}" />
+                    <Image Style="{DynamicResource OpenFolderImg}" />
                 </MenuItem.Icon>
             </MenuItem>
             <MenuItem Header="Open Program GMS Folder" Click="MenuItemGMS_Click">
                 <MenuItem.Icon>
-                    <Image Style="{DynamicResource FolderOpenedImage}" />
+                    <Image Style="{DynamicResource OpenFolderImg}" />
                 </MenuItem.Icon>
             </MenuItem>
         </ContextMenu>

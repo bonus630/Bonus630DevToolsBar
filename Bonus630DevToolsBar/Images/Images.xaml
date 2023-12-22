@@ -104,7 +104,7 @@
     <Style x:Key="PasteMenuItemImg" TargetType="Image">
         <Setter Property="Source" Value="{Binding Source={StaticResource paste},Converter={StaticResource ResourceToMediaImageConverter}}"/>
     </Style>
-    <System:String x:Key="cut">cut.png</System:String>
+    <System:String x:Key="cut">Cut.png</System:String>
     <Style x:Key="CutMenuItemImg" TargetType="Image">
         <Setter Property="Source" Value="{Binding Source={StaticResource cut},Converter={StaticResource ResourceToMediaImageConverter}}"/>
     </Style>
@@ -163,6 +163,18 @@
     <System:String x:Key="AddDelegate">addDelegate.png</System:String>
     <Style x:Key="AddDelegateImg" TargetType="Image">
         <Setter Property="Source" Value="{Binding Source={StaticResource AddDelegate},Converter={StaticResource ResourceToMediaImageConverter}}"/>
+    </Style>
+    <System:String x:Key="OpenFolder">OpenFolder.png</System:String>
+    <Style x:Key="OpenFolderImg" TargetType="Image">
+        <Setter Property="Source" Value="{Binding Source={StaticResource OpenFolder},Converter={StaticResource ResourceToMediaImageConverter}}"/>
+    </Style>
+    <System:String x:Key="PastBig">PastBig.png</System:String>
+    <Style x:Key="PastBigImg" TargetType="Image">
+        <Setter Property="Source" Value="{Binding Source={StaticResource PastBig},Converter={StaticResource ResourceToMediaImageConverter}}"/>
+    </Style>
+    <System:String x:Key="CopyBig">CopyBig.png</System:String>
+    <Style x:Key="CopyBigImg" TargetType="Image">
+        <Setter Property="Source" Value="{Binding Source={StaticResource CopyBig},Converter={StaticResource ResourceToMediaImageConverter}}"/>
     </Style>
     <!--<System:String x:Key="CreateSelection">createSelection.png</System:String>
     <Style x:Key="CreateSelectionImg" TargetType="Image">

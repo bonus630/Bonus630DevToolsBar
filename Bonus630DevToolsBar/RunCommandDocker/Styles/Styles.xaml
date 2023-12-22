@@ -28,7 +28,7 @@
     <Style TargetType="RichTextBox">
         <Setter Property="Foreground" Value="{DynamicResource Default.Static.Foreground}" />
         <Setter Property="Background" Value="{DynamicResource Default.Static.Background}" />
-    </Style> 
+    </Style>
     <Style TargetType="ContextMenu">
         <Setter Property="Foreground" Value="{DynamicResource Default.Static.Foreground}" />
         <Setter Property="Background" Value="{DynamicResource Default.Static.Background}" />
@@ -41,21 +41,22 @@
 
                 <ControlTemplate TargetType="{x:Type MenuItem}">
                     <Grid>
-                        <Border x:Name="PART_BG" BorderBrush="{DynamicResource Default.Static.Background}" Background="{TemplateBinding Background}" BorderThickness="1" >
-                            <Grid Width="200" Height="24" Background="{DynamicResource Default.Static.Background}">
+                        <Border x:Name="PART_BG" BorderBrush="{DynamicResource Default.Static.Background}" Background="{DynamicResource Default.Static.Background}" BorderThickness="1" >
+                            <Grid Height="20" Background="{DynamicResource Default.Static.Background}">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="1"/>
+                                    <ColumnDefinition Width="30" />
+                                    <!--<ColumnDefinition Width="1"/>-->
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <ContentPresenter Grid.Column="0" ContentSource="Icon" Margin="10,2,10,2" />
-                                <Separator Grid.Column="1" BorderBrush="{DynamicResource Default.Static.Background}" HorizontalAlignment="Center">
+                                <ContentPresenter x:Name="PART_ICON_PRESENTER" Grid.Column="0" ContentSource="Icon" Margin="5,2,5,2" />
+                                <!--<Separator x:Name="PART_SEPARATOR" Grid.Column="1" BorderBrush="{DynamicResource Default.Static.Background}" HorizontalAlignment="Center">
                                     <Separator.LayoutTransform>
                                         <RotateTransform Angle="90"/>
                                     </Separator.LayoutTransform>
-                                </Separator>
-                                <ContentPresenter Grid.Column="2" Margin="10,0,0,0" ContentSource="Header" VerticalAlignment="Center" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
-
+                                </Separator>-->
+                                <Grid Background="{DynamicResource NumericTextBox.Static.Background}" Grid.Column="1"  >
+                                    <ContentPresenter Margin="5,0,5,0" ContentSource="Header" VerticalAlignment="Center" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                                </Grid>
                             </Grid>
                         </Border>
                         <ItemsPresenter  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
@@ -71,12 +72,14 @@
                         <Trigger Property="IsMouseOver" Value="true">
                             <Setter Property="Background" TargetName="PART_BG" Value="{DynamicResource Button.MouseOver.Background}"/>
                             <Setter Property="BorderBrush" TargetName="PART_BG" Value="{DynamicResource Button.MouseOver.Border}"/>
-                            <Setter Property="BorderThickness" TargetName="PART_BG" Value="1"/>
+                            
                         </Trigger>
                         <Trigger Property="IsPressed" Value="true">
                             <Setter Property="Background" TargetName="PART_BG" Value="{DynamicResource TabItem.Selected.MouseOver.Background}"/>
                         </Trigger>
-
+                        <!--<DataTrigger Binding="{Binding ElementName=PART_ICON_PRESENTER, Path=Content}" Value="{x:Null}">
+                            <Setter TargetName="PART_SEPARATOR" Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>-->
                     </ControlTemplate.Triggers>
 
 

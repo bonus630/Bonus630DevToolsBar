@@ -1,4 +1,6 @@
-﻿using Corel.Interop.VGCore;
+﻿using br.com.Bonus630DevToolsBar.CustomControls;
+using br.com.Bonus630DevToolsBar.RunCommandDocker.Styles;
+using Corel.Interop.VGCore;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -34,6 +36,7 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
 
                 this.corelApp = app as c.Application;
                 gmsPath = corelApp.GMSManager.UserGMSPath;
+                this.Loaded += Dragger_Loaded;
                 this.corelApp.OnApplicationEvent += CorelApp_OnApplicationEvent;
             }
             catch
@@ -41,6 +44,12 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
                 global::System.Windows.MessageBox.Show("VGCore Erro");
             }
         }
+
+        private void Dragger_Loaded(object sender, RoutedEventArgs e)
+        { 
+            LoadThemeFromPreference();
+        }
+
         protected override void OnDragOver(DragEventArgs e)
         {
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
@@ -213,7 +222,8 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
          "Container.Text.Static.Background" ,
          "Container.Text.Static.Foreground" ,
          "Container.Static.Background" ,
-         "Default.Static.Inverted.Foreground", "Button.MouseOver.Background" ,
+         "Default.Static.Inverted.Foreground", 
+            "Button.MouseOver.Background" ,
          "Button.MouseOver.Border",
          "Button.Static.Border" ,
          "Button.Static.Background" ,
@@ -221,6 +231,9 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
          "Button.Pressed.Border" ,
          "Button.Disabled.Foreground",
          "Button.Disabled.Background",
+         "NumericTextBox.Static.Background",
+        "NumericTextBox.Static.Border",
+        "NumericTextBox.Selected.Border"
 
         };
       
