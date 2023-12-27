@@ -23,7 +23,7 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
     public partial class Dragger : Button
     {
         c.Application corelApp;
-        string currentTheme = "";
+        
         string gmsPath = "";
         List<string> resultList = new List<string>();
         public readonly string VBAEditorGuid = "28e16db6-6339-440d-af0d-f58ac27c115d";
@@ -202,7 +202,23 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
                 processFiles(of.FileNames);
             }
         }
+        private void MenuItemUserGMS_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start(this.corelApp.GMSManager.UserGMSPath);
+        }
+
+        private void MenuItemGMS_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start(this.corelApp.GMSManager.GMSPath);
+        }
         #region controle style
+        private void CorelApp_OnApplicationEvent(string EventName, ref object[] Parameters)
+        {
+            if (EventName.Equals("WorkspaceChanged") || EventName.Equals("OnColorSchemeChanged"))
+            {
+                LoadThemeFromPreference();
+            }
+        }
         //Keys resources name follow the resource order to add a new value, order to works you need add 5 resources colors and Resources/Colors.xaml
         //1º is default, is the same name of StyleKeys string array
         //2º add LightestGrey. in start name of 1º for LightestGrey style in corel
@@ -236,7 +252,7 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
         "NumericTextBox.Selected.Border"
 
         };
-      
+        string currentTheme = "";
         private void LoadStyle(string name)
         {
 
@@ -244,13 +260,6 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
             for (int i = 0; i < StyleKeys.Length; i++)
             {
                 this.Resources[StyleKeys[i]] = this.Resources[string.Format("{0}.{1}", style, StyleKeys[i])];
-            }
-        }
-        private void CorelApp_OnApplicationEvent(string EventName, ref object[] Parameters)
-        {
-            if (EventName.Equals("WorkspaceChanged") || EventName.Equals("OnColorSchemeChanged"))
-            {
-                LoadThemeFromPreference();
             }
         }
         public void LoadThemeFromPreference()
@@ -275,15 +284,6 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
         }
         #endregion
 
-        private void MenuItemUserGMS_Click(object sender, RoutedEventArgs e)
-        {
-            System.Diagnostics.Process.Start(this.corelApp.GMSManager.UserGMSPath);
-        }
-
-        private void MenuItemGMS_Click(object sender, RoutedEventArgs e)
-        {
-            System.Diagnostics.Process.Start(this.corelApp.GMSManager.GMSPath);
-        }
     }
 
 

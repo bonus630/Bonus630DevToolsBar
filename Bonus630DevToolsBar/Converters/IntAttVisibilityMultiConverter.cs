@@ -8,24 +8,27 @@ namespace br.com.Bonus630DevToolsBar.Converters
     {
         public object Convert(object[] value, Type targetType, object parameter, CultureInfo culture)
         {
-           
-            if (value == null)
-                return System.Windows.Visibility.Collapsed;
-            if ((int)value[0] == 0)
-                return System.Windows.Visibility.Collapsed;
-            if(value.Length<2)
-                return System.Windows.Visibility.Collapsed;
-            if ((value[1] as System.Windows.Controls.ItemCollection).Count == 0)
-                return System.Windows.Visibility.Collapsed;
-            else
+            try
             {
-                foreach (var item in (value[1] as System.Windows.Controls.ItemCollection))
+                if (value == null)
+                    return System.Windows.Visibility.Collapsed;
+                if ((int)value[0] == 0)
+                    return System.Windows.Visibility.Collapsed;
+                if (value.Length < 2)
+                    return System.Windows.Visibility.Collapsed;
+                if ((value[1] as System.Windows.Controls.ItemCollection).Count == 0)
+                    return System.Windows.Visibility.Collapsed;
+                else
                 {
-                    DrawUIExplorer.DataClass.Attribute att = (item as DrawUIExplorer.DataClass.Attribute);
-                    if (att.Name != "guid" && att.IsGuid)
-                           return System.Windows.Visibility.Visible;
+                    foreach (var item in (value[1] as System.Windows.Controls.ItemCollection))
+                    {
+                        DrawUIExplorer.DataClass.Attribute att = (item as DrawUIExplorer.DataClass.Attribute);
+                        if (att.Name != "guid" && att.IsGuid)
+                            return System.Windows.Visibility.Visible;
+                    }
                 }
             }
+            catch { }
             return System.Windows.Visibility.Collapsed;
         }
 

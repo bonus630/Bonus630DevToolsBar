@@ -6,15 +6,16 @@
              xmlns:local="clr-namespace:br.com.Bonus630DevToolsBar.DrawUIExplorer" 
              xmlns:Converters="clr-namespace:br.com.Bonus630DevToolsBar.Converters"
              mc:Ignorable="d" 
-             Background="#FFE3FDD4" Loaded="UserControl_Loaded"
+             Loaded="UserControl_Loaded"
            >
     <UserControl.Resources>
         <ResourceDictionary>
             <Converters:BoolVisibilityConverter x:Key="BoolVisibilityConverter" />
             <Converters:ImagePathConverter x:Key="ImagePathConverter"/>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="../Resources/Colors.xaml"/>
-                <ResourceDictionary Source="../Resources/Styles.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/RunCommandDocker/Styles/Colors.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/RunCommandDocker/Styles/Styles.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/RunCommandDocker/Styles/ScrollComponentsStyles.xaml"/>
                 <ResourceDictionary Source="../../Images/Images.xaml"/>
 
             </ResourceDictionary.MergedDictionaries>
@@ -22,7 +23,7 @@
     </UserControl.Resources>
     <DockPanel Background="Transparent" x:Name="mainContentHolder" LastChildFill="True">
 
-        <ToolBar Background="#FF024D02" Foreground="White" DockPanel.Dock="Top">
+        <ToolBar Background="{DynamicResource Default.Static.Background}" Foreground="{DynamicResource Default.Static.Foreground}" DockPanel.Dock="Top">
             <StackPanel Orientation="Horizontal" >
 
                 <Grid>
@@ -34,7 +35,7 @@
                         <Image Style="{StaticResource ShowMenuItemImg}"/>
                     </Button>
                 </Grid>
-                <Label Content="XML Text Viewer" Foreground="White"/>
+                <Label Content="XML Text Viewer"/>
                 <Button  Content="Get XML" Command="{Binding GenXmlCommand}" 
                              VerticalAlignment="Center" Margin="4,0,4,0"
                          ToolTip="Get XML from selected node and childrens"/>
@@ -51,15 +52,15 @@
                         <Image Style="{StaticResource ShowMenuItemImg}"/>
                     </Button>
                 </Grid>
-                <Label Content="XSL Text Viewer" Foreground="White"/>
+                <Label Content="XSL Text Viewer" />
             </StackPanel>
             <Separator/>
             <StackPanel Grid.Row="2" Orientation="Horizontal">
                 <Button   Content="Process" Command="{Binding ProcessCommand}" VerticalAlignment="Center" Margin="4,0,4,0" />
                 <StackPanel  Orientation="Horizontal" Margin="10,0">
-                    <Label Content="Font Size" Foreground="White"/>
+                    <Label Content="Font Size" />
                     <Button Content="-" Width="20" Height="20" Command="{Binding DecreaseFontSizeCommand}"/>
-                    <Label Content="{Binding FontSize}" Foreground="White"/>
+                    <Label Content="{Binding FontSize}" />
                     <Button Content="+" Width="20" Height="20" Command="{Binding IncreaseFontSizeCommand}"/>
                 </StackPanel>
             </StackPanel>
@@ -79,8 +80,12 @@
                 <Border Grid.Column="0" BorderThickness="1" BorderBrush="Gray" >
                     <DockPanel  Visibility="{Binding XmlContainerVisible,Converter={StaticResource BoolVisibilityConverter}}" 
                             LastChildFill="True">
+                        <Border DockPanel.Dock="Top" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource Button.MouseOver.Border}" 
+                                Background="{DynamicResource Footer.Static.Background}">
+                            <Label DockPanel.Dock="Top" Content="XML Text Viewer" />
+                        </Border>
 
-                        <Label Content="XML Text Viewer" DockPanel.Dock="Top" Background="#A5D18C" />
+
                         <Label DockPanel.Dock="Bottom" Content="{Binding ElementName=txt_xml,Path=CaretIndex}" />
                         <ScrollViewer DockPanel.Dock="Bottom" HorizontalScrollBarVisibility="Auto" 
                                   VerticalScrollBarVisibility="Visible" Margin="0,0,0,0" Template="{DynamicResource ScrollViewerControlTemplate}">
@@ -96,8 +101,10 @@
                 <Border Grid.Column="2" BorderThickness="1" BorderBrush="Gray" >
                     <DockPanel Visibility="{Binding XsltContainerVisible,Converter={StaticResource BoolVisibilityConverter}}" 
                            LastChildFill="True" >
-
-                        <Label Content="XSL Text Viewer" DockPanel.Dock="Top" Background="#A5D18C" />
+                        <Border DockPanel.Dock="Top" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource Button.MouseOver.Border}" 
+                                Background="{DynamicResource Footer.Static.Background}">
+                            <Label Content="XSL Text Viewer"  />
+                        </Border>
                         <ScrollViewer DockPanel.Dock="Bottom" HorizontalScrollBarVisibility="Auto"
                                   VerticalScrollBarVisibility="Auto" Margin="0,0,0,0" Template="{DynamicResource ScrollViewerControlTemplate}" 
                                   Visibility="{Binding XsltContainerVisible,Converter={StaticResource BoolVisibilityConverter}}" >
@@ -117,8 +124,10 @@
 
             <Border Grid.Row="2" BorderThickness="1" BorderBrush="Gray" >
                 <DockPanel LastChildFill="True" >
-
-                    <Label Content="Result Viewer"  DockPanel.Dock="Top" Background="#A5D18C"/>
+                    <Border DockPanel.Dock="Top" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource Button.MouseOver.Border}" 
+                                Background="{DynamicResource Footer.Static.Background}">
+                        <Label Content="Result Viewer" />
+                    </Border>
                     <ScrollViewer DockPanel.Dock="Bottom" HorizontalScrollBarVisibility="Auto" 
                               VerticalScrollBarVisibility="Auto" Margin="0,0,0,0" 
                               Template="{DynamicResource ScrollViewerControlTemplate}" >

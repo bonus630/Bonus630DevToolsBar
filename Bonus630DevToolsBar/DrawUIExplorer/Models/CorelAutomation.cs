@@ -307,8 +307,19 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
         }
         public void RunBindWithParamDataSource(string value, bool invoke = false, string param = "")
         {
+            string result = string.Empty;
+            try
+            {
+                
+#if !X7
+                result = corelApp.GetApplicationPreferenceValue("WindowScheme", "Colors").ToString();
+#endif
+
+            }
+            catch { }
             Views.ParamBox pb = new Views.ParamBox();
-            if((bool) pb.ShowDialog())
+            pb.ChangeTheme(result);
+            if ((bool) pb.ShowDialog())
             {
                  param = pb.Param;
                 if (!String.IsNullOrEmpty(param))

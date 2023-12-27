@@ -18,7 +18,17 @@
             </Setter.Value>
         </Setter>
     </Style>
-
+    <Style  TargetType="Window">
+        <!-- Defina as propriedades desejadas, como Background (fundo) e Foreground (fonte) -->
+        <Setter Property="Background" Value="{DynamicResource Footer.Static.Background}" />
+        <!--<Setter Property="Foreground" Value="DarkRed" />-->
+    </Style>
+    <Style TargetType="Border" x:Key="BorderTitleStyle">
+        <Setter Property="BorderThickness" Value="0,0,0,1" />
+        <Setter Property="BorderBrush" Value="{DynamicResource Button.MouseOver.Border}" />
+        <Setter Property="Background" Value="{DynamicResource Footer.Static.Background}" />
+        <Setter Property="Height" Value="30" />
+    </Style>
     <Style x:Key="PopupBorder" TargetType="Border">
         <Setter Property="Background" Value="{DynamicResource Default.Static.Background}"/>
         <Setter Property="BorderThickness" Value="2" />
@@ -224,6 +234,7 @@
             </Trigger>
         </Style.Triggers>
     </Style>
+    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource ButtonStyle1}"/>
     <Style TargetType="{x:Type RadioButton}">
         <Setter Property="FocusVisualStyle">
             <Setter.Value>

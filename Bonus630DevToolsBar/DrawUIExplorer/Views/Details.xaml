@@ -5,16 +5,20 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:br.com.Bonus630DevToolsBar.DrawUIExplorer"
              xmlns:converters="clr-namespace:br.com.Bonus630DevToolsBar.Converters"
-             mc:Ignorable="d" Background="#FFE3FDD4" 
-           >
+             mc:Ignorable="d" 
+           > <!--Background="#FFE3FDD4"-->
     <UserControl.Resources>
         <ResourceDictionary>
             <converters:BoolVisibilityConverter x:Key="BoolVisibilityConverter" />
             <converters:NullVisibilityConverter x:Key="NullVisibilityConverter" />
             <converters:IntVisibilityConverter x:Key="IntVisibilityConverter"/>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="../Resources/Colors.xaml"/>
-                <ResourceDictionary Source="../Resources/Styles.xaml"/>
+                <!--<ResourceDictionary Source="../Resources/Colors.xaml"/>
+                <ResourceDictionary Source="../Resources/Styles.xaml"/>-->
+                <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/RunCommandDocker/Styles/Colors.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/RunCommandDocker/Styles/Styles.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/RunCommandDocker/Styles/ScrollComponentsStyles.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/RunCommandDocker/Styles/ListComponentsStyles.xaml"/>
                 <ResourceDictionary Source="../../Images/Images.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -32,7 +36,14 @@
         <Grid Grid.Row="0" Height="220">-->
     <StackPanel>
         <Grid Visibility="{Binding Content.Length,ElementName=lba_caption,Converter={StaticResource IntVisibilityConverter}}">
-            <Image Name="img_icon" Margin="2,0,0,0" Width="28" Height="28" Source="{Binding CurrentBasicData.Icon}" HorizontalAlignment="Left" Visibility="{Binding Path=Source, RelativeSource={RelativeSource Mode=Self},Converter={StaticResource NullVisibilityConverter}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Border Grid.Column="0" Padding="1" BorderBrush="{DynamicResource Default.Static.Foreground}" BorderThickness="1" Background="WhiteSmoke" Margin="2"
+                    Visibility="{Binding CurrentBasicData.Icon,Converter={StaticResource NullVisibilityConverter}}">
+            <Image  Name="img_icon"  Width="28" Height="28"  Source="{Binding CurrentBasicData.Icon,TargetNullValue={x:Null}}" HorizontalAlignment="Left" >
                 <Image.ContextMenu>
                     <ContextMenu>
                         <MenuItem Header="Copy" Background="WhiteSmoke" Command="{Binding Path=CopyIconCommand}" CommandParameter="{Binding CurrentBasicData.Icon}">
@@ -54,12 +65,14 @@
                     </ContextMenu>
                 </Image.ContextMenu>
             </Image>
-            <Label Content="{Binding CaptionLocalization}" Name="lba_captionLoc" HorizontalAlignment="Right" Height="29" VerticalAlignment="Top" ToolTip="Method used to crawler Caption" />
-            <Label Margin="36,0,0,0" Content="{Binding Caption}" Name="lba_caption" FontWeight="Bold" HorizontalAlignment="Left" Width="454" Height="29" VerticalAlignment="Top" >
-                <Label.ToolTip>
+            </Border>
+            <Label Grid.Column="1" Content="{Binding Caption,FallbackValue=Arquivo}" Name="lba_caption" FontWeight="Bold" HorizontalAlignment="Left" Width="454" VerticalAlignment="Center" >
+               <Label.ToolTip>
                     <Label Content="Caption" />
                 </Label.ToolTip>
             </Label>
+            <Label Grid.Column="2" Content="{Binding CaptionLocalization,FallbackValue=Get Automation}" Name="lba_captionLoc" HorizontalAlignment="Right" VerticalAlignment="Center" ToolTip="Method used to crawler Caption" />
+             
         </Grid>
         <Grid>
             <Label Content="Guid:" Height="26" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" />
@@ -110,7 +123,7 @@
         </Grid>
         <Grid>
             <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Hidden" Margin="66,0,0,0" Template="{DynamicResource ScrollViewerControlTemplate}">
-                <Label Content="{Binding Route}"  Name="lba_route" Background="{x:Null}" Foreground="#FF761212" FontWeight="Bold" Height="31" VerticalAlignment="Top" HorizontalAlignment="Left" MouseDoubleClick="lba_route_MouseDoubleClick">
+                <Label Content="{Binding Route}"  Name="lba_route" Background="{x:Null}"  FontWeight="Bold" Height="31" VerticalAlignment="Top" HorizontalAlignment="Left" MouseDoubleClick="lba_route_MouseDoubleClick">
                     <Label.ToolTip>
                         <Label Content="Double Click to Copy" />
                     </Label.ToolTip>
@@ -120,12 +133,12 @@
         </Grid>
 
 
-        <Grid Visibility="{Binding ItemsSource.Count,ElementName=list_attributes,Converter={StaticResource IntVisibilityConverter}}">
+        <Grid  Visibility="{Binding ItemsSource.Count,ElementName=list_attributes,Converter={StaticResource IntVisibilityConverter}}">
             <Label Content="Attributes:" Height="26" VerticalAlignment="Top" HorizontalAlignment="Left" Width="70" />
             <!--<ScrollViewer Margin="73,0,10,0" VerticalScrollBarVisibility="Auto">-->
 
 
-            <ListView  Name="list_attributes" MouseDoubleClick="list_attributes_MouseDoubleClick" Margin="0,24,0,0" ItemsSource="{Binding CurrentBasicData.Attributes}">
+            <ListView Background="yellow"  Name="list_attributes" MouseDoubleClick="list_attributes_MouseDoubleClick" Margin="0,24,0,0" ItemsSource="{Binding CurrentBasicData.Attributes}">
 
                 <ListView.Resources>
                     <ContextMenu x:Key="ItemContextMenu">
@@ -174,7 +187,7 @@
                 </ListView.Resources>
 
                 <ListView.ItemContainerStyle>
-                    <Style TargetType="{x:Type ListViewItem}" >
+                    <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource ListViewItemCustomStyle}">
                         <Setter Property="ContextMenu" Value="{StaticResource ItemContextMenu}" />
                     </Style>
                 </ListView.ItemContainerStyle>

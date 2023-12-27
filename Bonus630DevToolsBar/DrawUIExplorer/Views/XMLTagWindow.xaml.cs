@@ -1,6 +1,7 @@
 ﻿using br.com.Bonus630DevToolsBar.DrawUIExplorer.DataClass;
 using br.com.Bonus630DevToolsBar.DrawUIExplorer.Models;
 using br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels;
+using br.com.Bonus630DevToolsBar.RunCommandDocker.Styles;
 using Microsoft.Win32;
 using System;
 using System.Collections;
@@ -28,6 +29,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
         Search search;
         XSLTEster xslTester;
         CorelAutomation corelCmd;
+        public StylesController stylesController;
         int msgCount = 1;
         //bool cancelTreeGeneration = false;
         // Thread th = null;
@@ -45,17 +47,23 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
         //}
         public XMLTagWindow(object app, string filePath)
         {
+            InitializeComponent();
             this.app = app as Corel.Interop.VGCore.Application;
+            stylesController = new StylesController(this.Resources, this.app, ChangeTheme);
+            this.Loaded += (s, e) => { stylesController.LoadThemeFromPreference();  };
             init();
         }
         public XMLTagWindow(string filePath)
         {
+            InitializeComponent();
+            stylesController = new StylesController(this.Resources, ChangeTheme);
             init();
         }
         private void init()
         {
-            InitializeComponent();
+
             core = new Core();
+
             saveLoad = new SaveLoadConfig();
             btn_drawUI.Click += (s, e) => { CallDialogFileSelect(); };
             btn_workSpace.Click += (s, e) => { CallDialogFileSelect(false); };
@@ -72,9 +80,40 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
             core.LoadFinish += Core_LoadFinish1;
             core.NewMessage += Core_NewMessage;
             core.RequestUIHideVisibleChanged += Core_RequestUIHideVisibleChanged;
-            treeView_Nodes.SelectedItemChanged += (s, e) => { if (treeView_Nodes.SelectedItem != null) UpdateDetails(treeView_Nodes.SelectedItem, e); };
-            treeView_Ref.SelectedItemChanged += (s, e) => { if (treeView_Ref.SelectedItem != null) UpdateDetails(treeView_Ref.SelectedItem, e); };
-            treeView_Search.SelectedItemChanged += (s, e) => { if (treeView_Search.SelectedItem != null) UpdateDetails(treeView_Search.SelectedItem, e); };
+
+            treeView_Nodes.SelectedItemChanged += (s, e) =>
+            {
+                if (treeView_Nodes.SelectedItem != null)
+                {
+                    if (core.InCorel)
+                        UpdateDetails(treeView_Nodes.SelectedItem, e);
+                    else
+                        UpdateDetailsNoAttached(treeView_Nodes.SelectedItem, e);
+                }
+            };
+
+            treeView_Ref.SelectedItemChanged += (s, e) =>
+            {
+                if (treeView_Ref.SelectedItem != null)
+                {
+                    if (core.InCorel)
+                        UpdateDetails(treeView_Ref.SelectedItem, e);
+                    else
+                        UpdateDetailsNoAttached(treeView_Nodes.SelectedItem, e);
+                }
+            };
+
+            treeView_Search.SelectedItemChanged += (s, e) =>
+            {
+                if (treeView_Search.SelectedItem != null)
+                {
+                    if (core.InCorel)
+                        UpdateDetails(treeView_Search.SelectedItem, e);
+                    else
+                        UpdateDetailsNoAttached(treeView_Nodes.SelectedItem, e);
+                }
+            };
+
             dataContext.XmlDecode += DataContext_XmlDecode;
             inputControl.Core = core;
             if (saveLoad.AutoOpenLastFile && !string.IsNullOrEmpty(saveLoad.LastFilePath))
@@ -184,9 +223,13 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
                xslTester = new XSLTEster(core);
                grid_xslTester.Children.Add(xslTester);
                core.ListPrimaryItens.SetSelected(true, true, true);
+               ChangeTheme(stylesController.currentTheme);
                dockPanel_treeViews.Visibility = Visibility.Visible;
                treeView_Nodes.ItemsSource = dataContext.MainList;
-               UpdateDetails(core.ListPrimaryItens, new RoutedEventArgs(null, treeView_Nodes));
+               if (core.InCorel)
+                   UpdateDetails(core.ListPrimaryItens, new RoutedEventArgs(null, treeView_Nodes));
+               else
+                   UpdateDetailsNoAttached(core.ListPrimaryItens, new RoutedEventArgs(null, treeView_Nodes));
            }));
 
         }
@@ -225,7 +268,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
                     switch (msgType)
                     {
                         case MsgType.Console:
-                            ConsoleSetMsg(msg, Brushes.Black);
+                            ConsoleSetMsg(msg, (SolidColorBrush)this.FindResource("Default.Static.Foreground"));
                             break;
                         case MsgType.Erro:
                             ConsoleSetMsg(msg, Brushes.Crimson);
@@ -264,12 +307,12 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
             else
                 a = (string.Format("{0}\r", msg));
             txt_console.Text = a;
-          
+
             TextRange tr;
-            if(saveLoad.ConsoleCounter)
+            if (saveLoad.ConsoleCounter)
             {
-                tr =  new TextRange(txt_consoleFull.Document.ContentEnd, txt_consoleFull.Document.ContentEnd);
-                tr.Text = string.Format("{0}. ",msgCount);
+                tr = new TextRange(txt_consoleFull.Document.ContentEnd, txt_consoleFull.Document.ContentEnd);
+                tr.Text = string.Format("{0}. ", msgCount);
                 tr.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.DarkGray);
                 msgCount++;
             }
@@ -300,11 +343,48 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
                 core.CurrentBasicData.SetSelected(false, false, false, true);
             core.CurrentBasicData = data;
 
-       
+
             core.SetIcon(data);
             data.SetSelected(true, true, false, true);
             if (core.HighLightItemHelper.LayoutMode)
                 core.HighLightItemHelper.UpdateLayoutMode(data);
+            if (parent != null && (parent == "treeView_Nodes" || parent == "treeView_Search"))
+            {
+                //treeView_Ref.Items.Clear();
+                dataContext.RefList.Clear();
+                if (!string.IsNullOrEmpty(data.GuidRef))
+                {
+
+                    IBasicData refBasicData = core.SearchItemFromGuidRef(core.ListPrimaryItens, data.GuidRef);
+                    // InflateTreeView(refBasicData, treeView_Ref);
+                    //TreeViewItemData treeViewItem = GenerateTreeViewItem(refBasicData);
+                    //GenerateTreeViewItemList(treeViewItem);
+                    // treeView_Ref.Items.Add(treeViewItem);
+                    dataContext.RefList.Add(refBasicData);
+                    treeView_Ref.ItemsSource = dataContext.RefList;
+                }
+                if (treeView_Ref.Items.Count == 0 && treeView_Search.Items.Count == 0)
+                    gridRef.Visibility = Visibility.Collapsed;
+                else
+                    gridRef.Visibility = Visibility.Visible;
+            }
+            //details.Update(data);
+            //search.Update(data);
+            //xslTester.Update(data);
+            //lba_tagName.Content = data.TagName;
+            // args.Handled = true;
+        }
+        private void UpdateDetailsNoAttached(object sender, RoutedEventArgs args)
+        {
+            // IBasicData data = (sender as TreeViewItemData).Data;
+            IBasicData data = (sender as IBasicData);
+            //var parent = Core.FindParentControl<TreeView>(sender as TreeViewItemData);
+            string parent = (args.Source as TreeView).Name;
+            if (core.CurrentBasicData != null)
+                core.CurrentBasicData.SetSelected(false, false, false, true);
+            core.CurrentBasicData = data;
+            data.SetSelected(true, true, false, true);
+
             if (parent != null && (parent == "treeView_Nodes" || parent == "treeView_Search"))
             {
                 //treeView_Ref.Items.Clear();
@@ -618,6 +698,21 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
                 dataContext.ConsoleExpanded = true;
         }
 
-
+        private void ChangeTheme_EventHandler(object sender, RoutedEventArgs e)
+        {
+            string theme = (sender as Button).Tag.ToString();
+            stylesController.LoadStyle(theme);
+            ChangeTheme(theme);
+        }
+        public void ChangeTheme(string theme)
+        {
+            try
+            {
+                details.StylesController.LoadStyle(theme);
+                search.StylesController.LoadStyle(theme);
+                xslTester.StylesController.LoadStyle(theme);
+            }
+            catch { }
+        }
     }
 }

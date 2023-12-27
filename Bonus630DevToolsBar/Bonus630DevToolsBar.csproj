@@ -15,8 +15,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>br.com.Bonus630DevToolsBar</RootNamespace>
     <AssemblyName>Bonus630DevToolsBar</AssemblyName>
-    <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <Import Project="$(CdrTargetPath)" Condition="Exists('$(CdrTargetPath)')" />
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -238,6 +239,9 @@
     <Compile Include="CustomControls\ParamControl.xaml.cs">
       <DependentUpon>ParamControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CustomControls\SVGButton.xaml.cs">
+      <DependentUpon>SVGButton.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DrawUIExplorer\Models\BlockingObservableCollection.cs" />
     <Compile Include="Folders\Folder.cs" />
     <Compile Include="Folders\Folders.xaml.cs">
@@ -422,6 +426,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="CustomControls\SVGButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="DrawUIExplorer\Controls\InputCommandsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -445,6 +453,10 @@
     <Page Include="DrawUIExplorer\Resources\Styles.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="DrawUIExplorer\Resources\SVGButtons.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="DrawUIExplorer\Views\Config.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -575,6 +587,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="System.Data.SQLite.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="VisualTester.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="vswhere.exe">

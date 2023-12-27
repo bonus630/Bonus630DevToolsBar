@@ -1,22 +1,31 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 
 namespace br.com.Bonus630DevToolsBar.RunCommandDocker.Styles
 {
     public class StylesController
     {
-        string currentTheme = "";
+        public string currentTheme = "";
         ResourceDictionary Resources;
         Corel.Interop.VGCore.Application corelApp;
+        Action<string> Callback = null;
         /// <summary>
         /// Controller Styles of control, for more colors includes here in StyleKeys and Colors.xaml
         /// </summary>
         /// <param name="resource"></param>
         /// <param name="app"></param>
-        public StylesController(ResourceDictionary resource, Corel.Interop.VGCore.Application app)
+        public StylesController(ResourceDictionary resource, Corel.Interop.VGCore.Application app, Action<string> Callback = null)
         {
             Resources = resource;
             corelApp = app;
             corelApp.OnApplicationEvent += CorelApp_OnApplicationEvent;
+            this.Callback = Callback;
+
+        }
+        public StylesController(ResourceDictionary resource, Action<string> Callback = null)
+        {
+            Resources = resource;
+            this.Callback = Callback;
         }
         #region controle style
         //Keys resources name follow the resource order to add a new value, order to works you need add 5 resources colors and Resources/Colors.xaml
@@ -75,7 +84,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker.Styles
         "NumericTextBox.Selected.Border"
         };
 
-        private void LoadStyle(string name)
+        public void LoadStyle(string name)
         {
 
             string style = name.Substring(name.LastIndexOf("_") + 1);
@@ -83,6 +92,8 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker.Styles
             {
                 this.Resources[StyleKeys[i]] = this.Resources[string.Format("{0}.{1}", style, StyleKeys[i])];
             }
+            if (Callback != null)
+                Callback.Invoke(style);
         }
         private void CorelApp_OnApplicationEvent(string EventName, ref object[] Parameters)
         {
@@ -93,6 +104,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker.Styles
         }
         public void LoadThemeFromPreference()
         {
+            
             try
             {
                 string result = string.Empty;

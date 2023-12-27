@@ -1,4 +1,5 @@
-﻿using System;
+﻿using br.com.Bonus630DevToolsBar.RunCommandDocker.Styles;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,9 +22,11 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
     public partial class ParamBox : Window
     {
         public string Param { get { return txt_param.Text; } }
+        public StylesController StylesController { get; set; }
         public ParamBox()
         {
             InitializeComponent();
+            StylesController = new StylesController(this.Resources);
         }
 
         private void btn_ok_Click(object sender, RoutedEventArgs e)
@@ -34,6 +37,22 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
         private void btn_cancel_Click(object sender, RoutedEventArgs e)
         {
             this.DialogResult = false;
+        }
+        public void ChangeTheme(string theme)
+        {
+            StylesController.LoadStyle(theme);
+        }
+
+        private void txt_param_KeyUp(object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.Enter)
+            {
+                this.DialogResult = true;
+            }
+            if(e.Key == Key.Escape)
+            {
+                this.DialogResult = false;
+            }
         }
     }
 }

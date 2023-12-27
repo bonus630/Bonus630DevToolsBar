@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.IO;
+using br.com.Bonus630DevToolsBar.RunCommandDocker.Styles;
 
 namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
 {
@@ -21,12 +22,14 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
     /// </summary>
     public partial class Config : Window
     {
+        public StylesController StylesController { get; set; }
         ViewModels.ConfigViewModel dataContext;
         public Config()
         {
             InitializeComponent();
             dataContext = new ConfigViewModel();
             this.DataContext = dataContext;
+            StylesController = new StylesController(this.Resources);
             dataContext.CloseEvent += () => { this.Close(); };
         }
 

@@ -11,6 +11,7 @@
          xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms" 
         Title="{Binding Title}" Height="560" Width="840" MinWidth="840" HorizontalAlignment="Center" VerticalAlignment="Center"  
         WindowStartupLocation="CenterScreen" WindowState="Maximized" MinHeight="560" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto"
+        Background="{DynamicResource Footer.Static.Background}"
         >
     <Window.Resources>
 
@@ -18,24 +19,32 @@
             <Converters:BoolVisibilityConverter x:Key="BoolVisibilityConverter" />
             <Converters:InvertBoolVisibilityConverter x:Key="InvertBoolVisibilityConverter" />
             <Converters:BoolHeightConverter x:Key="BoolHeightConverter" />
-         
+
             <ResourceDictionary.MergedDictionaries>
                 <!--Este é o método correto para se carregar os recursos -->
-                <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/DrawUIExplorer/Resources/Colors.xaml"/>
+                <!--<ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/DrawUIExplorer/Resources/Colors.xaml"/>-->
                 <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/DrawUIExplorer/Resources/Styles.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/DrawUIExplorer/Resources/SVGButtons.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/Images/Images.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/RunCommandDocker/Styles/Colors.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/RunCommandDocker/Styles/Styles.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/RunCommandDocker/Styles/ScrollComponentsStyles.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/RunCommandDocker/Styles/ListComponentsStyles.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/RunCommandDocker/Styles/TreeComponentsStyles.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/DrawUIExplorer/Resources/ContextMenu.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
-    <DockPanel Background="#FF8AF971" LastChildFill="True">
+  
+    <DockPanel  LastChildFill="True" Background="Transparent">
         <ProgressBar DockPanel.Dock="Top" Height="2" x:Name="pb_load" SmallChange="0.01" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FFF34A0B" Visibility="Collapsed" />
-        <StatusBar DockPanel.Dock="Bottom" Height="20" Background="#FF8AF971" Foreground="Black">
+        <StatusBar DockPanel.Dock="Bottom" Height="20" Background="{DynamicResource Footer.Static.Background}" Foreground="{DynamicResource Default.Static.Foreground}">
             <StatusBar.ItemsPanel>
                 <ItemsPanelTemplate>
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="200" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
@@ -43,68 +52,106 @@
                 </ItemsPanelTemplate>
             </StatusBar.ItemsPanel>
             <StatusBarItem Grid.Column="0">
-                <!--<TextBlock x:Name="lblCursorPosition" />-->
                 <TextBlock x:Name="txt_console" TextAlignment="Right" Height="20" Padding="0,1" HorizontalAlignment="Left" VerticalAlignment="Center" />
             </StatusBarItem>
             <StatusBarItem Grid.Column="1" Padding="3,0">
-                <StackPanel Orientation="Horizontal">
-                    <!--<Button Visibility="{Binding InCorel,Converter={StaticResource BoolVisibilityConverter}}" x:Name="btn_tryHighLightThis"  HorizontalAlignment="Left" Margin="7,0,2,0" Width="22" Command="{Binding HighLightCommand}" Height="20" HorizontalContentAlignment="Left" VerticalContentAlignment="Top" Padding="1,0" BorderBrush="{x:Null}" Background="{x:Null}" VerticalAlignment="Top" Style="{DynamicResource ButtonStyleStatusBar}">
-                        <Image Height="20" Width="22"  HorizontalAlignment="Left" VerticalAlignment="Top" Style="{StaticResource HighLightButtonImg}"/>
-                        <Button.ToolTip>
+                <StackPanel Orientation="Horizontal" Background="Transparent" Visibility="{Binding InCorel,Converter={StaticResource InvertBoolVisibilityConverter}}">
+
+                    <Button  HorizontalAlignment="Left" Margin="7,0,2,0" Width="20" Height="20" HorizontalContentAlignment="Left" 
+                                 VerticalContentAlignment="Top" Padding="1,0" BorderBrush="{x:Null}" Background="#ffeaeaea" VerticalAlignment="Top" 
+                                 Click="ChangeTheme_EventHandler" Tag="Theme_LightestGrey" ToolTip="LightestGrey"
+                                 />
+                    <Button  HorizontalAlignment="Left" Margin="7,0,2,0" Width="20" Height="20" HorizontalContentAlignment="Left" 
+                                 VerticalContentAlignment="Top" Padding="1,0" BorderBrush="{x:Null}" Background="#ffe2e2e2" VerticalAlignment="Top" 
+                                 Click="ChangeTheme_EventHandler" Tag="Theme_MediumGrey" ToolTip="MediumGrey"
+                                 />
+                    <Button  HorizontalAlignment="Left" Margin="7,0,2,0" Width="20" Height="20" HorizontalContentAlignment="Left" 
+                                 VerticalContentAlignment="Top" Padding="1,0" BorderBrush="{x:Null}" Background="#ff323232" VerticalAlignment="Top" 
+                                 Click="ChangeTheme_EventHandler" Tag="Theme_DarkGrey" ToolTip="DarkGrey"
+                                 />
+                    <Button  HorizontalAlignment="Left" Margin="7,0,2,0" Width="20" Height="20" HorizontalContentAlignment="Left" 
+                                 VerticalContentAlignment="Top" Padding="1,0" BorderBrush="{x:Null}" Background="Black" VerticalAlignment="Top" 
+                                 Click="ChangeTheme_EventHandler" Tag="Theme_Black" ToolTip="Black"
+                                 />
+             
+
+                </StackPanel>
+            </StatusBarItem>
+            <StatusBarItem Grid.Column="2" Padding="3,0">
+                <StackPanel Orientation="Horizontal" Background="{DynamicResource Footer.Static.Background}">
+                    
+                    <custom:SVGButton Visibility="{Binding InCorel,Converter={StaticResource BoolVisibilityConverter}}" x:Name="btn_tryHighLightThis"  HorizontalAlignment="Left" Margin="7,0,2,0" Width="20" 
+                                       Command="{Binding HighLightCommand}" Height="20" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" Padding="1,0" BorderBrush="{x:Null}" Background="{x:Null}" VerticalAlignment="Top" >
+                        <custom:SVGButton.ToolTip>
                             <StackPanel Orientation="Horizontal">
                                 <Label Content="Try highlight this" VerticalAlignment="Center" Width="93" Padding="0" HorizontalAlignment="Right" VerticalContentAlignment="Center" Margin="4,0,0,0" />
                             </StackPanel>
-                        </Button.ToolTip>
-                    </Button>-->
-                
-                    <custom:IconButton Icon="light.png" Visibility="{Binding InCorel,Converter={StaticResource BoolVisibilityConverter}}" x:Name="btn_tryHighLightThis"  HorizontalAlignment="Left" Margin="7,0,2,0" Width="20" 
-                                       Command="{Binding HighLightCommand}" Height="20" HorizontalContentAlignment="Left" VerticalContentAlignment="Top" Padding="1,0" BorderBrush="{x:Null}" Background="{x:Null}" VerticalAlignment="Top" >
-                        <custom:IconButton.ToolTip>
-                            <StackPanel Orientation="Horizontal">
-                                <Label Content="Try highlight this" VerticalAlignment="Center" Width="93" Padding="0" HorizontalAlignment="Right" VerticalContentAlignment="Center" Margin="4,0,0,0" />
-                            </StackPanel>
-                        </custom:IconButton.ToolTip>
-                    </custom:IconButton>
-                    <custom:IconButton Icon="copy.png" Visibility="Visible"  x:Name="btn_getActiveGuid"  HorizontalAlignment="Left" Margin="2,0" VerticalAlignment="Top" Width="20" Command="{Binding ActiveGuidCommand}" BorderBrush="Black" Height="20" Padding="0" HorizontalContentAlignment="Center" >
-                        <!--<Image Height="20" Width="22" HorizontalAlignment="Left" VerticalAlignment="Top" Style="{StaticResource CopyMenuItemImg}"/>-->
-                        <custom:IconButton.ToolTip>
+                        </custom:SVGButton.ToolTip>
+                        <custom:SVGButton.Paths>
+                            <custom:path d="m9 0.027 -0.456 0.017 -0.451 0.058 -0.446 0.096 -0.434 0.132 -0.423 0.17 -0.408 0.206 -0.389 0.237 -0.367 0.269 -0.343 0.298 -0.319 0.327 -0.286 0.353 -0.257 0.374 -0.226 0.393 -0.189 0.415 -0.156 0.429 -0.117 0.437 -0.082 0.447 -0.045 0.454 -0.003 0.454 0.033 0.454 0.07 0.447 0.113 0.442 0.146 0.43 0.182 0.415 0.216 0.403 0.25 0.381 0.314 0.463 0.283 0.482 0.252 0.501 0.219 0.513 0.189 0.526 0.156 0.54 0.12 0.545 0.086 0.552 0.051 0.557 0.019 0.559v2.403l0.019 0.255 0.055 0.249 0.091 0.242 0.123 0.225 0.153 0.206 0.183 0.183 0.204 0.153 0.226 0.122 0.242 0.091 0.249 0.055 0.254 0.014h1.8l0.257 -0.019 0.249 -0.055 0.242 -0.091 0.226 -0.122 0.206 -0.153 0.18 -0.183 0.153 -0.206 0.127 -0.225 0.089 -0.242 0.055 -0.249 0.019 -0.255V13.798l0.019 -0.559 0.051 -0.559 0.086 -0.552 0.12 -0.545 0.156 -0.54 0.189 -0.526 0.219 -0.513 0.25 -0.501 0.283 -0.482 0.314 -0.463 0.249 -0.381 0.216 -0.403 0.182 -0.415 0.147 -0.43 0.111 -0.442 0.07 -0.447 0.033 -0.454 -0.003 -0.454 -0.045 -0.454 -0.081 -0.447 -0.117 -0.437 -0.156 -0.429 -0.19 -0.413 -0.225 -0.393 -0.259 -0.374 -0.286 -0.353 -0.317 -0.327 -0.343 -0.298 -0.367 -0.269 -0.389 -0.237 -0.408 -0.206L10.79 0.326 10.354 0.194 9.909 0.098 9.458 0.039 9 0.026zm0 0.897 0.411 0.021 0.406 0.057 0.401 0.094 0.389 0.129 0.375 0.165 0.362 0.199 0.339 0.23 0.319 0.261 0.293 0.288 0.266 0.314 0.238 0.336 0.204 0.357 0.171 0.374 0.135 0.387 0.099 0.398 0.065 0.406 0.026 0.41 -0.012 0.411 -0.048 0.405 -0.086 0.401 -0.123 0.394 -0.156 0.379 -0.192 0.363 -0.225 0.343 -0.327 0.489 -0.3 0.504 -0.267 0.519 -0.235 0.537 -0.206 0.549 -0.171 0.562 -0.137 0.567 -0.103 0.576 -0.069 0.583 -0.036 0.585H7.2l-0.036 -0.585 -0.069 -0.581 -0.103 -0.576 -0.137 -0.569 -0.171 -0.562 -0.206 -0.549 -0.235 -0.537 -0.267 -0.519 -0.3 -0.504 -0.327 -0.487 -0.223 -0.343 -0.192 -0.363 -0.156 -0.379 -0.123 -0.394 -0.084 -0.401 -0.048 -0.406 -0.012 -0.411 0.027 -0.41 0.063 -0.406 0.098 -0.398 0.135 -0.387 0.171 -0.374 0.206 -0.357 0.237 -0.336 0.266 -0.314 0.293 -0.288 0.319 -0.261 0.341 -0.228 0.36 -0.199 0.375 -0.165 0.389 -0.129 0.401 -0.094 0.408 -0.057 0.41 -0.021zM7.2 14.405h3.6v1.798l-0.015 0.173 -0.055 0.17 -0.082 0.154 -0.111 0.137 -0.137 0.111 -0.154 0.082 -0.171 0.05 -0.173 0.019h-1.8l-0.173 -0.019 -0.171 -0.05 -0.154 -0.082 -0.137 -0.111 -0.111 -0.137 -0.082 -0.154 -0.055 -0.17 -0.015 -0.173V14.405z"/>
+                        </custom:SVGButton.Paths>
+                    </custom:SVGButton>
+
+                    <custom:SVGButton  Visibility="Visible"  x:Name="btn_getActiveGuid"  HorizontalAlignment="Left" Margin="2,0" VerticalAlignment="Top" Width="20" Command="{Binding ActiveGuidCommand}" BorderBrush="Black" Height="20" Padding="0"  HorizontalContentAlignment="Center" VerticalContentAlignment="Center" >
+                        <custom:SVGButton.ToolTip>
                             <StackPanel Orientation="Horizontal">
                                 <Label Content="Get Active Guid" VerticalAlignment="Center" Width="87" Padding="0" HorizontalAlignment="Right" VerticalContentAlignment="Center" Margin="4,0,0,0" />
                             </StackPanel>
-                        </custom:IconButton.ToolTip>
-                    </custom:IconButton>
-                    <custom:IconButton Icon="setting.png" Visibility="Visible"  x:Name="btn_config"  HorizontalAlignment="Left" Margin="2,0" VerticalAlignment="Top" Width="20" Command="{Binding ConfigCommand}" BorderBrush="Black" Height="20" Padding="0" HorizontalContentAlignment="Center" >
-                        <!--<Image Height="20" Width="22" HorizontalAlignment="Left" VerticalAlignment="Top" Style="{StaticResource ConfigButtonImg}"/>-->
-                        <Button.ToolTip>
+                        </custom:SVGButton.ToolTip>
+                        <custom:SVGButton.Paths>
+                            <custom:path d="M1 9.50006C1 10.3285 1.67157 11.0001 2.5 11.0001H4L4 10.0001H2.5C2.22386 10.0001 2 9.7762 2 9.50006L2 2.50006C2 2.22392 2.22386 2.00006 2.5 2.00006L9.5 2.00006C9.77614 2.00006 10 2.22392 10 2.50006V4.00002H5.5C4.67158 4.00002 4 4.67159 4 5.50002V12.5C4 13.3284 4.67158 14 5.5 14H12.5C13.3284 14 14 13.3284 14 12.5V5.50002C14 4.67159 13.3284 4.00002 12.5 4.00002H11V2.50006C11 1.67163 10.3284 1.00006 9.5 1.00006H2.5C1.67157 1.00006 1 1.67163 1 2.50006V9.50006ZM5 5.50002C5 5.22388 5.22386 5.00002 5.5 5.00002H12.5C12.7761 5.00002 13 5.22388 13 5.50002V12.5C13 12.7762 12.7761 13 12.5 13H5.5C5.22386 13 5 12.7762 5 12.5V5.50002Z" />
+                        </custom:SVGButton.Paths>
+                    </custom:SVGButton>
+
+
+                    <custom:SVGButton   Visibility="Visible"  x:Name="btn_config"  HorizontalAlignment="Left" Margin="2,0" VerticalAlignment="Top" Width="20" Command="{Binding ConfigCommand}"  Height="20" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"  >
+                        <Image Height="20" Width="22" HorizontalAlignment="Left" VerticalAlignment="Top" Style="{StaticResource ConfigButtonImg}"/>
+                        <custom:SVGButton.ToolTip>
                             <StackPanel Orientation="Horizontal">
                                 <Label Content="Config" VerticalAlignment="Center" Width="87" Padding="0" HorizontalAlignment="Right" VerticalContentAlignment="Center" Margin="4,0,0,0" />
                             </StackPanel>
-                        </Button.ToolTip>
-                    </custom:IconButton>
-                    <custom:IconButton Icon="xmltag.png"  Visibility="Visible"  x:Name="btn_drawUI"  HorizontalAlignment="Left" Margin="2,0" VerticalAlignment="Top" Width="20" BorderBrush="Black" Height="20" Padding="0" HorizontalContentAlignment="Center" >
-                        <!--<Image Height="20" Width="22" HorizontalAlignment="Left" VerticalAlignment="Top" Style="{StaticResource DrawUIButtonImg}"/>-->
-                        <custom:IconButton.ToolTip>
+                        </custom:SVGButton.ToolTip>
+                        <custom:SVGButton.Paths>
+                            <custom:path 
+d="m11.633 12.191 0.45 -0.447c2.081 0.069 2.114 -0.005 2.206 -0.219l0.572 -1.392 0.042 -0.131 -0.047 -0.116c-0.025 -0.061 -0.1 -0.244 -1.4 -1.483V7.75c1.5 -1.445 1.469 -1.519 1.383 -1.731l-0.569 -1.406c-0.086 -0.211 -0.119 -0.294 -2.184 -0.237l-0.45 -0.466a10.083 10.083 0 0 0 -0.07 -2.053l-0.058 -0.131 -1.487 -0.65c-0.219 -0.1 -0.295 -0.136 -1.7 1.394l-0.631 -0.009C6.244 0.916 6.175 0.944 5.958 1.031l-1.383 0.559c-0.217 0.088 -0.294 0.119 -0.209 2.219l-0.447 0.445c-2.081 -0.069 -2.113 0.006 -2.203 0.219l-0.573 1.394 -0.045 0.133 0.047 0.116c0.025 0.059 0.097 0.241 1.4 1.481v0.65c-1.5 1.445 -1.467 1.519 -1.381 1.731l0.569 1.408c0.088 0.216 0.119 0.292 2.184 0.237l0.45 0.467a10.122 10.122 0 0 0 0.069 2.05l0.058 0.133 1.497 0.655c0.217 0.091 0.294 0.123 1.694 -1.4l0.631 0.008c1.447 1.545 1.522 1.516 1.733 1.43l1.38 -0.558c0.219 -0.086 0.294 -0.117 0.206 -2.219ZM5.703 8.928a2.478 2.478 0 1 1 3.244 1.413 2.506 2.506 0 0 1 -3.244 -1.413Z"                             />
+
+
+                        </custom:SVGButton.Paths>
+                    </custom:SVGButton>
+
+
+                    <custom:SVGButton Visibility="Visible"  x:Name="btn_drawUI"  HorizontalAlignment="Left" Margin="2,0" VerticalAlignment="Top" Width="20"  Height="20" Padding="0"  HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" >
+                        <custom:SVGButton.ToolTip>
                             <StackPanel Orientation="Horizontal">
                                 <Label Content="DrawUI" VerticalAlignment="Center" Width="87" Padding="0" HorizontalAlignment="Right" VerticalContentAlignment="Center" Margin="4,0,0,0" />
                             </StackPanel>
-                        </custom:IconButton.ToolTip>
-                    </custom:IconButton>
-                    <custom:IconButton Icon="workspace.png" Visibility="Visible"  x:Name="btn_workSpace"  HorizontalAlignment="Left" Margin="2,0" VerticalAlignment="Top" Width="20" BorderBrush="Black" Height="20" Padding="0" HorizontalContentAlignment="Center" >
-                        <!--<Image Height="20" Width="22" HorizontalAlignment="Left" VerticalAlignment="Top" Style="{StaticResource WorkSpaceButtonImg}"/>-->
-                        <custom:IconButton.ToolTip>
+                        </custom:SVGButton.ToolTip>
+                        <custom:SVGButton.Paths>
+                            <custom:path d="m10.721 11.107 1.161 1.161L15.75 8.4l-3.869 -3.869 -1.161 1.161L13.429 8.4Z" />
+                            <custom:path d="M6.08 5.693 4.919 4.531 1.05 8.4l3.869 3.869 1.161 -1.161L3.371 8.4Z" />
+                            <custom:path d="m9.141 4.03 0.84 0.229 -2.321 8.51 -0.84 -0.229 2.321 -8.51Z" />
+                        </custom:SVGButton.Paths>
+                    </custom:SVGButton>
+
+
+                    <custom:SVGButton Visibility="Visible"  x:Name="btn_workSpace"  HorizontalAlignment="Left" Margin="2,0" VerticalAlignment="Top" Width="20"  Height="20" VerticalContentAlignment="Stretch">
+                        <custom:SVGButton.ToolTip>
                             <StackPanel Orientation="Horizontal">
-                                <Label Content="Workspace" VerticalAlignment="Center" Width="87" Padding="0" HorizontalAlignment="Right" VerticalContentAlignment="Center" Margin="4,0,0,0" />
+                                <Label Content="Workspace" VerticalAlignment="Center" Width="87" Padding="0" HorizontalAlignment="Right"  Margin="4,0,0,0" />
                             </StackPanel>
-                        </custom:IconButton.ToolTip>
-                    </custom:IconButton>
+                        </custom:SVGButton.ToolTip>
+                        <custom:SVGButton.Paths>
+                            <custom:path d="M4.725 10.5h4.725v4.725H4.725V10.5ZM10.5 15.225V10.5h4.725v4.725H10.5Zm0 -5.775V4.725h4.725v4.725H10.5ZM4.725 7.612v-1.05h4.725v1.05H4.725Z"   />
+                        </custom:SVGButton.Paths>
+                    </custom:SVGButton>
                 </StackPanel>
 
             </StatusBarItem>
 
             <StatusBarItem Grid.Column="3"/>
         </StatusBar>
-        <DockPanel Margin="2,2,2,0" DockPanel.Dock="Left" x:Name="dockPanel_treeViews" Visibility="Visible">
-            <Grid DockPanel.Dock="Left" Width="Auto" Margin="0,-2,0,0"  >
+        <DockPanel Margin="2,0,2,0" DockPanel.Dock="Left" x:Name="dockPanel_treeViews" Visibility="Visible">
+            <Grid DockPanel.Dock="Left" Width="Auto"  >
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="3*" />
@@ -113,7 +160,9 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>-->
                 </Grid.RowDefinitions>
-                <Label Content="Main Tree:" Grid.Row="0" FontFamily="Segoe UI Black" Background="#FF8AF971"/>
+                <Border  Style="{DynamicResource BorderTitleStyle}">
+                    <Label Content="Main Tree:" Grid.Row="0" FontFamily="Segoe UI Black" />
+                </Border>
                 <TreeView  Grid.Row="1"  x:Name="treeView_Nodes"  Margin="0" BorderBrush="{x:Null}" Background="#FFE3FDD4" 
                            VirtualizingStackPanel.IsVirtualizing="True" VirtualizingStackPanel.VirtualizationMode="Recycling">
 
@@ -123,7 +172,8 @@
                             <Setter Property="ContextMenu" Value="{StaticResource contextMenu}"/>
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding Path=IsSelected}" Value="true">
-                                    <Setter Property="Background" Value="#7F1D3806" />
+                                    <Setter Property="Background" Value="{DynamicResource TabControl.Selected.Background}" />
+                                    <!--<Setter Property="Background" Value="#7F1D3806" />-->
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
@@ -137,79 +187,84 @@
                 </TreeView>
 
             </Grid>
-            <Grid DockPanel.Dock="Left" Width="Auto"  Margin="4,-2,2,0" Name="gridRef" Visibility="Collapsed">
+            <Grid DockPanel.Dock="Left" Width="Auto"  Margin="1,0,0,0" Name="gridRef" Visibility="Collapsed">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="14" />
-                    <RowDefinition Height="12"/>
+                    <RowDefinition Height="16"/>
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <Label Content="Ref Tree:" Background="#FF8AF971" Grid.Row="0" FontFamily="Segoe UI Black" Grid.RowSpan="2" Padding="5"/>
+                <Border Grid.RowSpan="2" Grid.Row="0" Style="{DynamicResource BorderTitleStyle}">
+                    <Label Content="Ref Tree:"  FontFamily="Segoe UI Black"/>
+                </Border>
                 <TreeView  x:Name="treeView_Ref" Grid.Row="2" Margin="0" BorderBrush="{x:Null}" Background="#FFE3FDD4" 
                            VirtualizingStackPanel.IsVirtualizing="True" VirtualizingStackPanel.VirtualizationMode="Recycling">
 
                     <TreeView.ItemContainerStyle>
                         <Style TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource TreeViewItemStyle}">
-                            <Setter Property="KeyboardNavigation.TabNavigation" Value="Continue"/>
+                            <!--<Setter Property="KeyboardNavigation.TabNavigation" Value="Continue"/>
                             <Setter Property="ContextMenu" Value="{StaticResource contextMenu}"/>
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding Path=IsSelected}" Value="true">
                                     <Setter Property="Background" Value="#7F1D3806" />
                                 </DataTrigger>
-                            </Style.Triggers>
+                            </Style.Triggers>-->
                         </Style>
                     </TreeView.ItemContainerStyle>
 
                     <TreeView.ItemTemplate>
                         <HierarchicalDataTemplate  ItemsSource="{Binding Path=Childrens}">
                             <HeaderedContentControl Header="{Binding Path=TagValue}" Focusable="False"/>
-                            <!--<Label Content="{Binding Path=TagName}"/>-->
                         </HierarchicalDataTemplate>
                     </TreeView.ItemTemplate>
                 </TreeView>
-                <Label Content="Search Tree:" Background="#FF8AF971" Grid.Row="3" FontFamily="Segoe UI Black"/>
-                <TreeView VerticalAlignment="Stretch"  Grid.Row="4" x:Name="treeView_Search" Margin="0,2,0,0" BorderBrush="{x:Null}" Background="#FFE3FDD4" 
+                <Border Grid.Row="3" Style="{DynamicResource BorderTitleStyle}">
+                    <Label Content="Search Tree:"   FontFamily="Segoe UI Black"/>
+                </Border>
+                <TreeView VerticalAlignment="Stretch"  Grid.Row="4" x:Name="treeView_Search" Margin="0,2,0,0" BorderBrush="{x:Null}" 
                            VirtualizingStackPanel.IsVirtualizing="True" VirtualizingStackPanel.VirtualizationMode="Recycling">
 
                     <TreeView.ItemContainerStyle>
                         <Style TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource TreeViewItemStyle}">
-                            <Setter Property="KeyboardNavigation.TabNavigation" Value="Continue"/>
+                            <!--<Setter Property="KeyboardNavigation.TabNavigation" Value="Continue"/>
                             <Setter Property="ContextMenu" Value="{StaticResource contextMenu}"/>
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding Path=IsSelected}" Value="true">
                                     <Setter Property="Background" Value="#7F1D3806" />
                                 </DataTrigger>
-                            </Style.Triggers>
+                            </Style.Triggers>-->
                         </Style>
                     </TreeView.ItemContainerStyle>
 
                     <TreeView.ItemTemplate>
                         <HierarchicalDataTemplate  ItemsSource="{Binding Path=Childrens}">
                             <HeaderedContentControl Header="{Binding Path=TagValue}" Focusable="False"/>
-                            <!--<Label Content="{Binding Path=TagName}"/>-->
                         </HierarchicalDataTemplate>
                     </TreeView.ItemTemplate>
                 </TreeView>
             </Grid>
         </DockPanel>
-        <Grid DockPanel.Dock="Bottom" Height="{Binding ConsoleExpanded,Converter={StaticResource BoolHeightConverter}}" VerticalAlignment="Bottom"  Margin="2,2,2,0" Background="#FFE3FDD4" Name="grid_consoles">
+        <Grid DockPanel.Dock="Bottom" Height="{Binding ConsoleExpanded, Converter={StaticResource BoolHeightConverter}}" VerticalAlignment="Bottom"  Margin="2,2,2,0"  Name="grid_consoles">
             <Grid Panel.ZIndex="1" HorizontalAlignment="Right" Width="80" Height="21" VerticalAlignment="Bottom">
                 <custom:IconCheckBox IconUnchecked="collapseArrow.png" IconChecked="expandArrow.png" Background="{x:Null}"
-                                     Margin="0,0,0,1" x:Name="btn_expandConsole" Command="{Binding ExpandConsoleCommand}" 
+                                     Margin="0,0,0,1" x:Name="btn_expandConsole" IsChecked="{Binding ConsoleExpanded,Mode=TwoWay}"
                                      Panel.ZIndex="2" Height="18" VerticalAlignment="Bottom" HorizontalAlignment="Right"
-                                     Width="18" BorderBrush="{x:Null}">
-                   
-                </custom:IconCheckBox>
-                <!--<Button Visibility="{Binding ConsoleExpanded,Converter={StaticResource BoolVisibilityConverter}}" Background="{x:Null}" Margin="0,0,0,1" Name="btn_collapseConsole" Command="{Binding ExpandConsoleCommand}" Panel.ZIndex="2" Height="18" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="18" BorderBrush="{x:Null}">
-                    <Image Style="{StaticResource ConsoleCollapse}" />
-                </Button>-->
-                <custom:IconButton Icon="trash.png" Background="{x:Null}" Margin="39,0,0,1" x:Name="btn_clearConsole" Click="btn_clearConsole_Click" Panel.ZIndex="2" Height="18" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="18" BorderBrush="{x:Null}" Tag="{Binding ElementName=tabControl_Details,Path=SelectedIndex}">
-               
-                    <custom:IconButton.ToolTip>
+                                     Width="18" BorderBrush="{x:Null}" />
+       
+                
+                <custom:SVGButton Margin="39,0,0,1" x:Name="btn_clearConsole" Click="btn_clearConsole_Click" Panel.ZIndex="2" Height="18" Width="18" VerticalAlignment="Bottom" HorizontalAlignment="Left" Tag="{Binding ElementName=tabControl_Details,Path=SelectedIndex}">
+                    <custom:SVGButton.ToolTip>
                         <Label Content="Clear All" />
-                    </custom:IconButton.ToolTip>
-                </custom:IconButton>
+                    </custom:SVGButton.ToolTip>
+                    <custom:SVGButton.Paths>
+                        <custom:path d="M13 3s0-0.51-2-0.8v-0.7c-0.017-0.832-0.695-1.5-1.53-1.5-0 0-0 0-0 0h-3c-0.815 0.017-1.47 0.682-1.47 1.5 0 0 0 0 0 0v0.7c-0.765 0.068-1.452 0.359-2.007 0.806l-0.993-0.006v1h12v-1h-1zM6 1.5c0.005-0.274 0.226-0.495 0.499-0.5l3.001-0c0 0 0.001 0 0.001 0 0.282 0 0.513 0.22 0.529 0.499l0 0.561c-0.353-0.042-0.763-0.065-1.178-0.065-0.117 0-0.233 0.002-0.349 0.006-0.553-0-2.063-0-2.503 0.070v-0.57z" />
+
+
+                        <custom:path d="M2 5v1h1v9c1.234 0.631 2.692 1 4.236 1 0.002 0 0.003 0 0.005 0h1.52c0.001 0 0.003 0 0.004 0 1.544 0 3.002-0.369 4.289-1.025l-0.054-8.975h1v-1h-12zM6 13.92q-0.51-0.060-1-0.17v-6.75h1v6.92zM9 14h-2v-7h2v7zM11 13.72c-0.267 0.070-0.606 0.136-0.95 0.184l-0.050-6.904h1v6.72z" />
+                    </custom:SVGButton.Paths>
+                </custom:SVGButton>
+         
 
             </Grid>
             <TabControl x:Name="tabControl_Details" MouseUp="tabControl_Details_MouseUp" Style="{DynamicResource TabControlStyle}" TabStripPlacement="Bottom">
@@ -223,25 +278,21 @@
                     </Grid>
                 </TabItem>-->
                 <TabItem Header="Xml Viewer" Style="{DynamicResource TabItemStyle}">
-                    <Grid Background="#FFE5E5E5" >
+                    <Grid>
                         <ScrollViewer  VerticalScrollBarVisibility="Auto" Template="{DynamicResource ScrollViewerControlTemplate}">
                             <TextBox ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" x:Name="txt_xmlViewer"/>
                         </ScrollViewer>
                     </Grid>
                 </TabItem>
                 <TabItem Header="Console" Style="{DynamicResource TabItemStyle}">
-                    <Grid Background="#FFF2F5EA">
+                    <Grid >
                         <ScrollViewer  VerticalScrollBarVisibility="Auto"  Template="{DynamicResource ScrollViewerControlTemplate}">
-                            <!--<WindowsFormsHost Visibility="{Binding ConsoleExpanded,Converter={StaticResource BoolVisibilityConverter}}">
-                                <wf:RichTextBox  x:Name="txt_consoleFull" ForeColor="Black"/>
-                            </WindowsFormsHost>-->
                             <RichTextBox ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto"  x:Name="txt_consoleFull" />
-
                         </ScrollViewer>
                     </Grid>
                 </TabItem>
                 <TabItem Header="Corel EventViewer" Visibility="{Binding InCorel,Converter={StaticResource BoolVisibilityConverter}}" Style="{DynamicResource TabItemStyle}">
-                    <Grid Background="#FFF2F5EA">
+                    <Grid>
                         <ScrollViewer  VerticalScrollBarVisibility="Auto">
                             <TextBox ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" x:Name="txt_CorelEventViewer" />
                         </ScrollViewer>
@@ -251,18 +302,20 @@
             </TabControl>
         </Grid>
 
-        <ScrollViewer DockPanel.Dock="Top" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="0,2,2,0" Background="#FFE3FDD4">
+        <ScrollViewer DockPanel.Dock="Top" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="0,2,2,0" Background="#FFE3FDD4" Padding="0">
             <StackPanel>
-                <Label x:Name="lba_tagName" FontSize="14" FontWeight="Bold" Background="{x:Null}" Foreground="#FF990B0B" Height="40" Content="{Binding CurrentBasicData.TagName}">
-                    <Label.ToolTip>
-                        <StackPanel>
-                            <Label Content="Current Tag" FontWeight="Bold" />
-                            <Label Content="Double Click to Copy" />
-                        </StackPanel>
-                    </Label.ToolTip>
-                </Label>
+                <Border Style="{DynamicResource BorderTitleStyle}">
+                    <Label x:Name="lba_tagName" FontSize="14" FontWeight="Bold" Content="{Binding CurrentBasicData.TagName}">
+                        <Label.ToolTip>
+                            <StackPanel>
+                                <Label Content="Current Tag" FontWeight="Bold" />
+                                <Label Content="Double Click to Copy" />
+                            </StackPanel>
+                        </Label.ToolTip>
+                    </Label>
+                </Border>
                 <TabControl Visibility="Visible" x:Name="tabControl_details"  Margin="0" BorderBrush="{x:Null}"
-                            Background="#FFE3FDD4" Style="{DynamicResource TabControlStyle}">
+                             Style="{DynamicResource TabControlStyle}">
                     <TabItem Header="Details"  BorderBrush="{x:Null}"  Style="{DynamicResource TabItemStyle}">
                         <Grid x:Name="grid_details"/>
                     </TabItem>

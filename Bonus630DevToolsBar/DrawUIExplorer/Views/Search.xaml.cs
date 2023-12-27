@@ -1,5 +1,6 @@
 ﻿using br.com.Bonus630DevToolsBar.DrawUIExplorer.Models;
 using br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels;
+using br.com.Bonus630DevToolsBar.RunCommandDocker.Styles;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -11,11 +12,13 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
     public partial class Search : UserControl
     {
         SearchViewModel searchViewModel;
+        public StylesController StylesController { get; set; }
         public Search(Core core)
         {
             InitializeComponent();
             searchViewModel = new SearchViewModel(core);
             this.DataContext = searchViewModel;
+            StylesController = new StylesController(this.Resources);
         }
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {

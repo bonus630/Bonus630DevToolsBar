@@ -443,7 +443,8 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
                 LoadListsFinish();
             FilePath = file.FullName;
             //Teste para pegar os guids do RCDATA
-            ResourcesExtractor.GetGuids();
+            if(InCorel)
+                ResourcesExtractor.GetGuids();
             //listIsLoaded = true;
             //TestGetResourceRCDATA();
 

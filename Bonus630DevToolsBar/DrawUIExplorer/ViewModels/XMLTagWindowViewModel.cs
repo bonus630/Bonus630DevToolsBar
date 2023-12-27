@@ -40,7 +40,8 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
             //tenho que fazer o merge aqui?
             //Preciso verificar as tags que já estão carregadas e entao adicionar somente as nao carregadas nas posiçoes corretas
             //mainList.Add(core.ListPrimaryItens);
-            dispatcher.Invoke(new Action(()=>{
+            dispatcher.Invoke(new Action(() =>
+            {
                 mainList.Add(core.ListPrimaryItens);
                 OnPropertyChanged("MainList");
             }));
@@ -65,7 +66,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
                 OnPropertyChanged();
             }
         }
-        private bool consoleExpanded;
+        private bool consoleExpanded = false;
 
         public bool ConsoleExpanded
         {
@@ -106,6 +107,9 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
         public BaseDataCommand GetDockersGuidCommand { get; protected set; }
         public BaseDataCommand GetIUnknownTypesCommand { get; protected set; }
         public BaseDataCommand RemoveMeCommand { get; protected set; }
+
+
+
         private void initializeCommands()
         {
             CopyGuidCommand = new BaseDataCommand(CopyGuidExec, HasGuid);
@@ -128,7 +132,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
             GetDockersGuidCommand = new BaseDataCommand(GetDockersGuidExec, IsDockers);
             RemoveMeCommand = new BaseDataCommand(RemoveMeExec, IsSearchData);
             HighLightCommand = new SimpleCommand(showHighLightItem);
-            LayoutCommand = new BaseDataCommand(layoutAdorms,IsComplexLayout);
+            LayoutCommand = new BaseDataCommand(layoutAdorms, IsComplexLayout);
         }
         private bool IsDockers(IBasicData basicData)
         {
@@ -271,7 +275,15 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
                 IBasicData temp = basicData.Childrens[i];
                 if (temp.GetType() == typeof(DockerData) && !guidDockersNotOpen.Contains(temp.Guid))
                 {
-                    Clipboard.SetText(temp.Guid);
+                    try
+                    {
+                        Clipboard.SetText(temp.Guid);
+                        core.DispactchNewMessage("Dockers Caption is copied!", MsgType.Result);
+                    }
+                    catch (Exception e)
+                    {
+                        core.DispactchNewMessage("Error when copying", MsgType.Erro);
+                    }
                     if (string.IsNullOrEmpty(temp.Caption))
                     {
                         temp.Caption = core.CorelApp.FrameWork.Automation.GetCaptionText(temp.Guid);
@@ -280,7 +292,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
                     {
                         try
                         {
-                            
+
                             //System.Windows.MessageBox.Show("Test");
                             core.CorelApp.FrameWork.ShowDocker(temp.Guid);
                             temp.Caption = core.CorelApp.FrameWork.Automation.GetCaptionText(temp.Guid);
@@ -305,14 +317,28 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
                     guid += "\"" + temp.Guid + "\",";
                 }
             }
-            core.DispactchNewMessage("Dockers Guids copied!", MsgType.Result);
-            Clipboard.SetText(guid);
+            try
+            {
+                Clipboard.SetText(guid);
+                core.DispactchNewMessage("Dockers Guids copied!", MsgType.Result);
+            }
+            catch (Exception e)
+            {
+                core.DispactchNewMessage("Error when copying", MsgType.Erro);
+            }
         }
 
         private void CopyGuidExec(IBasicData basicData)
         {
-            System.Windows.Clipboard.SetText(basicData.Guid);
-            core.DispactchNewMessage(string.Format("Copied    {0}", basicData.Guid), MsgType.Result);
+            try
+            {
+                System.Windows.Clipboard.SetText(basicData.Guid);
+                core.DispactchNewMessage(string.Format("Copied:>    {0}", basicData.Guid), MsgType.Result);
+            }
+            catch (Exception e)
+            {
+                core.DispactchNewMessage("Error when copying", MsgType.Erro);
+            }
         }
         private void RemoveMeExec(IBasicData basicData)
         {
@@ -324,7 +350,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
             //Precisa fixar
             if (XmlDecode != null)
                 XmlDecode(basicData);
-        }  
+        }
         private void OpenEditor(IBasicData basicData)
         {
             core.RunEditor(basicData);
@@ -381,7 +407,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
         private void showHighLightItem()
         {
             core.HighLightItemHelper.ShowHighLightItem(core.Route);
-        }   
+        }
         private void layoutAdorms(IBasicData basicData)
         {
             core.HighLightItemHelper.InitializeLayoutMode(core.CurrentBasicData);
@@ -389,7 +415,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
         private bool IsComplexLayout(IBasicData basicData)
         {
             return basicData is DockerData || basicData is CommandBarData;
-     
+
         }
         private void activeGuid()
         {

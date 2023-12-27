@@ -6,6 +6,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using br.com.Bonus630DevToolsBar.DrawUIExplorer.DataClass;
 using br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels;
+using br.com.Bonus630DevToolsBar.RunCommandDocker.Styles;
 
 namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
 {
@@ -14,10 +15,12 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
     /// </summary>
     public partial class Details : UserControl
     {
+        public StylesController StylesController { get; set; } 
         public Details(Core core)
         {
             InitializeComponent();
             this.DataContext = new DetailsViewModel(core);
+            StylesController = new StylesController(this.Resources);
         }
         private void list_attributes_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {

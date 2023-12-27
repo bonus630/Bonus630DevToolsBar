@@ -1,20 +1,34 @@
 ﻿<Window x:Class="br.com.Bonus630DevToolsBar.DrawUIExplorer.Views.ParamBox"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:br.com.Bonus630DevToolsBar.DrawUIExplorer.Views"
-             mc:Ignorable="d" 
-             Width="240" Height="110">
-    <Grid>
+             MaxWidth="240" MinWidth="240" MinHeight="120" MaxHeight="120" Title="Type Param" ResizeMode="NoResize" 
+             >
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/RunCommandDocker/Styles/Colors.xaml"/>
+            <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/RunCommandDocker/Styles/Styles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+        </ResourceDictionary>
+    </Window.Resources>
+    <Window.TaskbarItemInfo>
+        <TaskbarItemInfo/>
+    </Window.TaskbarItemInfo>
+    <Grid FocusManager.FocusedElement="{Binding ElementName=txt_param}" >
         <Grid.RowDefinitions>
-            <RowDefinition Height="32"/>
-            <RowDefinition Height="32"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
-        <TextBox Grid.Row="0" x:Name="txt_param" Height="32" />
-        <StackPanel Grid.Row="1" Orientation="Horizontal">
-            <Button Content="Ok" Name="btn_ok" Width="60" Margin="10,0" Click="btn_ok_Click"/>
-            <Button Content="Cancel" Name="btn_cancel" Width="120" Click="btn_cancel_Click"/>
-        </StackPanel>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="140" />
+            <ColumnDefinition Width="10" />
+            <ColumnDefinition Width="70" />
+        </Grid.ColumnDefinitions>
+        <TextBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" x:Name="txt_param" Margin="10" Focusable="True" KeyUp="txt_param_KeyUp" VerticalContentAlignment="Center" VerticalAlignment="Stretch"/>
+
+        <Button Grid.Row="1" Grid.Column="0" Content="Ok" Name="btn_ok" Width="130" HorizontalAlignment="Right" Click="btn_ok_Click" Focusable="False"/>
+        <Button Grid.Row="1" Grid.Column="2" Content="Cancel" Name="btn_cancel" Width="60" HorizontalAlignment="Left" Click="btn_cancel_Click" Focusable="False"/>
+        
     </Grid>
 </Window>

@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels;
+using br.com.Bonus630DevToolsBar.RunCommandDocker.Styles;
 
 namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
 {
@@ -11,12 +12,13 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
     public partial class XSLTEster : UserControl
     {
         XSLTesterViewModel xSLTesterViewModel;
-
+        public StylesController StylesController { get; set; }
         public XSLTEster(Core core)
         {
             InitializeComponent();
             xSLTesterViewModel = new XSLTesterViewModel(core);
             this.DataContext = xSLTesterViewModel;
+            StylesController = new StylesController(this.Resources);
         }
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {

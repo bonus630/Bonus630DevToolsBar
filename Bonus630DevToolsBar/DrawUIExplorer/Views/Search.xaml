@@ -13,10 +13,15 @@
             <converters:IntVisibilityConverter x:Key="IntVisibilityConverter"/>
             <converters:InvertBoolVisibilityConverter x:Key="InvertBoolVisibilityConverter"/>
             <converters:BoolVisibilityConverter x:Key="BoolVisibilityConverter"/>
+            <converters:ImagePathConverter x:Key="ImagePathConverter"/>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="../Resources/Colors.xaml"/>
-                <ResourceDictionary Source="../Resources/Styles.xaml"/>
-                <ResourceDictionary Source="../../Images/Images.xaml"/>
+                <!--<ResourceDictionary Source="../Resources/Colors.xaml"/>
+                <ResourceDictionary Source="../Resources/Styles.xaml"/>-->
+                <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/RunCommandDocker/Styles/Styles.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/RunCommandDocker/Styles/Colors.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/RunCommandDocker/Styles/ScrollComponentsStyles.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/RunCommandDocker/Styles/ListComponentsStyles.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/Images/Images.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -68,7 +73,7 @@
             </GroupBox>
             <GroupBox Grid.Row="2" Header="Attribute Name"  VerticalAlignment="Top" HorizontalAlignment="Left" Width="400">
                 <StackPanel Orientation="Horizontal">
-                    <CheckBox Content="Only" x:Name="cb_uniqueName" VerticalAlignment="Center" Style="{DynamicResource CheckBoxStyle}" IsChecked="{Binding UniqueName}"/>
+                    <CheckBox Content="Only" x:Name="cb_uniqueName" VerticalAlignment="Center" IsChecked="{Binding UniqueName}"/>
                     <ComboBox HorizontalAlignment="Left" Margin="5,6,0,0" VerticalAlignment="Top" Width="255" x:Name="cb_attributeName"  
                               ItemsSource="{Binding AttributesName}" SelectedItem="{Binding AttributeName}"/>
                     <Button Content="List" HorizontalAlignment="Left" Margin="8,6,0,0" Width="40" x:Name="btn_getAttributeName"  Height="26" VerticalAlignment="Top" Tag="AttributeName"  
@@ -80,13 +85,13 @@
             <GroupBox Grid.Row="3" Header="Attribute Value"  VerticalAlignment="Top" HorizontalAlignment="Left" Width="400">
                 <StackPanel  VerticalAlignment="Top">
                     <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
-                        <RadioButton Content="Equals" Width="80" IsChecked="True" x:Name="rb_att_equals"  Style="{DynamicResource RadioButtonStyle}" Margin="0,-3.335,0,3.335"
+                        <RadioButton Content="Equals" Width="80" IsChecked="True" x:Name="rb_att_equals"  Margin="0,-3.335,0,3.335"
                                      CommandParameter="{Binding ElementName=rb_att_like,Path=IsChecked}" Command="{Binding SetAttributeTag}"/>
-                        <RadioButton Content="Like" Width="80" Margin="8,-3.335,0,3.335" x:Name="rb_att_like" Style="{DynamicResource RadioButtonStyle}"
+                        <RadioButton Content="Like" Width="80" Margin="8,-3.335,0,3.335" x:Name="rb_att_like" 
                                      CommandParameter="{Binding RelativeSource={RelativeSource Self},Path=IsChecked}" Command="{Binding SetAttributeTag}"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <CheckBox Content="Only" x:Name="cb_uniqueValue" IsChecked="{Binding UniqueValue}" VerticalAlignment="Center" HorizontalAlignment="Left" Style="{DynamicResource CheckBoxStyle}"/>
+                        <CheckBox Content="Only" x:Name="cb_uniqueValue" IsChecked="{Binding UniqueValue}" VerticalAlignment="Center" HorizontalAlignment="Left" />
                         <TextBox x:Name="textBox_attributeValue" Margin="5,0,0,0"  Width="300"  Text="{Binding AttributeValue}"
                                  Visibility="{Binding ElementName=rb_att_like,Path=IsChecked,Converter={StaticResource BoolVisibilityConverter}}" Height="22" d:IsHidden="True" >
                             <TextBox.ContextMenu>
@@ -133,11 +138,11 @@
             <GroupBox Grid.Row="4" Header="Search in"  VerticalAlignment="Top" HorizontalAlignment="Left" Width="400">
                 <StackPanel Height="52" VerticalAlignment="Top">
                     <StackPanel Orientation="Horizontal" Margin="0,6,0,0" Height="24">
-                        <RadioButton Content="{Binding GlobalDataName}"  Margin="8,0,0,0" x:Name="rb_allTag"  
-                                     CommandParameter="{Binding RelativeSource={RelativeSource Self},Path=IsChecked}" Command="{Binding SetGlobalData}"  Style="{DynamicResource RadioButtonStyle}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                        <RadioButton Content="{Binding GlobalDataName,FallbackValue=uiConfig}"  Margin="8,0,0,0" x:Name="rb_allTag"  
+                                     CommandParameter="{Binding RelativeSource={RelativeSource Self},Path=IsChecked}" Command="{Binding SetGlobalData}"  VerticalAlignment="Center" HorizontalAlignment="Left"/>
 
-                        <RadioButton Content="{Binding LocalDataName}" IsChecked="True" x:Name="rb_currentTag" 
-                                     CommandParameter="{Binding RelativeSource={RelativeSource Self},Path=IsChecked}" Command="{Binding SetLocalData}" Style="{DynamicResource RadioButtonStyle}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                        <RadioButton Content="{Binding LocalDataName,FallbackValue=Items}" IsChecked="True" x:Name="rb_currentTag" 
+                                     CommandParameter="{Binding RelativeSource={RelativeSource Self},Path=IsChecked}" Command="{Binding SetLocalData}"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="8,0,0,0"/>
                     </StackPanel>
                 </StackPanel>
             </GroupBox>
