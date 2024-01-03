@@ -203,13 +203,14 @@ d="m11.633 12.191 0.45 -0.447c2.081 0.069 2.114 -0.005 2.206 -0.219l0.572 -1.392
 
                     <TreeView.ItemContainerStyle>
                         <Style TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource TreeViewItemStyle}">
-                            <!--<Setter Property="KeyboardNavigation.TabNavigation" Value="Continue"/>
+                            <Setter Property="KeyboardNavigation.TabNavigation" Value="Continue"/>
                             <Setter Property="ContextMenu" Value="{StaticResource contextMenu}"/>
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding Path=IsSelected}" Value="true">
-                                    <Setter Property="Background" Value="#7F1D3806" />
+                                    <Setter Property="Background" Value="{DynamicResource TabControl.Selected.Background}" />
+                                    <!--<Setter Property="Background" Value="#7F1D3806" />-->
                                 </DataTrigger>
-                            </Style.Triggers>-->
+                            </Style.Triggers>
                         </Style>
                     </TreeView.ItemContainerStyle>
 
@@ -227,13 +228,14 @@ d="m11.633 12.191 0.45 -0.447c2.081 0.069 2.114 -0.005 2.206 -0.219l0.572 -1.392
 
                     <TreeView.ItemContainerStyle>
                         <Style TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource TreeViewItemStyle}">
-                            <!--<Setter Property="KeyboardNavigation.TabNavigation" Value="Continue"/>
+                            <Setter Property="KeyboardNavigation.TabNavigation" Value="Continue"/>
                             <Setter Property="ContextMenu" Value="{StaticResource contextMenu}"/>
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding Path=IsSelected}" Value="true">
-                                    <Setter Property="Background" Value="#7F1D3806" />
+                                    <Setter Property="Background" Value="{DynamicResource TabControl.Selected.Background}" />
+                                    <!--<Setter Property="Background" Value="#7F1D3806" />-->
                                 </DataTrigger>
-                            </Style.Triggers>-->
+                            </Style.Triggers>
                         </Style>
                     </TreeView.ItemContainerStyle>
 

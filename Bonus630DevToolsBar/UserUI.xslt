@@ -103,7 +103,15 @@ with F8 to reapply the changes.
 			<!--Folders-->
 			<xsl:if test="not(./item[@guidRef='680d03b3-2da0-4314-bc79-fa6b26471e22'])">
 				<item guidRef="680d03b3-2da0-4314-bc79-fa6b26471e22"/>
-			</xsl:if>	
+			</xsl:if>
+			<!--IconCreator-->
+			<xsl:if test="not(./item[@guidRef='d0a371e7-9fad-4e1c-8159-b285d67c0497'])">
+				<item guidRef="d0a371e7-9fad-4e1c-8159-b285d67c0497"/>
+			</xsl:if>
+			<!--IconLoader-->
+			<xsl:if test="not(./item[@guidRef='657042cb-3594-43a1-80bf-c8a27fd43146'])">
+				<item guidRef="657042cb-3594-43a1-80bf-c8a27fd43146"/>
+			</xsl:if>
 			<!--Recent Files-->
 			<xsl:if test="not(./item[@guidRef='7d15e9c7-2431-4841-a5aa-9eaa5b581230'])">
 				<item dock="fill" guidRef="7d15e9c7-2431-4841-a5aa-9eaa5b581230"/>
@@ -132,6 +140,19 @@ with F8 to reapply the changes.
 
 			<xsl:if test="not(./toolbar[@guidRef='48024933-d18b-4e0a-9b59-96a6b99a418e'])">
 				<toolbar guidRef="48024933-d18b-4e0a-9b59-96a6b99a418e" dock="fill"/>
+			</xsl:if>
+		</xsl:copy>
+	</xsl:template>
+
+	<xsl:template match="/uiConfig/containers/container[@guid='bee85f91-3ad9-dc8d-48b5-d2a87c8b2109']/container[@guid='Framework_MainFrame-layout']/dockHost/dockHost/dockHost/dockHost[@guid='930211f2-174f-2783-47c8-ac28b179bac7']">
+		<xsl:copy>
+			<xsl:apply-templates select="node()|@*"/>
+
+			<xsl:if test="not(./viewHost[@guidRef='60b73b65-2952-43b3-95b4-bcfd77a767e1'])">
+				<viewHost guid="60b73b65-2952-43b3-95b4-bcfd77a767e1" category="view+docker" selectedView="488c069a-7535-4af9-9c88-eda17c4808f7" dock="bottom">
+
+					<dockerData guidRef="488c069a-7535-4af9-9c88-eda17c4808f7" category="view+docker"/>
+				</viewHost>
 			</xsl:if>
 		</xsl:copy>
 	</xsl:template>

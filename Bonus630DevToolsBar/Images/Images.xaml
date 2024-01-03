@@ -175,6 +175,10 @@
     <System:String x:Key="CopyBig">CopyBig.png</System:String>
     <Style x:Key="CopyBigImg" TargetType="Image">
         <Setter Property="Source" Value="{Binding Source={StaticResource CopyBig},Converter={StaticResource ResourceToMediaImageConverter}}"/>
+    </Style>  
+    <System:String x:Key="Export">Export.png</System:String>
+    <Style x:Key="ExportImg" TargetType="Image">
+        <Setter Property="Source" Value="{Binding Source={StaticResource Export},Converter={StaticResource ResourceToMediaImageConverter}}"/>
     </Style>
     <!--<System:String x:Key="CreateSelection">createSelection.png</System:String>
     <Style x:Key="CreateSelectionImg" TargetType="Image">

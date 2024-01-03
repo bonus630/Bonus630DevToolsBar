@@ -22,16 +22,22 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
         public ViewModelDataBase(Core core)
         {
             this.core = core;
-            core.CurrentBasicDataChanged += Update;
-         
+            if (core.InCorel)
+                core.CurrentBasicDataChanged += Update;
+            else
+                core.CurrentBasicDataChanged += UpdateNoAttached;
+
+
         }
         protected Core core;
 
         protected abstract void Update(IBasicData basicData);
 
+        protected abstract void UpdateNoAttached(IBasicData basicData);
+
         //public BitmapSource CopyMenuItemImg { get { return copy; } }
         //public BitmapSource PasteMenuItemImg { get { return paste; } }
         //public BitmapSource HighLightButtonImg { get { return highLight; } }
-        
+
     }
 }

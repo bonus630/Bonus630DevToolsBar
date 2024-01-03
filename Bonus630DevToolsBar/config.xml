@@ -1,27 +1,35 @@
 <?xml version="1.0"?>
 <config>
 	<resources>
-		<resource name="Bonus630DevToolsBar" path="Bonus630DevToolsBar.dll">
+		<resource name="Bonus630DevToolsBar" path="Resources.dll">
 			<resourceMap>
 
+				<!-- DataSource-->
+				<resEntry id="9d86b3ac-5c08-4c95-9c22-288173525877" string="20000" icon="101"/>
 				<!-- Run Command Docker Button icon and string resource-->
-				<resEntry id="7acb54e6-084e-494f-ad31-2718f34ddad2" string="10223" icon="111"/>
+				<resEntry id="7acb54e6-084e-494f-ad31-2718f34ddad2" string="20001" icon="102"/>
 				<!-- DrawUI Explorer Button  icon and string resource -->
-				<resEntry id="942df043-e3e2-4d0e-83ee-a456557ac093" string="10224" icon="115"/>
+				<resEntry id="942df043-e3e2-4d0e-83ee-a456557ac093" string="20002" icon="103"/>
 				<!-- Shortcuts -->
-				<resEntry id="b0bc23ba-086b-46d1-ae04-ee36aa9003a4" string="10225" icon="112"/>
+				<resEntry id="b0bc23ba-086b-46d1-ae04-ee36aa9003a4" string="20003" icon="104"/>
 				<!-- Drag GMS -->
-				<!--<resEntry id="3b3f72b8-0129-4316-b8a3-40e4758ba9bc" string="10230" icon="114"/>-->
+				<resEntry id="3b3f72b8-0129-4316-b8a3-40e4758ba9bc" string="20004" icon="105"/>
 				<!-- Reload Gms-->
-				<resEntry id="9b07d7af-da14-4cd8-9db9-7da214ee1d4a" string="10226" icon="114"/>
+				<resEntry id="9b07d7af-da14-4cd8-9db9-7da214ee1d4a" string="20005" icon="106"/>
 				<!-- Delete Gms-->
-				<resEntry id="571db7b2-8cae-4b99-b241-a56ecd61f90e" string="10227" icon="113"/>
+				<resEntry id="571db7b2-8cae-4b99-b241-a56ecd61f90e" string="20006" icon="107"/>
 				<!--cql-->
-				<resEntry id="51b24cfb-b8df-411f-886c-4c5520e931a4" string="10228" icon="108"/>
+				<resEntry id="51b24cfb-b8df-411f-886c-4c5520e931a4" string="20007" icon="108"/>
 				<!-- cql reference guide-->
-				<resEntry id="d61f1ede-79aa-4255-8f96-307e6f63c204" string="10229" icon="110"/>
+				<resEntry id="d61f1ede-79aa-4255-8f96-307e6f63c204" string="20008" icon="109"/>
 				<!-- Folders-->
-				<resEntry id="680d03b3-2da0-4314-bc79-fa6b26471e22" string="10230" icon="109"/>
+				<resEntry id="680d03b3-2da0-4314-bc79-fa6b26471e22" string="20009" icon="110"/>
+				<!-- Recent Files-->
+				<resEntry id="7d15e9c7-2431-4841-a5aa-9eaa5b581230" string="20010" icon="111"/>
+				<!-- Icon Toolset Docker-->
+				<resEntry id="d0a371e7-9fad-4e1c-8159-b285d67c0497" string="20011" icon="112"/>
+				<!-- Icon test slot-->
+				<resEntry id="657042cb-3594-43a1-80bf-c8a27fd43146" string="20012" icon="113"/>
 
 			</resourceMap>
 		</resource>

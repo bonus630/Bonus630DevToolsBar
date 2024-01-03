@@ -120,7 +120,14 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
                 GlobalDataName = core.ListPrimaryItens.TagName;
             //}
         }
-
+        protected override void UpdateNoAttached(IBasicData basicData)
+        {
+            try
+            {
+                Update(basicData);
+            }
+            catch { }
+        }
         private bool isUnique;
 
         public bool IsUnique

@@ -151,7 +151,10 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
             }
             Route = route;
         }
-
+        protected override void UpdateNoAttached(IBasicData basicData)
+        {
+            Update(basicData);
+        }
         private void attributeContentExec(Attribute attribute)
         {
             bool invoke = false;

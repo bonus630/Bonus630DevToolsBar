@@ -28,15 +28,23 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
         }
         private void processZip(Stream fileStream)
         {
-            zipArchive = new ZipArchive(fileStream);
-            xmlStreamReader = GetStreamFromEntry("content/workspace.xml", zipArchive);
+           
+                zipArchive = new ZipArchive(fileStream);
+                xmlStreamReader = GetStreamFromEntry("content/workspace.xml", zipArchive);
+          
            
         }
-        private StreamReader GetStreamFromEntry(string entry,ZipArchive zipFile)
+        private StreamReader GetStreamFromEntry(string entry, ZipArchive zipFile)
         {
+            
             ZipArchiveEntry textEntry = zipFile.GetEntry(entry);
+            if(textEntry == null)
+            {
+                throw new Exception(string.Format("The {0} not found in this file!", entry));
+            }
             Stream stEntry = textEntry.Open();
             return new StreamReader(stEntry);
+        
  
         }
         private string GetStringFromEntry(string entry, ZipArchive zipFile)

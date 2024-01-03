@@ -7,7 +7,7 @@
              xmlns:converters="clr-namespace:br.com.Bonus630DevToolsBar.Converters"
              d:DataContext="{d:DesignInstance Type=local:RecentFilesViewModel}"
              mc:Ignorable="d" 
-             d:Background="White" >
+             d:Background="White" VerticalAlignment="Stretch" Background="Transparent" Height="20" MaxHeight="48">
     <UserControl.Resources>
 
         <ResourceDictionary>
@@ -117,11 +117,14 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <DockPanel LastChildFill="True">
-        <CheckBox x:Name="ck_autoLoad" DockPanel.Dock="Left" ToolTip="Auto Load Files" VerticalAlignment="Center" Click="CheckBox_Click"/>
-        <ItemsControl x:Name="Items" DockPanel.Dock="Right" Margin="10,0,0,0" ItemsSource="{Binding Files}" Height="20" Width="400">
+        <CheckBox x:Name="ck_autoLoad" DockPanel.Dock="Left" ToolTip="Auto Load Files" 
+                  Click="CheckBox_Click"/>
+        <ItemsControl x:Name="Items" DockPanel.Dock="Right" VerticalAlignment="Stretch" Margin="10,0,0,0" ItemsSource="{Binding Files}" Width="400">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Button Content="{Binding Index,FallbackValue=0}" Tag="{Binding FullName}" Width="20" Height="20" Click="Button_Click" MouseEnter="Button_MouseEnter">
+                    <Button Content="{Binding Index,FallbackValue=0}" Tag="{Binding FullName}" VerticalAlignment="Stretch"
+                             Width="20" Height="20" MaxHeight="48" MaxWidth="48" 
+                             Click="Button_Click" MouseEnter="Button_MouseEnter">
                         <Button.ToolTip>
 
                             <Border BorderThickness="1">

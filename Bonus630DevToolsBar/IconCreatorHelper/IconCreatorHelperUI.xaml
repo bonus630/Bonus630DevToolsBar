@@ -1,0 +1,182 @@
+﻿<UserControl x:Class="br.com.Bonus630DevToolsBar.IconCreatorHelper.IconCreatorHelperUI"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:br.com.Bonus630DevToolsBar.IconCreatorHelper"
+             xmlns:converters="clr-namespace:br.com.Bonus630DevToolsBar.Converters"
+             xmlns:custom="clr-namespace:br.com.Bonus630DevToolsBar.CustomControls"
+             xmlns:tools="clr-namespace:br.com.Bonus630DevToolsBar.CustomControls"
+             mc:Ignorable="d" Width="310" MinWidth="310" MaxWidth="310" AllowDrop="True"
+             
+              d:Background="Red">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <Style x:Key="FocusVisual">
+                <Setter Property="Control.Template">
+                    <Setter.Value>
+                        <ControlTemplate>
+                            <Rectangle Margin="2" StrokeDashArray="1 2" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" SnapsToDevicePixels="true" StrokeThickness="1"/>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <ContextMenu x:Key="BorderContextMenu" >
+                <MenuItem Header="Export PNG"   Tag="{Binding Path=PlacementTarget.Tag, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu},Mode=FindAncestor}}" Click="MenuItemExportPage_Click">
+                    <MenuItem.Icon>
+                        <Image Style="{StaticResource ExportImg}" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Copy Shapes"   Tag="{Binding Path=PlacementTarget.Tag, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu},Mode=FindAncestor}}" Click="MenuItemCopyPage_Click">
+                    <MenuItem.Icon>
+                        <Image Style="{StaticResource CopyMenuItemImg}" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Past"  Tag="{Binding Path=PlacementTarget.Tag, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu},Mode=FindAncestor}}" Click="MenuItemPastPage_Click">
+                    <MenuItem.Icon>
+                        <Image Style="{StaticResource PasteMenuItemImg}" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Clear page" Tag="{Binding Path=PlacementTarget.Tag, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu},Mode=FindAncestor}}" Click="MenuItemClearPage_Click">
+                    <MenuItem.Icon>
+                        <Image Style="{DynamicResource ClearConsoleButtonImg}" />
+                    </MenuItem.Icon>
+                </MenuItem>
+            </ContextMenu>
+            <Style x:Key="bBorder"  TargetType="Border">
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="{DynamicResource Button.MouseOver.Border}" />
+                    </Trigger>
+                </Style.Triggers>
+                <Setter Property="BorderThickness" Value="1" />
+                <Setter Property="BorderBrush" Value="{DynamicResource Button.MouseOver.Border}"/>
+                <Setter Property="Background" Value="White"/>
+                <Setter Property="Padding" Value="1" />
+                <Setter Property="ContextMenu" Value="{StaticResource BorderContextMenu}" />
+                <!--<Setter Property="Background" Value="Red"/>-->
+
+            </Style>
+
+            <!--<converters:IntVisibilityConverter x:Key="IntToVisibilityConverter" />
+            <converters:NullVisibilityConverter x:Key="NullToVisibilityConverter" />
+            <converters:TypeToVisibilityConverter x:Key="TypeToVisibilityConverter" />
+            <converters:TypeToStringConverter x:Key="TypeToStringConverter" />
+            <converters:InvertBoolVisibilityConverter x:Key="ReverseBoolVisibilityConverter" />
+            <converters:BoolVisibilityConverter x:Key="BoolToVisibilityConverter" />
+            <converters:EmptyStringToVisibilityConverter x:Key="EmptyStringToVisibilityConverter" />-->
+            <ResourceDictionary.MergedDictionaries>
+                <!--pack://application:,,,/Bonus630DevToolsBar;component/-->
+                <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/Images/Images.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/RunCommandDocker/Styles/Colors.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/RunCommandDocker/Styles/Styles.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/RunCommandDocker/Styles/ScrollComponentsStyles.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/RunCommandDocker/Styles/ListComponentsStyles.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/RunCommandDocker/Styles/TreeComponentsStyles.xaml"/>
+
+
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+
+    </UserControl.Resources>
+    <DockPanel LastChildFill="true" >
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+            <Button x:Name="btn_prepareDocument" Content="Prepare Document" Click="btn_prepareDocument_Click" Margin="4,4,0,4"/>
+            <Button x:Name="btn_openDocumento" Content="Open a Document" Click="btn_openDocumento_Click" Margin="4,4,0,4"/>
+            <Button x:Name="btn_exportIcon" Content="Generate Icon" Click="btn_exportIcon_Click" Margin="4,4,0,4"/>
+
+            <!--<Button Content="nossa" Margin="30"/>-->
+        </StackPanel>
+
+        <Border DockPanel.Dock="Bottom" Margin="4" BorderThickness="1" BorderBrush="{DynamicResource Default.Static.Foreground}">
+            <Grid>
+
+                <custom:DraggableGrid Panel.ZIndex="20" Margin="260,20,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="24" Background="#1AFF0000">
+                    <Border BorderThickness="1" BorderBrush="{DynamicResource Button.MouseOver.Border}" Padding="2,10">
+                        <StackPanel>
+                            <tools:IconButton  Icon="Refresh.png" Content="Refresh" ToolTip="Refresh thumbs previews" Width="20" Height="20" Click="btn_update_Click" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,2"/>
+                            <tools:IconButton  Icon="Outline.png" Content="Outline" ToolTip="Apply outline in selecteds" Width="20" Height="20" Click="btn_outline_Click" VerticalAlignment="Top" HorizontalAlignment="Center"  Margin="0,2"/>
+                            <tools:IconButton  Icon="Invert.png" Content="invert" ToolTip="Invert Background Color" Width="20" Height="20" Click="btn_invertBackgroundColor_Click" VerticalAlignment="Top" HorizontalAlignment="Center"  Margin="0,2"/>
+                            <tools:IconButton  Icon="CenterPage.png" Content="centerPage" ToolTip="Center selected shapes in page" Width="20" Height="20" Click="btn_centerPage_Click" VerticalAlignment="Top" HorizontalAlignment="Center"  Margin="0,2"/>
+                        </StackPanel>
+                    </Border>
+                </custom:DraggableGrid>
+
+
+                <ScrollViewer  HorizontalScrollBarVisibility="Disabled">
+                    <!--<StackPanel Orientation="Horizontal">-->
+                    <StackPanel >
+
+                        <StackPanel Orientation="Horizontal" Tag="16" 
+                              Margin="2" Background="#1AFFFFFF" AllowDrop="{Binding ElementName=ck_16,Path=IsChecked}"
+                                    Drop="StackPanel_Drop" DragOver="StackPanel_DragOver" DragEnter="StackPanel_DragEnter" DragLeave="StackPanel_DragLeave">
+                            <CheckBox x:Name="ck_16" Tag="16" VerticalContentAlignment="Center" Click="ck_Click"/>
+                            <StackPanel Margin="2" Background="Transparent" IsEnabled="{Binding ElementName=ck_16,Path=IsChecked}">
+                                <Label  Content="16x16" FontWeight="Bold"/>
+                                <Border Style="{StaticResource bBorder}"  Width="18" Height="18" Tag="16"  MouseUp="img_MouseUp">
+                                    <Image Width="16" Height="16" x:Name="img_16" />
+
+                                </Border>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" Tag="32" Margin="2" Background="#1AFFFFFF" AllowDrop="{Binding ElementName=ck_32,Path=IsChecked}"
+                                    Drop="StackPanel_Drop" DragOver="StackPanel_DragOver" DragEnter="StackPanel_DragEnter" DragLeave="StackPanel_DragLeave">
+                            <CheckBox x:Name="ck_32" Tag="32" VerticalContentAlignment="Center" Click="ck_Click"/>
+                            <StackPanel Margin="2" Background="Transparent"  IsEnabled="{Binding ElementName=ck_32,Path=IsChecked}">
+                                <Label  Content="32X32" />
+                                <Border  Style="{StaticResource bBorder}"  Width="34" Height="34" Tag="32"  MouseUp="img_MouseUp">
+                                    <Image Width="32" Height="32" x:Name="img_32" />
+                                </Border>
+                            </StackPanel>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Tag="48" Margin="2" Background="#1AFFFFFF" AllowDrop="{Binding ElementName=ck_48,Path=IsChecked}"
+                                    Drop="StackPanel_Drop" DragOver="StackPanel_DragOver" DragEnter="StackPanel_DragEnter" DragLeave="StackPanel_DragLeave">
+                            <CheckBox x:Name="ck_48" Tag="48" VerticalContentAlignment="Center" Click="ck_Click"/>
+                            <StackPanel Margin="2" Background="Transparent" IsEnabled="{Binding ElementName=ck_48,Path=IsChecked}">
+                                <Label  Content="48X48" FontWeight="Bold"/>
+                                <Border  Style="{StaticResource bBorder}"  Width="50" Height="50" Tag="48"  MouseUp="img_MouseUp">
+                                    <Image Width="48" Height="48" x:Name="img_48" />
+                                </Border>
+                            </StackPanel>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Tag="64" Margin="2" Background="#1AFFFFFF" AllowDrop="{Binding ElementName=ck_64,Path=IsChecked}"
+                                    Drop="StackPanel_Drop" DragOver="StackPanel_DragOver" DragEnter="StackPanel_DragEnter" DragLeave="StackPanel_DragLeave">
+                            <CheckBox x:Name="ck_64" Tag="64" VerticalContentAlignment="Center" Click="ck_Click"/>
+                            <StackPanel Margin="2" Background="Transparent" IsEnabled="{Binding ElementName=ck_64,Path=IsChecked}">
+                                <Label  Content="64X64" FontWeight="Bold"/>
+                                <Border  Style="{StaticResource bBorder}"  Width="66" Height="66" Tag="64"  MouseUp="img_MouseUp">
+                                    <Image Width="64" Height="64" x:Name="img_64"/>
+                                </Border>
+                            </StackPanel>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Tag="128" Margin="2" Background="#1AFFFFFF" AllowDrop="{Binding ElementName=ck_128,Path=IsChecked}"
+                                    Drop="StackPanel_Drop" DragOver="StackPanel_DragOver" DragEnter="StackPanel_DragEnter" DragLeave="StackPanel_DragLeave">
+                            <CheckBox x:Name="ck_128" Tag="128" VerticalContentAlignment="Center" Click="ck_Click"/>
+                            <StackPanel Margin="2" Background="Transparent" IsEnabled="{Binding ElementName=ck_128,Path=IsChecked}">
+                                <Label  Content="128X128" FontWeight="Bold"/>
+                                <Border  Style="{StaticResource bBorder}"  Width="130" Height="130" Tag="128"  MouseUp="img_MouseUp">
+                                    <Image Width="128" Height="128" x:Name="img_128" Tag="128" />
+                                </Border>
+                            </StackPanel>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Tag="256" Margin="2" Background="#1AFFFFFF" AllowDrop="{Binding ElementName=ck_256,Path=IsChecked}"
+                                    Drop="StackPanel_Drop" DragOver="StackPanel_DragOver" DragEnter="StackPanel_DragEnter" DragLeave="StackPanel_DragLeave">
+                            <CheckBox x:Name="ck_256" Tag="256" VerticalContentAlignment="Center" Click="ck_Click"/>
+                            <StackPanel Margin="2" Background="Transparent"  IsEnabled="{Binding ElementName=ck_256,Path=IsChecked}">
+                                <Label  Content="256X256" FontWeight="Bold"/>
+                                <Border  Style="{StaticResource bBorder}"  Width="258" Height="258" Tag="256"  MouseUp="img_MouseUp">
+                                    <Image Width="256" Height="256" x:Name="img_256"/>
+                                </Border>
+                            </StackPanel>
+                        </StackPanel>
+
+                    </StackPanel>
+
+                </ScrollViewer>
+
+            </Grid>
+        </Border>
+    </DockPanel>
+</UserControl>

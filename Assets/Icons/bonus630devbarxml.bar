@@ -1,0 +1,125 @@
+<?xml version="1.0"?>
+<CommandBar version="2.0" name="bar teste">
+  <GmsFiles>
+    <Gms id="0">D:\CDRGMS\elvin_Contour_black.gms</Gms>
+  </GmsFiles>
+  <Commands>
+    <CommandItem id="0">
+      <GmsFileId>0</GmsFileId>
+      <Caption>Bonus630DevTools</Caption>
+      <Command>a</Command>
+      <Enable>true</Enable>
+      <Shortcut>
+      </Shortcut>
+      <Icon>C:\wamp64\www\bonus630\favicon.ico</Icon>
+    </CommandItem>
+    <CommandItem id="1">
+      <GmsFileId>0</GmsFileId>
+      <Caption>Run Command Docker</Caption>
+      <Command>b</Command>
+      <Enable>true</Enable>
+      <Shortcut>
+      </Shortcut>
+      <Icon>D:\C# Ed26-08-22\Bonus630DevToolsBar\Assets\Icons\RunCommand.ico</Icon>
+    </CommandItem>
+    <CommandItem id="2">
+      <GmsFileId>0</GmsFileId>
+      <Caption>DrawUI Explorer Window</Caption>
+      <Command>c</Command>
+      <Enable>true</Enable>
+      <Shortcut>
+      </Shortcut>
+      <Icon>D:\C# Ed26-08-22\Bonus630DevToolsBar\Assets\Icons\xml.ico</Icon>
+    </CommandItem>
+    <CommandItem id="3">
+      <GmsFileId>0</GmsFileId>
+      <Caption>Shortcuts Docker</Caption>
+      <Command>d</Command>
+      <Enable>true</Enable>
+      <Shortcut>
+      </Shortcut>
+      <Icon>D:\C# Ed26-08-22\Bonus630DevToolsBar\Assets\Icons\Shortcut2.ico</Icon>
+    </CommandItem>
+    <CommandItem id="4">
+      <GmsFileId>0</GmsFileId>
+      <Caption>Drag GMS here</Caption>
+      <Command>e</Command>
+      <Enable>true</Enable>
+      <Shortcut>
+      </Shortcut>
+      <Icon>C:\Users\bonus\AppData\Local\Temp\tmp3B95.ico</Icon>
+    </CommandItem>
+    <CommandItem id="5">
+      <GmsFileId>0</GmsFileId>
+      <Caption>GMS Reloader</Caption>
+      <Command>f</Command>
+      <Enable>true</Enable>
+      <Shortcut>
+      </Shortcut>
+      <Icon>D:\C# Ed26-08-22\Bonus630DevToolsBar\Assets\Icons\vbe.ico</Icon>
+    </CommandItem>
+    <CommandItem id="6">
+      <GmsFileId>0</GmsFileId>
+      <Caption>Unload all GMS</Caption>
+      <Command>g</Command>
+      <Enable>true</Enable>
+      <Shortcut>
+      </Shortcut>
+      <Icon>D:\C# Ed26-08-22\Bonus630DevToolsBar\Assets\Icons\trash.ico</Icon>
+    </CommandItem>
+    <CommandItem id="7">
+      <GmsFileId>0</GmsFileId>
+      <Caption>CQL input box</Caption>
+      <Command>h</Command>
+      <Enable>true</Enable>
+      <Shortcut>
+      </Shortcut>
+      <Icon>D:\C# Ed26-08-22\Bonus630DevToolsBar\Assets\Icons\cql.ico</Icon>
+    </CommandItem>
+    <CommandItem id="8">
+      <GmsFileId>0</GmsFileId>
+      <Caption>CQL Reference Guide</Caption>
+      <Command>i</Command>
+      <Enable>true</Enable>
+      <Shortcut>
+      </Shortcut>
+      <Icon>D:\C# Ed26-08-22\Bonus630DevToolsBar\Assets\Icons\help.ico</Icon>
+    </CommandItem>
+    <CommandItem id="9">
+      <GmsFileId>0</GmsFileId>
+      <Caption>Folders</Caption>
+      <Command>j</Command>
+      <Enable>true</Enable>
+      <Shortcut>
+      </Shortcut>
+      <Icon>D:\C# Ed26-08-22\Bonus630DevToolsBar\Assets\Icons\folder.ico</Icon>
+    </CommandItem>
+    <CommandItem id="10">
+      <GmsFileId>0</GmsFileId>
+      <Caption>Auto Load</Caption>
+      <Command>k</Command>
+      <Enable>true</Enable>
+      <Shortcut>
+      </Shortcut>
+      <Icon>C:\Users\bonus\OneDrive\Imagens\ICOS\favicon.ico</Icon>
+    </CommandItem>
+    <CommandItem id="11">
+      <GmsFileId>0</GmsFileId>
+      <Caption>Icon Toolset Docker</Caption>
+      <Command>l</Command>
+      <Enable>true</Enable>
+      <Shortcut>
+      </Shortcut>
+      <Icon>D:\C# Ed26-08-22\Bonus630DevToolsBar\Assets\Icons\imageIcon.ico</Icon>
+    </CommandItem>
+    <CommandItem id="12">
+      <GmsFileId>0</GmsFileId>
+      <Caption>Icon test slot</Caption>
+      <Command>m</Command>
+      <Enable>true</Enable>
+      <Shortcut>
+      </Shortcut>
+      <Icon>D:\C# Ed26-08-22\Bonus630DevToolsBar\Assets\Icons\fileIcon.ico</Icon>
+    </CommandItem>
+  </Commands>
+</CommandBar>

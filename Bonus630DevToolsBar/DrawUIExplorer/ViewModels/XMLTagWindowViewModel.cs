@@ -391,6 +391,10 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
         {
             CurrentBasicData = basicData;
         }
+        protected override void UpdateNoAttached(IBasicData basicData)
+        {
+            Update(basicData);
+        }
         private void autoCompleteInputCommand()
         {
             AutoCompleteSource = new System.Windows.Forms.AutoCompleteStringCollection();

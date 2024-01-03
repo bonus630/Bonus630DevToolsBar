@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
 using System.Windows.Interop;
 
 namespace br.com.Bonus630DevToolsBar.DataSource
@@ -25,7 +26,33 @@ namespace br.com.Bonus630DevToolsBar.DataSource
 
         public Bonus630DevToolsBarDataSource(DataSourceProxy proxy) : base(proxy)
         {
+            //ControlUI.corelApp.OnApplicationEvent += CorelApp_OnApplicationEvent;
+        }
 
+        private void CorelApp_OnApplicationEvent(string EventName, ref object[] Parameters)
+        {
+            if (EventName.Equals("FrameworkManagerToolbarListChanged"))
+            {
+                int x = 0, y = 0, w = 0, h = 0;
+                ControlUI.corelApp.FrameWork.Automation.GetItemScreenRect("fa65d0c1-879b-4ef5-9465-af09e00e91ab", "fa65d0c1-879b-4ef5-9465-af09e00e91ab", out x, out y, out w, out h);
+                //ItemWidth = h;
+                //if (h == 40)
+                //{
+                //    this.Width = 26;
+                //    this.Height = 26;
+                //}
+                //else if (h == 48)
+                //{
+                //    this.Width = 32;
+                //    this.Height = 32;
+                //}
+                //else
+                //{
+                //    this.Width = 20;
+                //    this.Height = 20;
+                //}
+
+            }
         }
 
         // You can change caption/icon dynamically setting a new value here 
@@ -81,7 +108,15 @@ namespace br.com.Bonus630DevToolsBar.DataSource
                 cqlContext = value; 
                 NotifyPropertyChanged(); }
         }
-
+        private string itemWidth = "500";
+        public string ItemWidth
+        {
+            get { return itemWidth; }
+            set { itemWidth = value;
+                NotifyPropertyChanged();
+                
+            }
+        }
 
         private void CloseDocker(string guid)
         {
@@ -102,6 +137,11 @@ namespace br.com.Bonus630DevToolsBar.DataSource
             ControlUI.CallXMLForm("");
         }
 
+        public void RunIconCreatorHelper()
+        {
+            ControlUI.corelApp.FrameWork.ShowDocker("488c069a-7535-4af9-9c88-eda17c4808f7");
+           // ControlUI.corelApp.FrameWork.Automation.InvokeItem("488c069a-7535-4af9-9c88-eda17c4808f7");
+        }
         public void UnloadNDeleteUserGMS()
         {
             string path = ControlUI.corelApp.GMSManager.UserGMSPath;
@@ -175,6 +215,26 @@ namespace br.com.Bonus630DevToolsBar.DataSource
                 System.Diagnostics.Process.Start(path);
             }
             catch { }
+        }
+        public void LoadIcon()
+        {
+            OpenFileDialog of = new OpenFileDialog();
+            of.Filter = "ico file (*.ico)|*.ico";
+            of.Multiselect = false;
+            of.Title = "Select a ico file";
+            if (of.ShowDialog() == DialogResult.OK)
+            {
+                var commandBar = ControlUI.corelApp.FrameWork.CommandBars["Bonus630 Dev Tools"];
+
+                foreach (Corel.Interop.VGCore.Control item in commandBar.Controls)
+                {
+                    if(item.ID.Equals("657042cb-3594-43a1-80bf-c8a27fd43146"))
+                        item.SetIcon2(of.FileName); 
+                }
+
+                
+
+            }
         }
     }
 

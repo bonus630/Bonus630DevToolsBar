@@ -1,4 +1,5 @@
-﻿using br.com.Bonus630DevToolsBar.RunCommandDocker.Styles;
+﻿using br.com.Bonus630DevToolsBar.Converters;
+using br.com.Bonus630DevToolsBar.RunCommandDocker.Styles;
 using Corel.Interop.VGCore;
 using System;
 using System.IO;
@@ -21,7 +22,12 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
         private StylesController stylesController;
         RecentFileModel recentFileModel;
         RecentFilesViewModel dataContext;
-         int limit = 10;
+        int limit = 10;
+
+        public int Height{
+            get;
+            set;
+            }
 
         public RecentFilesView(object app)
         {

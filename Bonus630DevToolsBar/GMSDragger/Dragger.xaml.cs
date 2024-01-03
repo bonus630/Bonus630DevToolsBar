@@ -27,6 +27,8 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
         string gmsPath = "";
         List<string> resultList = new List<string>();
         public readonly string VBAEditorGuid = "28e16db6-6339-440d-af0d-f58ac27c115d";
+
+
         public Dragger(object app)
         {
 
@@ -38,6 +40,15 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
                 gmsPath = corelApp.GMSManager.UserGMSPath;
                 this.Loaded += Dragger_Loaded;
                 this.corelApp.OnApplicationEvent += CorelApp_OnApplicationEvent;
+                //this.SizeChanged += (s, e) => { 
+                //    if(e.NewSize.Height > 256)
+                //    {
+                //        this.Width = 256;
+                //        this.Height = 256;
+                //    }
+                   
+                //    Console.WriteLine(e.NewSize.ToString());
+                //};
             }
             catch
             {
@@ -48,6 +59,7 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
         private void Dragger_Loaded(object sender, RoutedEventArgs e)
         { 
             LoadThemeFromPreference();
+            
         }
 
         protected override void OnDragOver(DragEventArgs e)
@@ -213,11 +225,13 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
         }
         #region controle style
         private void CorelApp_OnApplicationEvent(string EventName, ref object[] Parameters)
-        {
+        {  
+           
             if (EventName.Equals("WorkspaceChanged") || EventName.Equals("OnColorSchemeChanged"))
             {
                 LoadThemeFromPreference();
             }
+          
         }
         //Keys resources name follow the resource order to add a new value, order to works you need add 5 resources colors and Resources/Colors.xaml
         //1º is default, is the same name of StyleKeys string array

@@ -99,7 +99,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
                     if (core.InCorel)
                         UpdateDetails(treeView_Ref.SelectedItem, e);
                     else
-                        UpdateDetailsNoAttached(treeView_Nodes.SelectedItem, e);
+                        UpdateDetailsNoAttached(treeView_Ref.SelectedItem, e);
                 }
             };
 
@@ -110,7 +110,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
                     if (core.InCorel)
                         UpdateDetails(treeView_Search.SelectedItem, e);
                     else
-                        UpdateDetailsNoAttached(treeView_Nodes.SelectedItem, e);
+                        UpdateDetailsNoAttached(treeView_Search.SelectedItem, e);
                 }
             };
 

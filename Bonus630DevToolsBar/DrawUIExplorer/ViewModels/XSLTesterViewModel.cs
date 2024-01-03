@@ -98,6 +98,10 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
         {
             CurrentBasicData = basicData;
         }
+        protected override void UpdateNoAttached(IBasicData basicData)
+        {
+            CurrentBasicData = basicData;
+        }
 
         //int level = 0;
         private void GenXmlText()

@@ -382,7 +382,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
         {
 
             FileInfo file = param as FileInfo;
-            StreamReader fs;
+            StreamReader fs = null;
             if (file == null)
             {
                 DispactchNewMessage("Load file erro", MsgType.Erro); 
@@ -393,9 +393,16 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
 
             if (file.Extension == ".cdws")
             {
-                workspaceUnzip = new WorkspaceUnzip(file);
-                fs = workspaceUnzip.XmlStreamReader;
-
+                try
+                {
+                    workspaceUnzip = new WorkspaceUnzip(file);
+                    fs = workspaceUnzip.XmlStreamReader;
+                }
+                catch(Exception e)
+                {
+                    DispactchNewMessage(e.Message, MsgType.Erro);
+                    return;
+                }
             }
             else
             {
