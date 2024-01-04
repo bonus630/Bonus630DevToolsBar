@@ -101,6 +101,12 @@
 					type="wpfhost"
 					hostedType="Addons\Bonus630DevToolsBar\Bonus630DevToolsBar.dll,br.com.Bonus630DevToolsBar.GMSDragger.GMSLoader"
 					enable="true"/>
+			<!-- Command Bar Builder-->
+			
+			<itemData guid="f9691f7a-27cc-405b-b2f4-de164246bcbd"
+					 onInvoke="*Bind(DataSource=Bonus630DevToolsBarDS;Path=RunCommandBarBuilder)"
+					  icon="guid://f9691f7a-27cc-405b-b2f4-de164246bcbd"
+					  type="button"  enable="true" />
 			
 			<!-- Unload and Delete GMS-->
 			<itemData guid="571db7b2-8cae-4b99-b241-a56ecd61f90e"
@@ -199,34 +205,36 @@
 						<item  guidRef="3b3f72b8-0129-4316-b8a3-40e4758ba9bc" />
 						<!--8 Macro Manager-->
 						<item guidRef="13d17830-0ba8-4f71-85e0-6df0a1051eee" dock="top" />
-						<!--9 Reload Gms -->
+						<!--9 CommandBar Builder-->
+						<item guidRef="f9691f7a-27cc-405b-b2f4-de164246bcbd" dock="top" />
+						<!--10 Reload Gms -->
 						<item  guidRef="9b07d7af-da14-4cd8-9db9-7da214ee1d4a" dock="top"/>
-						<!--10 Unload and Delete GMS -->
+						<!--11 Unload and Delete GMS -->
 						<item  guidRef="571db7b2-8cae-4b99-b241-a56ecd61f90e" dock="top"/>
-						<!--11 Separator-->
+						<!--12 Separator-->
 						<item guidRef="266435b4-6e53-460f-9fa7-f45be187d400" />
 					
-						<!--12 CqlRunner -->
+						<!--13 CqlRunner -->
 						<item  guidRef="51b24cfb-b8df-411f-886c-4c5520e931a4" />	
-						<!--13 CqlHelp -->
+						<!--14 CqlHelp -->
 						<item  guidRef="d61f1ede-79aa-4255-8f96-307e6f63c204" />	
-						<!--14 Separator-->
+						<!--15 Separator-->
 						<item guidRef="266435b4-6e53-460f-9fa7-f45be187d400" />
-						<!--15 Folders-->
+						<!--16 Folders-->
 						<item guidRef="680d03b3-2da0-4314-bc79-fa6b26471e22" />
-						<!--16 Separator-->
+						<!--17 Separator-->
 						<item guidRef="266435b4-6e53-460f-9fa7-f45be187d400" />
 						
-						<!--17 IconCreatorHelper-->
+						<!--18 Icon Toolset -->
 						<item guidRef="d0a371e7-9fad-4e1c-8159-b285d67c0497" />
-						<!--18 IconCreatorHelper loader-->
+						<!--19 Icon test slot loader-->
 						<item guidRef="657042cb-3594-43a1-80bf-c8a27fd43146" />
 						
 						
 						
-						<!--19 Separator-->
+						<!--20 Separator-->
 						<item guidRef="266435b4-6e53-460f-9fa7-f45be187d400" />
-						<!--20 Recent Files -->
+						<!--21 Recent Files -->
 						<item  guidRef="7d15e9c7-2431-4841-a5aa-9eaa5b581230" dock="fill"/>
 						<!--<item  guidRef="118bad9e-cab3-4810-883e-843626f798ae" dock="top"/>-->
 
@@ -274,9 +282,9 @@
 				</container>
 			</dockerData>
 
-			<!-- Define IconContainerHelperDocker -->
+			<!-- Define Icon ToolsetDocker -->
 			<dockerData guid="488c069a-7535-4af9-9c88-eda17c4808f7"
-						userCaption="IconContainerHelper"
+						userCaption="Icon Toolset"
 						wantReturn="true"
 						icon="guid://d0a371e7-9fad-4e1c-8159-b285d67c0497"
 						focusStyle="noThrow"
@@ -348,10 +356,12 @@
 						<!--7 GMS Dragger-->
 						<!--<item  guidRef="3b3f72b8-0129-4316-b8a3-40e4758ba9bc" />-->
 						<!--8 Macro Manager-->
-						<!--<item guidRef="13d17830-0ba8-4f71-85e0-6df0a1051eee" />-->
-						<!--9 Reload Gms -->
+						<!--<item guidRef="13d17830-0ba8-4f71-85e0-6df0a1051eee" />-->	
+						<!--9 CommandBar Builder-->
+						<item guidRef="f9691f7a-27cc-405b-b2f4-de164246bcbd" />
+						<!--10 Reload Gms -->
 						<item  guidRef="9b07d7af-da14-4cd8-9db9-7da214ee1d4a" />
-						<!--10 Unload and Delete GMS -->
+						<!--11 Unload and Delete GMS -->
 						<item  guidRef="571db7b2-8cae-4b99-b241-a56ecd61f90e" />
 				
 					
@@ -360,19 +370,19 @@
 						<!--13 CqlHelp -->
 						<item  guidRef="d61f1ede-79aa-4255-8f96-307e6f63c204" />	
 						
-						<!--15 Folders-->
+						<!--16 Folders-->
 						<item guidRef="680d03b3-2da0-4314-bc79-fa6b26471e22" />
 			
 						
-						<!--17 IconCreatorHelper-->
+						<!--18 IconCreatorHelper-->
 						<item guidRef="d0a371e7-9fad-4e1c-8159-b285d67c0497" />
-						<!--18 IconCreatorHelper loader-->
+						<!--19 IconCreatorHelper loader-->
 						<item guidRef="657042cb-3594-43a1-80bf-c8a27fd43146" />
 						
 						
 						
 					
-						<!--20 Recent Files -->
+						<!--21 Recent Files -->
 						<!--<item  guidRef="7d15e9c7-2431-4841-a5aa-9eaa5b581230" />-->
 						
 			

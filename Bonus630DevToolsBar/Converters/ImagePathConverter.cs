@@ -6,12 +6,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
 using System.Windows.Data;
+using Corel.Interop.VGCore;
 
 namespace br.com.Bonus630DevToolsBar.Converters
 {
     [ValueConversion(typeof(string), typeof(string))]
     public class ImagePathConverter : IValueConverter
     {
+        public Application CorelApp { get; set; }
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             string path = "D:\\C# Ed26-08-22\\Bonus630DevToolsBar\\";

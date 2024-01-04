@@ -211,12 +211,20 @@
     <SolidColorBrush x:Key="Black.Button.Disabled.Foreground" Color="#FF425048"/>
     <SolidColorBrush x:Key="Black.Button.Disabled.Background" Color="#00425048"/>
     <SolidColorBrush x:Key="Black.Default.Static.Foreground" Color="#ffcccccc" />
-    <SolidColorBrush x:Key="Black.Default.Static.Background" Color="#0F0F0F" />
+    <SolidColorBrush x:Key="Black.Default.Static.Background" Color="#232323" />
     <SolidColorBrush x:Key="Black.Container.Text.Static.Background" Color="#ff0f0f0f" />
     <SolidColorBrush x:Key="Black.Container.Text.Static.Foreground" Color="#ffcccccc" />
     <SolidColorBrush x:Key="Black.Container.Static.Background" Color="#ff232323" />
     <SolidColorBrush x:Key="Black.Default.Static.Inverted.Foreground" Color="#ff0f0f0f" />
     <SolidColorBrush x:Key="Black.ComboBox.Border.Popup.Item.MouseOver" Color="#ff0078d7"/>
+    <SolidColorBrush x:Key="Black.ControlUI.Button.MouseOver.Background" Color="#ff003c78"/>
+    <SolidColorBrush x:Key="Black.ControlUI.Button.MouseOver.Border" Color="#ff3399ff"/>
+    <SolidColorBrush x:Key="Black.ControlUI.Button.Static.Border" Color="#ff5a5a5a" />
+    <SolidColorBrush x:Key="Black.ControlUI.Button.Static.Background" Color="#ff323232" />
+    <SolidColorBrush x:Key="Black.ControlUI.Button.Pressed.Background" Color="#FFC4E5F6"/>
+    <SolidColorBrush x:Key="Black.ControlUI.Button.Pressed.Border" Color="#FF2C628B"/>
+    <SolidColorBrush x:Key="Black.ControlUI.Button.Disabled.Foreground" Color="#FF425048"/>
+    <SolidColorBrush x:Key="Black.ControlUI.Button.Disabled.Background" Color="#00425048"/>
     <SolidColorBrush x:Key="Black.ScrollBar.Static.Background" Color="#464646"/>
     <SolidColorBrush x:Key="Black.ScrollBar.Static.Border" Color="#464646"/>
     <SolidColorBrush x:Key="Black.ScrollBar.Static.Glyph" Color="#FEFEFE"/>
@@ -236,6 +244,7 @@
     <SolidColorBrush x:Key="Black.NumericTextBox.Static.Background" Color="#ff0f0f0f" />
     <SolidColorBrush x:Key="Black.NumericTextBox.Static.Border" Color="#ff5a5a5a" />
     <SolidColorBrush x:Key="Black.NumericTextBox.Selected.Border" Color="#ff3399ff" />
+ 
 
     <!--#endregion colors styles resource-->
 

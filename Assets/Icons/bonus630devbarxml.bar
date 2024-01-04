@@ -121,5 +121,14 @@
       </Shortcut>
       <Icon>D:\C# Ed26-08-22\Bonus630DevToolsBar\Assets\Icons\fileIcon.ico</Icon>
     </CommandItem>
+    <CommandItem id="13">
+      <GmsFileId>0</GmsFileId>
+      <Caption>CommandBar Builder</Caption>
+      <Command>n</Command>
+      <Enable>true</Enable>
+      <Shortcut>
+      </Shortcut>
+      <Icon>D:\C# Ed26-08-22\Bonus630DevToolsBar\Assets\Icons\icon.ico</Icon>
+    </CommandItem>
   </Commands>
 </CommandBar>

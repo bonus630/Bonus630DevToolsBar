@@ -45,10 +45,10 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
         //    core = new Core();
 
         //}
-        public XMLTagWindow(object app, string filePath)
+        public XMLTagWindow(Corel.Interop.VGCore.Application app, string filePath)
         {
             InitializeComponent();
-            this.app = app as Corel.Interop.VGCore.Application;
+            this.app = app;
             stylesController = new StylesController(this.Resources, this.app, ChangeTheme);
             this.Loaded += (s, e) => { stylesController.LoadThemeFromPreference();  };
             init();

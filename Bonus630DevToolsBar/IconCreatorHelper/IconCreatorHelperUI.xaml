@@ -97,7 +97,14 @@
                         <StackPanel>
                             <tools:IconButton  Icon="Refresh.png" Content="Refresh" ToolTip="Refresh thumbs previews" Width="20" Height="20" Click="btn_update_Click" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,2"/>
                             <tools:IconButton  Icon="Outline.png" Content="Outline" ToolTip="Apply outline in selecteds" Width="20" Height="20" Click="btn_outline_Click" VerticalAlignment="Top" HorizontalAlignment="Center"  Margin="0,2"/>
-                            <tools:IconButton  Icon="Invert.png" Content="invert" ToolTip="Invert Background Color" Width="20" Height="20" Click="btn_invertBackgroundColor_Click" VerticalAlignment="Top" HorizontalAlignment="Center"  Margin="0,2"/>
+                            <tools:IconButton  Icon="Invert.png" Content="invert"  Width="20" Height="20" MouseRightButtonUp="IconButton_MouseUp" Click="btn_invertBackgroundColor_Click" VerticalAlignment="Top" HorizontalAlignment="Center"  Margin="0,2">
+                                <tools:IconButton.ToolTip>
+                                    <StackPanel>
+                                        <Label Content="Left Click to Invert Background Color" />
+                                        <Label Content="Right Click to Invert elements Colors" />
+                                    </StackPanel>
+                                </tools:IconButton.ToolTip>
+                            </tools:IconButton>
                             <tools:IconButton  Icon="CenterPage.png" Content="centerPage" ToolTip="Center selected shapes in page" Width="20" Height="20" Click="btn_centerPage_Click" VerticalAlignment="Top" HorizontalAlignment="Center"  Margin="0,2"/>
                         </StackPanel>
                     </Border>

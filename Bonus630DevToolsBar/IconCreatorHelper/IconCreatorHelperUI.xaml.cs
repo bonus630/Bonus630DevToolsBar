@@ -1,16 +1,16 @@
 ﻿using Bonus630DevToolsBar;
-using br.com.Bonus630DevToolsBar.Folders;
 using br.com.Bonus630DevToolsBar.RunCommandDocker.Styles;
 using Corel.Interop.VGCore;
-using ImageMagick;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing.IconLib;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Windows;
 using System.Windows.Input;
-using System.Xml.Linq;
+
 
 
 
@@ -28,25 +28,26 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
         private StylesController stylesController;
 
         private FileSystemWatcher fileSystemWatcher;
-        private double margin = 16;
-        private double contourWidth = 16;//antigo 14
-        private int resolution = 96;
-        //precisamos de 96DPI
         private double pageSize = 256;
         private double pageCenterX, pageCenterY;
 
-        Color colorWhite;
-        Color colorBlack;
-        Color colorGray;
-        Color colorYellow;
-        Color colorGreen;
-        Color colorBlue;
-        Color colorRed;
-        Color colorOrange;
+        readonly Color colorWhite;
+        readonly Color colorBlack;
+        readonly Color colorGray;
+        readonly Color colorYellow;
+        readonly Color colorGreen;
+        readonly Color colorBlue;
+        readonly Color colorRed;
+        readonly Color colorOrange;
 
-        List<int> PreFixedSizes = new List<int> { 16, 32, 48, 64, 128, 256 };
-        List<System.Windows.Controls.Image> ImgsControls;
-        Color[] Colors;
+        readonly string iconLayer = "Icon";
+        readonly List<int> PreFixedSizes = new List<int> { 16, 32, 48, 64, 128, 256 };
+        readonly List<System.Windows.Controls.Image> ImgsControls;
+        readonly Color[] Colors;
+        readonly double margin = 16;
+        readonly double contourWidth = 16;//antigo 14
+        readonly int resolution = 96;
+        //precisamos de 96DPI
 
         private List<int> resolutions = new List<int>();
         System.Windows.Media.Imaging.BitmapImage WhiteImage;
@@ -224,15 +225,15 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
                     {
                         int index = resolutions.IndexOf(size);
                         bool before = false;
-                        
-                        if(index ==0)
+
+                        if (index == 0)
                         {
                             before = true;
                             index = 1;
                         }
 
 
-                        p = Doc.InsertPagesEx(1, before, index , (double)size, (double)size);
+                        p = Doc.InsertPagesEx(1, before, index, (double)size, (double)size);
                         PreparePage(p, size);
                     }
                 }
@@ -240,7 +241,7 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
             }
             else
             {
-                if(resolutions.Count==1)
+                if (resolutions.Count == 1)
                 {
                     ck.IsChecked = true;
                     corelApp.MsgShow("You cannot delete the last page of the document");
@@ -253,10 +254,16 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
                     p = GetPageBySize(size);
                     if (p != null)
                         p.Delete();
+                    int index = resolutions.IndexOf(size);
+                    if (index < resolutions.Count - 2)
+                        index++;
+                    if(index > resolutions.Count -2)
+                        index--;
+                    resolutions.Remove(size);
+                    resolutions.Sort();
+                    GoTo(resolutions[index]);
                     //Doc.Pages[resolutions.IndexOf(size) + 1].Delete();
                 }
-                resolutions.Remove(size);
-                resolutions.Sort();
             }
 
         }
@@ -264,29 +271,31 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
         string docFilePath = string.Empty;
         public void Initialize()
         {
-            CreateDocument();
-            if (Doc == null)
-                return;
-            // startThread();
-            if (resolutions.Count == 0)
+            if (CreateDocument())
             {
-                PreparePage(Doc.Pages[1], 16);
-                updateCks();
-                return;
+                //if (Doc == null)
+                //    return;
+                // startThread();
+                if (resolutions.Count == 0)
+                {
+                    PreparePage(Doc.Pages[1], 16);
+                    updateCks();
+                    return;
+                }
+                corelApp.BeginDraw();
+                int nPages = Doc.Pages.Count;
+
+                if (nPages < resolutions.Count)
+                    Doc.InsertPages(resolutions.Count - nPages, false, 1);
+
+
+                for (int i = 1; i <= Doc.Pages.Count; i++)
+                {
+                    PreparePage(Doc.Pages[i], resolutions[i - 1], false);
+                }
+                corelApp.EndDraw();
+                updateImgs();
             }
-
-            int nPages = Doc.Pages.Count;
-
-            if (nPages < resolutions.Count)
-                Doc.InsertPages(resolutions.Count - nPages, false, 1);
-
-
-            for (int i = 1; i <= Doc.Pages.Count; i++)
-            {
-                PreparePage(Doc.Pages[i], resolutions[i - 1]);
-            }
-
-
 
         }
         private void startThread()
@@ -303,7 +312,7 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
             PrepareWorkerFolder();
             PrepareFiles();
         }
-        public void CreateDocument()
+        public bool CreateDocument()
         {
             Doc = corelApp.CreateDocument();
             Doc.Save();
@@ -311,7 +320,7 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
             if (Doc.Dirty)
             {
                 corelApp.MsgShow("Process is canceled!");
-                return;
+                return false;
             }
             Doc.BeginCommandGroup();
             //HasDoc = true;
@@ -323,8 +332,8 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
             Doc.Unit = cdrUnit.cdrPixel;
             Doc.PreserveSelection = true;
             Doc.Resolution = resolution;
-            
-            
+
+
 
             ShapeRange sr = corelApp.CreateShapeRange();
             Page page = Doc.ActivePage;
@@ -337,13 +346,14 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
             Doc.Save();
             Doc.EndCommandGroup();
             StartWatcher();
+            return true;
         }
 
 
 
         //https://learn.microsoft.com/en-us/visualstudio/extensibility/ux-guidelines/images-and-icons-for-visual-studio?view=vs-2022
 
-        public void PreparePage(Page page, double pageSize = 256)
+        public void PreparePage(Page page, double pageSize = 256, bool optimization = true)
         {
 
             // Document doc = CreateDocument();
@@ -358,9 +368,10 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
 
             //corelApp.Optimization = false;
             //corelApp.Refresh();
-            Doc.BeginCommandGroup();
+            if (optimization)
+                Doc.BeginCommandGroup();
             Shape c = page.ActiveLayer.CreateRectangle2(0, 0, pageSize, pageSize);
-            page.ActiveLayer.Name = "Icon";
+            page.ActiveLayer.Name = iconLayer;
             //System.Windows.Forms.MessageBox.Show(page.Layers.Count.ToString());
             c.Outline.SetNoOutline();
             c.Fill.ApplyNoFill();
@@ -404,7 +415,8 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
             //layer.Editable = false;
 
             c.Layer.Activate();
-            Doc.EndCommandGroup();
+            if (optimization)
+                Doc.EndCommandGroup();
 
         }
 
@@ -424,11 +436,12 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
 
             page.Activate();
             Shape bg = page.FindShape("Transparent BG");
-            if (bg.Fill.Type != cdrFillType.cdrNoFill)
+            if (bg!=null)
             {
                 bg.Locked = false;
                 bg.Fill.ApplyNoFill();
-                bg.Locked = true;
+                bg.Outline.SetNoOutline();
+                sr.Add(bg);
             }
 
             //string name = corelApp.ActiveShape.Name;
@@ -436,11 +449,12 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
 
             if (Math.Round(sr.SizeWidth) < size || Math.Round(sr.SizeHeight) < size)
             {
-              
-                Layer l = sr.FirstShape.Layer;
+
+                Layer l = GetIconLayer(page);
                 Shape c = l.CreateRectangle2(0, 0, size, size);
                 c.Outline.SetNoOutline();
                 c.Fill.ApplyNoFill();
+                c.OrderToBack();
                 sr.CenterX = l.Page.CenterX;
                 sr.CenterY = l.Page.CenterY;
                 sr.Add(c);
@@ -456,7 +470,11 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
             catch { return string.Empty; }
             if (optimization)
                 Doc.EndCommandGroup();
-            return pngFile;
+            if (bg != null)
+            {
+                bg.Locked = true;
+            }
+                return pngFile;
         }
 
         string WorkerFolder = string.Empty;
@@ -471,9 +489,11 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
             corelApp.BeginDraw();
             for (int i = 0; i < resolutions.Count; i++)
             {
+
                 ExportPng(resolutions[i].ToString(), WorkerFolder, resolutions[i], GetPageBySize(resolutions[i]), false);
             }
-            GoTo(Int32.Parse(Doc.Pages[pageIndex].Name));
+
+            GoTo(Doc.Pages[pageIndex].Name);
             corelApp.EndDraw();
             // firtTime = false;
         }
@@ -490,6 +510,14 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
             WorkerFolder = folder;
             return folder;
         }
+        private List<FileInfo> GetFiles()
+        {
+
+            DirectoryInfo dirInfo = new DirectoryInfo(WorkerFolder);
+            FileInfo[] fi = dirInfo.GetFiles();
+            List<FileInfo> list = fi.OrderBy(f => Int32.Parse(f.Name.Replace(".png", ""))).ToList<FileInfo>();
+            return list;
+        }
         public void ClonePage(Page[] pages)
         {
             ShapeRange sr = GetShapeRange(corelApp.ActivePage);
@@ -501,32 +529,68 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
 
         }
 
+        //ImageMagickMethod
+        //public void ExportToIco()
+        //{
 
+        //    try
+        //    {
+        //        string[] files = Directory.GetFiles(WorkerFolder);
+        //        if (files.Length == 0)
+        //            return;
+        //        using (var icon = new MagickImageCollection())
+        //        {
+        //            for (int i = 0; i < files.Length; i++)
+        //            {
+        //                icon.Add(new MagickImage(files[i]));
+        //            }
+        //            System.Windows.Forms.SaveFileDialog sfd = new System.Windows.Forms.SaveFileDialog();
+        //            sfd.Filter = "ico file|*.ico";
+        //            sfd.Title = "Save your ico";
+        //            sfd.AddExtension = true;
+        //            sfd.DefaultExt = ".ico";
+        //            if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+        //            {
+
+        //                // Salvar o ícone
+        //                icon.Write(sfd.FileName);
+        //            }
+        //        }
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        corelApp.MsgShow(e.Message);
+        //    }
+        //}
         public void ExportToIco()
         {
-
             try
             {
-                string[] files = Directory.GetFiles(WorkerFolder);
-
-                using (var icon = new MagickImageCollection())
+                System.Windows.Forms.SaveFileDialog sfd = new System.Windows.Forms.SaveFileDialog();
+                sfd.Filter = "ico file|*.ico";
+                sfd.Title = "Save your ico";
+                sfd.AddExtension = true;
+                sfd.DefaultExt = ".ico";
+                if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
-                    for (int i = 0; i < files.Length; i++)
+                    var files = GetFiles();
+                    MultiIcon mIcon = new MultiIcon();
+                    SingleIcon sIcon = mIcon.Add(Doc.Name.Replace(".cdr", ""));
+                    System.Drawing.Bitmap bitmap16;
+                    for (int i = 0; i < files.Count; i++)
                     {
-                        icon.Add(new MagickImage(files[i]));
+                        Console.WriteLine(files[i].FullName);
+                        bitmap16 = new System.Drawing.Bitmap(System.Drawing.Bitmap.FromFile(files[i].FullName));
+                        sIcon.Add(bitmap16);
+                        if (i == files.Count - 1)
+                        {
+                            sIcon[sIcon.Count - 1].IconImageFormat = IconImageFormat.PNG;
+                        }
                     }
-                    System.Windows.Forms.SaveFileDialog sfd = new System.Windows.Forms.SaveFileDialog();
-                    sfd.Filter = "ico file|*.ico";
-                    sfd.Title = "Save your ico";
-                    sfd.AddExtension = true;
-                    sfd.DefaultExt = ".ico";
-                    if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                    {
-
-                        // Salvar o ícone
-                        icon.Write(sfd.FileName);
-                    }
+                    mIcon.SelectedIndex = 0;
+                    mIcon.Save(sfd.FileName, MultiIconFormat.ICO);
                 }
+
             }
             catch (Exception e)
             {
@@ -564,6 +628,7 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
 
                 update();
                 updateCks();
+                updateImgs();
             }
             // startThread();
         }
@@ -580,9 +645,9 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
                 try
                 {
                     ShapeRange sr = GetShapeRange(corelApp.ActivePage);
-                    if(sr.Count<=count)
+                    if (sr.Count <= count)
                     {
-                        
+
                         string pngFile = string.Format("{0}\\{1}.png", WorkerFolder, corelApp.ActivePage.Name);
                         if (File.Exists(pngFile))
                         {
@@ -598,7 +663,7 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
         {
             try
             {
-                
+
                 double res = Doc.ActivePage.SizeWidth;
                 update();
                 GoTo((int)res);
@@ -645,7 +710,7 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
 
                 int size = Int32.Parse(border.Tag.ToString());
 
-                
+
 
 
                 if (resolutions.Contains(size))
@@ -676,6 +741,14 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
                 Doc.ActiveWindow.Refresh();
             }
         }
+        private void GoTo(string pageName)
+        {
+            int size = 16;
+            if (!Int32.TryParse(pageName, out size) && resolutions.Count > 0)
+                size = resolutions[0];
+            GoTo(size);
+
+        }
         private Page GetPageBySize(int size)
         {
             Page page = null;
@@ -691,7 +764,21 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
             }
             return page;
         }
+        private Layer GetIconLayer(int size)
+        {
+            Page p = GetPageBySize(size);
 
+            return GetIconLayer(p);
+        }
+        private Layer GetIconLayer(Page p)
+        {
+            if (p != null)
+            {
+                Layer l = p.Layers.Find(iconLayer);
+                return l;
+            }
+            return null;
+        }
         private void StackPanel_DragOver(object sender, DragEventArgs e)
         {
 
@@ -803,35 +890,105 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
             catch { }
         }
 
-        private void btn_invertBackgroundColor_Click(object sender, RoutedEventArgs e)
-        {
-            InvertBackground(corelApp.ActivePage);
-        }
+      
         private void InvertBackground(Page page)
         {
             try
             {
+                corelApp.BeginDraw();
                 Shape bg = page.FindShape("Transparent BG");
                 bg.Locked = false;
                 if (bg.Fill.Type == cdrFillType.cdrNoFill)
                     bg.Fill.UniformColor = colorBlack;
                 else
                     bg.Fill.ApplyNoFill();
+                bg.OrderToBack();
                 bg.Locked = true;
+                corelApp.EndDraw();
             }
             catch { }
         }
+        private void InvertShapesColors(ShapeRange sr)
+        {
+            for (int i = 1; i <= sr.Count; i++)
+            {
+                InvertShapeColor(sr[i]);
+            }
+        }
+        public void InvertShapeColor(Shape s)
+        {
+            if (s.Type == cdrShapeType.cdrGroupShape)
+            {
+               
+                for (int i = 1; i <= s.Shapes.Count; i++)
+                {
+                    InvertShapeColor(s.Shapes[i]);
+                }
+                return;
+            }
+          
+            if (s.Fill.Type == cdrFillType.cdrPatternFill)
+            {
+                InvertColor(s.Fill.Pattern.FrontColor);
+                InvertColor(s.Fill.Pattern.BackColor);
+            }
+            if (s.Fill.Type == cdrFillType.cdrFountainFill)
+            {
+                foreach (FountainColor item in s.Fill.Fountain.Colors)
+                {
+                    InvertColor(item.Color);
+                }
+            }
+
+            if (s.Fill.Type == cdrFillType.cdrUniformFill)
+            {
+                InvertColor(s.Fill.UniformColor);
+            }
+
+            if (s.Outline.Type == cdrOutlineType.cdrOutline)
+            {
+                InvertColor(s.Outline.Color);
+            }
+
+        }
+      
+        public void InvertColor(Corel.Interop.VGCore.Color color)
+        {
+            if (color.Type != cdrColorType.cdrColorRGB)
+                color.ConvertToRGB();
+            color.RGBRed = 255 - color.RGBRed;
+            color.RGBGreen = 255 - color.RGBGreen;
+            color.RGBBlue = 255 - color.RGBBlue;
+        }
         private ShapeRange GetShapeRange(Page p)
         {
-            ShapeRange sr = p.Shapes.All();
+            Layer iconLayer = GetIconLayer(p);
+            ShapeRange sr = iconLayer.Shapes.All();
+            //p.Shapes.All();
             try
             {
-                sr.RemoveRange(p.Shapes.FindShapes(Type: cdrShapeType.cdrGuidelineShape));
+            //    sr.RemoveRange(p.Shapes.FindShapes(Type: cdrShapeType.cdrGuidelineShape));
                 sr.RemoveRange(p.FindShapes("Transparent BG"));
             }
             catch { }
             return sr;
         }
+
+      
+
+        private void IconButton_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            ShapeRange sr = GetShapeRange(corelApp.ActivePage);
+            corelApp.BeginDraw();
+            InvertShapesColors(sr);
+            corelApp.EndDraw();
+        }
+
+        private void btn_invertBackgroundColor_Click(object sender, RoutedEventArgs e)
+        {
+            InvertBackground(corelApp.ActivePage);
+        }
+
         private void StackPanel_Drop(object sender, DragEventArgs e)
         {
             if (e.KeyStates == DragDropKeyStates.RightMouseButton)
@@ -839,37 +996,39 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
                 e.Handled = true;
                 return;
             }
-            ShapeRange sr = corelApp.ActiveSelectionRange;
-            ShapeRange nSr = corelApp.CreateShapeRange();
-
-            Page oriPage = sr[1].Page;
-            int oriWidth = (int)Math.Round(sr[1].Page.SizeWidth);
-
-
-
             System.Windows.Controls.StackPanel border = sender as System.Windows.Controls.StackPanel;
 
             int size = Int32.Parse(border.Tag.ToString());
-            Page p = GetPageBySize(size);
 
+            Debug.WriteLine("Drop-size:" + size, "Drop");
+
+            ShapeRange sr = corelApp.ActiveSelectionRange;
+            ShapeRange nSr = corelApp.CreateShapeRange();
+            Page p = GetPageBySize(size);
+            
+            Layer l = GetIconLayer(p);
+            if (l == null)
+            {
+                e.Handled = true;
+                return;
+            }
+
+            Page oriPage = sr[1].Page;
+            int oriWidth = (int)Math.Round(sr[1].Page.SizeWidth);
             double scaleFactor = (double)size / oriWidth;
 
-            //corelApp.BeginDraw();
+            corelApp.BeginDraw();
             if (e.KeyStates == DragDropKeyStates.ControlKey)
                 nSr = sr.Clone();
             else
                 nSr = sr.Duplicate();
             foreach (Shape item in nSr)
             {
-                double ow = item.Outline.PenWidth;
-                ///System.Windows.Forms.MessageBox.Show(ow.ToString());
-                item.Outline.ScaleWithShape = true;
-                if (ow == 0)
-                    item.Outline.PenWidth = 0;
+                ScaleOutline(item);
             }
             double oriDeslX = sr.PositionX - oriPage.LeftX;
             double oriDeslY = oriPage.BottomY + sr.PositionY;
-            nSr.MoveToLayer(p.ActiveLayer);
+            nSr.MoveToLayer(l);
 
 
             nSr.SizeWidth = nSr.SizeWidth * scaleFactor;
@@ -880,8 +1039,27 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
             nSr.PositionX = p.LeftX + deslX;
             nSr.PositionY = p.BottomY + deslY;
             Mouse.OverrideCursor = null;
+            corelApp.EndDraw();
             GoTo(size);
-            // corelApp.EndDraw();
+        }
+        private void ScaleOutline(Shape item)
+        {
+            if(item.Type == cdrShapeType.cdrGroupShape)
+            {
+                for (int i = 1; i <= item.Shapes.Count; i++)
+                {
+                    ScaleOutline(item.Shapes[i]);
+                }
+                return;
+            }
+            double pw = item.Outline.PenWidth;
+            double ow = item.Outline.Width;
+            ///System.Windows.Forms.MessageBox.Show(ow.ToString());
+            item.Outline.ScaleWithShape = true;
+            if (pw == 0)
+                item.Outline.PenWidth = 0;
+            if (ow == 0)
+                item.Outline.Width = 0;
         }
     }
 }

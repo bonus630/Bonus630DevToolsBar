@@ -30,6 +30,8 @@
 				<resEntry id="d0a371e7-9fad-4e1c-8159-b285d67c0497" string="20011" icon="112"/>
 				<!-- Icon test slot-->
 				<resEntry id="657042cb-3594-43a1-80bf-c8a27fd43146" string="20012" icon="113"/>
+				<!-- CommandBar Builder-->
+				<resEntry id="f9691f7a-27cc-405b-b2f4-de164246bcbd" string="20013" icon="114"/>
 
 			</resourceMap>
 		</resource>

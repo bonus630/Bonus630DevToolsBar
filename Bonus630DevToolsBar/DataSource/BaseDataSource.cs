@@ -15,10 +15,11 @@ namespace br.com.Bonus630DevToolsBar.DataSource
     public class BaseDataSource : INotifyPropertyChanged
     {
         protected DataSourceProxy m_AppProxy;
-
-        public BaseDataSource(DataSourceProxy proxy)
+        protected Application CorelApp;
+        public BaseDataSource(DataSourceProxy proxy,Application corelApp)
         {
             this.m_AppProxy = proxy;
+            this.CorelApp = corelApp;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
