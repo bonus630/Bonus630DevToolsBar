@@ -1054,12 +1054,14 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
             }
             double pw = item.Outline.PenWidth;
             double ow = item.Outline.Width;
+            cdrOutlineType t = item.Outline.Type;
             ///System.Windows.Forms.MessageBox.Show(ow.ToString());
             item.Outline.ScaleWithShape = true;
             if (pw == 0)
                 item.Outline.PenWidth = 0;
             if (ow == 0)
                 item.Outline.Width = 0;
+            item.Outline.Type = t;
         }
     }
 }

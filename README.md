@@ -3,7 +3,7 @@
 
 This repository provides you with a comprehensive codebase for creating an addon for CorelDRAW. The solution, built using Visual Studio, compiles into a powerful addon that incorporates a set of tools to enhance your CorelDRAW experience.
 
-![Bonus630DevToolsBar](Screenshots/bonus60DevTools-Bar.PNG)
+![Bonus630DevToolsBar](Screenshots/bonus60DevTools-Bar.png)
 
 Whether you're an experienced developer or just starting with CorelDRAW addons, this toolkit offers a solid foundation to streamline your workflow and expand the capabilities of the software. With a range of meticulously crafted tools, you'll be equipped to develop innovative addons that boost productivity and unleash your creativity.
 
@@ -13,7 +13,7 @@ Whether you're an experienced developer or just starting with CorelDRAW addons, 
 
 The RunCommandDocker tool is a Docker-based alternative to the native VSTA editor in CorelDRAW. While the native CorelDRAW editor only allows you to create macros using C#, this tool expands your options by enabling macro creation in VB as well. With this tool, you have the flexibility to use any editor of your choice, freeing you from being limited to a specific version of Visual Studio required by CorelDRAW. You can even edit macros using a simple text editor like Notepad, thanks to the built-in C# and VB project templates. Additionally, the tool incorporates the MSBuild command to compile your DLL, simplifying the development process.
 
-![RunCommandDocker](Screenshots/run-command-docker.PNG)
+![RunCommandDocker](Screenshots/run-command-docker.png)
 
 Key Features:
 
@@ -33,7 +33,7 @@ The RunCommandDocker tool offers an enhanced development experience for CorelDRA
 
 The DrawUIExplorer tool provides an intuitive interface for opening and exploring the drawui.xml file of CorelDRAW or a workspace file in a tree-like structure. This tool comes with a powerful search system, branching capabilities, XSLT testing, icon extraction, item highlighting, opening dockers and dialogs, and running data sources. It serves as an assistant in creating your AppUI and UserUI files.
 
-![DrawUIExplorer](Screenshots/drawui-explorer.PNG)
+![DrawUIExplorer](Screenshots/drawui-explorer.png)
 
 Key Features:
 
@@ -55,7 +55,7 @@ Utilize the core functionality of the DrawUIExplorer tool to perform searches wi
 
 The Shortcuts Docker is a powerful tool that generates a comprehensive list of shortcuts present in the DrawUI.xml file. It utilizes the core functionality of the DrawUIExplorer tool to provide an intuitive interface for viewing and managing shortcuts. In addition to visualizing the shortcuts, this docker allows you to execute commands directly from within the tool.
 
-![Shortcuts Docker](Screenshots/Shortcuts-docker.PNG)
+![Shortcuts Docker](Screenshots/Shortcuts-docker.png)
 
 Key Features:
 
