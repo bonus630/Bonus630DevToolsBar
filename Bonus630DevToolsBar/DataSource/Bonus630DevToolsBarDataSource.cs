@@ -250,12 +250,19 @@ namespace br.com.Bonus630DevToolsBar.DataSource
             {
                 string path = Path.Combine(CorelApp.AddonPath,
                ControlUI.AddonFolderName, "CDRCommandBarBuilder.exe");
-                Assembly asm = Assembly.LoadFile(path);
-                Type cc = asm.GetType("CustomCommandBarCreator.Views.MainWindow");
-                //object m = cc.Assembly.CreateInstance("CustomCommandBarCreator.Views.MainWindow");
-                object o = Activator.CreateInstance(cc, CorelApp);
-                MethodInfo mi = cc.GetMethod("Show");
-                mi.Invoke(o, null);
+
+
+                //this is ideal, but not load resources, its is essencial for working
+               //Assembly asm = Assembly.LoadFile(path);
+               // Type cc = asm.GetType("CustomCommandBarCreator.Views.MainWindow");
+               // object o = Activator.CreateInstance(cc, CorelApp);
+               // MethodInfo mi = cc.GetMethod("Show");
+               // mi.Invoke(o, null);
+
+
+                //Let's use this for now
+
+                System.Diagnostics.Process.Start(path);
             }
             catch { }
         }

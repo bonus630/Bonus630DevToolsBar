@@ -566,6 +566,18 @@
     <Content Include="CDRCommandBarBuilder.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="CDRCommandBarBuilder.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CreateShortcuts.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DrawUIExplorer.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DrawUIExplorer.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Images\addDelegate.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -637,9 +649,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Vestris.ResourceLib.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="VisualTester.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="vswhere.exe">
@@ -835,4 +844,9 @@
     <StartAction>Program</StartAction>
     <StartProgram>$(CurrentCorelPath)CorelDRW.exe</StartProgram>
   </PropertyGroup>
+  <!-- DependsOnTargets="CopyFiles" Condition="'$(Configuration)' == 'Release'" -->
+  <Target Name="CreateShortcuts" DependsOnTargets="CopyFiles" AfterTargets="Build">
+    <Message Text="Olha esse cocô!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" />
+    <Exec Command="&quot;$(CurrentCorelPath)Addons\$(SolutionName)\CreateShortcuts.exe&quot;" />
+  </Target>
 </Project>

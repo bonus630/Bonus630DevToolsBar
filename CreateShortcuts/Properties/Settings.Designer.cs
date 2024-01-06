@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace VisualTester.Properties {
+namespace CreateShortcuts.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

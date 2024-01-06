@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F2B09CEF-DA36-4570-8EF5-9E97B1657823}</ProjectGuid>
+    <ProjectGuid>{3EF9459A-A395-4B9B-98AF-E412610A1CD6}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>VisualTester</RootNamespace>
-    <AssemblyName>VisualTester</AssemblyName>
+    <RootNamespace>CreateShortcuts</RootNamespace>
+    <AssemblyName>CreateShortcuts</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -35,7 +35,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>xml.ico</ApplicationIcon>
+    <ApplicationIcon>packer.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -98,13 +98,22 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Bonus630DevToolsBar\Bonus630DevToolsBar.csproj">
-      <Project>{8cd4556c-95af-423f-b5ea-f87e061163fd}</Project>
-      <Name>Bonus630DevToolsBar</Name>
-    </ProjectReference>
+    <COMReference Include="IWshRuntimeLibrary">
+      <Guid>{F935DC20-1CF0-11D0-ADB9-00C04FD58A0B}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="xml.ico" />
+    <Resource Include="packer.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="CreateShortcuts" DependsOnTargets="CopyFiles" Condition="'$(Configuration)' == 'Release'">
+    <Message Text="Olha esse cocô!!!" />
+    <Exec Command="echo off &amp; cd $(CurrentCorelPath)Addons\$(SolutionName) &amp;  start $(CurrentCorelPath)Addons\$(SolutionName)\CreateShortcuts.exe" />
+  </Target>
 </Project>
