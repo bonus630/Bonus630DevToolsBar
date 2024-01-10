@@ -7,6 +7,8 @@ using System.Runtime.Remoting;
 using System.Reflection;
 using System.Diagnostics;
 using System.Collections;
+using ExceptionDispatchInfo =
+    System.Runtime.ExceptionServices.ExceptionDispatchInfo;
 
 namespace br.com.Bonus630DevToolsBar.RunCommandDocker
 {
@@ -18,7 +20,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         Assembly commandAssembly;
         public Func<object> Ctor { get; private set; }
         private readonly string[] CDRAttributesMacroFlags = { "CgsAddInModule", "CgsAddInConstructor", "CgsAddInMacro", "CgsAddInTool" };
-        private readonly string AuxAttributesFlagsModulePath = "ModulePath" ;
+        private readonly string AuxAttributesFlagsModulePath = "ModulePath";
         private Type[] AssemblyTypes;
         public Func<object> ActionRunCommand { get; private set; }
 
@@ -27,9 +29,9 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         public CommandProxy(string commandURI)
         {
             Initialize(commandURI);
-           
-        } 
-    
+
+        }
+
 
         public CommandProxy(object app, Command command)
         {
@@ -64,10 +66,12 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         {
             return File.ReadAllBytes(CommandURI);
         }
-        private object GetInstance(object app, Command command )
+        private object GetInstance(object app, Command command)
         {
             try
             {
+                //Temos um erro aqui quando alteramos a quantidade de parametros da função
+                //o methodinfo retorna nulo
                 Type type = AssemblyTypes.FirstOrDefault(t => t.FullName.Equals(command.Parent.FullName));
                 Ctor = () => (Activator.CreateInstance(commandAssembly.FullName, type.FullName, true, BindingFlags.Default, null, new object[] { app }, null, null).Unwrap());
                 Instance = Ctor();
@@ -88,9 +92,9 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         {
             return "";
         }
-        public Tuple<string,string,string>[] GetTypesNames()
+        public Tuple<string, string, string>[] GetTypesNames()
         {
-            Tuple<string, string,string>[] typesNames = { };
+            Tuple<string, string, string>[] typesNames = { };
 
             for (int i = 0; i < AssemblyTypes.Length; i++)
             {
@@ -98,7 +102,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                 Type type = AssemblyTypes[i];
                 if (CheckTypeIsQualifedAttributeCDR(type))
                 {
-                    if(type.IsClass)
+                    if (type.IsClass)
                     {
                         if (CheckParametizedCtor(type))
                         {
@@ -107,10 +111,10 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                             string modulePath = "";
                             if (modulePathObj != null)
                                 modulePath = modulePathObj.ToString();
-                            typesNames[typesNames.Length - 1] = new Tuple<string, string,string>(type.Name, type.FullName,modulePath);
+                            typesNames[typesNames.Length - 1] = new Tuple<string, string, string>(type.Name, type.FullName, modulePath);
                         }
                     }
-              
+
                 }
             }
             return typesNames;
@@ -149,7 +153,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         {
             Type type = AssemblyTypes.FirstOrDefault(
                 r => r.FullName.Equals(command.Parent.FullName));
-            MethodInfo methodInfo = GetMethodInfo(type,command);
+            MethodInfo methodInfo = GetMethodInfo(type, command);
 
             //type.GetMethods().FirstOrDefault(r=>r.Name.Equals(command.Name));
             //.GetMembers().FirstOrDefault(u => u.Name.Equals(command.Name));
@@ -158,14 +162,14 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             {
                 command.ReturnsType = methodInfo.ReturnType;
             }
-            catch(ArgumentException e)
+            catch (ArgumentException e)
             {
                 command.ReturnsType = typeof(object);
             }
             ParameterInfo[] parameters = methodInfo.GetParameters();
             if (parameters == null)
                 return null;
-           
+
             object[] arguments = new object[parameters.Length];
             for (int i = 0; i < parameters.Length; i++)
 
@@ -180,7 +184,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             return arguments;
             //Pq os items com os argumentos chegam nulos na ui, aqui são setados corretamente
         }
-        private MethodInfo GetMethodInfo(Type type,Command command)
+        private MethodInfo GetMethodInfo(Type type, Command command)
         {
             MethodInfo methodInfo = null;
             List<MethodInfo> methodInfos = type.GetMethods().ToList();
@@ -204,8 +208,17 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         }
         public object RunCommand()
         {
-            return ActionRunCommand.Invoke();
-          
+            try
+            {
+                return ActionRunCommand.Invoke();
+            }
+            catch(Exception e)
+            {
+
+                throw new AggregateException(e.InnerException);
+              
+            }
+            return null;
         }
         private Assembly LoadDomain_AssemblyResolve(object sender, ResolveEventArgs args)
         {
@@ -217,8 +230,8 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             if (type.IsInterface || type.GetCustomAttributesData().Count == 0 || CDRAttributesMacroFlags.Contains(type.Name))
                 return false;
             return CheckCustomAttribute(type.GetCustomAttributesData());
-     
-            
+
+
         }
         private bool CheckMethodIsQualifedAttributeCDR(MemberInfo method)
         {
@@ -239,11 +252,11 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             }
             return false;
         }
-        private object GetCustomAttributeValue(IList<CustomAttributeData> customAttributes,string AttributeName)
+        private object GetCustomAttributeValue(IList<CustomAttributeData> customAttributes, string AttributeName)
         {
             for (int i = 0; i < customAttributes.Count; i++)
             {
-                if (customAttributes[i].ToString().Contains( AttributeName))
+                if (customAttributes[i].ToString().Contains(AttributeName))
                 {
                     return customAttributes[i].ConstructorArguments[0].Value;
                 }

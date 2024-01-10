@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using Microsoft.Build.Evaluation;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -181,6 +182,31 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         public object Parent { get; set; }
         public string Path { get; set; }
         public override string ToString() { return Name; }
+
+        private bool loaded = true;
+        public bool Loaded { get { return loaded; }
+            set { loaded = value;OnPropertyChanged("Loaded"); }
+        }
+
+        public void SwitchLoaded()
+        {
+            string path;//string name;
+            if(loaded)
+            {
+                path = System.IO.Path.ChangeExtension(this.Path, ".bak");
+                System.IO.File.Move(this.Path, path);
+                //name = string.Format("Unloaded {0}",this.Name);
+            }
+            else
+            {
+                path = System.IO.Path.ChangeExtension(this.Path, ".dll");
+                System.IO.File.Move(this.Path, path);
+               // name = this.Name.Replace("Unloaded ", "");
+            }
+            Loaded = !loaded;
+            this.Path = path;
+           // this.Name = name;
+        }
 
         public override bool Equals(object obj)
         {
@@ -456,7 +482,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         }
         private bool canStop = false;
         private bool lastRunFails;
-
+        private AggregateException lastException = null;
         public bool CanStop
         {
             get { return canStop; }
@@ -514,7 +540,10 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             set { lastRunFails = value;
                 OnPropertyChanged("LastRunFails");
             } }
-
+        public AggregateException LastException { get { return lastException; }
+            set { lastException = value;
+                OnPropertyChanged("LastException");
+            } }
         public bool CheckSelected()
         {
             if (IsSelectedBase)

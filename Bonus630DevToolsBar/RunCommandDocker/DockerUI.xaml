@@ -454,10 +454,15 @@
                             <Grid.ContextMenu>
                                 <ContextMenu>
                                     <MenuItem Header="Unload" CommandParameter="{Binding}" 
-                                          Command="{Binding Path=PlacementTarget.DataContext.Parent.UnloadProjectCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}" >
+                                          Command="{Binding Path=PlacementTarget.DataContext.Parent.SwitchProjectCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}"
+                                              Visibility="{Binding Loaded,Converter={StaticResource BoolToVisibilityConverter}}">
 
                                     </MenuItem>
+                                    <MenuItem Header="Reload" CommandParameter="{Binding}" 
+                                          Command="{Binding Path=PlacementTarget.DataContext.Parent.SwitchProjectCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}" 
+                                              Visibility="{Binding Loaded,Converter={StaticResource ReverseBoolVisibilityConverter}}">
 
+                                    </MenuItem>
                                 </ContextMenu>
                             </Grid.ContextMenu>
                             <Label Content="{Binding Path=Name}" Focusable="False" />
@@ -560,14 +565,20 @@
                                 </custom:IconButton>
                                 <Grid  Grid.Column="1"  Background="{Binding RelativeSource={RelativeSource AncestorType=Border,Mode=FindAncestor},Path=Background}" Width="16" Height="16" 
                                    Visibility="{Binding LastRunFails,Converter={StaticResource BoolToVisibilityConverter}}">
-                                    <Image Style="{StaticResource FailsImage}">
+                                    <Image Style="{StaticResource FailsImage}" Name="img_fails" MouseEnter="img_fails_MouseOver">
                                         <Image.ToolTip>
                                             <StackPanel>
-                                                <Label Content="Fails" FontWeight="Bold"/>
-                                                <Label Content="The last run fails, try check your code!" />
+                                                <Label Content="Fails, try check your code!" FontWeight="Bold"/>
+                                                <Label Content="{Binding LastException.InnerExceptions[0].Message}" />
+                                                <TextBox Margin="10" Text="{Binding LastException.InnerExceptions[0].StackTrace, Mode=OneWay}" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"  />
                                             </StackPanel>
                                         </Image.ToolTip>
+                                        
+                                       
                                     </Image>
+                                    <!--<popup:MyPopup ToReflect="{Binding LastException}" PlacementTarget="{Binding ElementName=img_fails}" Placement="Right" AllowsTransparency="True"
+                                                       IsOpen="{Binding Path=DataContext.Parent.Parent.Parent.MyPopupExceptionIsOpen}" 
+                                                           PopupCloseEvent="MyPopup_PopupCloseExceptionEvent" />-->
                                 </Grid>
                                 <Label Grid.Column="2" VerticalAlignment="Center" Content="{Binding Name}" />
 

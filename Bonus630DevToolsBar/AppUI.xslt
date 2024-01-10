@@ -79,8 +79,8 @@
 					hostedType="Addons\Bonus630DevToolsBar\Bonus630DevToolsBar.dll,br.com.Bonus630DevToolsBar.ControlsShorcutsCDRAddon.DockerUI"
 					enable="true"/>
 
-			<!--GMS Dragger-->
-			<itemData guid="3b3f72b8-0129-4316-b8a3-40e4758ba9bc"
+			<!--GMS Dragger let change guid to test dialog original guid:3b3f72b8-0129-4316-b8a3-40e4758ba9bc-->
+			<itemData guid="1752053c-096c-4534-90b2-af8b101abac3"
 					type="wpfhost"
 					hostedType="Addons\Bonus630DevToolsBar\Bonus630DevToolsBar.dll,br.com.Bonus630DevToolsBar.GMSDragger.Dragger"
 					enable="true"
@@ -88,7 +88,15 @@
 					height="*Bind(DataSource=Bonus630DevToolsBarDS;Path=ItemWidth)"
 					caption="Drag your GMS here!"
 			/>
-
+			<!--GMS Dragger Dialog test -->
+			<itemData guid="3b3f72b8-0129-4316-b8a3-40e4758ba9bc"
+					type="placeHolder"
+					enable="true"
+					width ="*Bind(DataSource=Bonus630DevToolsBarDS;Path=ItemWidth)"
+					height="*Bind(DataSource=Bonus630DevToolsBarDS;Path=ItemWidth)"
+					caption="Drag your GMS here!"
+					  xmlItems ="*Bind(DataSource=Bonus630DevToolsBarDS;Path=XmlItems)"
+			/>
 			<!--Reload GMS-->
 			<itemData guid="9b07d7af-da14-4cd8-9db9-7da214ee1d4a"
 					  onInvoke="*Bind(DataSource=Bonus630DevToolsBarDS;Path=ReloadNRestoreUserGMS)"

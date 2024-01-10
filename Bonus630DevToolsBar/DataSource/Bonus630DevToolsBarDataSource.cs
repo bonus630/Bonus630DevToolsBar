@@ -5,6 +5,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Threading;
+
 //using System.Windows.Forms;
 using System.Windows.Interop;
 
@@ -25,10 +27,8 @@ namespace br.com.Bonus630DevToolsBar.DataSource
         private readonly string runCommandGuid = "5087687d-337d-4d0e-acaf-c0b1df967757";
         private readonly string shortcutsCommandGuid = "512194ae-a540-4979-8991-bcadded6726e";
 
-        public Bonus630DevToolsBarDataSource(DataSourceProxy proxy,Application corelApp) : base(proxy,corelApp)
-        {
-            
-            //CorelApp.OnApplicationEvent += CorelApp_OnApplicationEvent;
+        public Bonus630DevToolsBarDataSource(DataSourceProxy proxy, Application corelApp) : base(proxy, corelApp)
+        { 
         }
 
         private void CorelApp_OnApplicationEvent(string EventName, ref object[] Parameters)
@@ -57,13 +57,7 @@ namespace br.com.Bonus630DevToolsBar.DataSource
             }
         }
 
-        //public Application CorelApp
-        //{
-        //    get { return corelApp; }
-        //    set { 
-        //        corelApp = value; 
-        //        NotifyPropertyChanged(); }
-        //}
+     
 
         // You can change caption/icon dynamically setting a new value here 
         //or loading the value from resource specifying the id of the caption/icon 
@@ -126,10 +120,10 @@ namespace br.com.Bonus630DevToolsBar.DataSource
                 NotifyPropertyChanged();
             }
         }
-        private string itemWidth = "500";
+        private int itemWidth = 20;
         //private Application corelApp;
 
-        public string ItemWidth
+        public int ItemWidth
         {
             get { return itemWidth; }
             set
@@ -139,7 +133,16 @@ namespace br.com.Bonus630DevToolsBar.DataSource
 
             }
         }
+        public string XmlItems
+        {
+            get
+            {
+                //"<item  guidRef=\"1752053c-096c-4534-90b2-af8b101abac3\" />"; 
 
+                return "<placeholderData> <itemData guid=\"1752053c-096c-4534-90b2-af8b101abac3\" /> </placeholderData>";
+            }
+            set {; }
+        }
         private void CloseDocker(string guid)
         {
             CorelApp.FrameWork.HideDocker(guid);
@@ -253,11 +256,11 @@ namespace br.com.Bonus630DevToolsBar.DataSource
 
 
                 //this is ideal, but not load resources, its is essencial for working
-               //Assembly asm = Assembly.LoadFile(path);
-               // Type cc = asm.GetType("CustomCommandBarCreator.Views.MainWindow");
-               // object o = Activator.CreateInstance(cc, CorelApp);
-               // MethodInfo mi = cc.GetMethod("Show");
-               // mi.Invoke(o, null);
+                //Assembly asm = Assembly.LoadFile(path);
+                // Type cc = asm.GetType("CustomCommandBarCreator.Views.MainWindow");
+                // object o = Activator.CreateInstance(cc, CorelApp);
+                // MethodInfo mi = cc.GetMethod("Show");
+                // mi.Invoke(o, null);
 
 
                 //Let's use this for now

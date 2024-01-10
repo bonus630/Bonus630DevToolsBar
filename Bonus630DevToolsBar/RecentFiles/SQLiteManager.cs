@@ -26,7 +26,7 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
         private static string GetDBFDirPath()
         {
             string path = Path.Combine(
-                 Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), SQLiteManager.component);
+                 Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),"bonus630", SQLiteManager.component);
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
             return path;

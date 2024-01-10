@@ -161,6 +161,15 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         {
             projectsManager.MyPopupIsOpen = false;
         }
+        private void img_fails_MouseOver(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            projectsManager.MyPopupExceptionIsOpen = true;
+        }
+
+        private void MyPopup_PopupCloseExceptionEvent()
+        {
+            projectsManager.MyPopupExceptionIsOpen = false;
+        }
         //Ref.:01 
         // Compare to another Ref.:01
         private void TreeView_Selected(object sender, RoutedEventArgs e)

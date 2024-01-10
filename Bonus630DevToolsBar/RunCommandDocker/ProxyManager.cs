@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Remoting;
 using System.Text;
 using System.Threading;
+using System.Windows.Markup;
 
 
 namespace br.com.Bonus630DevToolsBar.RunCommandDocker
@@ -144,12 +146,15 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                         Assembly.GetExecutingAssembly().GetExportedTypes().First(r => r.Name.Contains("CommandProxy")).FullName,
                         true, BindingFlags.Default, null, new object[] { this.corelApp, command }, null, null);
                 var c = (CommandProxy)o.Unwrap();
-                
+
                 command.Returns = c.RunCommand();
                 command.LastRunFails = false;
             }
-            catch(Exception e)
+        
+            catch (AggregateException e)
             {
+                command.LastException = e;
+
                 //command.Returns = null;
                 command.LastRunFails = true;
             }
