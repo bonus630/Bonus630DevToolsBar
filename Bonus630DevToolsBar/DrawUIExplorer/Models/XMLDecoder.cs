@@ -99,6 +99,9 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
                     case "key":
                         tempBasicData = new KeyData();
                         break;
+                    case "table":
+                        tempBasicData = new TableData();
+                        break;
                     default:
                         tempBasicData = new OtherData();
                     break;

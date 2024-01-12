@@ -250,6 +250,7 @@
     <Compile Include="CustomControls\SVGButton.xaml.cs">
       <DependentUpon>SVGButton.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DrawUIExplorer\DataClass\TableData.cs" />
     <Compile Include="DrawUIExplorer\Models\BlockingObservableCollection.cs" />
     <Compile Include="Folders\Folder.cs" />
     <Compile Include="Folders\Folders.xaml.cs">
@@ -261,6 +262,7 @@
     <Compile Include="GMSDragger\Dragger.xaml.cs">
       <DependentUpon>Dragger.xaml</DependentUpon>
     </Compile>
+    <Compile Include="IconCreatorHelper\Generator.cs" />
     <Compile Include="IconCreatorHelper\IconCreatorHelperUI.xaml.cs">
       <DependentUpon>IconCreatorHelperUI.xaml</DependentUpon>
     </Compile>
@@ -597,6 +599,18 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Resource Include="Images\Export.png" />
+    <Content Include="Images\imageButton.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\imageLoader.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\imageNew.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\imageRestore.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Images\Invert.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

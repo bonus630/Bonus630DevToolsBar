@@ -8,6 +8,7 @@ using br.com.Bonus630DevToolsBar.DrawUIExplorer;
 using br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels;
 using br.com.Bonus630DevToolsBar.ControlsShorcutsCDRAddon.Models;
 using Corel.Interop.VGCore;
+using System.Linq;
 
 
 namespace br.com.Bonus630DevToolsBar.ControlsShorcutsCDRAddon.ViewModels
@@ -16,49 +17,16 @@ namespace br.com.Bonus630DevToolsBar.ControlsShorcutsCDRAddon.ViewModels
     {
         private Application corelApp;
         public ObservableCollection<Shortcut> Shortcuts { get; set; }
+        private ObservableCollection<Shortcut> AllItems = new ObservableCollection<Shortcut>(); 
         private Core core;
         private readonly string keyName = "keySequence";
         private readonly string itemRef = "itemRef";
         private readonly string altAttribute = "alt";
         private Dispatcher dispatcher;
         public RunCommand RunCommand { get; set; }
-
-        //private IComparer<Shortcut> shortcutOrder;
-
-        //public IComparer<Shortcut> ShortcutOrder
-        //{
-        //    get { return shortcutOrder; }
-        //    set { shortcutOrder = value; OnPropertyChanged(nameof(ShortcutOrder)); }
-        //}
-
-        //private bool orderByName;
-
-        //public bool OrderByName
-        //{
-        //    get { return orderByName; }
-        //    set
-        //    {
-        //        orderByName = value;
-        //        OnPropertyChanged(nameof(OrderByName));
-        //        if (value)
-        //            ShortcutOrder = new ComparerName();
-        //    }
-        //}
-        //private bool orderByKey;
-
-        //public bool OrderByKey
-        //{
-        //    get { return orderByName; }
-        //    set
-        //    {
-        //        orderByName = value;
-        //        OnPropertyChanged(nameof(OrderByKey));
-        //        if (value)
-        //            ShortcutOrder = new ComparerKey();
-        //    }
-        //}
-
-
+        public RunCommand CopyGuidCommand { get; set; }
+        public ICommand SortAscendingCommand { get; set; }
+        public ICommand SortDescendingCommand { get; set; }
 
 
         private System.Windows.Visibility loadingVisible = System.Windows.Visibility.Visible;
@@ -74,6 +42,9 @@ namespace br.com.Bonus630DevToolsBar.ControlsShorcutsCDRAddon.ViewModels
         {
             Shortcuts = new ObservableCollection<Shortcut>();
             RunCommand = new RunCommand(InvokeItem);
+            CopyGuidCommand = new RunCommand(CopyGuid);
+            SortAscendingCommand = new DrawUIExplorer.ViewModels.Commands.SimpleCommand(SortAscending);
+            SortDescendingCommand = new DrawUIExplorer.ViewModels.Commands.SimpleCommand(SortDescending);
             this.corelApp = corelApp;
             this.dispatcher = Dispatcher.CurrentDispatcher;
             core = new Core();
@@ -108,6 +79,7 @@ namespace br.com.Bonus630DevToolsBar.ControlsShorcutsCDRAddon.ViewModels
                     dispatcher.Invoke(() =>
                     {
                         this.Shortcuts.Add(s);
+                        this.AllItems.Add(s);   
                     });
                 }
             }
@@ -133,6 +105,58 @@ namespace br.com.Bonus630DevToolsBar.ControlsShorcutsCDRAddon.ViewModels
                 this.corelApp.FrameWork.Automation.InvokeItem(shortcut.Guid);
             }
             catch { }
+        }  
+        public void CopyGuid(Shortcut shortcut)
+        {
+            try
+            {
+                System.Windows.Clipboard.SetText(shortcut.Guid);
+            }
+            catch { }
+        }
+        private string searchTerm;
+        public string SearchTerm
+        {
+            get { return searchTerm; }
+            set
+            {
+                if (searchTerm != value)
+                {
+                    searchTerm = value;
+                    OnPropertyChanged("SearchTerm");
+                    UpdateFilteredItems();
+                }
+            }
+        }
+        private void UpdateFilteredItems()
+        {
+            if (string.IsNullOrEmpty(SearchTerm))
+            {
+                Shortcuts = new ObservableCollection<Shortcut>(AllItems);
+            }
+            else
+            {
+                if(SearchTerm.Length==1)
+                    Shortcuts = new ObservableCollection<Shortcut>(
+                   AllItems.Where<Shortcut>(item => item.Name.StartsWith(SearchTerm,StringComparison.OrdinalIgnoreCase)));
+                else
+                Shortcuts = new ObservableCollection<Shortcut>(
+                    AllItems.Where<Shortcut>(item => item.Name.IndexOf(SearchTerm,StringComparison.OrdinalIgnoreCase) >=0
+                    || item.Guid.IndexOf(SearchTerm)>=0));
+            }
+
+            OnPropertyChanged("Shortcuts");
+        }
+        private void SortAscending()
+        {
+            Shortcuts = new ObservableCollection<Shortcut>(Shortcuts.OrderBy(item => item.Name));
+            OnPropertyChanged("Shortcuts");
+        }
+
+        private void SortDescending()
+        {
+            Shortcuts = new ObservableCollection<Shortcut>(Shortcuts.OrderByDescending(item => item.Name));
+            OnPropertyChanged("Shortcuts");
         }
 
     }

@@ -648,8 +648,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                 if (System.IO.Path.GetExtension(project.Path).ToLower().Equals(".dll"))
                 {
                     project.Name = project.Name.Replace("Unloaded ", "");
-                    SetModulesCommands(project);
-                    LoadPinnedCommands();
+                   
                 }
                 else
                 {
@@ -657,28 +656,35 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                     project.Name = string.Format("Unloaded {0}", project.Name);
                     project.Name = project.Name.Replace(".bak",".dll");
                 }
-                if (Projects.Count == 0)
+                if (!Projects.Contains(project))
                     Projects.Add(project);
-                else
+                //if (Projects.Count == 0)
+                //    Projects.Add(project);
+                //else
+                //{
+                //    if (!Projects.Contains(project))
+                //    {
+                //        if (project.Loaded)
+                //        {
+                //            for (int i = projects.Count - 1; i >= 0; i--)
+                //            {
+
+                //                if (Projects[i].Loaded || i == 0)
+                //                {
+                //                    projects.Insert(i, project);
+                //                    break;
+                //                }
+                //            }
+                //        }
+                //        else
+                //            Projects.Add(project);
+
+                //    }
+                //}
+                if(project.Loaded)
                 {
-                    if (!Projects.Contains(project))
-                    {
-                        if (project.Loaded)
-                        {
-                            for (int i = projects.Count - 1; i >= 0; i--)
-                            {
-
-                                if (Projects[i].Loaded || i == 0)
-                                {
-                                    projects.Insert(i, project);
-                                    break;
-                                }
-                            }
-                        }
-                        else
-                            Projects.Add(project);
-
-                    }
+                    SetModulesCommands(project);
+                    LoadPinnedCommands();
                 }
             }));
         }

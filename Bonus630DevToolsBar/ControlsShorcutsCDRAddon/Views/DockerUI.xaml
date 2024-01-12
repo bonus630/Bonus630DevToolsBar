@@ -20,20 +20,58 @@
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
+            
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0" Height="28"  HorizontalAlignment="Stretch" VerticalAlignment="Center"  Visibility="{Binding LoadingVisible}">
+        <Grid Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions >
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="30"/>
+            </Grid.ColumnDefinitions>
+            <TextBox Grid.Row="0" Grid.Column="0" Margin="4,0,10,0" Text="{Binding SearchTerm, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"/>
+            <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right">
+              
+           
+                <!--<StackPanel Orientation="Horizontal">
+                    <Label Content="Key:" FontSize="11"/>
+                    <Label Content="{Binding Key}" FontSize="11" FontWeight="Bold" />
+                </StackPanel>
+
+            </StackPanel>
+            <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Horizontal" Margin="6,0,0,0" Width="156">
+                <CheckBox Content="Control" IsChecked="{Binding Control}" FontSize="11" Margin="2"/>
+                <CheckBox Content="Shift" IsChecked="{Binding Shift}" FontSize="11" Margin="2"/>
+                <CheckBox Content="Alt" IsChecked="{Binding Alt}" FontSize="11" Margin="2" />-->
+              <Button  Width="20" Height="20" BorderBrush="{x:Null}" Background="{x:Null}" HorizontalAlignment="Right" VerticalAlignment="Center"
+                            Command="{Binding SortAscendingCommand}" >
+                    <Image Style="{DynamicResource SortAscendingImg}"/>
+            </Button>
+                <Button  Width="20" Height="20" BorderBrush="{x:Null}" Background="{x:Null}" HorizontalAlignment="Right" VerticalAlignment="Center"
+                            Command="{Binding SortDescendingCommand}" >
+                    <Image Style="{DynamicResource SortDescendingImg}"/>
+                </Button>
+            </StackPanel>
+          
+        </Grid>
+        <Grid Grid.Row="1" Height="28"  HorizontalAlignment="Stretch" VerticalAlignment="Center"  Visibility="{Binding LoadingVisible}">
             <Label Content="Loading" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top"/>
             <ProgressBar Height="2" Background="Red" IsIndeterminate="True" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" />
         </Grid>
-        <ListView  Grid.Row="1" ItemsSource="{Binding Shortcuts}" Name="lv_shortcuts"  >
+        <ListView  Grid.Row="2" ItemsSource="{Binding Shortcuts}" Name="lv_shortcuts"  >
             
             <ListView.ItemTemplate>
                 <DataTemplate>
 
                     <Grid>
                         <Grid.RowDefinitions>
+                            <RowDefinition />
                             <RowDefinition />
                             <RowDefinition />
                             <RowDefinition />
@@ -52,13 +90,21 @@
                          
                         </StackPanel>
                         <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Horizontal" Margin="6,0,0,0" Width="156">
-                            <CheckBox Content="Control" IsChecked="{Binding Control}" FontSize="11" Margin="2"/>
-                            <CheckBox Content="Shift" IsChecked="{Binding Shift}" FontSize="11" Margin="2"/>
-                            <CheckBox Content="Alt" IsChecked="{Binding Alt}" FontSize="11" Margin="2" />
+                            <CheckBox IsEnabled="False" Content="Control" IsChecked="{Binding Control}" FontSize="11" Margin="2"/>
+                            <CheckBox IsEnabled="False" Content="Shift" IsChecked="{Binding Shift}" FontSize="11" Margin="2"/>
+                            <CheckBox IsEnabled="False" Content="Alt" IsChecked="{Binding Alt}" FontSize="11" Margin="2" />
                         </StackPanel>
+
+                        <Label Grid.Row="3" Grid.Column="0"  Content="{Binding Guid}" FontSize="9" />
+                        
+                       
                         <Button Grid.Row="0" Grid.Column="1" Grid.RowSpan="3" Width="30" Height="30" CommandParameter="{Binding}" BorderBrush="{x:Null}" Background="{x:Null}" HorizontalAlignment="Center" VerticalAlignment="Center"
                             Command="{Binding DataContext.RunCommand,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ListView}}" >
                             <Image Style="{DynamicResource PlayImage}"/>
+                        </Button>
+                        <Button Grid.Row="3" Grid.Column="1"  Width="20" Height="20" CommandParameter="{Binding}" BorderBrush="{x:Null}" Background="{x:Null}" HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Command="{Binding DataContext.CopyGuidCommand,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ListView}}" >
+                            <Image Style="{DynamicResource CopyMenuItemImg}"/>
                         </Button>
                     </Grid>
                 </DataTemplate>

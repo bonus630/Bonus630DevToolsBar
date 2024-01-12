@@ -82,9 +82,10 @@
     </UserControl.Resources>
     <DockPanel LastChildFill="true" >
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
-            <Button x:Name="btn_prepareDocument" Content="Prepare Document" Click="btn_prepareDocument_Click" Margin="4,4,0,4"/>
-            <Button x:Name="btn_openDocumento" Content="Open a Document" Click="btn_openDocumento_Click" Margin="4,4,0,4"/>
-            <Button x:Name="btn_exportIcon" Content="Generate Icon" Click="btn_exportIcon_Click" Margin="4,4,0,4"/>
+            <custom:IconButton Icon="imageNew.png" Width="30" Height="30" x:Name="btn_prepareDocument" ToolTip="Prepare Document" Click="btn_prepareDocument_Click" Margin="4,4,0,4"/>
+            <custom:IconButton Icon="imageRestore.png" Width="30" Height="30"  x:Name="btn_openDocumento" ToolTip="Open a Document" Click="btn_openDocumento_Click" Margin="4,4,0,4"/>
+            <custom:IconButton Icon="imageButton.png" Width="30" Height="30"  x:Name="btn_previewIcon" ToolTip="Load a preview in &quot;Icon test slot&quot;" Click="btn_previewIcon_Click" Margin="4,4,0,4"/>
+            <custom:IconButton Icon="imageLoader.png" Width="30" Height="30"  x:Name="btn_exportIcon" ToolTip="Generate Icon" Click="btn_exportIcon_Click" Margin="4,4,0,4"/>
 
             <!--<Button Content="nossa" Margin="30"/>-->
         </StackPanel>

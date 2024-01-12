@@ -183,7 +183,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.DataClass
             }
             return false;
         }
-        public string GetAnyGuidAttribute()
+        public virtual string GetAnyGuidAttribute()
         {
             if (this.Attributes == null)
                 return null;
