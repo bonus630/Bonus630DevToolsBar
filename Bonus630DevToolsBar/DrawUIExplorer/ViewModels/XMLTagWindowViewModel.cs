@@ -418,12 +418,13 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
         }
         private bool IsComplexLayout(IBasicData basicData)
         {
-            return basicData is DockerData || basicData is CommandBarData;
+            return true;
+           // return basicData is DockerData || basicData is CommandBarData;
 
         }
         private void activeGuid()
         {
-            //core.CopyItemCaptionAndGuid();
+           core.CorelAutomation.GetActiveGuidTool();
         }
 
         private void config()

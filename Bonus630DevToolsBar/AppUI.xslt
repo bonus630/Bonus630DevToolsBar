@@ -71,13 +71,15 @@
 			<itemData guid="2ee3372b-f6b5-47fe-aa81-4ecd2c4771e2"
 					type="wpfhost"
 					hostedType="Addons\Bonus630DevToolsBar\Bonus630DevToolsBar.dll,br.com.Bonus630DevToolsBar.RunCommandDocker.DockerUI"
-					enable="true"/>
+					enable="true"
+				  />
 
 			<!--Shortcuts docker-->
 			<itemData guid="c934c5dc-882b-476a-a634-b1d9ab7c81f1"
 					type="wpfhost"
 					hostedType="Addons\Bonus630DevToolsBar\Bonus630DevToolsBar.dll,br.com.Bonus630DevToolsBar.ControlsShorcutsCDRAddon.DockerUI"
-					enable="true"/>
+					enable="true"
+			  />
 
 			<!--GMS Dragger let change guid to test dialog original guid:3b3f72b8-0129-4316-b8a3-40e4758ba9bc-->
 			<itemData guid="1752053c-096c-4534-90b2-af8b101abac3"

@@ -23,7 +23,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
         //Pen bluePen;
        // SolidBrush transparentBlueBrush;
         public bool NormalMode = true;
-
+        public IntPtr OwnerHandle { get; set; }
         public OverlayForm(System.Windows.Rect rect)
         {
             start(rect);
@@ -145,5 +145,17 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
             this.rectOverlay = new Rectangle((int)rect.X, (int)rect.Y, (int)rect.Width, (int)rect.Height);
             Invalidate();
         }
+        public void Show(bool noFocus)
+        {
+            base.Show(new WpfWrapper(this.Handle));
+        }
+    }
+    public class WpfWrapper : IWin32Window
+    {
+        public WpfWrapper(IntPtr handle)
+        {
+            Handle = handle; 
+        }
+        public IntPtr Handle { get; set; }
     }
 }

@@ -19,6 +19,8 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         //private object corelObj;
         private Styles.StylesController stylesController;
 
+   
+
         ProxyManager proxyManager;
         ProjectsManager projectsManager;
         ShapeRangeManager shapeRangeManager;
@@ -29,7 +31,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
 
             try
             {
-
+                
                 proxyManager = new ProxyManager(app, System.IO.Path.Combine((app as corel.Application).AddonPath, "Bonus630DevToolsBar"));
                 this.corelApp = app as corel.Application;
                 stylesController = new Styles.StylesController(this.Resources, this.corelApp);

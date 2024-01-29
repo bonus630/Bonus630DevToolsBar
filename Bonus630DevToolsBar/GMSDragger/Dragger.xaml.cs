@@ -23,7 +23,7 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
     public partial class Dragger : Button
     {
         c.Application corelApp;
-        
+
         string gmsPath = "";
         List<string> resultList = new List<string>();
         public readonly string VBAEditorGuid = "28e16db6-6339-440d-af0d-f58ac27c115d";
@@ -46,7 +46,7 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
                 //        this.Width = 256;
                 //        this.Height = 256;
                 //    }
-                   
+
                 //    Console.WriteLine(e.NewSize.ToString());
                 //};
             }
@@ -57,48 +57,75 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
         }
 
         private void Dragger_Loaded(object sender, RoutedEventArgs e)
-        { 
+        {
             LoadThemeFromPreference();
-            
+
         }
 
         protected override void OnDragOver(DragEventArgs e)
         {
+
+
+
+
+            base.OnDragEnter(e);
+        }
+        protected override void OnDrop(DragEventArgs e)
+        {
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
             try
             {
-                processFiles(files);
+
+                bool remove = e.KeyStates == (DragDropKeyStates.ControlKey | DragDropKeyStates.ShiftKey);
+
+                processFiles(files, remove);
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Error on drop process!\nError:" + ex.Message);
             }
-
-
-            base.OnDragEnter(e);
+            base.OnDrop(e);
         }
-
         protected override void OnDragEnter(DragEventArgs drgevent)
         {
             if (drgevent.Data.GetDataPresent(DataFormats.FileDrop))
                 drgevent.Effects = DragDropEffects.Copy;
             base.OnDragEnter(drgevent);
         }
-        private void processFiles(string[] files)
+        private void processFiles(string[] files, bool remove = false)
         {
             string result = "";
             this.corelApp.InitializeVBA();
             bool r = false;
+
             for (int i = 0; i < files.Length; i++)
             {
                 var project = this.corelApp.GMSManager.Projects.Load(files[i]);
                 if (project.PasswordProtected)
                 {
                     project.Unload();
-                    if (processFile(files[i], out result))
+                    if (processFile(files[i], out result, remove))
                     {
                         project = this.corelApp.GMSManager.Projects.Load(result);
-
+                        // https://learn.microsoft.com/en-us/office/vba/language/reference/visual-basic-add-in-model/properties-visual-basic-add-in-model
+                        //  project.0000000000
+                        //  try
+                        // {
+                        //      //    System.Windows.Forms.MessageBox.Show((corelApp.VBE as dynamic).VBProjects.Count.ToString());
+                        //      //    (corelApp.VBE as dynamic).ActiveVBProject.Protection = 0;
+                        //      for (int j = 1; j <= (corelApp.VBE as dynamic).VBProjects.Count; j++)
+                        //      {
+                        //          dynamic p = (corelApp.VBE as dynamic).VBProjects[j];
+                        //          if (p.FileName == files[i])
+                        //          {
+                        //              (corelApp.VBE as dynamic).VBProjects[j].Protection = 0;
+                        //          }
+                        //      }
+                        //  }
+                        //  catch (Exception e)
+                        //{
+                        //      System.Windows.Forms.MessageBox.Show(e.Message);
+                        //  }
                         r = true;
                     }
                 }
@@ -106,16 +133,15 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
                     r = true;
             }
             if (r)
+            {
                 this.corelApp.FrameWork.Automation.InvokeItem(VBAEditorGuid);
+            }
         }
-        private bool processFile(string arquivo, out string result)
+        private bool processFile(string arquivo, out string result, bool remove = false)
         {
-            string toReplace = "5351FFE607030703F8FD0803BECFCA6AB7796054D8A2E61F539CAD491169CD680FA4C6D26A";
-            // string arquivo = @"D:\CDRGMS\Shaping-X64-2020.gms";
             string fileResultName = arquivo.Substring(arquivo.LastIndexOf("\\") + 1, arquivo.Length - arquivo.LastIndexOf("\\") - 5) + "-Cracked.gms";
             result = string.Format("{0}\\{1}", this.gmsPath, fileResultName);
             //string dpbInitial = "DPB=\"";
-            string dpbInitial = "DPB";
             try
             {
                 if (File.Exists(result))
@@ -133,62 +159,66 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
             {
                 try
                 {
-#if NoCrack
-                    File.Copy(arquivo, string.Format("{0}\\{1}", this.gmsPath, arquivo.Substring(arquivo.LastIndexOf("\\") + 1, arquivo.Length - arquivo.LastIndexOf("\\") - 1)));
-#else
-
-                    byte[] buffer = new byte[4096];
-                    //byte[] dpbBuffer = Encoding.ASCII.GetBytes("080AEEF1EFF1EFF1");
-                    byte[] dpbBuffer = Encoding.ASCII.GetBytes("DPx");
-                    bool tryFind = true;
-                    using (FileStream sr = new FileStream(arquivo, FileMode.Open, FileAccess.Read))
+                    if (!remove)
+                        File.Copy(arquivo, string.Format("{0}\\{1}", this.gmsPath, arquivo.Substring(arquivo.LastIndexOf("\\") + 1, arquivo.Length - arquivo.LastIndexOf("\\") - 1)));
+                    else
                     {
+                        string toReplace = "5351FFE607030703F8FD0803BECFCA6AB7796054D8A2E61F539CAD491169CD680FA4C6D26A";
+                        // string arquivo = @"D:\CDRGMS\Shaping-X64-2020.gms";
+                        string dpbInitial = "DPB";
 
-                        using (FileStream fs = new FileStream(result, FileMode.OpenOrCreate, FileAccess.Write))
+                        byte[] buffer = new byte[4096];
+                        //byte[] dpbBuffer = Encoding.ASCII.GetBytes("080AEEF1EFF1EFF1");
+                        byte[] dpbBuffer = Encoding.ASCII.GetBytes("DPx");
+                        bool tryFind = true;
+                        using (FileStream sr = new FileStream(arquivo, FileMode.Open, FileAccess.Read))
                         {
 
-                            int i = 0;
-                            int table = 0;
-                            while ((i = sr.Read(buffer, 0, buffer.Length)) > 0)
+                            using (FileStream fs = new FileStream(result, FileMode.OpenOrCreate, FileAccess.Write))
                             {
-                                if (tryFind)
+
+                                int i = 0;
+                                int table = 0;
+                                while ((i = sr.Read(buffer, 0, buffer.Length)) > 0)
                                 {
-                                    //DPB="080AEEF1EFF1EFF1"
-                                    string f = Encoding.ASCII.GetString(buffer);
-                                    int index = f.IndexOf(dpbInitial);
-                                    if (index > -1)
+                                    if (tryFind)
                                     {
-                                        //index += dpbInitial.Length;
-                                        //string p = f.Substring(index, f.Length - index);
-                                        string p = f.Substring(index, 3);
-                                        Console.WriteLine(p.IndexOf("\""));
-                                        //string p1 = p.Substring(0, p.IndexOf("\""));
-                                        string p1 = p;
-                                        Console.WriteLine(p1);
-                                        byte[] dpbToReplace = Encoding.ASCII.GetBytes(p1);
-                                        byte[] bufferFinal = new byte[buffer.Length - index - dpbToReplace.Length];
-                                        Array.Copy(buffer, index + dpbToReplace.Length, bufferFinal, 0, bufferFinal.Length);
+                                        //DPB="080AEEF1EFF1EFF1"
+                                        string f = Encoding.ASCII.GetString(buffer);
+                                        int index = f.IndexOf(dpbInitial);
+                                        if (index > -1)
+                                        {
+                                            //index += dpbInitial.Length;
+                                            //string p = f.Substring(index, f.Length - index);
+                                            string p = f.Substring(index, 3);
+                                            Console.WriteLine(p.IndexOf("\""));
+                                            //string p1 = p.Substring(0, p.IndexOf("\""));
+                                            string p1 = p;
+                                            Console.WriteLine(p1);
+                                            byte[] dpbToReplace = Encoding.ASCII.GetBytes(p1);
+                                            byte[] bufferFinal = new byte[buffer.Length - index - dpbToReplace.Length];
+                                            Array.Copy(buffer, index + dpbToReplace.Length, bufferFinal, 0, bufferFinal.Length);
 
-                                        Array.Resize(ref buffer, buffer.Length - dpbToReplace.Length + dpbBuffer.Length);
+                                            Array.Resize(ref buffer, buffer.Length - dpbToReplace.Length + dpbBuffer.Length);
 
-                                        Array.Copy(dpbBuffer, 0, buffer, index, dpbBuffer.Length);
+                                            Array.Copy(dpbBuffer, 0, buffer, index, dpbBuffer.Length);
 
-                                        Array.Copy(bufferFinal, 0, buffer, index + dpbBuffer.Length, bufferFinal.Length);
-
-
+                                            Array.Copy(bufferFinal, 0, buffer, index + dpbBuffer.Length, bufferFinal.Length);
 
 
-                                        Console.WriteLine("----------------------- index:" + index + " table:" + table);
-                                        tryFind = false;
+
+
+                                            Console.WriteLine("----------------------- index:" + index + " table:" + table);
+                                            tryFind = false;
+                                        }
                                     }
+                                    fs.Write(buffer, 0, buffer.Length);
+                                    table++;
                                 }
-                                fs.Write(buffer, 0, buffer.Length);
-                                table++;
                             }
                         }
+                        return true;
                     }
-                    return true;
-#endif
                 }
                 catch (Exception ex)
                 {
@@ -225,13 +255,13 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
         }
         #region controle style
         private void CorelApp_OnApplicationEvent(string EventName, ref object[] Parameters)
-        {  
-           
+        {
+
             if (EventName.Equals("WorkspaceChanged") || EventName.Equals("OnColorSchemeChanged"))
             {
                 LoadThemeFromPreference();
             }
-          
+
         }
         //Keys resources name follow the resource order to add a new value, order to works you need add 5 resources colors and Resources/Colors.xaml
         //1º is default, is the same name of StyleKeys string array
@@ -252,7 +282,7 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
          "Container.Text.Static.Background" ,
          "Container.Text.Static.Foreground" ,
          "Container.Static.Background" ,
-         "Default.Static.Inverted.Foreground", 
+         "Default.Static.Inverted.Foreground",
             "Button.MouseOver.Background" ,
          "Button.MouseOver.Border",
          "Button.Static.Border" ,

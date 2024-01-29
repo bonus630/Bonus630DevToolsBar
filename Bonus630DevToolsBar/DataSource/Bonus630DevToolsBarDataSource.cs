@@ -28,11 +28,13 @@ namespace br.com.Bonus630DevToolsBar.DataSource
         private readonly string shortcutsCommandGuid = "512194ae-a540-4979-8991-bcadded6726e";
 
         public Bonus630DevToolsBarDataSource(DataSourceProxy proxy, Application corelApp) : base(proxy, corelApp)
-        { 
+        {
+           // corelApp.OnApplicationEvent += CorelApp_OnApplicationEvent;
         }
-
+       // private int test = 1;
         private void CorelApp_OnApplicationEvent(string EventName, ref object[] Parameters)
         {
+               // CQLContext = test ++;
             if (EventName.Equals("FrameworkManagerToolbarListChanged"))
             {
                 int x = 0, y = 0, w = 0, h = 0;
@@ -139,7 +141,10 @@ namespace br.com.Bonus630DevToolsBar.DataSource
             {
                 //"<item  guidRef=\"1752053c-096c-4534-90b2-af8b101abac3\" />"; 
 
-                return "<placeholderData> <itemData guid=\"1752053c-096c-4534-90b2-af8b101abac3\" /> </placeholderData>";
+                return "<placeholderData> " +
+                    "<itemData guid=\"1752053c-096c-4534-90b2-af8b101abac3\" />" +
+                  
+                    " </placeholderData>";
             }
             set {; }
         }

@@ -10,6 +10,7 @@ using System.Threading;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Reflection;
+using System.Windows.Controls;
 
 
 namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
@@ -65,10 +66,27 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
             core.DispactchNewMessage(string.Format("X:{0},Y:{1},W:{2},H:{3}", sr.Left, sr.Top, sr.Width, sr.Height), MsgType.Result);
             return new System.Windows.Rect() { X = sr.Left,Y = sr.Top, Width = sr.Width, Height = sr.Height };
         }
-        public string GetCaption(string guid)
+        public string GetActiveGuidTool()
+        {
+            string guid = string.Empty;
+            try
+            {
+                guid = corelApp.ActiveToolStateGuid;
+                core.DispactchNewMessage(string.Format("The current tool guid: {0}", guid),MsgType.Result);
+               
+            }
+            catch(Exception e)
+            {
+                core.DispactchNewMessage(e.Message, MsgType.Erro);
+            }
+            return guid;
+        }
+        public string GetCaption(string guid, bool removeAmpersand = false)
         {
             try
             {
+                if (removeAmpersand)
+                    return this.corelApp.FrameWork.Automation.GetCaptionText(guid).Replace("&", "");
                 return this.corelApp.FrameWork.Automation.GetCaptionText(guid);
             }
 

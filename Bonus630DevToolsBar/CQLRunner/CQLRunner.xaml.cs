@@ -176,6 +176,8 @@ namespace br.com.Bonus630DevToolsBar.CQLRunner
                                         Thread.Sleep(200);
                                         sr[i].RemoveFromSelection();
                                     }
+                                    Thread.Sleep(200);
+                                    sr.AddToSelection();
                                 }
                                 ));
                             th.IsBackground = true;

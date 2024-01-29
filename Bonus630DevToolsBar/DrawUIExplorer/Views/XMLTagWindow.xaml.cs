@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using System.Windows.Interop;
 using System.Windows.Media;
 
 namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
@@ -80,7 +81,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
             core.LoadFinish += Core_LoadFinish1;
             core.NewMessage += Core_NewMessage;
             core.RequestUIHideVisibleChanged += Core_RequestUIHideVisibleChanged;
-
+            core.MainWindowHandler = new WindowInteropHelper(this).Handle;
             treeView_Nodes.SelectedItemChanged += (s, e) =>
             {
                 if (treeView_Nodes.SelectedItem != null)

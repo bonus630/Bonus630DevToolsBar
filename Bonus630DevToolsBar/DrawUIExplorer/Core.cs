@@ -68,6 +68,9 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
         public HighLightItemHelper HighLightItemHelper { get; private set; }
         public List<IBasicData> Route { get { return getRoute(); } }
         public bool SetUIVisible { set { if (RequestUIHideVisibleChanged != null) RequestUIHideVisibleChanged(value); } }
+
+        public IntPtr MainWindowHandler { get; internal set; }
+
         public Core()
         {
             workerFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\bonus630\\DrawUIExplorer";

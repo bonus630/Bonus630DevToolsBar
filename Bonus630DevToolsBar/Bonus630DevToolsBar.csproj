@@ -222,6 +222,7 @@
     <Compile Include="Converters\DoubleToStringConverter.cs" />
     <Compile Include="Converters\ImagePathConverter.cs" />
     <Compile Include="Converters\ImagePathConverterD.cs" />
+    <Compile Include="Converters\InvertEmptyStringToVisibilityConverter.cs" />
     <Compile Include="Converters\NormalizeImagePathConverter.cs" />
     <Compile Include="Converters\StringLenToVisibilityConverter.cs" />
     <Compile Include="Converters\TypeToBoolConverter.cs" />
@@ -237,6 +238,9 @@
     </Compile>
     <Compile Include="CustomControls\IconCheckBox.xaml.cs">
       <DependentUpon>IconCheckBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControls\IconTextBox.xaml.cs">
+      <DependentUpon>IconTextBox.xaml</DependentUpon>
     </Compile>
     <Compile Include="CustomControls\Image.xaml.cs">
       <DependentUpon>Image.xaml</DependentUpon>
@@ -266,6 +270,7 @@
     <Compile Include="IconCreatorHelper\IconCreatorHelperUI.xaml.cs">
       <DependentUpon>IconCreatorHelperUI.xaml</DependentUpon>
     </Compile>
+    <Compile Include="PipesServerAndClient.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -430,6 +435,10 @@
     <Page Include="CustomControls\IconCheckBox.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="CustomControls\IconTextBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="CustomControls\Image.xaml">
       <SubType>Designer</SubType>
@@ -853,7 +862,6 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
   <PropertyGroup>
     <StartAction>Program</StartAction>
     <StartProgram>$(CurrentCorelPath)CorelDRW.exe</StartProgram>

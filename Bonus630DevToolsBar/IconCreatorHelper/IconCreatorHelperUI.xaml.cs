@@ -26,6 +26,7 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
     {
 
         private Corel.Interop.VGCore.Application corelApp;
+       
         //private object corelObj;
         private StylesController stylesController;
 

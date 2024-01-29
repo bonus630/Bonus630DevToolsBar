@@ -22,6 +22,8 @@ namespace br.com.Bonus630DevToolsBar.ControlsShorcutsCDRAddon.ViewModels
         private readonly string keyName = "keySequence";
         private readonly string itemRef = "itemRef";
         private readonly string altAttribute = "alt";
+        private readonly string ctrlAttribute = "ctrl";
+        private readonly string shiftAttribute = "shift";
         private Dispatcher dispatcher;
         public RunCommand RunCommand { get; set; }
         public RunCommand CopyGuidCommand { get; set; }
@@ -71,11 +73,13 @@ namespace br.com.Bonus630DevToolsBar.ControlsShorcutsCDRAddon.ViewModels
                         s.Alt = alt;
                         if (obj.Childrens[i].Childrens[0].Childrens.Count > 0)
                             s.Key = obj.Childrens[i].Childrens[0].Childrens[0].Text.Replace("VK", "");
+                        Boolean.TryParse(obj.Childrens[i].Childrens[0].GetAttribute(shiftAttribute), out shift);
+                        s.Shift = shift;
+                        Boolean.TryParse(obj.Childrens[i].Childrens[0].GetAttribute(ctrlAttribute), out control);
+                        s.Control = control;
                     }
-                    s.Shift = shift;
-                    s.Control = control;
                     s.Guid = obj.Childrens[i].GetAttribute(itemRef);
-                    s.Name = core.CorelAutomation.GetCaption(s.Guid);
+                    s.Name = core.CorelAutomation.GetCaption(s.Guid,true);
                     dispatcher.Invoke(() =>
                     {
                         this.Shortcuts.Add(s);
@@ -138,7 +142,8 @@ namespace br.com.Bonus630DevToolsBar.ControlsShorcutsCDRAddon.ViewModels
             {
                 if(SearchTerm.Length==1)
                     Shortcuts = new ObservableCollection<Shortcut>(
-                   AllItems.Where<Shortcut>(item => item.Name.StartsWith(SearchTerm,StringComparison.OrdinalIgnoreCase)));
+                   AllItems.Where<Shortcut>(item => item.Name.StartsWith(SearchTerm,StringComparison.OrdinalIgnoreCase) || 
+                   item.Key.StartsWith(SearchTerm, StringComparison.OrdinalIgnoreCase)));
                 else
                 Shortcuts = new ObservableCollection<Shortcut>(
                     AllItems.Where<Shortcut>(item => item.Name.IndexOf(SearchTerm,StringComparison.OrdinalIgnoreCase) >=0

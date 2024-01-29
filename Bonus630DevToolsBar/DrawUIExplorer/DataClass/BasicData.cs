@@ -161,6 +161,11 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.DataClass
             }
             return false;
         }
+       /// <summary>
+       /// 
+       /// </summary>
+       /// <param name="AttributeName"></param>
+       /// <returns>Return string.Empty if attribute not found</returns>
         public string GetAttribute(string AttributeName)
         {
             if (this.Attributes == null)

@@ -81,7 +81,7 @@
                 <StackPanel Orientation="Horizontal" Background="{DynamicResource Footer.Static.Background}">
                     
                     <custom:SVGButton Visibility="{Binding InCorel,Converter={StaticResource BoolVisibilityConverter}}" x:Name="btn_tryHighLightThis"  HorizontalAlignment="Left" Margin="7,0,2,0" Width="20" 
-                                       Command="{Binding HighLightCommand}" Height="20" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" Padding="1,0" BorderBrush="{x:Null}" Background="{x:Null}" VerticalAlignment="Top" >
+                                       Command="{Binding HighLightCommand}" Height="20" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" Padding="1,0" BorderBrush="{x:Null}" VerticalAlignment="Top" >
                         <custom:SVGButton.ToolTip>
                             <StackPanel Orientation="Horizontal">
                                 <Label Content="Try highlight this" VerticalAlignment="Center" Width="93" Padding="0" HorizontalAlignment="Right" VerticalContentAlignment="Center" Margin="4,0,0,0" />
