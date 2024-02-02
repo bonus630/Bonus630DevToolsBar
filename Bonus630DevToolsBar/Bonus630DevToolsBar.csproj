@@ -218,11 +218,13 @@
     <Compile Include="ControlsShorcutsCDRAddon\Views\DockerUI.xaml.cs">
       <DependentUpon>DockerUI.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\FilterAttributesConverter.cs" />
     <Compile Include="Converters\FileExtensionToVisibilityConverter.cs" />
     <Compile Include="Converters\DoubleToStringConverter.cs" />
     <Compile Include="Converters\ImagePathConverter.cs" />
     <Compile Include="Converters\ImagePathConverterD.cs" />
     <Compile Include="Converters\InvertEmptyStringToVisibilityConverter.cs" />
+    <Compile Include="Converters\MultiItemConverter.cs" />
     <Compile Include="Converters\NormalizeImagePathConverter.cs" />
     <Compile Include="Converters\StringLenToVisibilityConverter.cs" />
     <Compile Include="Converters\TypeToBoolConverter.cs" />
@@ -867,7 +869,7 @@
     <StartProgram>$(CurrentCorelPath)CorelDRW.exe</StartProgram>
   </PropertyGroup>
   <!-- DependsOnTargets="CopyFiles" Condition="'$(Configuration)' == 'Release'" -->
-  <Target Name="CreateShortcuts" DependsOnTargets="CopyFiles" AfterTargets="Build"  Condition="'$(Configuration)' == 'Release'" >
+  <Target Name="CreateShortcuts" DependsOnTargets="CopyFiles" AfterTargets="Build" Condition="'$(Configuration)' == 'Release'">
     <Message Text="Olha esse cocô!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" />
     <Exec Command="&quot;$(CurrentCorelPath)Addons\$(SolutionName)\CreateShortcuts.exe&quot;" />
   </Target>
