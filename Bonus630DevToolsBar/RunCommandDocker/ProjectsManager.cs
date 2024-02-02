@@ -166,7 +166,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             SetCommandToValueCommand = new BindingCommand<Command>(SetCommandReturnArgumentValue, CanRunSetCommandReturnArgVal);
             SetShapeRangeToValueCommand = new SimpleCommand(SetShapeRangeArgumentValue);
             CreateSelectionShapeRangeCommand = new SimpleCommand(CreateSelectionShapeRange);
-            startFolderMonitor(assemblyDirectory);
+            CheckFolder(assemblyDirectory);
         }
 
         private void UnloadProject(Project project)
@@ -494,8 +494,15 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                 AssemblyDirectory = fbd.SelectedPath;
                 Properties.Settings.Default.FolderPath = assemblyDirectory;
                 Properties.Settings.Default.Save();
-                startFolderMonitor(assemblyDirectory);
-                return true;
+                if (Directory.Exists(AssemblyDirectory))
+                {
+                    startFolderMonitor(assemblyDirectory);
+                    return true;
+                }
+                    
+                else
+                    return false;
+                
             }
             else
                 return false;
@@ -505,19 +512,28 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             if (Directory.Exists(assemblyDirectory))
                 System.Diagnostics.Process.Start(assemblyDirectory);
         }
-        private void startFolderMonitor(string dir)
+        private bool CheckFolder(string folder)
         {
-            if (!Directory.Exists(dir))
+            if (!Directory.Exists(folder))
             {
                 if (System.Windows.MessageBox.Show("Please define a directory to store your dlls, this is a mandatory step for this tool to work", "Invalid or not defined directory!",
                 MessageBoxButton.YesNo, MessageBoxImage.Warning).Equals(MessageBoxResult.Yes))
                 {
-                    if (!SelectFolder())
-                        return;
+                    return SelectFolder();
+                        
                 }
-                else
-                    return;
+                return false;
             }
+            else
+            {
+                startFolderMonitor(folder);
+            }
+            return true;
+
+        }
+        private void startFolderMonitor(string dir)
+        {
+         
             dllMonitor = new FileSystemWatcher(dir);
             dllMonitor.EnableRaisingEvents = true;
             dllMonitor.Changed += Fsw_Changed;

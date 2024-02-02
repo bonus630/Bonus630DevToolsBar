@@ -82,8 +82,11 @@ namespace br.com.Bonus630DevToolsBar.ControlsShorcutsCDRAddon.ViewModels
                     s.Name = core.CorelAutomation.GetCaption(s.Guid,true);
                     dispatcher.Invoke(() =>
                     {
-                        this.Shortcuts.Add(s);
-                        this.AllItems.Add(s);   
+                        if (!this.AllItems.Contains(s))
+                        {
+                            this.Shortcuts.Add(s);
+                            this.AllItems.Add(s);
+                        }
                     });
                 }
             }

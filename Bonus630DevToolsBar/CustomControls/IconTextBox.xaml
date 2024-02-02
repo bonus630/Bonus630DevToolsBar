@@ -27,20 +27,18 @@
                     <Setter.Value>
                         <ControlTemplate TargetType="local:IconTextBox">
                             <Border BorderBrush="{TemplateBinding BorderBrush}" Height="{TemplateBinding Height}" Width="{TemplateBinding Width}"
-                        BorderThickness="{TemplateBinding BorderThickness}" Name="border">
-                                <Grid HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="{TemplateBinding ActualWidth}" />
-                                        <ColumnDefinition Width="Auto"/> 
-                                    </Grid.ColumnDefinitions>
-                                    <ScrollViewer  Grid.Column="0" HorizontalAlignment="Stretch"  x:Name="PART_ContentHost" Focusable="false"
-                                                      VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
-                                    <Grid Grid.Column="1" Visibility="{TemplateBinding Text, Converter={StaticResource InvertEmptyStringToVisibilityConverter}}">
-                                        <Label Content="Search" VerticalAlignment="Center" HorizontalAlignment="Left" FontStyle="Italic" IsEnabled="False" FontSize="9"  Padding="0"/>
+                        BorderThickness="{TemplateBinding BorderThickness}" Name="border" >
+                                <DockPanel LastChildFill="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                      Height="{TemplateBinding Height}" Width="{TemplateBinding Width}" >
+                                
+                                    <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" Visibility="{TemplateBinding Text, Converter={StaticResource InvertEmptyStringToVisibilityConverter}}">
                                         <Image Source="{TemplateBinding Icon,Converter={StaticResource mediaConverter}}"
-                                            Width="{TemplateBinding ActualHeight}" Height="{TemplateBinding ActualHeight}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="30,0,0,0"/>
-                                    </Grid>
-                                </Grid>
+                                            Width="{TemplateBinding ActualHeight}" Height="{TemplateBinding ActualHeight}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                                        <Label Content="{TemplateBinding PlaceHolder}" VerticalAlignment="Center" HorizontalAlignment="Right" FontStyle="Italic" IsEnabled="False" FontSize="9"  Padding="0" Margin="10,0,0,0"/>
+                                    </StackPanel>
+                                    <ScrollViewer  DockPanel.Dock="Left" HorizontalAlignment="Stretch"  x:Name="PART_ContentHost" Focusable="false"
+                                                      VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
+                                </DockPanel>
                             </Border>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsEnabled" Value="false">

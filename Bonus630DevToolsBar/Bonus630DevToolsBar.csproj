@@ -867,7 +867,7 @@
     <StartProgram>$(CurrentCorelPath)CorelDRW.exe</StartProgram>
   </PropertyGroup>
   <!-- DependsOnTargets="CopyFiles" Condition="'$(Configuration)' == 'Release'" -->
-  <Target Name="CreateShortcuts" DependsOnTargets="CopyFiles" AfterTargets="Build">
+  <Target Name="CreateShortcuts" DependsOnTargets="CopyFiles" AfterTargets="Build"  Condition="'$(Configuration)' == 'Release'" >
     <Message Text="Olha esse cocô!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" />
     <Exec Command="&quot;$(CurrentCorelPath)Addons\$(SolutionName)\CreateShortcuts.exe&quot;" />
   </Target>

@@ -157,19 +157,22 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
         private void GMSLoader_Loaded(object sender, RoutedEventArgs e)
         {
             stylesController.LoadThemeFromPreference();
-            string path = ControlUI.corelApp.GMSManager.UserGMSPath;
-
-            FileInfo[] f = (new DirectoryInfo(path)).GetFiles();
-            Files = new ObservableCollection<MyFile>();
-            for (int i = 0; i < f.Length; i++)
+            try
             {
-                if (f[i].Extension.ToLower() == ".gms" || f[i].Extension.ToLower() == ".bak")
-                    Files.Add(new MyFile(f[i].FullName));
+                string path = ControlUI.corelApp.GMSManager.UserGMSPath;
+
+                FileInfo[] f = (new DirectoryInfo(path)).GetFiles();
+                Files = new ObservableCollection<MyFile>();
+                for (int i = 0; i < f.Length; i++)
+                {
+                    if (f[i].Extension.ToLower() == ".gms" || f[i].Extension.ToLower() == ".bak")
+                        Files.Add(new MyFile(f[i].FullName));
+                }
+
+                this.DataContext = this;
+                OnFilesChanged();
             }
-
-            this.DataContext = this;
-            OnFilesChanged();
-
+            catch { }
         }
 
         private void ListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)

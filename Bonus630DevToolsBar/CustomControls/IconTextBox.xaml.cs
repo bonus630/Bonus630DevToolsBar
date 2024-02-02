@@ -25,6 +25,20 @@ namespace br.com.Bonus630DevToolsBar.CustomControls
                 SetValue(IconProperty, value);
             }
         }
+        public static readonly DependencyProperty PlaceHolderProperty = DependencyProperty.Register("PlaceHolder", typeof(string), typeof(IconTextBox), null);
+        [Browsable(true)]
+        [Category("Common")]
+        public string PlaceHolder
+        {
+            get
+            {
+                return (string)GetValue(PlaceHolderProperty);
+            }
+            set
+            {
+                SetValue(PlaceHolderProperty, value);
+            }
+        }
         public IconTextBox()
         {
             InitializeComponent();

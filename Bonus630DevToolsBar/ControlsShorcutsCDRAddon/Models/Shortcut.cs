@@ -21,8 +21,16 @@ namespace br.com.Bonus630DevToolsBar.ControlsShorcutsCDRAddon.Models
         public bool Alt { get; set; }
         public string Key { get; set; }
 
-
-     
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+                return false;
+            return Guid.Equals((obj as Shortcut).Guid);   
+        }
+        public override int GetHashCode()
+        {
+            return Guid.GetHashCode();  
+        }
 
     }
 }

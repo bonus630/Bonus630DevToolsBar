@@ -16,12 +16,12 @@
                 <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/RunCommandDocker/Styles/ScrollComponentsStyles.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/RunCommandDocker/Styles/ListComponentsStyles.xaml"/>
 
-           </ResourceDictionary.MergedDictionaries>
+            </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            
+
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition />
@@ -31,16 +31,19 @@
                 <RowDefinition />
                 <RowDefinition />
                 <RowDefinition />
+
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions >
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="30"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <custom:IconTextBox Icon="search.png" Grid.Row="0" Grid.Column="0" Margin="4,0,10,0" Text="{Binding SearchTerm, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" VerticalContentAlignment="Center"/>
-            <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right">
-              
-           
+            <custom:IconTextBox Icon="search.png" PlaceHolder="Search..." Grid.Row="0" Grid.Column="0" Margin="4,0,10,0" 
+                                Text="{Binding SearchTerm, UpdateSourceTrigger=PropertyChanged}" BorderThickness="1"
+                                HorizontalAlignment="Stretch" VerticalContentAlignment="Center"/>
+            <StackPanel Grid.Row="0" Grid.Column="1"  Orientation="Horizontal" HorizontalAlignment="Right">
+
+
                 <!--<StackPanel Orientation="Horizontal">
                     <Label Content="Key:" FontSize="11"/>
                     <Label Content="{Binding Key}" FontSize="11" FontWeight="Bold" />
@@ -51,23 +54,24 @@
                 <CheckBox Content="Control" IsChecked="{Binding Control}" FontSize="11" Margin="2"/>
                 <CheckBox Content="Shift" IsChecked="{Binding Shift}" FontSize="11" Margin="2"/>
                 <CheckBox Content="Alt" IsChecked="{Binding Alt}" FontSize="11" Margin="2" />-->
-              <Button  Width="20" Height="20" BorderBrush="{x:Null}" Background="{x:Null}" HorizontalAlignment="Right" VerticalAlignment="Center"
+                <Label Content="{Binding Shortcuts.Count}" HorizontalContentAlignment="Right" FontSize="9" VerticalAlignment="Center"/>
+                <Button  Width="20" Height="20" BorderBrush="{x:Null}" Background="{x:Null}" HorizontalAlignment="Right" VerticalAlignment="Center"
                             Command="{Binding SortAscendingCommand}" >
                     <Image Style="{DynamicResource SortAscendingImg}"/>
-            </Button>
+                </Button>
                 <Button  Width="20" Height="20" BorderBrush="{x:Null}" Background="{x:Null}" HorizontalAlignment="Right" VerticalAlignment="Center"
                             Command="{Binding SortDescendingCommand}" >
                     <Image Style="{DynamicResource SortDescendingImg}"/>
                 </Button>
             </StackPanel>
-          
+
         </Grid>
         <Grid Grid.Row="1" Height="28"  HorizontalAlignment="Stretch" VerticalAlignment="Center"  Visibility="{Binding LoadingVisible}">
             <Label Content="Loading" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top"/>
             <ProgressBar Height="2" Background="Red" IsIndeterminate="True" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" />
         </Grid>
         <ListView  Grid.Row="2" ItemsSource="{Binding Shortcuts}" Name="lv_shortcuts" SelectionMode="Single" KeyUp="lv_shortcuts_KeyUp"  >
-            
+
             <ListView.ItemTemplate>
                 <DataTemplate>
 
@@ -89,7 +93,7 @@
                                 <Label Content="Key:" FontSize="11"/>
                                 <Label Content="{Binding Key}" FontSize="11" FontWeight="Bold" />
                             </StackPanel>
-                         
+
                         </StackPanel>
                         <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Horizontal" Margin="6,0,0,0" Width="156">
                             <CheckBox IsEnabled="False" Content="Control" IsChecked="{Binding Control}" FontSize="11" Margin="2"/>
