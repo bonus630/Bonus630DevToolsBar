@@ -93,6 +93,10 @@
 			<xsl:if test="not(./item[@guidRef='657042cb-3594-43a1-80bf-c8a27fd43146'])">
 				<item guidRef="657042cb-3594-43a1-80bf-c8a27fd43146"/>
 			</xsl:if>
+			<!--PrintScreen-->
+			<xsl:if test="not(./item[@guidRef='b5c5d8c0-e3d0-44dd-822f-2e61190c870b'])">
+				<item dock="fill" guidRef="b5c5d8c0-e3d0-44dd-822f-2e61190c870b"/>
+			</xsl:if>
 			<!--Recent Files-->
 			<xsl:if test="not(./item[@guidRef='7d15e9c7-2431-4841-a5aa-9eaa5b581230'])">
 				<item dock="fill" guidRef="7d15e9c7-2431-4841-a5aa-9eaa5b581230"/>
@@ -185,6 +189,17 @@
 				<item guidRef="b0a4b2ff-7bf5-47c3-a92a-16e2a4520746" dock="fill"/>
 			</xsl:if>
 
+		</xsl:copy>
+	</xsl:template>
+	<!-- Add Shortcuts-->
+	<xsl:template match="uiConfig/shortcutKeyTables/table[@tableID='bc175625-191c-4b95-9053-756e5eee26fe']">
+		<xsl:copy>
+			<xsl:apply-templates select="node()|@*"/>
+			<xsl:if test="not(./keySequence[@itemRef='b5c5d8c0-e3d0-44dd-822f-2e61190c870b'])">
+				<keySequence itemRef="b5c5d8c0-e3d0-44dd-822f-2e61190c870b">
+					<key shift="true">p</key>
+				</keySequence>
+			</xsl:if>
 		</xsl:copy>
 	</xsl:template>
 </xsl:stylesheet>

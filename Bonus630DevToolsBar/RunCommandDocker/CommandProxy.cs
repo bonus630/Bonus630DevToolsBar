@@ -25,6 +25,8 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         public Func<object> ActionRunCommand { get; private set; }
 
         public string CommandURI { get; set; }
+        public string ConsoleOut { get; private set; }
+
         private string methodName;
         public CommandProxy(string commandURI)
         {
@@ -78,7 +80,19 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                 MethodInfo methodInfo = GetMethodInfo(type, command);
                 //MethodInfo methodInfo = type.GetMethods().First(m => m.Name.Equals(command.Name));
                 //command.Items. ToArray<object>()
-                ActionRunCommand = () => methodInfo.Invoke(Instance, command.ArgumentsCache);
+                ActionRunCommand = () =>
+                {
+                    using (StringWriter stringWriter = new StringWriter())
+                    {
+                        Console.SetOut(stringWriter);
+                        object result = methodInfo.Invoke(Instance, command.ArgumentsCache);
+                        ConsoleOut = stringWriter.ToString();
+
+                        return result;
+
+                    }
+
+                };
                 return Instance;
             }
             catch (Exception ex)

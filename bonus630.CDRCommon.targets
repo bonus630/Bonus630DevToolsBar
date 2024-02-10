@@ -4,7 +4,7 @@
 		<When Condition="'$(Configuration)' == 'X7 Release' or '$(Configuration)' == 'X7 Debug'">
 			<PropertyGroup>
 
-				<CurrentCorelPath></CurrentCorelPath>
+				<CurrentCorelPath>D:\Program Files\Corel\CorelDRAW Graphics Suite X7\Programs64\</CurrentCorelPath>
 				<CurrentCorelAbr>X7</CurrentCorelAbr>
 				<CurrentCorelDebugConst>X7</CurrentCorelDebugConst>
 			</PropertyGroup>
@@ -60,7 +60,7 @@
 		<When Condition="'$(Configuration)' == '2022 Release' or '$(Configuration)' == '2022 Debug'">
 			<PropertyGroup>
 
-				<CurrentCorelPath></CurrentCorelPath>
+				<CurrentCorelPath>D:\Program Files\Corel\CorelDRAW Graphics Suite 2022\Programs64\</CurrentCorelPath>
 				<CurrentCorelAbr>2022</CurrentCorelAbr>
 				<CurrentCorelDebugConst>X14</CurrentCorelDebugConst>
 			</PropertyGroup>

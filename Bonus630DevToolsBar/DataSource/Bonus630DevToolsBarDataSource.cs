@@ -277,9 +277,14 @@ namespace br.com.Bonus630DevToolsBar.DataSource
         public void LoadIcon()
         {
             System.Windows.Forms.OpenFileDialog of = new System.Windows.Forms.OpenFileDialog();
+#if X7
             of.Filter = "ico file (*.ico)|*.ico";
-            of.Multiselect = false;
             of.Title = "Select a ico file";
+#else
+            of.Filter = "Image file (*.bmp)|*.bmp;(*.jpg)|*.jpg";
+            of.Title = "Select a image file";
+#endif
+            of.Multiselect = false;
             if (of.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 var commandBar = CorelApp.FrameWork.CommandBars["Bonus630 Dev Tools"];
@@ -293,6 +298,20 @@ namespace br.com.Bonus630DevToolsBar.DataSource
 
 
             }
+        }
+        public void PrintScreen()
+        {
+            string path = Path.GetTempPath();
+            string file = "untitled";
+
+            if (CorelApp.ActiveDocument != null && !CorelApp.ActiveDocument.Dirty)
+            {
+                path = CorelApp.ActiveDocument.FilePath;
+                file = CorelApp.ActiveDocument.FileName;
+            }
+           PrintScreen.Cropper cropper = new PrintScreen.Cropper(CorelApp);
+           cropper.SetFolderPath(file, path);
+           cropper.Show(); 
         }
 
         

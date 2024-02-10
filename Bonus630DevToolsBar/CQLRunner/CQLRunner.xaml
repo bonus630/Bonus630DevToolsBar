@@ -40,12 +40,12 @@
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition />
-                <RowDefinition />
+                <RowDefinition Height="20" />
                 <RowDefinition />
                 <RowDefinition />
             </Grid.RowDefinitions>
             <Label Grid.Row="0" Grid.Column="1" Content="Type your cql, and press &quot;Enter&quot; Key!" />
-            <WindowsFormsHost Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" VerticalAlignment="Center">
+            <WindowsFormsHost Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" VerticalAlignment="Stretch">
                 <forms:TextBox x:Name="txt_cql" AutoCompleteMode="SuggestAppend"  ></forms:TextBox>
             </WindowsFormsHost>
 
@@ -86,7 +86,7 @@
                 </StackPanel>
             </GroupBox>
             <Button Grid.Row="2" Grid.Column="3" Background="{x:Null}"  BorderThickness="0"  Width="20" Height="20" ToolTip="Copy list" Click="Button_Click" Margin="0,8,0,0">
-                <Image Width="18" Height="18" Source="/Bonus630DevToolsBar;component/Images/CopyBig.png" />
+                <Image Width="18" Height="18" Style="{StaticResource CopyBigImg}" />
             </Button>
             <Label Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" x:Name="lba_console" Content="" />
 

@@ -448,6 +448,14 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         public Type ReturnsType { 
             get { return returnsType; } 
             set { returnsType = value; OnPropertyChanged("ReturnsType"); } }
+
+        private string consoleOut;
+        public string ConsoleOut
+        {
+            get { return consoleOut; }
+            set { consoleOut = value; OnPropertyChanged("ConsoleOut"); }
+        }
+
         private Reflected reflected;
 
         public Reflected ReflectedProp

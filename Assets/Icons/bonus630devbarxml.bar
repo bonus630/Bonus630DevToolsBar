@@ -47,7 +47,7 @@
       <Enable>true</Enable>
       <Shortcut>
       </Shortcut>
-      <Icon>C:\Users\bonus\AppData\Local\Temp\tmp3B95.ico</Icon>
+      <Icon />
     </CommandItem>
     <CommandItem id="5">
       <GmsFileId>0</GmsFileId>
@@ -129,6 +129,14 @@
       <Shortcut>
       </Shortcut>
       <Icon>D:\C# Ed26-08-22\Bonus630DevToolsBar\Assets\Icons\icon.ico</Icon>
+    </CommandItem>
+    <CommandItem id="14">
+      <GmsFileId>0</GmsFileId>
+      <Caption>Print Screen</Caption>
+      <Command>o</Command>
+      <Enable>true</Enable>
+      <Shortcut>shift+p</Shortcut>
+      <Icon>C:\Users\bonus\AppData\Local\Temp\tmpE272.ico</Icon>
     </CommandItem>
   </Commands>
 </CommandBar>

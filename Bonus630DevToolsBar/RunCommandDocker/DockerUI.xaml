@@ -207,7 +207,7 @@
             <Border BorderThickness="1" Grid.Row="1" Visibility="{Binding SelectedCommand,Converter={StaticResource NullToVisibilityConverter}}" >
                 <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="0,10">
                     <Expander  IsExpanded="true" x:Name="expander_Attributes"
-                                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
+                                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalContentAlignment="Top" HorizontalContentAlignment="Stretch">
                         <Expander.Header>
                             <StackPanel HorizontalAlignment="{Binding Path=HorizontalAlignment, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentPresenter}}, Mode=OneWayToSource}" >
                                 <StackPanel Orientation="Horizontal">
@@ -238,9 +238,18 @@
 
                             </StackPanel>
                         </Expander.Header>
-                        <StackPanel Margin="0">
-                            <Label Content="{Binding SelectedCommand.ElapsedTime}" Visibility="{Binding SelectedCommand.ElapsedTime,Converter={StaticResource EmptyStringToVisibilityConverter}}"/>
-                            <GroupBox Header="Return" Margin="0,0,0,10" Visibility="{Binding SelectedCommand.ReturnsType,ConverterParameter={x:Type System:Void},Converter={StaticResource TypeToVisibilityConverter}}">
+                        <Grid Margin="0" HorizontalAlignment="Stretch">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Row="0" Grid.Column="0" Content="{Binding SelectedCommand.ElapsedTime}" Visibility="{Binding SelectedCommand.ElapsedTime,Converter={StaticResource EmptyStringToVisibilityConverter}}"/>
+                            <GroupBox Grid.Row="1" Grid.Column="0"  Header="Return" Margin="0,0,0,4" Visibility="{Binding SelectedCommand.ReturnsType,ConverterParameter={x:Type System:Void},Converter={StaticResource TypeToVisibilityConverter}}">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition/>
@@ -277,7 +286,16 @@
 
                                 </Grid>
                             </GroupBox>
-                            <GroupBox Header="Params" Visibility="{Binding SelectedCommand.Count,Converter={StaticResource IntToVisibilityConverter},FallbackValue=0}" Margin="0,10">
+                            <GroupBox Grid.Row="2" Grid.Column="0"  Header="Console" Visibility="{Binding SelectedCommand.ConsoleOut,Converter={StaticResource EmptyStringToVisibilityConverter}}" Margin="0,0,0,4">
+                                <Grid Margin="0">
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox Grid.Column="0" Text="{Binding SelectedCommand.ConsoleOut}" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" ></TextBox>
+                                </Grid>
+                            </GroupBox>
+                            <GroupBox Grid.Row="3" Grid.Column="0"  Header="Params" Visibility="{Binding SelectedCommand.Count,Converter={StaticResource IntToVisibilityConverter},FallbackValue=0}" Margin="0,0,0,4">
                                 <Grid>
                                     <ListView BorderThickness="0" 
                                         ItemsSource="{Binding SelectedCommand.Items}" 
@@ -315,7 +333,7 @@
 
                                 </Grid>
                             </GroupBox>
-                        </StackPanel>
+                        </Grid>
                     </Expander>
 
                 </ScrollViewer>
@@ -430,14 +448,14 @@
                     </StackPanel>
 
                 </Grid>
-                      
-                
+
+
             </Grid>
             <!--</Popup>-->
             <TreeView Grid.Row="1"  ItemsSource="{Binding Projects}" Name="treeViewCommands" TreeViewItem.Selected="TreeView_Selected" 
                       IsTextSearchCaseSensitive="False" IsTextSearchEnabled="True" TextSearch.TextPath="Name" KeyDown="treeViewCommands_KeyDown" KeyUp="treeViewCommands_KeyUp">
-                        <!--Reciclar ou focar o item?-->
-                      <!--VirtualizingStackPanel.IsVirtualizing="True" VirtualizingStackPanel.VirtualizationMode="Recycling"--> 
+                <!--Reciclar ou focar o item?-->
+                <!--VirtualizingStackPanel.IsVirtualizing="True" VirtualizingStackPanel.VirtualizationMode="Recycling"-->
 
                 <!-- //Ref.:01 
             // Compare to another Ref.:01
@@ -573,8 +591,8 @@
                                                 <TextBox Margin="10" Text="{Binding LastException.InnerExceptions[0].StackTrace, Mode=OneWay}" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"  />
                                             </StackPanel>
                                         </Image.ToolTip>
-                                        
-                                       
+
+
                                     </Image>
                                     <!--<popup:MyPopup ToReflect="{Binding LastException}" PlacementTarget="{Binding ElementName=img_fails}" Placement="Right" AllowsTransparency="True"
                                                        IsOpen="{Binding Path=DataContext.Parent.Parent.Parent.MyPopupExceptionIsOpen}" 

@@ -1,4 +1,4 @@
-﻿using br.com.Bonus630DevToolsBar.RecentFiles;
+﻿using Bonus630DevToolsBar;
 using br.com.Bonus630DevToolsBar.RunCommandDocker.Styles;
 using Corel.Interop.VGCore;
 using System;
@@ -11,12 +11,11 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
+
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+
+
 using corel = Corel.Interop.VGCore;
 
 namespace br.com.Bonus630DevToolsBar.CQLRunner
@@ -34,6 +33,7 @@ namespace br.com.Bonus630DevToolsBar.CQLRunner
         private readonly char[] separator = new char[] { '\n' };
 
         DataSourceProxy dsp;
+        OnScreenCurve ScreenCurve = null;
 
         public CQLRunner(object app)
         {
@@ -47,17 +47,24 @@ namespace br.com.Bonus630DevToolsBar.CQLRunner
                 txt_cql.AutoCompleteCustomSource = CQLSucessedList;
                 txt_cql.KeyUp += Txt_cql_KeyUp1;
                 this.Loaded += CQLRunner_Loaded;
-               
+                this.Unloaded += CQLRunner_Unloaded;
 
             }
             catch
             {
-                MessageBox.Show("VGCore Erro");
+                System.Windows.MessageBox.Show("VGCore Erro");
             }
+        }
+
+        private void CQLRunner_Unloaded(object sender, RoutedEventArgs e)
+        {
+            if (ScreenCurve != null)
+                ScreenCurve.Hide();
         }
 
         private void CQLRunner_Loaded(object sender, RoutedEventArgs e)
         {
+            txt_cql.Focus();
             stylesController.LoadThemeFromPreference();
             dsp = corelApp.FrameWork.Application.DataContext.GetDataSource(ControlUI.DataSourceName);
             object o = dsp.GetProperty("CQLSucessedList");
@@ -84,7 +91,6 @@ namespace br.com.Bonus630DevToolsBar.CQLRunner
                     rb_shape.IsChecked = true;
                     break;
             }
-            txt_cql.Focus();
         }
 
         private void Txt_cql_KeyUp1(object sender, System.Windows.Forms.KeyEventArgs e)
@@ -126,7 +132,11 @@ namespace br.com.Bonus630DevToolsBar.CQLRunner
             string cql = txt_cql.Text;
             object result = null;
             SetConsoleMessage("");
-          
+            if (ScreenCurve != null)
+            {
+                ScreenCurve.Hide();
+                ScreenCurve = null;
+            }
             if (string.IsNullOrEmpty(cql))
                 return;
             try
@@ -151,37 +161,42 @@ namespace br.com.Bonus630DevToolsBar.CQLRunner
                                 if (sr1.Count == 0)
                                     SetConsoleMessage("nothing selected!");
                                 else
-                                    SetConsoleMessage(string.Format("{0} selected!",sr1.Count));
+                                    SetConsoleMessage(string.Format("{0} selected!", sr1.Count));
                                 SaveCQL(cql);
                             }
                         }
                         break;
                     case 2:
                         ShapeRange sr = this.corelApp.ActiveSelectionRange;
-                        if (sr.Count == 0)
-                            return;
-                      //  this.corelApp.ActiveWindow.ActiveView.SetViewArea(sr.LeftX, sr.BottomY, sr.SizeWidth , sr.SizeHeight  );
                         if (sr != null)
                         {
+                            if (sr.Count == 0)
+                            {
+                                SetConsoleMessage("No shape selected",false);
+                                return;
+                            }
+                            //  this.corelApp.ActiveWindow.ActiveView.SetViewArea(sr.LeftX, sr.BottomY, sr.SizeWidth , sr.SizeHeight  );
+
                             sr.Sort(cql);
+                            ShowScreen(sr);
                             SetConsoleMessage("Sucess");
                             SaveCQL(cql);
-                            sr.RemoveFromSelection();
-                            Thread th = new Thread(new ThreadStart(
-                                () =>
-                                {
-                                    for (int i = 1; i <= sr.Count; i++)
-                                    {
-                                        sr[i].AddToSelection();
-                                        Thread.Sleep(200);
-                                        sr[i].RemoveFromSelection();
-                                    }
-                                    Thread.Sleep(200);
-                                    sr.AddToSelection();
-                                }
-                                ));
-                            th.IsBackground = true;
-                            th.Start();
+                            //sr.RemoveFromSelection();
+                            //Thread th = new Thread(new ThreadStart(
+                            //    () =>
+                            //    {
+                            //        for (int i = 1; i <= sr.Count; i++)
+                            //        {
+                            //            sr[i].AddToSelection();
+                            //            Thread.Sleep(200);
+                            //            sr[i].RemoveFromSelection();
+                            //        }
+                            //        Thread.Sleep(200);
+                            //        sr.AddToSelection();
+                            //    }
+                            //    ));
+                            //th.IsBackground = true;
+                            //th.Start();
 
                         }
                         break;
@@ -189,7 +204,7 @@ namespace br.com.Bonus630DevToolsBar.CQLRunner
                         if (this.corelApp.ActiveShape != null)
                         {
                             result = this.corelApp.ActiveShape.Evaluate(cql);
-                           SetConsoleMessage(result);
+                            SetConsoleMessage(result);
                             if (result != null)
                                 SaveCQL(cql);
                         }
@@ -200,20 +215,51 @@ namespace br.com.Bonus630DevToolsBar.CQLRunner
             }
             catch (COMException ex)
             {
-               
-                SetConsoleMessage(ex.Message,false);
+
+                SetConsoleMessage(ex.Message, false);
             }
         }
-
-        private void SetConsoleMessage(string msg,bool sucess = true)
+        private void ShowScreen(ShapeRange sr)
         {
-            if(sucess)
+            ScreenCurve = corelApp.CreateOnScreenCurve();
+
+
+            this.corelApp.BeginDraw();
+
+            ShapeRange screenRange = corelApp.CreateShapeRange();
+            Curve curve = corelApp.CreateCurve();
+
+            for (int i = 1; i <= sr.Count; i++)
+            {
+                Shape s = corelApp.ActiveLayer.CreateArtisticText(0, 0, i.ToString());
+                s.CenterX = sr[i].CenterX;
+                s.CenterY = sr[i].CenterY;
+                s.ConvertToCurves();
+                curve.AppendCurve(s.Curve);
+                screenRange.Add(s);
+
+
+            }
+            screenRange.Delete();
+
+            corelApp.Optimization = false;
+            corelApp.EventsEnabled = true;
+            corelApp.Refresh();
+
+            ScreenCurve.SetCurve(curve);
+            this.corelApp.EndDraw();
+            ScreenCurve.Show();
+        }
+
+        private void SetConsoleMessage(string msg, bool sucess = true)
+        {
+            if (sucess)
                 lba_console.Foreground = Brushes.Green;
             else
                 lba_console.Foreground = Brushes.Red;
             lba_console.Content = msg;
         }
-        private void SetConsoleMessage(object obj,bool sucess = true)
+        private void SetConsoleMessage(object obj, bool sucess = true)
         {
             SetConsoleMessage(obj.ToString(), sucess);
         }

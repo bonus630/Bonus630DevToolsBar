@@ -686,6 +686,11 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
 
         private async void btn_previewIcon_Click(object sender, RoutedEventArgs e)
         {
+            
+#if X7
+    System.Windows.Forms.MessageBox.Show("This function is available on X8 or higher");
+    return;
+#endif
             try
             {
                 string path = string.Format("{0}bonus630\\IconCreator\\{1}.ico", Path.GetTempPath(), Guid.NewGuid());

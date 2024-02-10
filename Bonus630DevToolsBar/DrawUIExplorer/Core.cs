@@ -465,13 +465,14 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
             string fileName = Path.Combine(CorelApp.AddonPath, "Bonus630DevToolsBar\\IconsExtractor.exe");
             if (!File.Exists(fileName))
             {
-                DispactchNewMessage("You missing IconsExtractor.exe!", MsgType.Console);
+                DispactchNewMessage("You missing IconsExtractor.exe!", MsgType.Erro);
                 return;
             }
 
             if (!Directory.Exists(IconsFolder))
                 Directory.CreateDirectory(IconsFolder);
             DispactchNewMessage("Save icons in: " + IconsFolder, MsgType.Console);
+         
             Action saveIcons = new Action(() =>
             {
                 // ResourcesExtractor.SaveIcons(IconsFolder);
@@ -659,7 +660,8 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
         Event,
         Xml,
         Erro,
-        Result
+        Result,
+        Link
     }
 
 }

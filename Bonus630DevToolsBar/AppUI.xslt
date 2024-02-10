@@ -151,6 +151,8 @@
 			  icon="guid://d61f1ede-79aa-4255-8f96-307e6f63c204"
 			  type="button"  enable="true"/>
 
+		
+
 			<!--DropdownButton Folders-->
 			<itemData guid='680d03b3-2da0-4314-bc79-fa6b26471e22' type='dropDownDlgBtn' arrowStyle='down'
 					  caption='*Bind(DataSource=Bonus630DevToolsBarDS;Path=FoldersCaption)'
@@ -170,7 +172,12 @@
 					type="wpfhost"
 					hostedType="Addons\Bonus630DevToolsBar\Bonus630DevToolsBar.dll,br.com.Bonus630DevToolsBar.IconCreatorHelper.IconCreatorHelperUI"
 					enable="true" Width="310"/>
-			
+
+			<!--PrintScreen-->
+			<itemData guid="b5c5d8c0-e3d0-44dd-822f-2e61190c870b"
+			  onInvoke="*Bind(DataSource=Bonus630DevToolsBarDS;Path=PrintScreen)"
+			  icon="guid://b5c5d8c0-e3d0-44dd-822f-2e61190c870b"
+			  type="button"  enable="true"/>
 			
 			<!--Recent Files-->
 			<itemData guid="7d15e9c7-2431-4841-a5aa-9eaa5b581230"
@@ -244,7 +251,13 @@
 						
 						<!--20 Separator-->
 						<item guidRef="266435b4-6e53-460f-9fa7-f45be187d400" />
-						<!--21 Recent Files -->
+						<!--21 PrintScreen-->
+						<item guidRef="b5c5d8c0-e3d0-44dd-822f-2e61190c870b" />
+						
+						<!--22 Separator-->
+						<item guidRef="266435b4-6e53-460f-9fa7-f45be187d400" />
+						
+						<!--23 Recent Files -->
 						<item  guidRef="7d15e9c7-2431-4841-a5aa-9eaa5b581230" dock="fill"/>
 						<!--<item  guidRef="118bad9e-cab3-4810-883e-843626f798ae" dock="top"/>-->
 
@@ -388,8 +401,8 @@
 						<item guidRef="d0a371e7-9fad-4e1c-8159-b285d67c0497" />
 						<!--19 IconCreatorHelper loader-->
 						<item guidRef="657042cb-3594-43a1-80bf-c8a27fd43146" />
-						
-						
+						<!--21 PrintScreen-->
+						<item guidRef="b5c5d8c0-e3d0-44dd-822f-2e61190c870b" />
 						
 					
 						<!--21 Recent Files -->
@@ -400,5 +413,17 @@
 
 		</xsl:copy>
 	</xsl:template>
+	<xsl:template match="uiConfig/shortcutKeyTables/table[@tableID='bc175625-191c-4b95-9053-756e5eee26fe']">
+		<xsl:copy>
+			<xsl:apply-templates select="node()|@*"/>
+			<!--Print Screen Shortctu Shift+P-->
+			<xsl:if test="not(./keySequence[@itemRef='b5c5d8c0-e3d0-44dd-822f-2e61190c870b'])">
+				<keySequence itemRef="b5c5d8c0-e3d0-44dd-822f-2e61190c870b">
+					<key shift="true">p</key>
+				</keySequence>
+			</xsl:if>
+		</xsl:copy>
+	</xsl:template>
+
 
 </xsl:stylesheet>

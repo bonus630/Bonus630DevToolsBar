@@ -273,6 +273,12 @@
       <DependentUpon>IconCreatorHelperUI.xaml</DependentUpon>
     </Compile>
     <Compile Include="PipesServerAndClient.cs" />
+    <Compile Include="PrintScreen\Cropper.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PrintScreen\Cropper.Designer.cs">
+      <DependentUpon>Cropper.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -859,6 +865,9 @@
     <EmbeddedResource Include="DrawUIExplorer\PrintScreenForm.resx">
       <DependentUpon>PrintScreenForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="PrintScreen\Cropper.resx">
+      <DependentUpon>Cropper.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -869,7 +878,7 @@
     <StartProgram>$(CurrentCorelPath)CorelDRW.exe</StartProgram>
   </PropertyGroup>
   <!-- DependsOnTargets="CopyFiles" Condition="'$(Configuration)' == 'Release'" -->
-  <Target Name="CreateShortcuts" DependsOnTargets="CopyFiles" AfterTargets="Build" Condition="'$(Configuration)' == 'Release'">
+  <Target Name="CreateShortcuts" DependsOnTargets="CopyFiles" AfterTargets="Build">
     <Message Text="Olha esse cocô!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" />
     <Exec Command="&quot;$(CurrentCorelPath)Addons\$(SolutionName)\CreateShortcuts.exe&quot;" />
   </Target>

@@ -51,7 +51,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
             InitializeComponent();
             this.app = app;
             stylesController = new StylesController(this.Resources, this.app, ChangeTheme);
-            this.Loaded += (s, e) => { stylesController.LoadThemeFromPreference();  };
+            this.Loaded += (s, e) => { stylesController.LoadThemeFromPreference(); };
             init();
         }
         public XMLTagWindow(string filePath)
@@ -268,15 +268,6 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
                 {
                     switch (msgType)
                     {
-                        case MsgType.Console:
-                            ConsoleSetMsg(msg, (SolidColorBrush)this.FindResource("Default.Static.Foreground"));
-                            break;
-                        case MsgType.Erro:
-                            ConsoleSetMsg(msg, Brushes.Crimson);
-                            break;
-                        case MsgType.Result:
-                            ConsoleSetMsg(msg, Brushes.CadetBlue);
-                            break;
                         case MsgType.Event:
                             txt_CorelEventViewer.AppendText(string.Format("{0}\r\n", msg));
                             try
@@ -293,6 +284,9 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
                             }
                             catch { }
                             break;
+                        default:
+                            ConsoleSetMsg(msg, msgType);
+                            break;
 
                     }
                 }
@@ -300,8 +294,21 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
             }
           ));
         }
-        private void ConsoleSetMsg(string msg, Brush color)
+        private void ConsoleSetMsg(string msg,MsgType msgType)
         {
+            Brush color = (SolidColorBrush)this.FindResource("Default.Static.Foreground");
+            switch (msgType)
+            {
+              
+                case MsgType.Erro:
+                   color = Brushes.Crimson;
+                    break;
+                case MsgType.Result:
+                    color = Brushes.CadetBlue;
+                    break;
+                
+
+            }
             string a = "";
             if (saveLoad.ConsoleCounter)
                 a = (string.Format("{0}. {1}\r", msgCount, msg));
@@ -310,6 +317,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
             txt_console.Text = a;
 
             TextRange tr;
+            txt_consoleFull.BeginChange();
             if (saveLoad.ConsoleCounter)
             {
                 tr = new TextRange(txt_consoleFull.Document.ContentEnd, txt_consoleFull.Document.ContentEnd);
@@ -317,14 +325,32 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
                 tr.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.DarkGray);
                 msgCount++;
             }
-            tr = new TextRange(txt_consoleFull.Document.ContentEnd, txt_consoleFull.Document.ContentEnd);
-            tr.Text = string.Format("{0}\r", msg);
-            tr.ApplyPropertyValue(TextElement.ForegroundProperty, color);
+            if (msgType == MsgType.Link)
+            {
+                Paragraph p = new Paragraph();
+                Hyperlink link = new Hyperlink(new Run(msg));
+                link.NavigateUri = new Uri(msg);
+                link.RequestNavigate += (s, e) => { System.Diagnostics.Process.Start(e.Uri.ToString()); };
+                p.Inlines.Add(link);
+                txt_consoleFull.Document.Blocks.Add(p);
+            }
+            else
+            {
+                tr = new TextRange(txt_consoleFull.Document.ContentEnd, txt_consoleFull.Document.ContentEnd);
+                tr.Text = string.Format("{0}\r", msg);
+                tr.ApplyPropertyValue(TextElement.ForegroundProperty, color);
+            }
+            txt_consoleFull.EndChange();
             //}
             try
             {
-                Rect r = txt_consoleFull.Document.ContentEnd.GetCharacterRect(LogicalDirection.Backward);
-                txt_consoleFull.ScrollToVerticalOffset(r.Y);
+                // txt_consoleFull.ScrollToEnd();
+                txt_consoleFull.Dispatcher.Invoke(() =>
+                {
+                    Rect r = txt_consoleFull.Document.ContentEnd.GetCharacterRect(LogicalDirection.Backward);
+                    txt_consoleFull.ScrollToVerticalOffset(r.Y);
+                });
+
             }
             catch { }
         }

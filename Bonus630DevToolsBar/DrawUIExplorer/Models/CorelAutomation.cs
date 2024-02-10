@@ -112,18 +112,6 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
             }
         }
 
-#if X9
-        public string LoadLocalizedString(string guid)
-        {
-
-            return app.FrameWork.Application.LoadLocalizedString(guid);
-
-        }
-#endif
-        //public void b()
-        //{
-        //    var a = corelApp.FrameWork.CommandBars[0].Controls[0].Parameter;
-        //}
         public void ShowHideCommandBar(IBasicData basicData, bool show = true)
         {
             try

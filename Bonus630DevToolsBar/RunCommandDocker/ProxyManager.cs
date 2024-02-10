@@ -148,6 +148,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                 var c = (CommandProxy)o.Unwrap();
 
                 command.Returns = c.RunCommand();
+                command.ConsoleOut = c.ConsoleOut;
                 command.LastRunFails = false;
             }
         

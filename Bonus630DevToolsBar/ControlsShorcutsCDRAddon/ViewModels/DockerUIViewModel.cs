@@ -51,6 +51,7 @@ namespace br.com.Bonus630DevToolsBar.ControlsShorcutsCDRAddon.ViewModels
             this.dispatcher = Dispatcher.CurrentDispatcher;
             core = new Core();
             core.StartCore(Path.Combine(this.corelApp.Path, "UIConfig\\DrawUI.xml"), this.corelApp);
+            core.ResourcesExtractor.GetGuids();
             core.LoadListsFinish += Core_LoadListsFinish;
             core.SearchResultEvent += Core_SearchResultEvent;
         }
