@@ -172,7 +172,7 @@ namespace br.com.Bonus630DevToolsBar.CQLRunner
                         {
                             if (sr.Count == 0)
                             {
-                                SetConsoleMessage("No shape selected",false);
+                                SetConsoleMessage("No shape selected", false);
                                 return;
                             }
                             //  this.corelApp.ActiveWindow.ActiveView.SetViewArea(sr.LeftX, sr.BottomY, sr.SizeWidth , sr.SizeHeight  );
@@ -232,6 +232,18 @@ namespace br.com.Bonus630DevToolsBar.CQLRunner
             for (int i = 1; i <= sr.Count; i++)
             {
                 Shape s = corelApp.ActiveLayer.CreateArtisticText(0, 0, i.ToString());
+                if (sr[i].SizeWidth > sr[i].SizeHeight)
+                {
+                    double h = s.SizeHeight;
+                    s.SizeHeight = sr[i].SizeHeight;
+                    s.SizeWidth = sr[i].SizeWidth * h / sr[i].SizeHeight;
+                }
+                else
+                {
+                    double w = s.SizeWidth;
+                    s.SizeWidth = sr[i].SizeWidth;
+                    s.SizeHeight = sr[i].SizeHeight * w / sr[i].SizeWidth;
+                }
                 s.CenterX = sr[i].CenterX;
                 s.CenterY = sr[i].CenterY;
                 s.ConvertToCurves();
