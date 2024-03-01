@@ -199,7 +199,7 @@ The Icon Toolset provides an all-encompassing solution for icon creation within 
 
 To utilize the Icon Toolset, explore the intuitive interface and take advantage of its various features for creating and previewing icons. Detailed instructions on installation, usage guidelines, and examples can be found in the accompanying documentation, enhancing your icon creation workflow in CorelDRAW.
 
-7.: Print Screen Tool
+10.: Print Screen Tool
 
 The Print Screen Tool provides a convenient way to capture an image of the active drawing window in CorelDRAW. This automated utility saves the screenshots in the same folder as the active document. If the document hasn't been saved yet, a folder selection window is prompted to choose the saving location. Screenshots are automatically named, and the capture time is added to the filename, maintaining a chronological order.
 
@@ -217,7 +217,7 @@ The Print Screen Tool streamlines the process of capturing images from the activ
 
 To use the Print Screen Tool, simply activate it to capture the desired image. If the document hasn't been saved, you'll be prompted to choose the saving folder. 
 
-8.: Recent Files Box
+11.: Recent Files Box
 
 The Recent Files Box is a handy tool that allows you to store your recent files for quick access. With this tool, you can conveniently save and organize your recent files, enabling easy retrieval and the option to automatically load them upon CorelDRAW startup.
 

@@ -192,6 +192,7 @@
     </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -226,6 +227,7 @@
     <Compile Include="Converters\InvertEmptyStringToVisibilityConverter.cs" />
     <Compile Include="Converters\MultiItemConverter.cs" />
     <Compile Include="Converters\NormalizeImagePathConverter.cs" />
+    <Compile Include="Converters\PathToImageConverter.cs" />
     <Compile Include="Converters\StringLenToVisibilityConverter.cs" />
     <Compile Include="Converters\TypeToBoolConverter.cs" />
     <Compile Include="CQLRunner\CQLRunner.xaml.cs">
@@ -262,12 +264,16 @@
     <Compile Include="Folders\Folders.xaml.cs">
       <DependentUpon>Folders.xaml</DependentUpon>
     </Compile>
+    <Compile Include="GMSDragger\CommandManager.xaml.cs">
+      <DependentUpon>CommandManager.xaml</DependentUpon>
+    </Compile>
     <Compile Include="GMSDragger\GMSLoader.xaml.cs">
       <DependentUpon>GMSLoader.xaml</DependentUpon>
     </Compile>
     <Compile Include="GMSDragger\Dragger.xaml.cs">
       <DependentUpon>Dragger.xaml</DependentUpon>
     </Compile>
+    <Compile Include="GMSDragger\MacrosManager.cs" />
     <Compile Include="IconCreatorHelper\Generator.cs" />
     <Compile Include="IconCreatorHelper\IconCreatorHelperUI.xaml.cs">
       <DependentUpon>IconCreatorHelperUI.xaml</DependentUpon>
@@ -517,6 +523,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Folders\Folders.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GMSDragger\CommandManager.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

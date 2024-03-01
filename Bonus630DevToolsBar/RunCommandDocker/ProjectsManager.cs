@@ -251,6 +251,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         {
             if (command.HasParam)
                 command.PrepareArguments();
+            command.LastRunFails = false;
             proxyManager.RunCommandAsync(command);
         }
 

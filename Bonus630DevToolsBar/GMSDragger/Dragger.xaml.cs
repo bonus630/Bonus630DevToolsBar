@@ -1,19 +1,22 @@
 ﻿using br.com.Bonus630DevToolsBar.CustomControls;
+using br.com.Bonus630DevToolsBar.Folders;
 using br.com.Bonus630DevToolsBar.RunCommandDocker.Styles;
 using Corel.Interop.VGCore;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
-
-
+using f = System.Windows.Forms;
 using c = Corel.Interop.VGCore;
+
 
 namespace br.com.Bonus630DevToolsBar.GMSDragger
 {
@@ -25,9 +28,9 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
         c.Application corelApp;
 
         string gmsPath = "";
-        List<string> resultList = new List<string>();
+       // List<string> resultList = new List<string>();
         public readonly string VBAEditorGuid = "28e16db6-6339-440d-af0d-f58ac27c115d";
-
+       
 
         public Dragger(object app)
         {
@@ -35,7 +38,6 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
             InitializeComponent();
             try
             {
-
                 this.corelApp = app as c.Application;
                 gmsPath = corelApp.GMSManager.UserGMSPath;
                 this.Loaded += Dragger_Loaded;
@@ -59,15 +61,12 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
         private void Dragger_Loaded(object sender, RoutedEventArgs e)
         {
             LoadThemeFromPreference();
-
+            //teste remover
+          // InstallThis(new string[] { @"C:\Users\bonus\OneDrive\Ambiente de Trabalho\Power Resize 1-03 2022.rar" });
         }
 
         protected override void OnDragOver(DragEventArgs e)
         {
-
-
-
-
             base.OnDragEnter(e);
         }
         protected override void OnDrop(DragEventArgs e)
@@ -75,10 +74,13 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
             try
             {
-
-                bool remove = e.KeyStates == (DragDropKeyStates.ControlKey | DragDropKeyStates.ShiftKey);
-
-                processFiles(files, remove);
+                if (e.KeyStates == (DragDropKeyStates.ControlKey | DragDropKeyStates.ShiftKey | DragDropKeyStates.AltKey))
+                    InstallThis(files);
+                else
+                {
+                    bool remove = e.KeyStates == (DragDropKeyStates.ControlKey | DragDropKeyStates.ShiftKey);
+                    processFiles(files, remove);
+                }
             }
             catch (Exception ex)
             {
@@ -234,6 +236,11 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
             return false;
         }
 
+        private void InstallThis(string[] files)
+        {
+            MacrosManager mm = new MacrosManager(this.corelApp, files);
+        }
+     
         private void Button_Click(object sender, RoutedEventArgs e)
         {
 

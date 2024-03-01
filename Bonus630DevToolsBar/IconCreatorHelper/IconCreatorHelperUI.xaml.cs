@@ -563,7 +563,7 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
             for (int i = 0; i < pages.Length; i++)
             {
                 sr.Clone();
-                sr.MoveToLayer(pages[1].Layers[i]);
+                sr.MoveToLayer(pages[i].Layers[i]);
             }
 
         }

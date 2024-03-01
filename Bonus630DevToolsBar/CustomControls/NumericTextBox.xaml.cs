@@ -27,6 +27,7 @@ namespace br.com.Bonus630DevToolsBar.CustomControls
         char regionSymbol;
         char toReplaceSymbol;
         Regex rg;
+        bool textChangedByValue = true;
         public NumericTextBox()
         {
             InitializeComponent();
@@ -37,13 +38,14 @@ namespace br.com.Bonus630DevToolsBar.CustomControls
                 toReplaceSymbol = ',';
 
             rg = NumericTextBox.InstantiateRegex(this.DecimalPlaces, this.NumericType);
-            //this.DataContext = this;
+
         }
         public event Action<double> ValueChangedEvent;
 
         #region DependencyProperties
 
-        public static readonly DependencyProperty UnitProperty = DependencyProperty.Register("Unit", typeof(string), typeof(NumericTextBox), new PropertyMetadata(null));
+        public static readonly DependencyProperty UnitProperty = DependencyProperty.Register("Unit",
+            typeof(string), typeof(NumericTextBox), new PropertyMetadata(null));
         [Browsable(true)]
         [Category("Extras")]
         public string Unit
@@ -51,10 +53,8 @@ namespace br.com.Bonus630DevToolsBar.CustomControls
             get { return (string)GetValue(UnitProperty); }
             set { SetValue(UnitProperty, value); }
         }
-
-  
-
-        public static readonly DependencyProperty NumericTypeProperty = DependencyProperty.Register("NumericType", typeof(ControlDownNumericType), typeof(NumericTextBox), new PropertyMetadata(ControlDownNumericType._Double));
+        public static readonly DependencyProperty NumericTypeProperty = DependencyProperty.Register("NumericType",
+            typeof(ControlDownNumericType), typeof(NumericTextBox), new PropertyMetadata(ControlDownNumericType._Double));
         [Browsable(true)]
         [Category("Extras")]
         public ControlDownNumericType NumericType
@@ -63,7 +63,8 @@ namespace br.com.Bonus630DevToolsBar.CustomControls
             set { SetValue(NumericTypeProperty, value); }
         }
 
-        public static readonly DependencyProperty DefaultValueProperty = DependencyProperty.Register("DefaultValue", typeof(double), typeof(NumericTextBox), new PropertyMetadata(null));
+        public static readonly DependencyProperty DefaultValueProperty = DependencyProperty.Register("DefaultValue",
+            typeof(double), typeof(NumericTextBox), new PropertyMetadata(0d, new PropertyChangedCallback(OnDefaultValuePropertyChangedCallback)));
         [Browsable(true)]
         [Category("Extras")]
         public double DefaultValue
@@ -72,7 +73,8 @@ namespace br.com.Bonus630DevToolsBar.CustomControls
             set { SetValue(DefaultValueProperty, value); }
         }
 
-        public static readonly DependencyProperty DecimalPlacesProperty = DependencyProperty.Register("DecimalPlaces", typeof(int), typeof(NumericTextBox), new PropertyMetadata(2,new PropertyChangedCallback(ChangedDecimalPlaces)));
+        public static readonly DependencyProperty DecimalPlacesProperty = DependencyProperty.Register("DecimalPlaces",
+            typeof(int), typeof(NumericTextBox), new PropertyMetadata(2, new PropertyChangedCallback(OnChangedDecimalPlacesCallback)));
         [Browsable(true)]
         [Category("Extras")]
         public int DecimalPlaces
@@ -94,85 +96,72 @@ namespace br.com.Bonus630DevToolsBar.CustomControls
         }
         public Visibility SetVisible { set { this.Visibility = value; } }
 
+        public static readonly DependencyProperty ValueProperty = DependencyProperty.Register("Value",
+            typeof(double), typeof(NumericTextBox), new PropertyMetadata(0d, OnValuePropertyChangedCallback));
 
 
         private double prevValue = 0;
         private double _value = 0;
+        [Browsable(false)]
         public double Value
         {
-            get
-            {
+            get { return (double)GetValue(ValueProperty); }
+            set { SetValue(ValueProperty, value); }
+            //get
+            //{
 
-                double.TryParse(Text.Replace(toReplaceSymbol, regionSymbol), out _value);
-                return _value;
-            }
-            set
-            {
-                _value = value;
-                Text = _value.ToString();
-            }
+            //    double.TryParse(Text.Replace(toReplaceSymbol, regionSymbol), out _value);
+            //    return _value;
+            //}
+            //set
+            //{
+            //    _value = value;
+            //    Text = _value.ToString();
+            //}
         }
-
-        //public event EventHandler<Double> ValueChanged;
-
 
         private void restoreDefault()
         {
-            this.Text = "0";
+            this.Text = DefaultValue.ToString();
         }
         private void checkTextFormat(object sender, TextCompositionEventArgs e)
         {
-            //e.Handled = true; não continua a adição de texto
-            //return;
-
             string text = (e.Source as TextBox).Text;
             string prevText = e.Text;
             bool stop = false;
             stop = !(rg.IsMatch(text) & rg.IsMatch(prevText));
             if (prevText == regionSymbol.ToString() || prevText == toReplaceSymbol.ToString())
             {
-
                 stop = (text.Contains(regionSymbol) || text.Contains(toReplaceSymbol));
                 if (this.NumericType == ControlDownNumericType._Int)
                     stop = true;
-                if (prevText == toReplaceSymbol.ToString() && !stop)
+                if (!stop)
                 {
                     TextBox tb = sender as TextBox;
-                    if (tb.Text.Length == 0)
-                        tb.AppendText(regionSymbol.ToString());
                     int caretIndex = tb.CaretIndex;
-                    tb.Text = tb.Text.Insert(caretIndex, "0");
+                    if (tb.Text.Length == 0 || caretIndex == 0)
+                    {
+                        tb.Text = tb.Text.Insert(caretIndex, prevText);
+                        caretIndex++;
+                    }
+                    else
+                        tb.Text = tb.Text.Insert(caretIndex, prevText);
+                    //tb.AppendText(prevText);
+                    caretIndex++;
 
-                    tb.CaretIndex = caretIndex + 1;
-                    e.Handled = true;
-                    return;
-                }
-                if (prevText == regionSymbol.ToString() && !stop)
-                {
-                    TextBox tb = sender as TextBox;
-                    if (tb.Text.Length == 0)
-                        tb.AppendText("0");
-                    int caretIndex = tb.CaretIndex;
-                    tb.Text = tb.Text.Insert(caretIndex, regionSymbol.ToString());
-
-                    tb.CaretIndex = caretIndex + 1;
+                    tb.CaretIndex = caretIndex;
                     e.Handled = true;
                     return;
                 }
             }
+
             e.Handled = stop;
             Debug.WriteLine("TXT:" + (sender as TextBox).Text);
         }
-      
-        private static void ChangedDecimalPlaces(DependencyObject d,DependencyPropertyChangedEventArgs e)
-        {
-            NumericTextBox ntx = d as NumericTextBox;
-            ntx.rg = InstantiateRegex((int)e.NewValue, ntx.NumericType);
-        }
 
-        private static Regex InstantiateRegex(int decimalPlaces,ControlDownNumericType numericType)
+        private static Regex InstantiateRegex(int decimalPlaces, ControlDownNumericType numericType)
         {
-          
+
             string pattern = "";
             int d = 1;
             if (decimalPlaces > d)
@@ -193,12 +182,20 @@ namespace br.com.Bonus630DevToolsBar.CustomControls
         }
         private void OnValueChanged()
         {
-            if (prevValue == Value)
+            if (prevValue == Value && textChangedByValue)
+            {
+                textChangedByValue = false;
                 return;
+            }
             else
+            {
+                double.TryParse(Text.Replace(toReplaceSymbol, regionSymbol), out _value);
+                Value = _value;
                 prevValue = Value;
+            }
             if (ValueChangedEvent != null)
                 ValueChangedEvent(Value);
+
         }
         protected override void OnGotFocus(RoutedEventArgs e)
         {
@@ -226,9 +223,22 @@ namespace br.com.Bonus630DevToolsBar.CustomControls
         #endregion
 
         #region Callbacks
-        private static void OnDecimalPlacesChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void OnChangedDecimalPlacesCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-
+            NumericTextBox ntx = d as NumericTextBox;
+            ntx.rg = InstantiateRegex((int)e.NewValue, ntx.NumericType);
+        }
+        private static void OnDefaultValuePropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            NumericTextBox ntx = d as NumericTextBox;
+            ntx.textChangedByValue = true;
+            ntx.Text = e.NewValue.ToString();
+        }
+        private static void OnValuePropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            NumericTextBox ntx = d as NumericTextBox;
+            ntx.textChangedByValue = true;
+            ntx.Text = e.NewValue.ToString();
 
         }
         #endregion

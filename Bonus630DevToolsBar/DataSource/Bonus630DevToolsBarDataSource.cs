@@ -281,7 +281,7 @@ namespace br.com.Bonus630DevToolsBar.DataSource
             of.Filter = "ico file (*.ico)|*.ico";
             of.Title = "Select a ico file";
 #else
-            of.Filter = "Image file (*.bmp)|*.bmp;(*.jpg)|*.jpg";
+            of.Filter = "Image files (*.bmp, *.jpg)|*.bmp;*.jpg";
             of.Title = "Select a image file";
 #endif
             of.Multiselect = false;
