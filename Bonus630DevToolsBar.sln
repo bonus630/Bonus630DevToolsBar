@@ -19,6 +19,8 @@ Global
 		2021 Release|Any CPU = 2021 Release|Any CPU
 		2022 Debug|Any CPU = 2022 Debug|Any CPU
 		2022 Release|Any CPU = 2022 Release|Any CPU
+		2024 Debug|Any CPU = 2024 Debug|Any CPU
+		2024 Release|Any CPU = 2024 Release|Any CPU
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 		X7 Debug|Any CPU = X7 Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{8CD4556C-95AF-423F-B5EA-F87E061163FD}.2022 Debug|Any CPU.Build.0 = 2022 Debug|Any CPU
 		{8CD4556C-95AF-423F-B5EA-F87E061163FD}.2022 Release|Any CPU.ActiveCfg = 2022 Release|Any CPU
 		{8CD4556C-95AF-423F-B5EA-F87E061163FD}.2022 Release|Any CPU.Build.0 = 2022 Release|Any CPU
+		{8CD4556C-95AF-423F-B5EA-F87E061163FD}.2024 Debug|Any CPU.ActiveCfg = 2024 Debug|Any CPU
+		{8CD4556C-95AF-423F-B5EA-F87E061163FD}.2024 Debug|Any CPU.Build.0 = 2024 Debug|Any CPU
+		{8CD4556C-95AF-423F-B5EA-F87E061163FD}.2024 Release|Any CPU.ActiveCfg = 2024 Release|Any CPU
+		{8CD4556C-95AF-423F-B5EA-F87E061163FD}.2024 Release|Any CPU.Build.0 = 2024 Release|Any CPU
 		{8CD4556C-95AF-423F-B5EA-F87E061163FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8CD4556C-95AF-423F-B5EA-F87E061163FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8CD4556C-95AF-423F-B5EA-F87E061163FD}.Release|Any CPU.ActiveCfg = X8 Release|Any CPU

@@ -33,8 +33,15 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
         { get { return files[i]; }set { Files[i] = value; OnPropertyChanged("Files"); } }
         public RecentFileViewModel this[string fullName]
         { 
-            get { 
-                return files.SingleOrDefault(r => r.FullName.Equals(fullName, StringComparison.InvariantCultureIgnoreCase)); 
+            get {
+                //estamos com um erro aqui, mas ele vem de outro lugar, estão sendo salvos arquivos duplicados na lista files
+                //return files.SingleOrDefault(r => r.FullName.Equals(fullName, StringComparison.InvariantCultureIgnoreCase));
+                //
+                var v = files.Where(r => r.FullName.Equals(fullName, StringComparison.InvariantCultureIgnoreCase));
+                if (v!=null && v.Count() > 0)
+                    return v.First();
+                else
+                    return null;
             }  }
 
         /// <summary>

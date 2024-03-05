@@ -235,14 +235,14 @@ namespace br.com.Bonus630DevToolsBar.CQLRunner
                 if (sr[i].SizeWidth > sr[i].SizeHeight)
                 {
                     double h = s.SizeHeight;
-                    s.SizeHeight = sr[i].SizeHeight;
-                    s.SizeWidth = sr[i].SizeWidth * h / sr[i].SizeHeight;
+                    s.SizeHeight = sr[i].SizeHeight- sr[i].SizeHeight*0.02d;
+                    s.SizeWidth = s.SizeWidth *  sr[i].SizeHeight / h;
                 }
                 else
                 {
                     double w = s.SizeWidth;
-                    s.SizeWidth = sr[i].SizeWidth;
-                    s.SizeHeight = sr[i].SizeHeight * w / sr[i].SizeWidth;
+                    s.SizeWidth = sr[i].SizeWidth - sr[i].SizeWidth * 0.02d;
+                    s.SizeHeight = s.SizeHeight *  s.SizeWidth / w;
                 }
                 s.CenterX = sr[i].CenterX;
                 s.CenterY = sr[i].CenterY;

@@ -300,6 +300,7 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
                 }
                 corelApp.EndDraw();
                 updateImgs();
+                Doc.Save();
             }
 
         }
@@ -354,10 +355,7 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
             return true;
         }
 
-
-
         //https://learn.microsoft.com/en-us/visualstudio/extensibility/ux-guidelines/images-and-icons-for-visual-studio?view=vs-2022
-
         public void PreparePage(Page page, double pageSize = 256, bool optimization = true)
         {
 
@@ -424,9 +422,6 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
                 Doc.EndCommandGroup();
 
         }
-
-
-
         public string ExportPng(string name, string folder = "D:\\ExportedPNG", int size = 256, Page page = null, bool optimization = true)
         {
             if (optimization)
@@ -497,9 +492,6 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
             }
             return pngFile;
         }
-
-
-
         public void PrepareFiles(string folder)
         {
             if (!HasDoc())
@@ -539,7 +531,11 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
                 DirectoryInfo di = new DirectoryInfo(folder);
                 foreach (var item in di.GetFiles())
                 {
-                    item.Delete();
+                    try
+                    {
+                        item.Delete();
+                    }
+                    catch { }
                 }
                 return folder;
             }
@@ -652,6 +648,236 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
         {
             Initialize();
         }
+        private int lastSize = 0;
+        private async Task IconIsReadyAsync(string path)
+        {
+            Debug.WriteLine("eNTER ICON");
+            int security = 0;
+            while (!File.Exists(path) && security < 500)
+            {
+                await Task.Delay(40);
+                security++;
+                Debug.WriteLine(security);
+            }
+        }
+        private async Task SetIconAsync(string path)
+        {
+            
+            if (File.Exists(path))
+            {
+                try
+                {
+                    await Task.Run( ()=> {Debug.WriteLine("ENTER PREVIEW");
+                        var commandBar = corelApp.FrameWork.CommandBars["Bonus630 Dev Tools"];
+
+                        foreach (Corel.Interop.VGCore.Control item in commandBar.Controls)
+                        {
+                            if (item.ID.Equals("657042cb-3594-43a1-80bf-c8a27fd43146"))
+                                item.SetIcon2(path);
+                        } });
+                }
+                catch
+                {
+                    //this.Dispatcher.Invoke(() =>
+                    //{
+                    //    (sender as System.Windows.Controls.Button).IsEnabled = true;
+                    //});
+                }
+            }
+        }
+        private void StartWatcher()
+        {
+            fileSystemWatcher = new FileSystemWatcher(PreviewFolder);
+            fileSystemWatcher.EnableRaisingEvents = true;
+            fileSystemWatcher.Filter = "*.png";
+            fileSystemWatcher.Changed += (s, ef) => { updateImgByFileName(ef.Name); };
+            //fileSystemWatcher.Deleted += (s, ef) => { updateImgByFileName(ef.Name); };
+            fileSystemWatcher.Created += (s, ef) => { updateImgByFileName(ef.Name); };
+            Doc.ShapeDelete += (count) =>
+            {
+                try
+                {
+                    ShapeRange sr = GetShapeRange(corelApp.ActivePage);
+                    if (sr.Count <= count)
+                    {
+
+                        string pngFile = string.Format("{0}\\{1}.png", PreviewFolder, corelApp.ActivePage.Name);
+                        if (File.Exists(pngFile))
+                        {
+                            File.Delete(pngFile);
+                        }
+                        updateImgByFileName(corelApp.ActivePage.Name);
+                    }
+                }
+                catch { }
+            };
+        }
+        private void GoTo(int resolution)
+        {
+            if (Doc == null)
+                return;
+            Page p = GetPageBySize(resolution);
+            if (p != null)
+            {
+                corelApp.EventsEnabled = false;
+                p.Activate();
+                try
+                {
+                    double margin = resolution / this.margin;
+                    Doc.ActiveWindow.ActiveView.ToFitArea(p.LeftX - margin, p.TopY + margin, p.RightX + margin, p.BottomY - margin);
+                    Doc.ActiveWindow.Refresh();
+                }
+                catch { }
+                finally
+                {
+                    corelApp.EventsEnabled = true;
+                }
+            }
+        }
+        private void GoTo(string pageName)
+        {
+            int size = 16;
+            if (!Int32.TryParse(pageName, out size) && resolutions.Count > 0)
+                size = resolutions[0];
+            GoTo(size);
+
+        }
+        private Page GetPageBySize(int size)
+        {
+            Page page = null;
+            if (Doc == null)
+                return page;
+            for (int i = 1; i <= Doc.Pages.Count; i++)
+            {
+                if (Math.Round(Doc.Pages[i].SizeWidth) == size)
+                {
+                    page = Doc.Pages[i];
+                    break;
+                }
+            }
+            return page;
+        }
+        private Layer GetIconLayer(int size)
+        {
+            Page p = GetPageBySize(size);
+
+            return GetIconLayer(p);
+        }
+        private Layer GetIconLayer(Page p)
+        {
+            if (p != null)
+            {
+                Layer l = p.Layers.Find(iconLayer);
+                return l;
+            }
+            return null;
+        }
+
+
+
+        private void InvertBackground(Page page)
+        {
+            try
+            {
+                corelApp.BeginDraw();
+                Shape bg = page.FindShape("Transparent BG");
+                bg.Locked = false;
+                if (bg.Fill.Type == cdrFillType.cdrNoFill)
+                    bg.Fill.UniformColor = colorBlack;
+                else
+                    bg.Fill.ApplyNoFill();
+                bg.OrderToBack();
+                bg.Locked = true;
+                corelApp.EndDraw();
+            }
+            catch { }
+        }
+        private void InvertShapesColors(ShapeRange sr)
+        {
+            for (int i = sr.Count; i > 0; i--)
+            {
+                InvertShapeColor(sr[i]);
+            }
+        }
+        public void InvertShapeColor(Shape s)
+        {
+            if (s.Type == cdrShapeType.cdrGroupShape)
+            {
+
+                for (int i = 1; i <= s.Shapes.Count; i++)
+                {
+                    InvertShapeColor(s.Shapes[i]);
+                }
+                return;
+            }
+
+            if (s.Fill.Type == cdrFillType.cdrPatternFill)
+            {
+                InvertColor(s.Fill.Pattern.FrontColor);
+                InvertColor(s.Fill.Pattern.BackColor);
+            }
+            if (s.Fill.Type == cdrFillType.cdrFountainFill)
+            {
+                foreach (FountainColor item in s.Fill.Fountain.Colors)
+                {
+                    InvertColor(item.Color);
+                }
+            }
+
+            if (s.Fill.Type == cdrFillType.cdrUniformFill)
+            {
+                InvertColor(s.Fill.UniformColor);
+            }
+
+            if (s.Outline.Type == cdrOutlineType.cdrOutline)
+            {
+                InvertColor(s.Outline.Color);
+            }
+
+        }
+
+        private void ScaleOutline(Shape item)
+        {
+            if (item.Type == cdrShapeType.cdrGroupShape)
+            {
+                for (int i = 1; i <= item.Shapes.Count; i++)
+                {
+                    ScaleOutline(item.Shapes[i]);
+                }
+                return;
+            }
+            double pw = item.Outline.PenWidth;
+            double ow = item.Outline.Width;
+            cdrOutlineType t = item.Outline.Type;
+            ///System.Windows.Forms.MessageBox.Show(ow.ToString());
+            item.Outline.ScaleWithShape = true;
+            if (pw == 0)
+                item.Outline.PenWidth = 0;
+            if (ow == 0)
+                item.Outline.Width = 0;
+            item.Outline.Type = t;
+        }
+        public void InvertColor(Corel.Interop.VGCore.Color color)
+        {
+            if (color.Type != cdrColorType.cdrColorRGB)
+                color.ConvertToRGB();
+            color.RGBRed = 255 - color.RGBRed;
+            color.RGBGreen = 255 - color.RGBGreen;
+            color.RGBBlue = 255 - color.RGBBlue;
+        }
+        private ShapeRange GetShapeRange(Page p)
+        {
+            Layer iconLayer = GetIconLayer(p);
+            ShapeRange sr = iconLayer.Shapes.All();
+            //p.Shapes.All();
+            try
+            {
+                //    sr.RemoveRange(p.Shapes.FindShapes(Type: cdrShapeType.cdrGuidelineShape));
+                sr.RemoveRange(p.FindShapes("Transparent BG"));
+            }
+            catch { }
+            return sr;
+        }
 
         private void btn_exportIcon_Click(object sender, RoutedEventArgs e)
         {
@@ -725,69 +951,6 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
                 //});
             }
         }
-        private async Task IconIsReadyAsync(string path)
-        {
-            Debug.WriteLine("eNTER ICON");
-            int security = 0;
-            while (!File.Exists(path) && security < 500)
-            {
-                await Task.Delay(40);
-                security++;
-                Debug.WriteLine(security);
-            }
-        }
-        private async Task SetIconAsync(string path)
-        {
-            
-            if (File.Exists(path))
-            {
-                try
-                {
-                    await Task.Run( ()=> {Debug.WriteLine("ENTER PREVIEW");
-                        var commandBar = corelApp.FrameWork.CommandBars["Bonus630 Dev Tools"];
-
-                        foreach (Corel.Interop.VGCore.Control item in commandBar.Controls)
-                        {
-                            if (item.ID.Equals("657042cb-3594-43a1-80bf-c8a27fd43146"))
-                                item.SetIcon2(path);
-                        } });
-                }
-                catch
-                {
-                    //this.Dispatcher.Invoke(() =>
-                    //{
-                    //    (sender as System.Windows.Controls.Button).IsEnabled = true;
-                    //});
-                }
-            }
-        }
-        private void StartWatcher()
-        {
-            fileSystemWatcher = new FileSystemWatcher(PreviewFolder);
-            fileSystemWatcher.EnableRaisingEvents = true;
-            fileSystemWatcher.Filter = "*.png";
-            fileSystemWatcher.Changed += (s, ef) => { updateImgByFileName(ef.Name); };
-            //fileSystemWatcher.Deleted += (s, ef) => { updateImgByFileName(ef.Name); };
-            fileSystemWatcher.Created += (s, ef) => { updateImgByFileName(ef.Name); };
-            Doc.ShapeDelete += (count) =>
-            {
-                try
-                {
-                    ShapeRange sr = GetShapeRange(corelApp.ActivePage);
-                    if (sr.Count <= count)
-                    {
-
-                        string pngFile = string.Format("{0}\\{1}.png", PreviewFolder, corelApp.ActivePage.Name);
-                        if (File.Exists(pngFile))
-                        {
-                            File.Delete(pngFile);
-                        }
-                        updateImgByFileName(corelApp.ActivePage.Name);
-                    }
-                }
-                catch { }
-            };
-        }
         private void btn_update_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -829,7 +992,6 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
             catch { }
         }
 
-        private int lastSize = 0;
         private void img_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             try
@@ -849,88 +1011,6 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
                 Debug.WriteLine("teste");
             }
 
-        }
-        private void GoTo(int resolution)
-        {
-            if (Doc == null)
-                return;
-            Page p = GetPageBySize(resolution);
-            if (p != null)
-            {
-                p.Activate();
-                try
-                {
-                    double margin = resolution / this.margin;
-                    Doc.ActiveWindow.ActiveView.ToFitArea(p.LeftX - margin, p.TopY + margin, p.RightX + margin, p.BottomY - margin);
-                    Doc.ActiveWindow.Refresh();
-                }
-                catch { }
-            }
-        }
-        private void GoTo(string pageName)
-        {
-            int size = 16;
-            if (!Int32.TryParse(pageName, out size) && resolutions.Count > 0)
-                size = resolutions[0];
-            GoTo(size);
-
-        }
-        private Page GetPageBySize(int size)
-        {
-            Page page = null;
-            if (Doc == null)
-                return page;
-            for (int i = 1; i <= Doc.Pages.Count; i++)
-            {
-                if (Math.Round(Doc.Pages[i].SizeWidth) == size)
-                {
-                    page = Doc.Pages[i];
-                    break;
-                }
-            }
-            return page;
-        }
-        private Layer GetIconLayer(int size)
-        {
-            Page p = GetPageBySize(size);
-
-            return GetIconLayer(p);
-        }
-        private Layer GetIconLayer(Page p)
-        {
-            if (p != null)
-            {
-                Layer l = p.Layers.Find(iconLayer);
-                return l;
-            }
-            return null;
-        }
-        private void StackPanel_DragOver(object sender, DragEventArgs e)
-        {
-
-            Debug.WriteLine("DragOver - ", "Dragging");
-            //System.Windows.Controls.Border border = sender as System.Windows.Controls.Border;
-
-            //int size = Int32.Parse(border.Tag.ToString());
-            ////e.Effects = DragDropEffects.Copy;
-            ////e.Effects = DragDropEffects.None; 
-            //Mouse.OverrideCursor = Cursors.Wait;
-        }
-
-        private void StackPanel_DragEnter(object sender, DragEventArgs e)
-        {
-            //Mouse.OverrideCursor = Cursors.Pen;
-            //e.Effects = DragDropEffects.None;
-
-            Debug.WriteLine("DragEnter - ", "Dragging");
-
-        }
-
-        private void StackPanel_DragLeave(object sender, DragEventArgs e)
-        {
-
-            Debug.WriteLine("DragLeave - ", "Dragging");
-            //Mouse.OverrideCursor = null;
         }
 
         private void MenuItemClearPage_Click(object sender, RoutedEventArgs e)
@@ -1017,91 +1097,6 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
         }
 
 
-        private void InvertBackground(Page page)
-        {
-            try
-            {
-                corelApp.BeginDraw();
-                Shape bg = page.FindShape("Transparent BG");
-                bg.Locked = false;
-                if (bg.Fill.Type == cdrFillType.cdrNoFill)
-                    bg.Fill.UniformColor = colorBlack;
-                else
-                    bg.Fill.ApplyNoFill();
-                bg.OrderToBack();
-                bg.Locked = true;
-                corelApp.EndDraw();
-            }
-            catch { }
-        }
-        private void InvertShapesColors(ShapeRange sr)
-        {
-            for (int i = sr.Count; i > 0; i--)
-            {
-                InvertShapeColor(sr[i]);
-            }
-        }
-        public void InvertShapeColor(Shape s)
-        {
-            if (s.Type == cdrShapeType.cdrGroupShape)
-            {
-
-                for (int i = 1; i <= s.Shapes.Count; i++)
-                {
-                    InvertShapeColor(s.Shapes[i]);
-                }
-                return;
-            }
-
-            if (s.Fill.Type == cdrFillType.cdrPatternFill)
-            {
-                InvertColor(s.Fill.Pattern.FrontColor);
-                InvertColor(s.Fill.Pattern.BackColor);
-            }
-            if (s.Fill.Type == cdrFillType.cdrFountainFill)
-            {
-                foreach (FountainColor item in s.Fill.Fountain.Colors)
-                {
-                    InvertColor(item.Color);
-                }
-            }
-
-            if (s.Fill.Type == cdrFillType.cdrUniformFill)
-            {
-                InvertColor(s.Fill.UniformColor);
-            }
-
-            if (s.Outline.Type == cdrOutlineType.cdrOutline)
-            {
-                InvertColor(s.Outline.Color);
-            }
-
-        }
-
-        public void InvertColor(Corel.Interop.VGCore.Color color)
-        {
-            if (color.Type != cdrColorType.cdrColorRGB)
-                color.ConvertToRGB();
-            color.RGBRed = 255 - color.RGBRed;
-            color.RGBGreen = 255 - color.RGBGreen;
-            color.RGBBlue = 255 - color.RGBBlue;
-        }
-        private ShapeRange GetShapeRange(Page p)
-        {
-            Layer iconLayer = GetIconLayer(p);
-            ShapeRange sr = iconLayer.Shapes.All();
-            //p.Shapes.All();
-            try
-            {
-                //    sr.RemoveRange(p.Shapes.FindShapes(Type: cdrShapeType.cdrGuidelineShape));
-                sr.RemoveRange(p.FindShapes("Transparent BG"));
-            }
-            catch { }
-            return sr;
-        }
-
-
-
         private void IconButton_MouseUp(object sender, MouseButtonEventArgs e)
         {
             ShapeRange sr = GetShapeRange(corelApp.ActivePage);
@@ -1145,9 +1140,14 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
 
             corelApp.BeginDraw();
             if (e.KeyStates == DragDropKeyStates.ControlKey)
-                nSr = sr.Clone();
-            else
+            {
                 nSr = sr.Duplicate();
+#if X14
+            sr.Duplicate();
+#endif
+            }
+            else
+                nSr = sr;
             foreach (Shape item in nSr)
             {
                 ScaleOutline(item);
@@ -1165,32 +1165,41 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
             nSr.PositionX = p.LeftX + deslX;
             nSr.PositionY = p.BottomY + deslY;
             Mouse.OverrideCursor = null;
-            corelApp.EndDraw();
+            
             GoTo(size);
+           
+            corelApp.EndDraw();
+            System.Windows.Forms.MessageBox.Show(sr[1].Page.Name.ToString());
         }
-
-
-
-        private void ScaleOutline(Shape item)
+        private void StackPanel_DragOver(object sender, DragEventArgs e)
         {
-            if (item.Type == cdrShapeType.cdrGroupShape)
-            {
-                for (int i = 1; i <= item.Shapes.Count; i++)
-                {
-                    ScaleOutline(item.Shapes[i]);
-                }
-                return;
-            }
-            double pw = item.Outline.PenWidth;
-            double ow = item.Outline.Width;
-            cdrOutlineType t = item.Outline.Type;
-            ///System.Windows.Forms.MessageBox.Show(ow.ToString());
-            item.Outline.ScaleWithShape = true;
-            if (pw == 0)
-                item.Outline.PenWidth = 0;
-            if (ow == 0)
-                item.Outline.Width = 0;
-            item.Outline.Type = t;
+
+            Debug.WriteLine("DragOver - ", "Dragging");
+            //System.Windows.Controls.Border border = sender as System.Windows.Controls.Border;
+
+            //int size = Int32.Parse(border.Tag.ToString());
+            ////e.Effects = DragDropEffects.Copy;
+            ////e.Effects = DragDropEffects.None; 
+            //Mouse.OverrideCursor = Cursors.Wait;
         }
+
+        private void StackPanel_DragEnter(object sender, DragEventArgs e)
+        {
+            //Mouse.OverrideCursor = Cursors.Pen;
+            //e.Effects = DragDropEffects.None;
+
+            Debug.WriteLine("DragEnter - ", "Dragging");
+
+        }
+
+        private void StackPanel_DragLeave(object sender, DragEventArgs e)
+        {
+
+            Debug.WriteLine("DragLeave - ", "Dragging");
+            //Mouse.OverrideCursor = null;
+        }
+
+
+
     }
 }
