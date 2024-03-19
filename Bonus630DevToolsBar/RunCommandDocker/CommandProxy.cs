@@ -7,8 +7,7 @@ using System.Runtime.Remoting;
 using System.Reflection;
 using System.Diagnostics;
 using System.Collections;
-using ExceptionDispatchInfo =
-    System.Runtime.ExceptionServices.ExceptionDispatchInfo;
+
 
 namespace br.com.Bonus630DevToolsBar.RunCommandDocker
 {

@@ -52,13 +52,13 @@
                 <ControlTemplate TargetType="{x:Type MenuItem}">
                     <Grid>
                         <Border x:Name="PART_BG" BorderBrush="{DynamicResource Default.Static.Background}" Background="{DynamicResource Default.Static.Background}" BorderThickness="1" >
-                            <Grid Height="20" Background="{DynamicResource Default.Static.Background}">
+                            <Grid Height="20" >
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="30" />
                                     <!--<ColumnDefinition Width="1"/>-->
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <ContentPresenter x:Name="PART_ICON_PRESENTER" Grid.Column="0" ContentSource="Icon" Margin="5,2,5,2" />
+                                <ContentPresenter x:Name="PART_ICON_PRESENTER" Grid.Column="0" ContentSource="Icon" Margin="5,2,5,2"/>
                                 <!--<Separator x:Name="PART_SEPARATOR" Grid.Column="1" BorderBrush="{DynamicResource Default.Static.Background}" HorizontalAlignment="Center">
                                     <Separator.LayoutTransform>
                                         <RotateTransform Angle="90"/>

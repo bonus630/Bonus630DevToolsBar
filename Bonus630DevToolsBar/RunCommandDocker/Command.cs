@@ -657,9 +657,10 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
     }
     public class Argument : CommandBase
     {
+        public Command Parent { get; set; }
+
         private Type argumentType;
 
-        public Command Parent { get; set; }
         public Type ArgumentType
         {
             get { return argumentType; }
