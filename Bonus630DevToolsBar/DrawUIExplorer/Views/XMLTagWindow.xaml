@@ -35,7 +35,7 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
-  
+
     <DockPanel  LastChildFill="True" Background="Transparent">
         <ProgressBar DockPanel.Dock="Top" Height="2" x:Name="pb_load" SmallChange="0.01" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FFF34A0B" Visibility="Collapsed" />
         <StatusBar DockPanel.Dock="Bottom" Height="20" Background="{DynamicResource Footer.Static.Background}" Foreground="{DynamicResource Default.Static.Foreground}">
@@ -73,13 +73,13 @@
                                  VerticalContentAlignment="Top" Padding="1,0" BorderBrush="{x:Null}" Background="Black" VerticalAlignment="Top" 
                                  Click="ChangeTheme_EventHandler" Tag="Theme_Black" ToolTip="Black"
                                  />
-             
+
 
                 </StackPanel>
             </StatusBarItem>
             <StatusBarItem Grid.Column="2" Padding="3,0">
                 <StackPanel Orientation="Horizontal" Background="{DynamicResource Footer.Static.Background}">
-                    
+
                     <custom:SVGButton Visibility="{Binding InCorel,Converter={StaticResource BoolVisibilityConverter}}" x:Name="btn_tryHighLightThis"  HorizontalAlignment="Left" Margin="7,0,2,0" Width="20" 
                                        Command="{Binding HighLightCommand}" Height="20" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" Padding="1,0" BorderBrush="{x:Null}" VerticalAlignment="Top" >
                         <custom:SVGButton.ToolTip>
@@ -175,6 +175,12 @@ d="m11.633 12.191 0.45 -0.447c2.081 0.069 2.114 -0.005 2.206 -0.219l0.572 -1.392
                                     <Setter Property="Background" Value="{DynamicResource TabControl.Selected.Background}" />
                                     <!--<Setter Property="Background" Value="#7F1D3806" />-->
                                 </DataTrigger>
+                                <DataTrigger Binding="{Binding Path=ChildrenSelected}" Value="true">
+                                    <Setter Property="Background" Value="{DynamicResource TreeViewItem.Children.Selected.Background}" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Path=Marked}" Value="true">
+                                    <Setter Property="Background" Value="{DynamicResource Footer.Static.Background}" />
+                                </DataTrigger>
                             </Style.Triggers>
                         </Style>
                     </TreeView.ItemContainerStyle>
@@ -210,6 +216,12 @@ d="m11.633 12.191 0.45 -0.447c2.081 0.069 2.114 -0.005 2.206 -0.219l0.572 -1.392
                                     <Setter Property="Background" Value="{DynamicResource TabControl.Selected.Background}" />
                                     <!--<Setter Property="Background" Value="#7F1D3806" />-->
                                 </DataTrigger>
+                                <DataTrigger Binding="{Binding Path=ChildrenSelected}" Value="true">
+                                    <Setter Property="Background" Value="{DynamicResource TreeViewItem.Children.Selected.Background}" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Path=Marked}" Value="true">
+                                    <Setter Property="Background" Value="{DynamicResource Footer.Static.Background}" />
+                                </DataTrigger>
                             </Style.Triggers>
                         </Style>
                     </TreeView.ItemContainerStyle>
@@ -235,6 +247,12 @@ d="m11.633 12.191 0.45 -0.447c2.081 0.069 2.114 -0.005 2.206 -0.219l0.572 -1.392
                                     <Setter Property="Background" Value="{DynamicResource TabControl.Selected.Background}" />
                                     <!--<Setter Property="Background" Value="#7F1D3806" />-->
                                 </DataTrigger>
+                                <DataTrigger Binding="{Binding Path=ChildrenSelected}" Value="true">
+                                    <Setter Property="Background" Value="{DynamicResource TreeViewItem.Children.Selected.Background}" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Path=Marked}" Value="true">
+                                    <Setter Property="Background" Value="{DynamicResource Footer.Static.Background}" />
+                                </DataTrigger>
                             </Style.Triggers>
                         </Style>
                     </TreeView.ItemContainerStyle>
@@ -253,8 +271,8 @@ d="m11.633 12.191 0.45 -0.447c2.081 0.069 2.114 -0.005 2.206 -0.219l0.572 -1.392
                                      Margin="0,0,0,1" x:Name="btn_expandConsole" IsChecked="{Binding ConsoleExpanded,Mode=TwoWay}"
                                      Panel.ZIndex="2" Height="18" VerticalAlignment="Bottom" HorizontalAlignment="Right"
                                      Width="18" BorderBrush="{x:Null}" />
-       
-                
+
+
                 <custom:SVGButton Margin="39,0,0,1" x:Name="btn_clearConsole" Click="btn_clearConsole_Click" Panel.ZIndex="2" Height="18" Width="18" VerticalAlignment="Bottom" HorizontalAlignment="Left" Tag="{Binding ElementName=tabControl_Details,Path=SelectedIndex}">
                     <custom:SVGButton.ToolTip>
                         <Label Content="Clear All" />
@@ -266,7 +284,7 @@ d="m11.633 12.191 0.45 -0.447c2.081 0.069 2.114 -0.005 2.206 -0.219l0.572 -1.392
                         <custom:path d="M2 5v1h1v9c1.234 0.631 2.692 1 4.236 1 0.002 0 0.003 0 0.005 0h1.52c0.001 0 0.003 0 0.004 0 1.544 0 3.002-0.369 4.289-1.025l-0.054-8.975h1v-1h-12zM6 13.92q-0.51-0.060-1-0.17v-6.75h1v6.92zM9 14h-2v-7h2v7zM11 13.72c-0.267 0.070-0.606 0.136-0.95 0.184l-0.050-6.904h1v6.72z" />
                     </custom:SVGButton.Paths>
                 </custom:SVGButton>
-         
+
 
             </Grid>
             <TabControl x:Name="tabControl_Details" MouseUp="tabControl_Details_MouseUp" Style="{DynamicResource TabControlStyle}" TabStripPlacement="Bottom">

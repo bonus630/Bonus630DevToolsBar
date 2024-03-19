@@ -28,9 +28,9 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
         c.Application corelApp;
 
         string gmsPath = "";
-       // List<string> resultList = new List<string>();
+        // List<string> resultList = new List<string>();
         public readonly string VBAEditorGuid = "28e16db6-6339-440d-af0d-f58ac27c115d";
-       
+
 
         public Dragger(object app)
         {
@@ -62,7 +62,7 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
         {
             LoadThemeFromPreference();
             //teste remover
-          // InstallThis(new string[] { @"C:\Users\bonus\OneDrive\Ambiente de Trabalho\Power Resize 1-03 2022.rar" });
+            // InstallThis(new string[] { @"C:\Users\bonus\OneDrive\Ambiente de Trabalho\Power Resize 1-03 2022.rar" });
         }
 
         protected override void OnDragOver(DragEventArgs e)
@@ -74,13 +74,23 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
             try
             {
-                if (e.KeyStates == (DragDropKeyStates.ControlKey | DragDropKeyStates.ShiftKey | DragDropKeyStates.AltKey))
-                    InstallThis(files);
-                else
+                bool remove = e.KeyStates == (DragDropKeyStates.ControlKey | DragDropKeyStates.ShiftKey);
+                if (remove)
                 {
-                    bool remove = e.KeyStates == (DragDropKeyStates.ControlKey | DragDropKeyStates.ShiftKey);
                     processFiles(files, remove);
+                    return;
                 }
+                if(e.KeyStates==DragDropKeyStates.ControlKey)
+                {
+                    processFiles(files, remove);
+                    return;
+                }
+                InstallThis(files);
+                //  if (e.KeyStates == (DragDropKeyStates.ControlKey | DragDropKeyStates.ShiftKey | DragDropKeyStates.AltKey))
+                //else
+                //{
+                //    processFiles(files, remove);
+                //}
             }
             catch (Exception ex)
             {
@@ -161,9 +171,7 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
             {
                 try
                 {
-                    if (!remove)
-                        File.Copy(arquivo, string.Format("{0}\\{1}", this.gmsPath, arquivo.Substring(arquivo.LastIndexOf("\\") + 1, arquivo.Length - arquivo.LastIndexOf("\\") - 1)));
-                    else
+                    if (remove)
                     {
                         string toReplace = "5351FFE607030703F8FD0803BECFCA6AB7796054D8A2E61F539CAD491169CD680FA4C6D26A";
                         // string arquivo = @"D:\CDRGMS\Shaping-X64-2020.gms";
@@ -221,6 +229,9 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
                         }
                         return true;
                     }
+                    else
+                        File.Copy(arquivo, string.Format("{0}\\{1}", this.gmsPath, arquivo.Substring(arquivo.LastIndexOf("\\") + 1, arquivo.Length - arquivo.LastIndexOf("\\") - 1)));
+
                 }
                 catch (Exception ex)
                 {
@@ -238,17 +249,19 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
 
         private void InstallThis(string[] files)
         {
-            MacrosManager mm = new MacrosManager(this.corelApp, files);
+            MacrosManager mm = new MacrosManager(this.corelApp, files, currentTheme);
         }
-     
+
         private void Button_Click(object sender, RoutedEventArgs e)
         {
 
             OpenFileDialog of = new OpenFileDialog();
-            of.Title = "Select gms files";
+            of.Filter = "Any File (*.*)|*.*";
+            of.Title = "Select any file(s)";
             if ((bool)of.ShowDialog())
             {
-                processFiles(of.FileNames);
+                InstallThis(of.FileNames);
+                //processFiles(of.FileNames);
             }
         }
         private void MenuItemUserGMS_Click(object sender, RoutedEventArgs e)

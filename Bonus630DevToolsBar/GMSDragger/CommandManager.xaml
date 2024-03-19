@@ -8,7 +8,23 @@
         mc:Ignorable="d"
         Title="CommandManager">
     <Window.Resources>
-        <converters:PathToImageConverter x:Key="PathToImageConverter" />
+        <ResourceDictionary>
+            <converters:PathToImageConverter x:Key="PathToImageConverter" />
+
+
+
+
+            <ResourceDictionary.MergedDictionaries>
+                <!--Este é o método correto para se carregar os recursos -->
+                <!--<ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/DrawUIExplorer/Resources/Colors.xaml"/>-->
+                <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/RunCommandDocker/Styles/Colors.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/RunCommandDocker/Styles/Styles.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/RunCommandDocker/Styles/ScrollComponentsStyles.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/RunCommandDocker/Styles/ListComponentsStyles.xaml"/>
+
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+
     </Window.Resources>
     <StackPanel>
         <ItemsControl ItemsSource="{Binding Commands}" Margin="10">

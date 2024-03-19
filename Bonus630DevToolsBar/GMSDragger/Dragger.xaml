@@ -5,7 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
                 xmlns:local="clr-namespace:br.com.Bonus630DevToolsBar.GMSDragger"
             mc:Ignorable="d" 
-            AllowDrop="True" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" MaxHeight="48" MaxWidth="48" MinWidth="20" MinHeight="20" Width="20" Height="20" Background="{DynamicResource ControlUI.Button.Static.Background}" Padding="1" BorderThickness="0" Click="Button_Click" >
+            AllowDrop="True" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" MaxHeight="48" MaxWidth="48" MinWidth="20" MinHeight="20" Width="20" Height="20" 
+        Background="{DynamicResource ControlUI.Button.Static.Background}" Padding="1" BorderThickness="0" Click="Button_Click" >
     <Button.Resources>
         <ResourceDictionary>
         <ResourceDictionary.MergedDictionaries>
@@ -64,7 +65,11 @@
 
 
     <Button.ToolTip>
-        <Label Content="Drag a GMS file" />
+        <StackPanel>
+            <Label Content="Drag files to install VBA macros" FontWeight="Bold" />
+            <Label Content="*.zip,*.rar,*.gms,folder" FontWeight="SemiBold"/>
+            <Label Content="Other file types will be copied" />
+        </StackPanel>
     </Button.ToolTip>
     <Button.ContextMenu>
         <ContextMenu>

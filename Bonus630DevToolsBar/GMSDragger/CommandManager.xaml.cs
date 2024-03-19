@@ -1,4 +1,5 @@
-﻿using System;
+﻿using br.com.Bonus630DevToolsBar.RunCommandDocker.Styles;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,10 +20,20 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
     /// </summary>
     public partial class CommandManager : Window
     {
-        public CommandManager(MacrosManager macrosManager)
+        public StylesController stylesController;
+        string theme = string.Empty;
+        public CommandManager(MacrosManager macrosManager,string theme)
         {
             InitializeComponent();
             this.DataContext = macrosManager;
+            stylesController = new StylesController(this.Resources);
+            this.theme = theme;
+            this.Loaded += CommandManager_Loaded;
+        }
+
+        private void CommandManager_Loaded(object sender, RoutedEventArgs e)
+        {
+            stylesController.LoadStyle(theme);
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -36,5 +47,6 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
             this.DialogResult = false;
             this.Close();
         }
+        
     }
 }

@@ -107,6 +107,8 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
         public BaseDataCommand GetDockersGuidCommand { get; protected set; }
         public BaseDataCommand GetIUnknownTypesCommand { get; protected set; }
         public BaseDataCommand RemoveMeCommand { get; protected set; }
+        public BaseDataCommand MarkCommand { get; protected set; }
+        public BaseDataCommand UnMarkCommand { get; protected set; }
 
 
 
@@ -131,9 +133,25 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
             GetDockersCaptionCommand = new BaseDataCommand(GetDockersCaptionExec, IsDockers);
             GetDockersGuidCommand = new BaseDataCommand(GetDockersGuidExec, IsDockers);
             RemoveMeCommand = new BaseDataCommand(RemoveMeExec, IsSearchData);
+            MarkCommand = new BaseDataCommand(Mark, IsUnMarked);
+            UnMarkCommand = new BaseDataCommand(Mark, IsMarked);
             HighLightCommand = new SimpleCommand(showHighLightItem);
             LayoutCommand = new BaseDataCommand(layoutAdorms, IsComplexLayout);
         }
+
+        private void Mark(IBasicData data)
+        {
+            data.Marked = !data.Marked;
+        }
+        private bool IsUnMarked(IBasicData data)
+        {
+            return !data.Marked;
+        } 
+        private bool IsMarked(IBasicData data)
+        {
+            return data.Marked;
+        }
+
         private bool IsDockers(IBasicData basicData)
         {
             if (basicData.TagName == "dockers")

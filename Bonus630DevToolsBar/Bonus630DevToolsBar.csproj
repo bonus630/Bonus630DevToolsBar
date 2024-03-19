@@ -175,12 +175,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-	  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == '2024 Debug|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == '2024 Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;X14</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;X15</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -189,7 +189,7 @@
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\$(CurrentCorelAbs)\</OutputPath>
     <OutDir>bin\Release\$(CurrentCorelAbs)\$(SolutionName)</OutDir>
-    <DefineConstants>TRACE;X14</DefineConstants>
+    <DefineConstants>TRACE;X15</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -202,6 +202,7 @@
       <HintPath>.\IconLib.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Build" />
+    <Reference Include="Microsoft.Build.Framework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.SQLite, Version=1.0.117.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
@@ -686,6 +687,9 @@
     <Content Include="Images\SortDescending.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Images\Uncheckmark.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Images\VbeReload.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -907,7 +911,7 @@
   </PropertyGroup>
   <!-- DependsOnTargets="CopyFiles" Condition="'$(Configuration)' == 'Release'" -->
   <Target Name="CreateShortcuts" DependsOnTargets="CopyFiles" AfterTargets="Build">
-    <Message Text="Olha esse cocô!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" />
+    <Message Text="Create Shortcuts" />
     <Exec Command="&quot;$(CurrentCorelPath)Addons\$(SolutionName)\CreateShortcuts.exe&quot;" />
   </Target>
 </Project>

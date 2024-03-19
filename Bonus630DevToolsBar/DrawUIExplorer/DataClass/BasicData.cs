@@ -26,6 +26,10 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.DataClass
         private bool isSpecialType = false;
         private string text;
         protected bool isContainer = false;
+
+        //protected IBasicData prevSelected;
+
+
         public string Text
         {
             get { return text; }
@@ -64,7 +68,20 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.DataClass
         public IBasicData Parent { get; set; }
 
         public event Action<bool, bool?, bool> SelectedEvent;
+        private bool childrenSelected;
 
+        public bool ChildrenSelected
+        {
+            get { return childrenSelected; }
+            set { childrenSelected = value; OnPropertyChanged(); }
+        }
+        private bool marked;
+
+        public bool Marked
+        {
+            get { return marked; }
+            set { marked = value; OnPropertyChanged(); }
+        }
 
         public BasicData()
         {
@@ -252,7 +269,10 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.DataClass
             }
             OnPropertyChanged("IsSelected");
             if (recursive && this.Parent != null)
+            {
+                this.Parent.ChildrenSelected = isSelected;
                 this.Parent.SetSelected(isSelected, isExpands, update, recursive);
+            }
         }
 
         public bool IAmUniqueTag()

@@ -38,6 +38,10 @@
     <Style x:Key="CheckmarkShapeRangeImage" TargetType="Image">
         <Setter Property="Source" Value="{Binding Source={StaticResource Checkmark},Converter={StaticResource ResourceToMediaImageConverter}}"/>
     </Style>
+    <System:String x:Key="Uncheckmark">Uncheckmark.png</System:String>
+    <Style x:Key="UncheckmarkShapeRangeImage" TargetType="Image">
+        <Setter Property="Source" Value="{Binding Source={StaticResource Uncheckmark},Converter={StaticResource ResourceToMediaImageConverter}}"/>
+    </Style>
 
     <System:String x:Key="Copy">Copy.png</System:String>
     <Style x:Key="CopyImage" TargetType="Image">

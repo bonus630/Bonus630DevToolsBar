@@ -82,38 +82,13 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
             core.NewMessage += Core_NewMessage;
             core.RequestUIHideVisibleChanged += Core_RequestUIHideVisibleChanged;
             core.MainWindowHandler = new WindowInteropHelper(this).Handle;
-            treeView_Nodes.SelectedItemChanged += (s, e) =>
-            {
-                if (treeView_Nodes.SelectedItem != null)
-                {
-                    if (core.InCorel)
-                        UpdateDetails(treeView_Nodes.SelectedItem, e);
-                    else
-                        UpdateDetailsNoAttached(treeView_Nodes.SelectedItem, e);
-                }
-            };
 
-            treeView_Ref.SelectedItemChanged += (s, e) =>
-            {
-                if (treeView_Ref.SelectedItem != null)
-                {
-                    if (core.InCorel)
-                        UpdateDetails(treeView_Ref.SelectedItem, e);
-                    else
-                        UpdateDetailsNoAttached(treeView_Ref.SelectedItem, e);
-                }
-            };
-
-            treeView_Search.SelectedItemChanged += (s, e) =>
-            {
-                if (treeView_Search.SelectedItem != null)
-                {
-                    if (core.InCorel)
-                        UpdateDetails(treeView_Search.SelectedItem, e);
-                    else
-                        UpdateDetailsNoAttached(treeView_Search.SelectedItem, e);
-                }
-            };
+            treeView_Nodes.SelectedItemChanged += TreeView_SelectedItem;
+            treeView_Ref.SelectedItemChanged += TreeView_SelectedItem;
+            treeView_Search.SelectedItemChanged += TreeView_SelectedItem;
+            treeView_Nodes.GotFocus += TreeView_SelectedItem;
+            treeView_Ref.GotFocus += TreeView_SelectedItem;
+            treeView_Search.GotFocus += TreeView_SelectedItem;
 
             dataContext.XmlDecode += DataContext_XmlDecode;
             inputControl.Core = core;
@@ -122,6 +97,20 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
                 StartProcess(saveLoad.LastFilePath);
             }
         }
+
+        private void TreeView_SelectedItem(object sender, RoutedEventArgs e)
+        {
+            TreeView tv = sender as TreeView;
+            if (tv.SelectedItem != null)
+            {
+                if (core.InCorel)
+                    UpdateDetails(tv.SelectedItem, e);
+                else
+                    UpdateDetailsNoAttached(tv.SelectedItem, e);
+            }
+        }
+      
+
         public void CallDialogFileSelect(bool drawui = true)
         {
             OpenFileDialog of = new OpenFileDialog();
@@ -369,7 +358,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
             if (core.CurrentBasicData != null)
                 core.CurrentBasicData.SetSelected(false, false, false, true);
             core.CurrentBasicData = data;
-
+            //treeView_Search
 
             core.SetIcon(data);
             data.SetSelected(true, true, false, true);
@@ -377,6 +366,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
                 core.HighLightItemHelper.UpdateLayoutMode(data);
             if (parent != null && (parent == "treeView_Nodes" || parent == "treeView_Search"))
             {
+               
                 //treeView_Ref.Items.Clear();
                 dataContext.RefList.Clear();
                 if (!string.IsNullOrEmpty(data.GuidRef))
@@ -390,6 +380,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
                     dataContext.RefList.Add(refBasicData);
                     treeView_Ref.ItemsSource = dataContext.RefList;
                 }
+                
                 if (treeView_Ref.Items.Count == 0 && treeView_Search.Items.Count == 0)
                     gridRef.Visibility = Visibility.Collapsed;
                 else

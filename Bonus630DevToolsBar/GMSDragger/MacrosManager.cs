@@ -13,6 +13,8 @@ using Microsoft.Win32;
 using c = Corel.Interop.VGCore;
 using Corel.Interop.VGCore;
 using System.Runtime.CompilerServices;
+using System.Xml.Linq;
+using System.Security.Cryptography;
 
 namespace br.com.Bonus630DevToolsBar.GMSDragger
 {
@@ -72,11 +74,13 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
             set { selectedCommandBar = value; OnPropertyChanged(); }
 
         }
-        public MacrosManager(c.Application corelApp, string[] files)
+        
+        public MacrosManager(c.Application corelApp, string[] files,string theme)
         {
             try
             {
                 this.corelApp = corelApp;
+                
                 corelApp.InitializeVBA();
             }
             catch
@@ -92,22 +96,12 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
                 CommandBars.Add(corelApp.FrameWork.CommandBars[i].Name);
             }
             processFiles2(files);
-            CommandManager cm = new CommandManager(this);
-
-
-            //Commands.Add(new MacroCommand("ab.cd.df") { FilePath = "abc"});
-            //icos.Add(@"C:\Users\bonus\OneDrive\Imagens\ICOS\packer.ico");
-            //icos.Add(@"C:\Users\bonus\OneDrive\Imagens\ICOS\qrcode.ico");
-
+            CommandManager cm = new CommandManager(this,theme);
 
             if ((bool)cm.ShowDialog())
             {
                 if(!string.IsNullOrEmpty(NewCommandBar) && !commandBars.Contains(newCommandBar))
                     this.corelApp.FrameWork.CommandBars.Add(newCommandBar);
-                //else
-                //{
-                //    MessageBox.Show("Co");
-                //}
                 for (int i = 0; i < this.Commands.Count; i++)
                 {
                     string name = Path.GetFileName(this.Commands[i].FilePath);
@@ -118,8 +112,27 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
                     }
                     catch { }
                     this.corelApp.GMSManager.Projects.Load(dest);
-                    c.Control c = corelApp.FrameWork.CommandBars[newCommandBar].Controls.AddCustomButton("2cc24a3e-fe24-4708-9a74-9c75406eebcd", this.commands[i].Command);
+                    var dsp = corelApp.FrameWork.Application.DataContext.GetDataSource("MacroMgrDockerDS");
+                    string xmlString = (string)dsp.GetProperty("MacroItemList");
+                    if (string.IsNullOrEmpty(xmlString))
+                        return ;
+
+                    XDocument xdoc = XDocument.Parse(xmlString);
+
+                    string[] paths = this.commands[i].Command.Split(new char[] { '.' }, options: StringSplitOptions.RemoveEmptyEntries);
+
+                    XElement resultElement = FindElementByPath(xdoc.Root, "VBA", paths);
+
+                    if (resultElement != null)
+                    {
+                        dsp.SetProperty("CurrentMacroItem", resultElement.ToString());
+                        dsp.InvokeMethod("OnAssignHotkey");
+                      
                    
+                    }
+                    c.Control c = corelApp.FrameWork.CommandBars[newCommandBar].Controls.AddCustomButton("2cc24a3e-fe24-4708-9a74-9c75406eebcd", this.commands[i].Command);
+
+
                     if (!string.IsNullOrEmpty(this.Commands[i].Ico))
                     {
                         name = Path.GetFileName(this.commands[i].Ico);
@@ -127,18 +140,38 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
                         try
                         {
                             File.Copy(this.Commands[i].Ico, dest);
+                            c.SetIcon2(dest);
                         }
                         catch { }
-                        c.SetIcon2(dest);
                     }
-
                 }
                 this.corelApp.FrameWork.CommandBars[newCommandBar].Visible = true;
-               // MessageBox.Show("aqui vamos instalar de fato");
+            }
+        }
+      
+        private XElement FindElementByPath(XElement parentElement, string targetGuid, string[] paths)
+        {
+            XElement currentElement = parentElement
+                .Elements("itemData")
+                .FirstOrDefault(e => (string)e.Attribute("guid") == targetGuid);
 
+            foreach (string path in paths)
+            {
+                if (currentElement != null)
+                {
+                    currentElement = currentElement
+                        .Elements("container")
+                        .Elements("itemData")
+                        .FirstOrDefault(e => (string)e.Attribute("text") == path);
+                }
+
+                if (currentElement == null)
+                {
+                    return null;
+                }
             }
 
-
+            return currentElement;
         }
         private void processZip(string zipFile)
         {
@@ -282,7 +315,12 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
         }
         private void processOthers(string path)
         {
-
+            try
+            {
+                File.Copy(path, this.corelApp.GMSManager.UserGMSPath);
+              
+            }
+            catch { }
         }
         private PTYPE getType(string path)
         {

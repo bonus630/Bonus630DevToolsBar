@@ -1169,7 +1169,7 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
             GoTo(size);
            
             corelApp.EndDraw();
-            System.Windows.Forms.MessageBox.Show(sr[1].Page.Name.ToString());
+            //System.Windows.Forms.MessageBox.Show(sr[1].Page.Name.ToString());
         }
         private void StackPanel_DragOver(object sender, DragEventArgs e)
         {

@@ -27,6 +27,23 @@
             <CompositeCollection>
                 <CollectionContainer Collection="{Binding Source={StaticResource refSource}}"  />
 
+                <MenuItem Header="Mark" Background="WhiteSmoke"
+		  CommandParameter="{Binding}" Command="{Binding Path=DataContext.MarkCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TreeView}}"
+			   Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}">
+                    <MenuItem.Icon>
+                        <Image Style="{DynamicResource CheckmarkShapeRangeImage}" />
+                    </MenuItem.Icon>
+                </MenuItem>
+
+                <MenuItem Header="UnMark" Background="WhiteSmoke"
+		  CommandParameter="{Binding}" Command="{Binding Path=DataContext.UnMarkCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TreeView}}"
+			   Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}">
+                    <MenuItem.Icon>
+                        <Image Style="{DynamicResource UncheckmarkShapeRangeImage}" />
+                    </MenuItem.Icon>
+                </MenuItem>
+
+
                 <MenuItem Header="XML" Background="WhiteSmoke"
 		  CommandParameter="{Binding}" Command="{Binding Path=DataContext.XmlCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TreeView}}"
 			   Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}">
@@ -148,6 +165,11 @@
 			   Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}">
 
                 </MenuItem>
+
+           
+
+
+
                 <MenuItem Header="Remove me" Background="WhiteSmoke"
 		  CommandParameter="{Binding}" Command="{Binding Path=DataContext.RemoveMeCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TreeView}}"
 			   Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}">

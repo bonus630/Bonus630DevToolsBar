@@ -10,6 +10,8 @@ using br.com.Bonus630DevToolsBar;
 using corel = Corel.Interop.VGCore;
 using Bonus630DevToolsBar;
 using System.Windows.Media;
+using System.Windows.Documents;
+using System.Windows.Interop;
 
 namespace br.com.Bonus630DevToolsBar.RunCommandDocker
 {
@@ -115,16 +117,43 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
 
             stylesController.LoadThemeFromPreference();
             pc.DataReceived += Pc_DataReceived;
+            pc.ErroReceived += Pc_ErroReceived;
             pc.VgCore = corelApp.ProgramPath + "Assemblies\\Corel.Interop.VGCore.dll";
             pc.AddonFolder = Path.Combine(corelApp.AddonPath, "Bonus630DevToolsBar");
+        }
+
+        private void Pc_ErroReceived(string obj)
+        {
+            txt_log.Dispatcher.Invoke(() =>
+            {
+                TextRange tr;
+                txt_log.BeginChange();
+           
+                    tr = new TextRange(txt_log.Document.ContentEnd, txt_log.Document.ContentEnd);
+                    tr.Text = string.Format("{0}\r", obj);
+                    tr.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.Crimson);
+
+                txt_log.EndChange();
+                txt_log.ScrollToEnd();
+            
+            });
         }
 
         private void Pc_DataReceived(string obj)
         {
             this.Dispatcher.Invoke(() =>
             {
-                txt_log.AppendText(obj);
-                txt_log.AppendText(Environment.NewLine);
+                TextRange tr;
+                txt_log.BeginChange();
+
+                tr = new TextRange(txt_log.Document.ContentEnd, txt_log.Document.ContentEnd);
+                tr.Text = string.Format("{0}\r", obj);
+              
+
+                txt_log.EndChange();
+
+                //txt_log.AppendText(obj);
+                //txt_log.AppendText(Environment.NewLine);
                 txt_log.ScrollToEnd();
             });
         }
@@ -259,7 +288,8 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             if (!string.IsNullOrEmpty(pc.LastProject))
             {
                 popup_log.IsOpen = true;
-                pc.Build();
+                //pc.MSBuild();
+               pc.DirectBuild();
             }
 
         }
@@ -283,7 +313,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
 
                 pc.ReplaceFiles();
                 popup_log.IsOpen = true;
-                pc.Build();
+                pc.MSBuild();
 
             }
             Reset();

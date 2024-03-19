@@ -8,6 +8,12 @@ using System.IO.Compression;
 using System.IO.Packaging;
 using System.Diagnostics;
 using System.Reflection;
+using Microsoft.Build.Execution;
+using Microsoft.Build.Evaluation;
+using Microsoft.Build.Framework;
+using Corel.Interop.VGCore;
+using System.Runtime.Remoting.Messaging;
+using Microsoft.Build.Exceptions;
 
 namespace br.com.Bonus630DevToolsBar.RunCommandDocker
 {
@@ -138,7 +144,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             catch { }
             ExtractFiles(tempPath, ProjectFolder);
         }
-        public void ExtractFiles(string zipPath,string destFolder)
+        public void ExtractFiles(string zipPath, string destFolder)
         {
             try
             {
@@ -191,19 +197,121 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             }
             return "";
         }
-        public void Build()
+        public void MSBuild()
         {
             if (!string.IsNullOrEmpty(LastProject))
                 StartMSBuild(string.Format("\"{0}\" /p:Configuration={1} /m", LastProject, config));
             //StartMSBuild(string.Format("\"{0}\" /p:Configuration=\"{1}\" /v:d /nologo /noconsolelogger{2}{3}"
             // , LastProject, config, "", loggerVariable));
         }
+        //private bool IsProjectInCollection(Microsoft.Build.Evaluation.Project project, IDictionary<string, string> globalProperties)
+        //{
+        //    foreach (ProjectInstance instance in BuildManager.DefaultBuildManager.GetProjectInstanceForBuild() .Keys)
+        //    {
+        //        if (instance.FullPath.Equals(project.FullPath, StringComparison.OrdinalIgnoreCase))
+        //        {
+        //            return true;
+        //        }
+        //    }
+        //    return false;
+        //}
+        Microsoft.Build.Evaluation.Project project;
+        private string prevProject = string.Empty;
+        public void DirectBuild()
+        {
+            if (!string.IsNullOrEmpty(LastProject))
+            {
 
+                try
+                {
+                    if(!LastProject.Equals(prevProject))
+                        project = new Microsoft.Build.Evaluation.Project(LastProject);
+                    prevProject = LastProject;
+           
+                    BuildRequestData requestData = null;
+                
+
+                    ErrorLogger eLog = new ErrorLogger();
+                    eLog.Verbosity = LoggerVerbosity.Minimal;
+                    eLog.BuildErrorEvent += (s, e) =>
+                    {
+                        OnErroReceived(e.Message);
+                    };
+                    eLog.BuildMessageEvent += (msg) =>
+                    {
+                        OnDataReceived(msg);
+                    };
+                    
+                    BuildParameters buildParameters = new BuildParameters
+                    {
+                        Loggers = new[] { eLog }
+
+                    };
+                    List<string> properties = new List<string>();
+                    properties.Add(config);
+
+                    Task.Run(() =>
+                    { 
+                        requestData = new BuildRequestData(project.CreateProjectInstance(), new string[] { "Build" }, null, BuildRequestDataFlags.ReplaceExistingProjectInstance, properties);
+                        BuildManager.DefaultBuildManager.Build(buildParameters, requestData);
+                        // Compilação
+                        //BuildManager.DefaultBuildManager.BeginBuild(buildParameters);
+
+                        //// Verifica se o projeto já está na coleção
+                        ////if (!IsProjectInCollection(project, BuildManager.DefaultBuildManager.ProjectInstanceGlobalProperties))
+                        //// {
+                        //requestData = new BuildRequestData(project.CreateProjectInstance(),new string[] {"Build" }, null, BuildRequestDataFlags.ReplaceExistingProjectInstance, properties);
+
+                        //BuildSubmission submission = BuildManager.DefaultBuildManager.PendBuildRequest(requestData);
+                        //submission.ExecuteAsync(null, null);
+                        //submission.WaitHandle.WaitOne();
+                        //////}
+
+                        //BuildManager.DefaultBuildManager.EndBuild();
+                    });
+                    ////try
+                    //{
+                   
+                    //}
+                    ////catch(InvalidProjectFileException fe)
+                    ////{
+                    ////    OnDataReceived(fe.Message);
+                    ////}
+                    //catch (Exception e)
+                    //{
+                    //    OnDataReceived(e.Message);
+                    //}
+
+
+
+
+
+                    // Compilação
+                   // BuildResult buildResult = BuildManager.DefaultBuildManager.Build(buildParameters, requestData);
+
+                    //if (buildResult.OverallResult == BuildResultCode.Success)
+                    //{
+                    //    OnFinish();
+                    //}
+                    //else
+                    //{
+                    //    OnDataReceived("Compile erro!");
+                    //}
+                }
+                catch (Exception e)
+                {
+                    OnErroReceived(string.Format("Buid Erro:{0}", e.Message));
+                }
+                   
+              
+            }
+        }
         protected string msbuildPath;
         private string config = "Release";
 
         public event Action<string> DataReceived;
         public event Action Finish;
+        public event Action<string> ErroReceived;
 
         protected void SetMsBuildPath()
         {
@@ -240,9 +348,9 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         }
         private void ExtractMsBuild(string path)
         {
-            try 
+            try
             {
-                string zip = string.Format("{0}\\MSBuild.zip",AddonFolder);
+                string zip = string.Format("{0}\\MSBuild.zip", AddonFolder);
                 ExtractFiles(zip, path);
             }
             catch { }
@@ -274,14 +382,65 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
 
         private void R_OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
-            if (DataReceived != null)
-                DataReceived(e.Data);
+           OnDataReceived(e.Data);
         }
         protected void OnFinish()
         {
             if (Finish != null)
                 Finish();
         }
-
+        private void OnDataReceived(string msg)
+        {
+            if (DataReceived != null)
+                DataReceived(msg);
+        }
+        private void OnErroReceived(string msg)
+        {
+            if (ErroReceived != null)
+                ErroReceived(msg);
+        }
     }
+
+    // Implementação de um Logger personalizado para capturar erros
+    class ErrorLogger : ILogger
+    {
+        public BuildErrorEventHandler BuildErrorEvent;
+
+        public Action<string> BuildMessageEvent;
+
+        public Action BuildStartEvent;
+
+        public string Parameters { get; set; }
+
+        public void Initialize(IEventSource eventSource)
+        {
+            eventSource.ErrorRaised += (sender, e) =>
+            {
+                if (BuildErrorEvent != null)
+                    BuildErrorEvent(sender, e);
+            };
+            eventSource.AnyEventRaised += (sender, e) =>
+            {
+                if (BuildMessageEvent != null)
+                    BuildMessageEvent(e.Message);
+            };
+            eventSource.BuildStarted += (sender, e) =>
+            {
+                if (BuildStartEvent != null)
+                    BuildStartEvent();
+            };
+        }
+
+      
+
+
+        public void Shutdown()
+        {
+        }
+
+        public LoggerVerbosity Verbosity { 
+            get; 
+            set; }
+    }
+
 }

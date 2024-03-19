@@ -79,7 +79,8 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker.Styles
          "ScrollBar.Disabled.Border",
          "ScrollBar.Disabled.Glyph",
         "Footer.Static.Background",
-          "NumericTextBox.Static.Background",
+        "TreeViewItem.Children.Selected.Background",
+         "NumericTextBox.Static.Background",
         "NumericTextBox.Static.Border",
         "NumericTextBox.Selected.Border"
         };
@@ -104,7 +105,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker.Styles
         }
         public void LoadThemeFromPreference()
         {
-            
+
             try
             {
                 string result = string.Empty;

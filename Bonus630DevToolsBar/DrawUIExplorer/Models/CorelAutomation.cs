@@ -257,7 +257,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
             Type type = null;
             try
             {
-                string pattern = @"(DataSource=(?<datasource>[a-zA-Z0-9]+);Path=(?<path>[0-9a-zA-Z]{0,}))";
+                string pattern = @"(DataSource=(?<datasource>[a-zA-Z0-9:]+);Path=(?<path>[0-9a-zA-Z]{0,}))";
                 Regex regex = new Regex(pattern);
                 Match match = regex.Match(value);
                 string datasource = match.Groups["datasource"].Value;
