@@ -192,6 +192,9 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                 arg.Name = parameters[i].Name;
                 arg.ArgumentType = parameters[i].ParameterType;
                 arg.Value = parameters[i].DefaultValue;
+                //Aqui vamos adicionar opções para o enum mas podemos adicionar para outros, tipo uma lista?
+                if (parameters[i].ParameterType.IsEnum)
+                    arg.OptionsAddRange(Enum.GetNames(parameters[i].ParameterType));
                 //Tuple<string,Type> argument = new Tuple<string,Type>(parameters[i].Name, parameters[i].ParameterType);
                 arguments[i] = arg;
             }

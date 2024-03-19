@@ -1,6 +1,7 @@
 ﻿using br.com.Bonus630DevToolsBar.RunCommandDocker;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Drawing.Imaging;
 using System.Linq;
@@ -22,29 +23,41 @@ namespace br.com.Bonus630DevToolsBar.CustomControls
     /// <summary>
     /// Interaction logic for ParamControl.xaml
     /// </summary>
-    public partial class ParamControl : UserControl,INotifyPropertyChanged
+    public partial class ParamControl : UserControl, INotifyPropertyChanged
     {
-        public static readonly DependencyProperty ParamValueProperty = DependencyProperty.Register("ParamValue",typeof(object),typeof(ParamControl),new FrameworkPropertyMetadata(default(object),FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,OnParamValueChanged));
+        public static readonly DependencyProperty ParamValueProperty = DependencyProperty.Register("ParamValue", typeof(object), typeof(ParamControl), new FrameworkPropertyMetadata(default(object), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnParamValueChanged));
         public object ParamValue
         {
             get { return GetValue(ParamValueProperty); }
-            set { SetValue(ParamValueProperty, value); }
+            set{ SetValue(ParamValueProperty, value); }
         }
-        public static void OnParamValueChanged(DependencyObject d,DependencyPropertyChangedEventArgs e)
+        public static void OnParamValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             ((ParamControl)d).ParamValue = e.NewValue;
 
             ((ParamControl)d).ChangeParam();
-        }   
-        public static readonly DependencyProperty ParamTypeProperty = DependencyProperty.Register("ParamType",typeof(Type),typeof(ParamControl),new FrameworkPropertyMetadata(default(Type), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnParamTypeChanged));
+        }
+        public static readonly DependencyProperty ParamTypeProperty = DependencyProperty.Register("ParamType", typeof(Type), typeof(ParamControl), new FrameworkPropertyMetadata(default(Type), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnParamTypeChanged));
         public Type ParamType
         {
             get { return (Type)GetValue(ParamTypeProperty); }
             set { SetValue(ParamTypeProperty, value); }
-        }
-        public static void OnParamTypeChanged(DependencyObject d,DependencyPropertyChangedEventArgs e)
+        }  
+        public static void OnParamTypeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             ((ParamControl)d).ParamType = (Type)e.NewValue;
+
+            ((ParamControl)d).ChangeParam();
+        }
+        public static readonly DependencyProperty ParamOptionsProperty = DependencyProperty.Register("ParamOptions", typeof(ObservableCollection<object>), typeof(ParamControl), new FrameworkPropertyMetadata(default(ObservableCollection<object>), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnParamOptionsChanged));
+        public ObservableCollection<object> ParamOptions
+        {
+            get { return (ObservableCollection<object>)GetValue(ParamOptionsProperty); }
+            set { SetValue(ParamOptionsProperty, value); }
+        }
+        public static void OnParamOptionsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            ((ParamControl)d).ParamOptions = (ObservableCollection<object>)e.NewValue;
 
             ((ParamControl)d).ChangeParam();
         }
@@ -52,13 +65,13 @@ namespace br.com.Bonus630DevToolsBar.CustomControls
         public bool IsFunc
         {
             get { return isFuncParam; }
-            set { isFuncParam = value;OnPropertyChanged(); }
+            set { isFuncParam = value; OnPropertyChanged(); }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            if(PropertyChanged!=null)
+            if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
 
@@ -67,7 +80,7 @@ namespace br.com.Bonus630DevToolsBar.CustomControls
         public bool IsBoolean
         {
             get { return isBoolean; }
-            set { isBoolean = value;OnPropertyChanged(); }
+            set { isBoolean = value; OnPropertyChanged(); }
         }
         private bool isVariant;
 
@@ -89,6 +102,13 @@ namespace br.com.Bonus630DevToolsBar.CustomControls
         {
             get { return isDecimal; }
             set { isDecimal = value; OnPropertyChanged(); }
+        }  
+        private bool isEnum;
+
+        public bool IsEnum
+        {
+            get { return isEnum; }
+            set { isEnum = value; OnPropertyChanged(); }
         }
 
 
@@ -96,19 +116,19 @@ namespace br.com.Bonus630DevToolsBar.CustomControls
         {
             InitializeComponent();
             txt_paramValue.TextChanged += Txt_paramValue_TextChanged;
-           
+
         }
 
-      
+
 
         private void Txt_paramValue_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if(txt_paramValue.Text.Length ==0)
+            if (txt_paramValue.Text.Length == 0)
             {
                 this.ParamValue = null;
                 ChangeParam();
                 IsFunc = false;
-                
+
             }
         }
 
@@ -118,6 +138,7 @@ namespace br.com.Bonus630DevToolsBar.CustomControls
             IsInteger = false;
             IsBoolean = false;
             IsDecimal = false;
+            IsEnum = false;
             if (this.ParamValue is FuncToParam && !isFuncParam)
             {
                 IsVariant = true;
@@ -128,6 +149,11 @@ namespace br.com.Bonus630DevToolsBar.CustomControls
             if (this.ParamType == null || this.ParamType.Equals(typeof(DBNull)))
             {
                 IsVariant = true;
+                return;
+            }
+            if(this.ParamType.IsEnum)
+            {
+                IsEnum = true;
                 return;
             }
             if (this.ParamType.Equals(typeof(string)))
@@ -144,11 +170,11 @@ namespace br.com.Bonus630DevToolsBar.CustomControls
             {
                 IsInteger = true;
                 return;
-            }   
+            }
             if (IsDecimalType(this.ParamType))
             {
                 IsDecimal = true;
-                
+
                 return;
             }
             if (this.ParamType.IsValueType)
@@ -218,7 +244,7 @@ namespace br.com.Bonus630DevToolsBar.CustomControls
 
             txt_paramValue.Text = GetValue<string>();
         }
-        private  bool IsNumericType(Type type)
+        private bool IsNumericType(Type type)
         {
             if (type == null)
             {
@@ -248,17 +274,30 @@ namespace br.com.Bonus630DevToolsBar.CustomControls
         }
         private bool IsDecimalType(Type type)
         {
-            if (type is decimal || type is float || type is double)
+            if (type == null)
             {
-                return true;
+                return false;
             }
 
+            switch (Type.GetTypeCode(type))
+            {
+                case TypeCode.Double:
+                case TypeCode.Decimal:
+                    return true;
+                case TypeCode.Object:
+                    if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
+                    {
+                        return IsNumericType(Nullable.GetUnderlyingType(type));
+                    }
+                    return false;
+            }
             return false;
         }
-        private T GetValue<T>() {
-            return this.ParamValue == null ? default(T) : (T)this.ParamValue; ;
+        private T GetValue<T>()
+        {
+            return this.ParamValue == null ? default(T) : (T)this.ParamValue;
         }
-             
+
 
     }
 }

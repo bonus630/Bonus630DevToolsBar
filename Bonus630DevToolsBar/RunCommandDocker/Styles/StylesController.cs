@@ -80,6 +80,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker.Styles
          "ScrollBar.Disabled.Glyph",
         "Footer.Static.Background",
         "TreeViewItem.Children.Selected.Background",
+        "ProgressBar.Static.Foreground",
          "NumericTextBox.Static.Background",
         "NumericTextBox.Static.Border",
         "NumericTextBox.Selected.Border"

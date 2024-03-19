@@ -47,6 +47,7 @@
     <SolidColorBrush x:Key="ScrollBar.Disabled.Glyph" Color="#BFBFBF"/>
     <SolidColorBrush x:Key="Footer.Static.Background" Color="#FFD7A3"/>
     <SolidColorBrush x:Key="TreeViewItem.Children.Selected.Background" Color="#FFBACFEB"/>
+    <SolidColorBrush x:Key="ProgressBar.Static.Foreground" Color="#FFF34A0B"/>
     <SolidColorBrush x:Key="NumericTextBox.Static.Background" Color="#ffffff" />
     <SolidColorBrush x:Key="NumericTextBox.Static.Border" Color="#ffb2b2b2" />
     <SolidColorBrush x:Key="NumericTextBox.Selected.Border" Color="#ff3399ff" />
@@ -96,6 +97,7 @@
     <SolidColorBrush x:Key="LightestGrey.ScrollBar.Disabled.Glyph" Color="#BFBFBF"/>
     <SolidColorBrush x:Key="LightestGrey.Footer.Static.Background" Color="#FFD7A3"/>
     <SolidColorBrush x:Key="LightestGrey.TreeViewItem.Children.Selected.Background" Color="#FFBACFEB"/>
+    <SolidColorBrush x:Key="LightestGrey.ProgressBar.Static.Foreground" Color="#FFFF4635"/>
     <SolidColorBrush x:Key="LightestGrey.NumericTextBox.Static.Background" Color="#ffffff" />
     <SolidColorBrush x:Key="LightestGrey.NumericTextBox.Static.Border" Color="#ffb2b2b2" />
     <SolidColorBrush x:Key="LightestGrey.NumericTextBox.Selected.Border" Color="#ff3399ff" />
@@ -146,6 +148,7 @@
     <SolidColorBrush x:Key="MediumGrey.ScrollBar.Disabled.Glyph" Color="#BFBFBF"/>
     <SolidColorBrush x:Key="MediumGrey.Footer.Static.Background" Color="#F2A138"/>
     <SolidColorBrush x:Key="MediumGrey.TreeViewItem.Children.Selected.Background" Color="#FFAEC2DC"/>
+    <SolidColorBrush x:Key="MediumGrey.ProgressBar.Static.Foreground" Color="#FFF34A0B"/>
     <SolidColorBrush x:Key="MediumGrey.NumericTextBox.Static.Background" Color="#ffffff" />
     <SolidColorBrush x:Key="MediumGrey.NumericTextBox.Static.Border" Color="#ffb2b2b2" />
     <SolidColorBrush x:Key="MediumGrey.NumericTextBox.Selected.Border" Color="#ff3399ff" />
@@ -195,6 +198,7 @@
     <SolidColorBrush x:Key="DarkGrey.ScrollBar.Disabled.Glyph" Color="#BFBFBF"/>
     <SolidColorBrush x:Key="DarkGrey.Footer.Static.Background" Color="#A62D74"/>
     <SolidColorBrush x:Key="DarkGrey.TreeViewItem.Children.Selected.Background" Color="#FF0050B6"/>
+    <SolidColorBrush x:Key="DarkGrey.ProgressBar.Static.Foreground" Color="#FF009933"/>
     <SolidColorBrush x:Key="DarkGrey.NumericTextBox.Static.Background" Color="#ff2d2d2d" />
     <SolidColorBrush x:Key="DarkGrey.NumericTextBox.Static.Border" Color="#ff000000" />
     <SolidColorBrush x:Key="DarkGrey.NumericTextBox.Selected.Border" Color="#ff3399ff" />
@@ -247,6 +251,7 @@
     <SolidColorBrush x:Key="Black.ScrollBar.Disabled.Glyph" Color="#BFBFBF"/>
     <SolidColorBrush x:Key="Black.Footer.Static.Background" Color="#861b2d"/>
     <SolidColorBrush x:Key="Black.TreeViewItem.Children.Selected.Background" Color="#FF003278"/>
+    <SolidColorBrush x:Key="Black.ProgressBar.Static.Foreground" Color="#FF89D185"/>
     <SolidColorBrush x:Key="Black.NumericTextBox.Static.Background" Color="#ff0f0f0f" />
     <SolidColorBrush x:Key="Black.NumericTextBox.Static.Border" Color="#ff5a5a5a" />
     <SolidColorBrush x:Key="Black.NumericTextBox.Selected.Border" Color="#ff3399ff" />

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Windows.Documents;
 using System.Windows.Threading;
@@ -53,7 +54,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected virtual void OnPropertyChanged(string propertyName)
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
@@ -383,6 +384,11 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                     {
                         if (Items[i].Value != null && !(Items[i].Value is DBNull))
                         {
+                            if (Items[i].ArgumentType.IsEnum)
+                            {
+                                objects[i] = Enum.Parse(Items[i].ArgumentType, Items[i].Value.ToString());
+                                continue;
+                            }
                             if (Items[i].Value.GetType().IsValueType || Items[i].Value is string)
                             {
                                 try
@@ -583,6 +589,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                         arguments.ArgumentType = typeof(object);
                     }
                     arguments.Value = (range[i] as Argument).Value;
+                    arguments.Options = (range[i] as Argument).Options;
                 }
                 else
                 {
@@ -671,8 +678,26 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                 _value = value;
                 OnPropertyChanged("Value");
             }
+        }  
+        private ObservableCollection<object> options;
+        public ObservableCollection<object> Options
+        {
+            get { return options; }
+            set
+            {
+                options = value;
+                OnPropertyChanged();
+            }
         }
-        
+        public void OptionsAddRange(object[] range)
+        {
+            if (Options == null)
+                Options = new ObservableCollection<object>();
+            for (int i = 0; i < range.Length; i++)
+            {
+                Options.Add(range[i]);
+            }
+        }
         public override bool Equals(object obj)
         {
             bool equals = false;

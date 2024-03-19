@@ -36,7 +36,10 @@
                               Visibility="{Binding  RelativeSource={RelativeSource AncestorType=UserControl},Path=IsDecimal,Converter={StaticResource BoolVisibilityConverter}}"/>
         <!--Text="{Binding RelativeSource={RelativeSource AncestorType=local:ParamControl},Path=ParamValue,Converter={StaticResource TypeToStringConverter}}"--> 
                  <!--Visibility="{Binding RelativeSource={RelativeSource AncestorType=local:ParamControl},Path=ParamType,Converter={StaticResource TypeToVisibilityConverter}, ConverterParameter={x:Type System:String}}" />-->
-
+        <ComboBox Grid.Column="1" ItemsSource="{Binding  RelativeSource={RelativeSource AncestorType=UserControl},Path=ParamOptions}"
+                                  SelectedItem="{Binding  RelativeSource={RelativeSource AncestorType=UserControl},Path=ParamValue, Converter={StaticResource TypeToStringConverter}}"
+                 VerticalContentAlignment="Center"  
+                              Visibility="{Binding  RelativeSource={RelativeSource AncestorType=UserControl},Path=IsEnum,Converter={StaticResource BoolVisibilityConverter}}"/>
         <CheckBox Grid.Column="1"  x:Name="cb_paramValue"  IsChecked="{Binding  RelativeSource={RelativeSource AncestorType=UserControl},Path=ParamValue, Converter={StaticResource TypeToBoolConverter}}"
                  VerticalContentAlignment="Center" HorizontalAlignment="Left"  
                   Visibility="{Binding  RelativeSource={RelativeSource AncestorType=UserControl},Path=IsBoolean,Converter={StaticResource BoolVisibilityConverter}}"/>

@@ -37,7 +37,7 @@
     </Window.Resources>
 
     <DockPanel  LastChildFill="True" Background="Transparent">
-        <ProgressBar DockPanel.Dock="Top" Height="2" x:Name="pb_load" SmallChange="0.01" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FFF34A0B" Visibility="Collapsed" />
+        <ProgressBar DockPanel.Dock="Top" Height="2" x:Name="pb_load" SmallChange="0.01" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{DynamicResource ProgressBar.Static.Foreground}" Visibility="Collapsed" />
         <StatusBar DockPanel.Dock="Bottom" Height="20" Background="{DynamicResource Footer.Static.Background}" Foreground="{DynamicResource Default.Static.Foreground}">
             <StatusBar.ItemsPanel>
                 <ItemsPanelTemplate>
