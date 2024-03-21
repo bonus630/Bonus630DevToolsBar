@@ -59,6 +59,7 @@
         <Grid Height="26" DockPanel.Dock="Top">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="26"/>
+                <ColumnDefinition Width="26"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="12" />
                 <ColumnDefinition Width="*"/>
@@ -67,7 +68,8 @@
 
             </Grid.ColumnDefinitions>
             <custom:IconButton Grid.Column="0"  Icon="New.png" Width="22" Height="22" x:Name="btn_newProject" Click="btn_newProject_Click" ToolTip="Create a new project"/>
-            <Border Grid.Column="1" Height="22" Style="{DynamicResource bBorder}">
+            <custom:IconButton Grid.Column="1"  Icon="import.png" Width="22" Height="22" x:Name="btn_importCGSAddon" Click="btn_importCGSAddon_Click" ToolTip="Import a CGSAddon Project"/>
+            <Border Grid.Column="2" Height="22" Style="{DynamicResource bBorder}">
 
                 <Grid Width="68">
                     <Button Margin="4,0,0,0" Padding="0"  BorderThickness="0" HorizontalAlignment="Left" x:Name="btn_buildProject" Click="btn_buildProject_Click">
@@ -103,7 +105,7 @@
             <!--<ComboBox Grid.Column="1" SelectedIndex="0">
                 <custom:IconButton Icon="BuildSolution"  Width="18" Height="18" HorizontalAlignment="Left" x:Name="btn_buildProject" Click="btn_buildProject_Click" ToolTip="Build a project"/>
             </ComboBox>-->
-            <custom:IconButton Icon="FolderBrowserDialogControl.png" Grid.Column="5"  Width="22" Height="22" x:Name="btn_selectFolder" Click="btn_selectFolder_Click">
+            <custom:IconButton Icon="FolderBrowserDialogControl.png" Grid.Column="6"  Width="22" Height="22" x:Name="btn_selectFolder" Click="btn_selectFolder_Click">
                 <custom:IconButton.ToolTip>
                     <StackPanel>
                         <Label Content="Select a folder to monitor"/>
@@ -112,7 +114,7 @@
                 </custom:IconButton.ToolTip>
 
             </custom:IconButton>
-            <custom:IconButton Icon="FolderOpened.png" Grid.Column="4"  Width="22" Height="22" x:Name="btn_openFolder" Click="btn_openFolder_Click" >
+            <custom:IconButton Icon="FolderOpened.png" Grid.Column="5"  Width="22" Height="22" x:Name="btn_openFolder" Click="btn_openFolder_Click" >
                 <custom:IconButton.ToolTip>
                     <StackPanel>
                         <Label Content="Open Commands Assemblies Folder"/>

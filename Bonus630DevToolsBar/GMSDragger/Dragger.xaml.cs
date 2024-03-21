@@ -254,6 +254,23 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            //f.MessageBox.Show("Começou o teste");
+            //try
+            //{
+            //    corelApp.AddPluginCommand("Olha so isso");
+            //    // corelApp.AdviseEvents()
+                
+
+            //}
+            //catch(Exception ex)
+            //{
+            //    f.MessageBox.Show("Exception "+ex.Message);
+            //}
+
+
+
+            //return;
+            /////fim teste
 
             OpenFileDialog of = new OpenFileDialog();
             of.Filter = "Any File (*.*)|*.*";

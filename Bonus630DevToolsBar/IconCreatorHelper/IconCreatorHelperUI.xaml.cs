@@ -11,6 +11,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+
 using System.Windows.Input;
 
 
@@ -95,6 +96,7 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
                     colorGreen,
                     corelApp.CreateRGBColor(0,153,51),
                     colorBlue,
+                    corelApp.CreateRGBColor(0,92,185),
                     corelApp.CreateRGBColor(6,169,244),
                     colorRed,
                     colorOrange,
@@ -321,6 +323,7 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
         public bool CreateDocument()
         {
             Doc = corelApp.CreateDocument();
+            
             Doc.Save();
 
             if (Doc.Dirty || string.IsNullOrEmpty(Doc.FilePath))
@@ -339,8 +342,20 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
             Doc.PreserveSelection = true;
             Doc.Resolution = resolution;
 
+            //Coreldraw 2022 '*Bind(DataSource=AppOrDocDataSource;Path=NudgeOffset;BindType=TwoWay)'
 
+            //Coreldraw X8 '*Bind(DataSource=WAppDataSource;Path=NudgeOffset;BindType=TwoWay)'
 
+            //guid = 'a49dc96d-29e7-4848-9747-9ffe643d61ff'
+
+            string ds = "WAppDataSource";
+
+#if X11 || X12 || X13 || X14 || X15
+    ds = "AppOrDocDataSource";
+#endif
+
+            var dsp = corelApp.FrameWork.Application.DataContext.GetDataSource(ds);
+            dsp.SetProperty("NudgeOffset", 846);
             ShapeRange sr = corelApp.CreateShapeRange();
             Page page = Doc.ActivePage;
             for (int C = 0; C < Colors.Length; C++)
@@ -351,6 +366,7 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
             sr.Delete();
             Doc.Save();
             Doc.EndCommandGroup();
+            Doc.ClearUndoList();
             StartWatcher();
             return true;
         }
@@ -374,12 +390,13 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
             if (optimization)
                 Doc.BeginCommandGroup();
             page.ActiveLayer.Name = iconLayer;
+            page.Background = cdrPageBackground.cdrPageBackgroundNone;
             //System.Windows.Forms.MessageBox.Show(page.Layers.Count.ToString());
-            Shape c = page.ActiveLayer.CreateRectangle2(0, 0, pageSize, pageSize);
-            c.Outline.SetNoOutline();
-            c.Fill.ApplyNoFill();
-            c.Name = "Transparent BG";
-            c.Locked = true;
+            //Shape c = page.ActiveLayer.CreateRectangle2(0, 0, pageSize, pageSize);
+            //c.Outline.SetNoOutline();
+            //c.Fill.ApplyNoFill();
+            //c.Name = "Transparent BG";
+            //c.Locked = true;
 
 
 
@@ -387,6 +404,10 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
 
             ShapeRange sr = corelApp.CreateShapeRange();
 
+            sr.Add(page.ActiveLayer.CreateGuide(page.LeftX, page.BottomY, page.LeftX, page.TopY));
+            sr.Add(page.ActiveLayer.CreateGuide(page.RightX, page.BottomY, page.RightX, page.TopY));
+            sr.Add(page.ActiveLayer.CreateGuide(page.LeftX, page.BottomY, page.RightX, page.BottomY));
+            sr.Add(page.ActiveLayer.CreateGuide(page.LeftX, page.TopY, page.RightX, page.TopY));
             sr.Add(page.ActiveLayer.CreateGuide(margin, page.BottomY, margin, page.TopY));
             sr.Add(page.ActiveLayer.CreateGuide(pageSize - margin, page.BottomY, pageSize - margin, page.TopY));
             sr.Add(page.ActiveLayer.CreateGuide(page.LeftX, margin, page.RightX, margin));
@@ -397,7 +418,8 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
             sr.Add(page.ActiveLayer.CreateGuide(page.LeftX, page.TopY - margin - contourWidth, page.RightX, page.TopY - margin - contourWidth));
             sr.Add(page.ActiveLayer.CreateGuide(page.CenterX, page.BottomY, page.CenterX, page.TopY));
             sr.Add(page.ActiveLayer.CreateGuide(page.LeftX, page.CenterY, page.RightX, page.CenterY));
-
+            sr.Add(page.ActiveLayer.CreateGuide(page.LeftX, page.BottomY, page.RightX, page.TopY));
+            sr.Add(page.ActiveLayer.CreateGuide(page.LeftX, page.TopY, page.RightX, page.BottomY));
             //for (int i = 1; i <= page.Layers.Count; i++)
             //{
             //    System.Windows.Forms.MessageBox.Show(page.Layers[i].IsGuidesLayer.ToString());
@@ -416,8 +438,8 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
             // layer.Printable = false;
             page.GuidesLayer.MoveAbove(page.Layers[1]);
             //layer.Editable = false;
-
-            c.Layer.Activate();
+            sr.Lock();
+           // c.Layer.Activate();
             if (optimization)
                 Doc.EndCommandGroup();
 
@@ -453,21 +475,22 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
                 sr = GetShapeRange(page);
             }
  
-            Shape bg = page.FindShape("Transparent BG");
-            if (bg != null)
-            {
-                bg.Locked = false;
-                bg.Fill.ApplyNoFill();
-                bg.Outline.SetNoOutline();
-                sr.Add(bg);
-            }
+            //Shape bg = page.FindShape("Transparent BG");
+            //if (bg != null)
+            //{
+            //    bg.Locked = false;
+            //    bg.Fill.ApplyNoFill();
+            //    bg.Outline.SetNoOutline();
+            //    sr.Add(bg);
+            //}
 
             //string name = corelApp.ActiveShape.Name;
             string pngFile = string.Format("{0}\\{1}.png", folder, name);
+            Shape c = null;
             if (Math.Round(sr.SizeWidth) < size || Math.Round(sr.SizeHeight) < size)
             {
 
-                Shape c = l.CreateRectangle2(0, 0, size, size);
+                c = l.CreateRectangle2(0, 0, size, size);
                 c.Outline.SetNoOutline();
                 c.Fill.ApplyNoFill();
                 c.OrderToBack();
@@ -486,10 +509,8 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
             catch { return string.Empty; }
             if (optimization)
                 Doc.EndCommandGroup();
-            if (bg != null)
-            {
-                bg.Locked = true;
-            }
+            if(c!=null)
+                c.Delete();
             return pngFile;
         }
         public void PrepareFiles(string folder)
@@ -780,14 +801,15 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
             try
             {
                 corelApp.BeginDraw();
-                Shape bg = page.FindShape("Transparent BG");
-                bg.Locked = false;
-                if (bg.Fill.Type == cdrFillType.cdrNoFill)
-                    bg.Fill.UniformColor = colorBlack;
+                if (page.Background == cdrPageBackground.cdrPageBackgroundNone)
+                {
+                    page.Background = cdrPageBackground.cdrPageBackgroundSolid;
+                    page.Color = colorBlack;
+                }
                 else
-                    bg.Fill.ApplyNoFill();
-                bg.OrderToBack();
-                bg.Locked = true;
+                {
+                    page.Background = cdrPageBackground.cdrPageBackgroundNone;
+                }
                 corelApp.EndDraw();
             }
             catch { }
@@ -870,12 +892,12 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
             Layer iconLayer = GetIconLayer(p);
             ShapeRange sr = iconLayer.Shapes.All();
             //p.Shapes.All();
-            try
-            {
-                //    sr.RemoveRange(p.Shapes.FindShapes(Type: cdrShapeType.cdrGuidelineShape));
-                sr.RemoveRange(p.FindShapes("Transparent BG"));
-            }
-            catch { }
+            //try
+            //{
+            //    //    sr.RemoveRange(p.Shapes.FindShapes(Type: cdrShapeType.cdrGuidelineShape));
+            //    sr.RemoveRange(p.FindShapes("Transparent BG"));
+            //}
+            //catch { }
             return sr;
         }
 

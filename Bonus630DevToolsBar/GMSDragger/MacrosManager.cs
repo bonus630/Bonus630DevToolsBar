@@ -14,7 +14,7 @@ using c = Corel.Interop.VGCore;
 using Corel.Interop.VGCore;
 using System.Runtime.CompilerServices;
 using System.Xml.Linq;
-using System.Security.Cryptography;
+
 
 namespace br.com.Bonus630DevToolsBar.GMSDragger
 {
@@ -140,6 +140,7 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
                         try
                         {
                             File.Copy(this.Commands[i].Ico, dest);
+                            
                             c.SetIcon2(dest);
                         }
                         catch { }

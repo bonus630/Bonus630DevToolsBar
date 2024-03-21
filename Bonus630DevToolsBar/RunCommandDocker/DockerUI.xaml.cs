@@ -1,17 +1,16 @@
-﻿
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
-using br.com.Bonus630DevToolsBar;
 using corel = Corel.Interop.VGCore;
 using Bonus630DevToolsBar;
 using System.Windows.Media;
 using System.Windows.Documents;
-using System.Windows.Interop;
+using System.IO.Compression;
+using System.Xml;
 
 namespace br.com.Bonus630DevToolsBar.RunCommandDocker
 {
@@ -21,7 +20,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         //private object corelObj;
         private Styles.StylesController stylesController;
 
-   
+
 
         ProxyManager proxyManager;
         ProjectsManager projectsManager;
@@ -33,7 +32,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
 
             try
             {
-                
+
                 proxyManager = new ProxyManager(app, System.IO.Path.Combine((app as corel.Application).AddonPath, "Bonus630DevToolsBar"));
                 this.corelApp = app as corel.Application;
                 stylesController = new Styles.StylesController(this.Resources, this.corelApp);
@@ -128,14 +127,14 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             {
                 TextRange tr;
                 txt_log.BeginChange();
-           
-                    tr = new TextRange(txt_log.Document.ContentEnd, txt_log.Document.ContentEnd);
-                    tr.Text = string.Format("{0}\r", obj);
-                    tr.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.Crimson);
+
+                tr = new TextRange(txt_log.Document.ContentEnd, txt_log.Document.ContentEnd);
+                tr.Text = string.Format("{0}\r", obj);
+                tr.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.Crimson);
 
                 txt_log.EndChange();
                 txt_log.ScrollToEnd();
-            
+
             });
         }
 
@@ -148,7 +147,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
 
                 tr = new TextRange(txt_log.Document.ContentEnd, txt_log.Document.ContentEnd);
                 tr.Text = string.Format("{0}\r", obj);
-              
+
 
                 txt_log.EndChange();
 
@@ -218,14 +217,14 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                 //        ((sender as TreeView).SelectedItem as TreeViewItem).BringIntoView();
                 //    }));
                 ////}
-               
+
             }
             catch (Exception ex)
             {
                 System.Windows.MessageBox.Show(ex.ToString());
             }
         }
-   
+
         private void ScrollToSelectedItem()
         {
             var selectedItem = treeViewCommands.SelectedItem as Command; // Substitua YourItemType pelo tipo real dos itens no seu TreeView
@@ -281,7 +280,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
 
         private void btn_buildProject_Click(object sender, RoutedEventArgs e)
         {
-            if(string.IsNullOrEmpty(pc.LastProject))
+            if (string.IsNullOrEmpty(pc.LastProject))
             {
                 btn_setProject_Click(null, null);
             }
@@ -289,7 +288,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             {
                 popup_log.IsOpen = true;
                 //pc.MSBuild();
-               pc.DirectBuild();
+                pc.DirectBuild();
             }
 
         }
@@ -318,6 +317,132 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             }
             Reset();
         }
+        private void btn_importCGSAddon_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                System.Windows.Forms.OpenFileDialog ofd = new System.Windows.Forms.OpenFileDialog();
+                ofd.Title = "Select CGSaddon file";
+                ofd.Multiselect = false;
+                ofd.Filter = "CGSAddon (*.CGSaddon)|*.CGSaddon";
+                if (ofd.ShowDialog() != System.Windows.Forms.DialogResult.OK)
+                    return;
+
+                string tempPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+                ZipFile.ExtractToDirectory(ofd.FileName, tempPath);
+                tempPath = string.Format("{0}\\content", tempPath);
+
+
+                if (!Directory.Exists(tempPath))
+                {
+                    corelApp.MsgShow("Project not found!");
+                    return;
+                }
+                System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
+                fbd.Description = "Select a  folder for your Project!";
+                if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    try
+                    {
+                        string testDir = Path.Combine(fbd.SelectedPath, "test.txt");
+                        using (File.Create(testDir)) { }
+                        txt_projectFolder.Text = fbd.SelectedPath;
+                        File.Delete(testDir);
+                    }
+                    catch (IOException ioe)
+                    {
+                        corelApp.MsgShow("Directory access limited, please choose another!");
+                    }
+                }
+                else
+                    return;
+                string[] files = Directory.GetFileSystemEntries(tempPath);
+                if (files.Length == 1)
+                    files = Directory.GetFileSystemEntries(files[0]);
+
+                string csprojFile = string.Empty;
+
+                XmlDocument xmlDoc = new XmlDocument();
+                foreach (string item in files)
+                {
+                    string fileName = Path.GetFileName(item);
+                    string destinoItem = Path.Combine(fbd.SelectedPath, fileName);
+
+                    if (File.Exists(item))
+                    {
+
+                        if (Path.GetExtension(item).Equals(".csproj"))
+                        {
+                            csprojFile = destinoItem;
+                            xmlDoc.Load(item);
+                        }
+                        else
+                        {
+                            File.Copy(item, destinoItem, true);
+                        }
+                    }
+                    else if (Directory.Exists(item))
+                    {
+                        CopyDirectory(item, destinoItem);
+                    }
+                }
+                if (string.IsNullOrEmpty(csprojFile))
+                {
+                    corelApp.MsgShow("Project not found!");
+                    return;
+                }
+                if (string.IsNullOrEmpty(this.projectsManager.AssemblyDirectory))
+                    this.projectsManager.SelectFolder();
+                pc.AssembliesFolder = this.projectsManager.AssemblyDirectory;
+
+                XmlNode rootNode = xmlDoc.DocumentElement;
+         
+                XmlElement targetNode = xmlDoc.CreateElement("Target", rootNode.NamespaceURI);
+                targetNode.SetAttribute("Name", "CopyFiles");
+                targetNode.SetAttribute("AfterTargets", "Build");
+                XmlElement makeDirNode = xmlDoc.CreateElement("MakeDir", rootNode.NamespaceURI);
+                makeDirNode.SetAttribute("Directories", pc.AssembliesFolder);
+                targetNode.AppendChild(makeDirNode);
+                XmlElement execNode = xmlDoc.CreateElement("Exec", rootNode.NamespaceURI);
+                execNode.SetAttribute("Condition", string.Format("Exists('{0}')", pc.AssembliesFolder));
+                execNode.SetAttribute("Command", string.Format("xcopy \"$(TargetDir)$(TargetFileName)\" \"{0}\" /y /d /e /c", pc.AssembliesFolder));
+                targetNode.AppendChild(execNode);
+                xmlDoc.LastChild.AppendChild(targetNode);
+
+                var na = new XmlNamespaceManager(xmlDoc.NameTable);
+                na.AddNamespace("p", "http://schemas.microsoft.com/developer/msbuild/2003");
+                var references = rootNode.SelectNodes("//p:ItemGroup//p:Reference",na);
+
+
+                foreach (XmlNode referenceNode in references)
+                {
+                    var att = referenceNode.Attributes["Include"];
+                    if (att.Value.Contains("Corel.Interop.VGCore"))
+                    {
+                        att.Value = pc.VgCore;
+                        XmlElement el = xmlDoc.CreateElement("Name",rootNode.NamespaceURI);
+                        el.InnerText = "Corel.Interop.VGCore";
+                        referenceNode.AppendChild(el);
+                        break;
+                    }
+                }
+           
+                xmlDoc.Save(csprojFile);
+
+           
+
+                pc.LastProject = csprojFile;
+                Properties.Settings.Default.LastProject = pc.LastProject;
+                Properties.Settings.Default.Save();
+                popup_log.IsOpen = true;
+                pc.MSBuild();
+            }
+            catch (Exception ep)
+            {
+                corelApp.MsgShow(ep.Message);
+            }
+        }
+
         private void Reset()
         {
             popup_newProject.IsOpen = false;
@@ -370,6 +495,35 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             popup_log.IsOpen = false;
             txt_log.Document.Blocks.Clear();
         }
+        // Função recursiva para copiar diretórios
+        private void CopyDirectory(string origem, string destiny)
+        {
+
+            if (!Directory.Exists(destiny))
+            {
+                Directory.CreateDirectory(destiny);
+            }
+
+
+            string[] files = Directory.GetFileSystemEntries(origem);
+
+            foreach (string item in files)
+            {
+                string source = Path.GetFileName(item);
+                string destinoItem = Path.Combine(destiny, source);
+
+                if (File.Exists(item))
+                {
+                    File.Copy(item, destinoItem, true);
+
+                }
+                else if (Directory.Exists(item))
+                {
+                    CopyDirectory(item, destinoItem);
+
+                }
+            }
+        }
 
 
         #region Search Events
@@ -389,7 +543,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             projectsManager.CommandSearch.Navegate(1);
         }
 
-       
+
 
         private void buttonClose_Click(object sender, RoutedEventArgs e)
         {
@@ -400,15 +554,15 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         private void RadioButtonCondition_Click(object sender, RoutedEventArgs e)
         {
             projectsManager.CommandSearch.termPosition = Int32.Parse((string)(sender as RadioButton).Tag);
-            projectsManager.CommandSearch.Search(textBoxSearch.Text,true);
+            projectsManager.CommandSearch.Search(textBoxSearch.Text, true);
         }
         private void OpenSearch()
         {
             gridSearchBox.Visibility = Visibility.Visible;
             textBoxSearch.Focus();
             projectsManager.PrepareSearch();
-            if(!string.IsNullOrEmpty(textBoxSearch.Text))
-                projectsManager.CommandSearch.Search(textBoxSearch.Text,true);
+            if (!string.IsNullOrEmpty(textBoxSearch.Text))
+                projectsManager.CommandSearch.Search(textBoxSearch.Text, true);
         }
         bool control = false;
         private void treeViewCommands_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
@@ -428,7 +582,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         private void checkBoxWholeWord_Click(object sender, RoutedEventArgs e)
         {
             projectsManager.CommandSearch.wholeWord = (bool)checkBoxWholeWord.IsChecked;
-            projectsManager.CommandSearch.Search(textBoxSearch.Text,  true);
+            projectsManager.CommandSearch.Search(textBoxSearch.Text, true);
         }
 
         private void checkBoxMatchCase_Click(object sender, RoutedEventArgs e)
@@ -436,8 +590,8 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             projectsManager.CommandSearch.matchCase = (bool)checkBoxMatchCase.IsChecked;
             projectsManager.CommandSearch.Search(textBoxSearch.Text, true);
         }
+
         #endregion
 
-      
     }
 }

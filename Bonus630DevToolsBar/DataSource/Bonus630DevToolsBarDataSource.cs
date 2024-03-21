@@ -29,9 +29,16 @@ namespace br.com.Bonus630DevToolsBar.DataSource
 
         public Bonus630DevToolsBarDataSource(DataSourceProxy proxy, Application corelApp) : base(proxy, corelApp)
         {
-           // corelApp.OnApplicationEvent += CorelApp_OnApplicationEvent;
+            // corelApp.OnApplicationEvent += CorelApp_OnApplicationEvent;
+            //corelApp.OnPluginCommand += CorelApp_OnPluginCommand;
         }
-       // private int test = 1;
+
+        private void CorelApp_OnPluginCommand(string CommandID)
+        {
+            System.Windows.Forms.MessageBox.Show(CommandID);
+        }
+
+        // private int test = 1;
         private void CorelApp_OnApplicationEvent(string EventName, ref object[] Parameters)
         {
                // CQLContext = test ++;
@@ -135,6 +142,8 @@ namespace br.com.Bonus630DevToolsBar.DataSource
 
             }
         }
+   
+
         public string XmlItems
         {
             get

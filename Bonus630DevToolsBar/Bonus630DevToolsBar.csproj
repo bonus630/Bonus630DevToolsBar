@@ -448,6 +448,7 @@
     <Compile Include="DataSource\DataSourceFactory.cs">
       <SubType>Code</SubType>
     </Compile>
+    <None Include="RunCommandDocker\Templates\CdrCustomAttributes.cs" />
     <Compile Include="Settings.cs" />
     <Page Include="ControlsShorcutsCDRAddon\Views\DockerUI.xaml">
       <Generator>MSBuild:Compile</Generator>

@@ -4,9 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:br.com.Bonus630DevToolsBar.GMSDragger"
-        xmlns:converters="clr-namespace:br.com.Bonus630DevToolsBar.Converters"  Width="600" d:DataContext="{d:DesignInstance Type=local:MacrosManager}"
+        xmlns:converters="clr-namespace:br.com.Bonus630DevToolsBar.Converters"  Width="600" MinHeight="260" d:DataContext="{d:DesignInstance Type=local:MacrosManager}"
         mc:Ignorable="d"
-        Title="CommandManager">
+        Title="Macro Installation Wizard">
     <Window.Resources>
         <ResourceDictionary>
             <converters:PathToImageConverter x:Key="PathToImageConverter" />
@@ -27,52 +27,38 @@
 
     </Window.Resources>
     <StackPanel>
-        <ItemsControl ItemsSource="{Binding Commands}" Margin="10">
-            <!--<ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Command" DisplayMemberBinding="{Binding Command}" Width="Auto">
-                        <GridViewColumn.CellTemplate>-->
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <Grid  Height="40">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" SharedSizeGroup="Column1" />
-                            <ColumnDefinition Width="Auto" SharedSizeGroup="Column2" />
+        <GroupBox Header="Check Macro command and icon.:" Margin="10,0,10,0">
+            <ItemsControl ItemsSource="{Binding Commands}" Margin="10">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid  Height="40">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" SharedSizeGroup="Column1" />
+                                <ColumnDefinition Width="Auto" SharedSizeGroup="Column2" />
+                            </Grid.ColumnDefinitions>
+                            <CheckBox Grid.Column="0" IsChecked="{Binding Add}" Content="{Binding Command}" VerticalAlignment="Center"/>
 
-
-                        </Grid.ColumnDefinitions>
-                        <CheckBox Grid.Column="0" IsChecked="{Binding Add}" Content="{Binding Command}" VerticalAlignment="Center"/>
-
-                        <!--</DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                    <GridViewColumn Header="Icon" DisplayMemberBinding="{Binding Path=DataContext.Icos, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type Window}}}" Width="Auto">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>-->
-                        <ComboBox Grid.Column="1" ItemsSource="{Binding Path=DataContext.Icos, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type Window}}}" Height="40" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Margin="10,0,10,0">
-                            <ComboBox.ItemTemplate>
-                                <DataTemplate>
-                                    <Image Width="32" Height="32" Source="{Binding Converter={StaticResource PathToImageConverter}}" />
-                                </DataTemplate>
-                            </ComboBox.ItemTemplate>
-                            <ComboBox.SelectedItem>
-                                <Binding Path="Ico" Mode="TwoWay" />
-                            </ComboBox.SelectedItem>
-                        </ComboBox>
-                    </Grid>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-            <!--</GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                </GridView>
-            </ListView.View>-->
-
-        </ItemsControl>
-        <Label Content="Command Bar.:" Margin="10,0,10,0"/>
-        <ComboBox ItemsSource="{Binding CommandBars}" IsEditable="True" Text="{Binding NewCommandBar,Mode=TwoWay}" SelectedItem="{Binding SelectedCommandBar}" Margin="10"/>
+                            <ComboBox Grid.Column="1" ItemsSource="{Binding Path=DataContext.Icos, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type Window}}}" Height="40" Width="46" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Margin="10,0,10,0">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Image Width="32" Height="32" Source="{Binding Converter={StaticResource PathToImageConverter}}" />
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                                <ComboBox.SelectedItem>
+                                    <Binding Path="Ico" Mode="TwoWay" />
+                                </ComboBox.SelectedItem>
+                            </ComboBox>
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+        </GroupBox>
+        <GroupBox Header="Choose a  CommandBar.:" Margin="10,0,10,0">
+            <ComboBox ItemsSource="{Binding CommandBars}" IsEditable="True" Text="{Binding NewCommandBar,Mode=TwoWay}" SelectedItem="{Binding SelectedCommandBar}" Margin="10" VerticalContentAlignment="Center"/>
+        </GroupBox>
         <StackPanel Orientation="Horizontal" Margin="10" >
-            <Button Content="OK" Click="Button_Click" />
-            <Button Content="Cancel" Click="Button_Click_1" Margin="10,0,0,0"/>
+            <Button Content="OK" Click="Button_Click" Height="40" Width="60" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+            <Button Content="Cancel" Click="Button_Click_1" Height="40" Width="80" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="10,0,0,0"/>
         </StackPanel>
     </StackPanel>
 </Window>
