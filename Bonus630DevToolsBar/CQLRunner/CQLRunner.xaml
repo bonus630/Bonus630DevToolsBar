@@ -88,7 +88,7 @@
             <Button Grid.Row="2" Grid.Column="3" Background="{x:Null}"  BorderThickness="0"  Width="20" Height="20" ToolTip="Copy list" Click="Button_Click" Margin="0,8,0,0">
                 <Image Width="18" Height="18" Style="{StaticResource CopyBigImg}" />
             </Button>
-            <Label Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" x:Name="lba_console" Content="" />
+            <Label Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" x:Name="lba_console" Content="" ToolTip="Click to copy" MouseLeftButtonUp="lba_console_MouseLeftButtonUp"/>
 
         </Grid>
     </Border>

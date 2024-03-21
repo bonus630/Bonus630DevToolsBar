@@ -46,17 +46,21 @@
             </ItemsControl.ContextMenu>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Button  ToolTip="{Binding Path}" Width="28" Height="28" BorderThickness="0"
+                    <Button  ToolTip="{Binding Path}" Width="34" Height="34" BorderThickness="1"
                              CommandParameter="{Binding}" Command="{Binding DataContext.OpenFolderCommand,RelativeSource=
                         {RelativeSource Mode=FindAncestor,AncestorType=ItemsControl}}" Tag="{Binding DataContext,RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}}">
                         <Grid>
                             <Label Content="{Binding Index}" />
-                            <Image Source="{Binding Icone,TargetNullValue={x:Null}}" Width="28" Height="28" 
+                            <Image Source="{Binding Icone,TargetNullValue={x:Null}}" Width="30" Height="30" Margin="1"
                                Visibility="{Binding RelativeSource={RelativeSource Mode=Self},Path=Source,Converter={StaticResource NullVisibilityConverter}}"/>
                         </Grid>
 
                         <Button.Style>
-                            <Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                                <Setter Property="HorizontalContentAlignment" Value="Center" />
+                                <Setter Property="VerticalContentAlignment" Value="Center" />
+                                <Setter Property="OverridesDefaultStyle" Value="False" />
+                                <Setter Property="Margin" Value="1" />
                                 <Setter Property="Button.ContextMenu" Value="{StaticResource FolderMenuContext}" />
                             </Style>
                         </Button.Style>

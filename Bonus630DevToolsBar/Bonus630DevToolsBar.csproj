@@ -703,6 +703,7 @@
     <Content Include="Resources.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\folderBase.png" />
     <Content Include="SQLite.Interop.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

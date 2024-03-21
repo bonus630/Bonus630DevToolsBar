@@ -801,7 +801,7 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
             try
             {
                 corelApp.BeginDraw();
-                if (page.Background == cdrPageBackground.cdrPageBackgroundNone)
+                if (page.Background == cdrPageBackground.cdrPageBackgroundNone && page.Color.RGBValue != 0)
                 {
                     page.Background = cdrPageBackground.cdrPageBackgroundSolid;
                     page.Color = colorBlack;
@@ -809,6 +809,7 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
                 else
                 {
                     page.Background = cdrPageBackground.cdrPageBackgroundNone;
+                    page.Color = colorWhite;
                 }
                 corelApp.EndDraw();
             }

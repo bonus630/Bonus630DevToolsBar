@@ -277,15 +277,23 @@ namespace br.com.Bonus630DevToolsBar.CQLRunner
         }
         private void SaveCQL(string cql)
         {
-            CQLSucessedList.Add(cql);
-            dsp.SetProperty("CQLSucessedList", GenString());
-            dsp.SetProperty("CQLTempText", "");
+            if (!CQLSucessedList.Contains(cql))
+            {
+                CQLSucessedList.Add(cql);
+                dsp.SetProperty("CQLSucessedList", GenString());
+                dsp.SetProperty("CQLTempText", "");
+            }
         }
 
         private void RadioButton_Click(object sender, RoutedEventArgs e)
         {
             context = Int32.Parse((sender as RadioButton).Tag.ToString());
             dsp.SetProperty("CQLContext", context);
+        }
+
+        private void lba_console_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            System.Windows.Forms.Clipboard.SetText(lba_console.Content.ToString());
         }
     }
 
