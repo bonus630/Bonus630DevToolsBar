@@ -140,27 +140,27 @@
                         </Button.ToolTip>
                         <Button.ContextMenu>
                             <ContextMenu >
-                                <MenuItem Header="Remove" Click="MenuItem_Click" Tag="{Binding ID}" >
+                                <MenuItem Header="Remove" Click="MenuItem_Click" Tag="{Binding Index}" >
                                     <MenuItem.Icon>
                                         <Image Style="{DynamicResource ClearConsoleButtonImg}" />
                                     </MenuItem.Icon>
                                 </MenuItem>
-                                <MenuItem Header="Add to Auto Load" Click="MenuItem_Click_1" Tag="{Binding ID}" >
+                                <MenuItem Header="Add to Auto Load" Click="MenuItem_Click_1" Tag="{Binding Index}" >
                                     <MenuItem.Icon>
                                         <Image Style="{DynamicResource AddShapeRangeImage}" />
                                     </MenuItem.Icon>
                                 </MenuItem>
-                                <MenuItem Header="Remove Auto Load" Click="MenuItem_Click_2" Tag="{Binding ID}" Visibility="{Binding AutoLoad,Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <MenuItem Header="Remove Auto Load" Click="MenuItem_Click_2" Tag="{Binding Index}" Visibility="{Binding AutoLoad,Converter={StaticResource BooleanToVisibilityConverter}}">
                                     <MenuItem.Icon>
                                         <Image Style="{DynamicResource RemoveShapeRangeImage}" />
                                     </MenuItem.Icon>
                                 </MenuItem>
-                                <MenuItem Header="Copy Path" Click="MenuItem_Click_3" Tag="{Binding ID}">
+                                <MenuItem Header="Copy Path" Click="MenuItem_Click_3" Tag="{Binding Index}">
                                     <MenuItem.Icon>
                                         <Image Style="{DynamicResource CopyBigImg}" />
                                     </MenuItem.Icon>
                                 </MenuItem>
-                                <MenuItem Header="Open Directory" Click="MenuItem_Click_4" Tag="{Binding ID}" >
+                                <MenuItem Header="Open Directory" Click="MenuItem_Click_4" Tag="{Binding Index}" >
                                     <MenuItem.Icon>
                                         <Image Style="{DynamicResource OpenFolderImg}" />
                                     </MenuItem.Icon>

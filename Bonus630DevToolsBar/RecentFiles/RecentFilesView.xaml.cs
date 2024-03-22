@@ -195,6 +195,7 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
                 }
                 else
                 {
+                    dataContext[current].Index = current;
                     current++;
                 }
                 count = dataContext.Count;
@@ -248,8 +249,15 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
 
         private void MenuItem_Click_4(object sender, RoutedEventArgs e)
         {
-            RecentFileViewModel r = dataContext[(int)(sender as MenuItem).Tag];
-            System.Diagnostics.Process.Start(r.FullName.Substring(0, r.FullName.LastIndexOf("\\")));
+            try
+            {
+                RecentFileViewModel r = dataContext[(int)(sender as MenuItem).Tag];
+                System.Diagnostics.Process.Start(r.FullName.Substring(0, r.FullName.LastIndexOf("\\")));
+            }
+            catch(Exception ex) 
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 
