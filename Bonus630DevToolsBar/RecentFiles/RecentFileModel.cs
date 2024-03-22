@@ -14,11 +14,14 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
     {
         private readonly string thumbEntry1 = "previews/thumbnail.png";
         private readonly string thumbEntry2 = "metadata/thumbnails/thumbnail.bmp";
+        //private readonly string table = "files";
+       // private readonly string primaryKey = "id";
 
-        public RecentFileModel(int corelVersion):base("RecentFiles", "recent-files",corelVersion)
+
+        public RecentFileModel(int corelVersion):base("RecentFiles", "recent-files",corelVersion,"files","id")
 
         {
-            this.table = "files";
+            
             this.CreateTable("CREATE TABLE IF NOT EXISTS files(id INTEGER PRIMARY KEY,_index INTEGER,count INTEGER,autoload INTEGER,name Varchar(50),path Varchar(256),time INTEGER);");
         }
 

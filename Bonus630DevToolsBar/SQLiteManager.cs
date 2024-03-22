@@ -8,17 +8,20 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Documents;
 
-namespace br.com.Bonus630DevToolsBar.RecentFiles
+namespace br.com.Bonus630DevToolsBar
 {
     public abstract class SQLiteManager
     {
         private string DbFilePath;
         public SQLiteConnection sqliteConnection;
         protected static string component;
-        protected string table;
+        protected readonly string table;
+        protected readonly string primaryKey;
 
-        public SQLiteManager(string component,string dbFileName,int corelVersion)
+        public SQLiteManager(string component,string dbFileName,int corelVersion,string table, string primaryKey)
         {
+            this.table = table;
+            this.primaryKey = primaryKey;
             SQLiteManager.component = component;
             this.checkFile(corelVersion,dbFileName);
         }
@@ -92,7 +95,7 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
 
                 using (SQLiteCommand command = CreateConnection().CreateCommand())
                 {
-                    command.CommandText = "SELECT * FROM files ORDER BY id DESC LIMIT 1;";
+                    command.CommandText = string.Format("SELECT * FROM {0} ORDER BY {1} DESC LIMIT 1;",table,primaryKey);
                   
                     using (SQLiteDataReader dataReader = command.ExecuteReader())
                     {
@@ -105,7 +108,13 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
             catch { }
             return result;
         }
-        public bool CheckExits(string fullName)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="field"></param>
+        /// <param name="fieldValue"></param>
+        /// <returns>Returns -1 if not exists</returns>
+        public int CheckExits(string field,string fieldValue)
         {
             try
             {
@@ -113,8 +122,8 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
 
                 using (SQLiteCommand command = CreateConnection().CreateCommand())
                 {
-                    command.CommandText = "SELECT id FROM files ORDER BY id WHERE path=:path DESC LIMIT 1;";
-                    command.Parameters.AddWithValue(":path", fullName);
+                    command.CommandText = string.Format("SELECT * FROM {0} WHERE {1}=:path ORDER BY {2} DESC LIMIT 1;", table, field,primaryKey);
+                    command.Parameters.AddWithValue(":path", fieldValue);
                  
                     using (SQLiteDataReader dataReader = command.ExecuteReader())
                     {
@@ -122,7 +131,7 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
                             id = dataReader.GetInt32(0);
                         if (id > -1)
                         {
-                            return true;
+                            return id;
                         }
 
                     }
@@ -130,7 +139,7 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
 
             }
             catch { }
-            return false;
+            return -1;
         }
         public void DeleteFile(int id)
         {
@@ -138,7 +147,7 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
             {
                 using (SQLiteCommand command = CreateConnection().CreateCommand())
                 {
-                    command.CommandText = "DELETE FROM files WHERE id=:id";
+                    command.CommandText = string.Format("DELETE FROM {0} WHERE {1}=:id",table,primaryKey);
                     command.Parameters.AddWithValue(":id", id);
                     command.ExecuteNonQuery();
                 }

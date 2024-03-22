@@ -11,11 +11,15 @@ using System.Windows.Media;
 using System.Windows.Documents;
 using System.IO.Compression;
 using System.Xml;
+using System.Runtime.CompilerServices;
 
 namespace br.com.Bonus630DevToolsBar.RunCommandDocker
 {
     public partial class DockerUI : UserControl
     {
+    
+
+      
         private corel.Application corelApp;
         //private object corelObj;
         private Styles.StylesController stylesController;

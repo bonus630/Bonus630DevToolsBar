@@ -12,8 +12,8 @@ namespace br.com.Bonus630DevToolsBar
 {
 
     public partial class ControlUI : UserControl
-    {
-       // public  corel.Application app = null;
+    { 
+        // public  corel.Application app = null;
         public static  corel.Application corelApp = null;
         
 
@@ -57,4 +57,5 @@ namespace br.com.Bonus630DevToolsBar
         }
 
     }
+   
 }

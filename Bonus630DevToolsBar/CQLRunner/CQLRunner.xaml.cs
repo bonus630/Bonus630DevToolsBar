@@ -34,6 +34,8 @@ namespace br.com.Bonus630DevToolsBar.CQLRunner
 
         DataSourceProxy dsp;
         OnScreenCurve ScreenCurve = null;
+        CQLModel model;
+
 
         public CQLRunner(object app)
         {
@@ -45,7 +47,9 @@ namespace br.com.Bonus630DevToolsBar.CQLRunner
                 stylesController = new StylesController(this.Resources, this.corelApp);
                 txt_cql.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
                 txt_cql.AutoCompleteCustomSource = CQLSucessedList;
+                model = new CQLModel(this.corelApp.VersionMajor);
                 txt_cql.KeyUp += Txt_cql_KeyUp1;
+                txt_cql.TextChanged += Txt_cql_TextChanged;
                 this.Loaded += CQLRunner_Loaded;
                 this.Unloaded += CQLRunner_Unloaded;
 
@@ -53,6 +57,14 @@ namespace br.com.Bonus630DevToolsBar.CQLRunner
             catch
             {
                 System.Windows.MessageBox.Show("VGCore Erro");
+            }
+        }
+
+        private void Txt_cql_TextChanged(object sender, EventArgs e)
+        {
+            if (txt_cql.Text.Length > 3)
+            {
+                model.Fill(CQLSucessedList, txt_cql.Text,10);
             }
         }
 
@@ -277,6 +289,10 @@ namespace br.com.Bonus630DevToolsBar.CQLRunner
         }
         private void SaveCQL(string cql)
         {
+            if(model.CheckExits("cql",cql) == -1)
+            {
+                model.InsertData(cql);
+            }
             if (!CQLSucessedList.Contains(cql))
             {
                 CQLSucessedList.Add(cql);

@@ -29,12 +29,6 @@
     <Setting Name="AutoLoad" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="foldersPath" Type="System.Collections.Specialized.StringCollection" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="imagesPath" Type="System.Collections.Specialized.StringCollection" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
     <Setting Name="Editor" Type="System.String" Scope="User">
       <Value Profile="(Default)">C:\Program Files (x86)\Notepad++\notepad++.exe</Value>
     </Setting>

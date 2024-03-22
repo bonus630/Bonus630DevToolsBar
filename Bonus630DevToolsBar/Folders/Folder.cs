@@ -11,6 +11,10 @@ namespace br.com.Bonus630DevToolsBar.Folders
 {
     public class Folder : ViewModelBase
     {
+        public Folder()
+        {
+				
+        }
         public Folder(Folders folders)
         {
 			this.Parent = folders;
@@ -42,11 +46,15 @@ namespace br.com.Bonus630DevToolsBar.Folders
         }
 
 		private string iconePath = string.Empty;
+
+		public string IconePath { get { return iconePath; } }
+
 		public void SetIcone(string iconePath)
 		{
 			this.iconePath = iconePath;
 			if(System.IO.File.Exists(iconePath))
 				Icone = new BitmapImage(new Uri(iconePath,UriKind.Absolute));
+			OnPropertyChanged("Icone");
 		}
 
 		public string GetIcone()

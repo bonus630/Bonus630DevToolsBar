@@ -26,7 +26,7 @@ namespace br.com.Bonus630DevToolsBar.Folders
         public ObservableCollection<Folder> _Folders { get; set; }
 
         private StylesController stylesController;
-
+        private FolderModel folderModel;
 
         public Folders(object app)
         {
@@ -37,10 +37,10 @@ namespace br.com.Bonus630DevToolsBar.Folders
             PastIconeCommand = new BindingCommand<Folder>(PastIcone);
             RemoveCommand = new BindingCommand<Folder>(Remove);
 
-
+            folderModel = new FolderModel((app as Corel.Interop.VGCore.Application).VersionMajor);
             _Folders = new ObservableCollection<Folder>();
             StartFolderShortcuts();
-      
+
             DataContext = this;
             try
             {
@@ -53,29 +53,40 @@ namespace br.com.Bonus630DevToolsBar.Folders
         private void PastFolder(string folder)
         {
             folder = Clipboard.GetText();
-            folder = folder.Trim('"',' ');
-
-            if(Properties.Settings.Default.foldersPath.Contains(folder))
+            folder = folder.Trim('"', ' ');
+            Folder f = null;
+            int id = folderModel.CheckExits("folderPath", folder);
+            if (id > -1)
             {
-                MessageBox.Show("This item already exists");
-                return;
+                for (int i = 0; i < _Folders.Count; i++)
+                {
+                    if (_Folders[i].Index == id)
+                        f = _Folders[i];
+                }
+            }
+            else
+            {
+                f = new Folder(this);
+                _Folders.Add(f);
+
             }
 
-            Folder f = new Folder(this);
-            f.Index = Properties.Settings.Default.foldersPath.Count;
             f.Path = folder;
             string icon = TryDefaultIcon(folder);
-            if(!string.IsNullOrEmpty(icon))
+            if (!string.IsNullOrEmpty(icon))
                 f.SetIcone(icon);
-          
-            _Folders.Add(f);
-            SaveOrUpdate(f);
+
+            if (id > -1)
+                folderModel.UpdateFile(f);
+            else
+                folderModel.InsertData(f);
+            //SaveOrUpdate(f);
 
         }
         private string TryDefaultIcon(string folder)
         {
             string result = string.Empty;
-            string dest = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "bonus630","Folders");
+            string dest = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "bonus630", "Folders");
             if (!Directory.Exists(dest))
                 Directory.CreateDirectory(dest);
             // Possível expressão para contornar bugs de hosts com dots        
@@ -93,47 +104,58 @@ namespace br.com.Bonus630DevToolsBar.Folders
             string host = "";
             if (!string.IsNullOrEmpty(folder))
             {
-                if (exp1.IsMatch(folder))
+                try
                 {
-                    Match match = exp1.Match(folder);
-                    try
+                    if (exp1.IsMatch(folder))
                     {
-                        host = match.Result("${host}");
-                    }
-                    catch
-                    {
+                        Match match = exp1.Match(folder);
+                        try
+                        {
+                            host = match.Result("${host}");
+                        }
+                        catch
+                        {
 
-                    }
-                    if (string.IsNullOrEmpty(host))
-                        result = string.Format("{0}\\{1}.ico", Guid.NewGuid().ToString());
-                    else
-                        result = string.Format("{0}\\{1}.ico",dest, host);
-                    var client = new System.Net.WebClient();
+                        }
+                        if (string.IsNullOrEmpty(host))
+                            result = string.Format("{0}\\{1}.ico", Guid.NewGuid().ToString());
+                        else
+                            result = string.Format("{0}\\{1}.ico", dest, host);
+                        var client = new System.Net.WebClient();
 
-                    client.DownloadFile(
-                        @"https://www.google.com/s2/favicons?sz=32&domain_url="+folder,
-                        result);
+                        client.DownloadFile(
+                            @"https://www.google.com/s2/favicons?sz=32&domain_url=" + folder,
+                            result);
+                        return result;
+                    }
+                }
+                catch { }
+
+
+            }
+
+
+
+            if (Directory.Exists(folder))
+            {
+                try
+                {
+                    string abs = Path.GetFileName(folder).Substring(0, 2).ToUpper();
+                    result = string.Format("{0}\\{1}.png", dest, Path.GetFileName(folder));
+                    System.Drawing.Bitmap bitmap = GenIcone(abs, br.com.Bonus630DevToolsBar.Properties.Resources.folderBase);
+                    bitmap.Save(result, ImageFormat.Png);
                     return result;
                 }
-                
+                catch { }
             }
-           
-            
-          
-            if(Directory.Exists(folder))
-            {
-                string abs = Path.GetFileName(folder).Substring(0, 2).ToUpper();
-                result = string.Format("{0}\\{1}.png", dest, Path.GetFileName(folder));
-                System.Drawing.Bitmap bitmap = GenIcone(abs,br.com.Bonus630DevToolsBar.Properties.Resources.folderBase);
-                bitmap.Save(result, ImageFormat.Png);
-                return result;
-            }
-            if(File.Exists(folder))
+
+
+            if (File.Exists(folder))
             {
                 try
                 {
                     System.Drawing.Bitmap icon = Icon.ExtractAssociatedIcon(folder).ToBitmap();
-                    result = string.Format("{0}\\{1}.ico",dest, Path.GetFileName(folder));
+                    result = string.Format("{0}\\{1}.ico", dest, Path.GetFileName(folder));
                     icon.Save(result);
                     return result;
                 }
@@ -149,9 +171,9 @@ namespace br.com.Bonus630DevToolsBar.Folders
             }
             catch { }
         }
-        private System.Drawing.Bitmap GenIcone(string text,System.Drawing.Bitmap imageBase)
+        private System.Drawing.Bitmap GenIcone(string text, System.Drawing.Bitmap imageBase)
         {
-            
+
             System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(32, 32);
             Graphics g = Graphics.FromImage(bitmap);
             g.FillRectangle(Brushes.Transparent, new System.Drawing.Rectangle(0, 0, 32, 32));
@@ -166,7 +188,7 @@ namespace br.com.Bonus630DevToolsBar.Folders
             g.DrawString(text, f, Brushes.Red, GetPoint(bitmap.Size, textSize));
 
             bitmap.MakeTransparent(System.Drawing.Color.Transparent);
-          
+
             return bitmap;
         }
         private System.Drawing.Point GetPoint(System.Drawing.Size bitmap, SizeF textSize)
@@ -181,11 +203,10 @@ namespace br.com.Bonus630DevToolsBar.Folders
                 of.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.gif;*.bmp;";
                 of.Multiselect = false;
                 of.DefaultExt = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                //MessageBox.Show(of.ShowDialog().ToString());
                 if (of.ShowDialog().Equals(form.DialogResult.OK))
                 {
                     folder.SetIcone(of.FileName);
-                    SaveOrUpdate(folder);
+                    folderModel.UpdateFile(folder);
                 }
             }
             catch
@@ -193,45 +214,17 @@ namespace br.com.Bonus630DevToolsBar.Folders
 
             }
         }
-        private void SaveOrUpdate(Folder folder)
-        {
-            
-            if (folder.Index >= Properties.Settings.Default.foldersPath.Count)
-            {
-                Properties.Settings.Default.foldersPath.Add(folder.Path);
-                Properties.Settings.Default.imagesPath.Add(folder.GetIcone());
-            }
-            else
-            {
-                Properties.Settings.Default.foldersPath[folder.Index] = folder.Path;
-                Properties.Settings.Default.imagesPath[folder.Index] = folder.GetIcone();
-            }
-            Properties.Settings.Default.Save();
-        }
+     
         private void Remove(Folder folder)
         {
+            folderModel.DeleteFile(folder.Index);
             _Folders.Remove(folder);
-            Properties.Settings.Default.foldersPath.RemoveAt(folder.Index);
-            Properties.Settings.Default.imagesPath.RemoveAt(folder.Index);
-            Properties.Settings.Default.Save();
+
         }
         private void StartFolderShortcuts()
         {
-          
-            if (Properties.Settings.Default.foldersPath == null)
-                Properties.Settings.Default.foldersPath = new System.Collections.Specialized.StringCollection();
-            if (Properties.Settings.Default.imagesPath == null)
-                Properties.Settings.Default.imagesPath = new System.Collections.Specialized.StringCollection();
-            
-
-            for (int i = 0; i < Properties.Settings.Default.foldersPath.Count; i++)
-            {
-                Folder f = new Folder(this);
-                f.Index = i;
-                f.Path = Properties.Settings.Default.foldersPath[i];
-                f.SetIcone(Properties.Settings.Default.imagesPath[i]);
-                _Folders.Add(f);
-            }
+            folderModel.Fill(_Folders, this);
+        
         }
     }
 }

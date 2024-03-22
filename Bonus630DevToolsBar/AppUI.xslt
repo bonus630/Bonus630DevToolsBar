@@ -28,6 +28,7 @@
 					  enable="false"
 					  caption="Bonus630DevToolBar"
 					  nonLocalizableName="Bonus630DevToolBar"
+					  
 			/>
 
 			<!-- Run Command Docker Button onInvoke="*Bind(DataSource=Bonus630DevToolsBarDS;Path=RunCommandDocker)"-->
@@ -37,10 +38,11 @@
 					  type="checkButton"  enable="true"/>
 
 			<!-- IconCreatorHelper button -->
-			<!--<itemData guid="d0a371e7-9fad-4e1c-8159-b285d67c0497"
+			<itemData guid="d0a371e7-9fad-4e1c-8159-b285d67c0497"
 					 onInvoke="*Bind(DataSource=Bonus630DevToolsBarDS;Path=RunIconCreatorHelper)"
 					  icon="guid://d0a371e7-9fad-4e1c-8159-b285d67c0497"
-					  type="button"  enable="true" />-->
+					  type="button"  enable="true" />
+			
 			<!-- IconCreatorHelper button -->
 			<itemData guid="d0a371e7-9fad-4e1c-8159-b285d67c0497"
 					 check="*Docker('488c069a-7535-4af9-9c88-eda17c4808f7')"
@@ -71,6 +73,7 @@
 			<itemData guid="2ee3372b-f6b5-47fe-aa81-4ecd2c4771e2"
 					type="wpfhost"
 					hostedType="Addons\Bonus630DevToolsBar\Bonus630DevToolsBar.dll,br.com.Bonus630DevToolsBar.RunCommandDocker.DockerUI"
+					
 					enable="true"
 				  />
 
@@ -90,6 +93,7 @@
 					height="*Bind(DataSource=Bonus630DevToolsBarDS;Path=ItemWidth)"
 					caption="Drag your GMS here!"
 			/>
+			
 			<!--GMS Dragger Dialog test -->
 			<itemData guid="3b3f72b8-0129-4316-b8a3-40e4758ba9bc"
 					type="placeHolder"
@@ -111,8 +115,8 @@
 					type="wpfhost"
 					hostedType="Addons\Bonus630DevToolsBar\Bonus630DevToolsBar.dll,br.com.Bonus630DevToolsBar.GMSDragger.GMSLoader"
 					enable="true"/>
-			<!-- Command Bar Builder-->
 			
+			<!-- Command Bar Builder-->
 			<itemData guid="f9691f7a-27cc-405b-b2f4-de164246bcbd"
 					 onInvoke="*Bind(DataSource=Bonus630DevToolsBarDS;Path=RunCommandBarBuilder)"
 					  icon="guid://f9691f7a-27cc-405b-b2f4-de164246bcbd"
@@ -125,10 +129,10 @@
 					  type="button"  enable="true"/>
 			
 			<!--CQL Runner-->
-			<!--<itemData guid="08bdac37-d2b9-42ad-a498-5335df9783c7"
+			<itemData guid="08bdac37-d2b9-42ad-a498-5335df9783c7"
 					type="wpfhost"
 					hostedType="Addons\Bonus630DevToolsBar\Bonus630DevToolsBar.dll,br.com.Bonus630DevToolsBar.CQLRunner.CQLRunner"
-					enable="true"/>-->	
+					enable="true"/>	
 			
 			<!--DropdownButton CqL-->
 			<itemData guid='51b24cfb-b8df-411f-886c-4c5520e931a4' type='dropDownDlgBtn' arrowStyle='down'
@@ -184,8 +188,10 @@
 					type="wpfhost"
 					hostedType="Addons\Bonus630DevToolsBar\Bonus630DevToolsBar.dll,br.com.Bonus630DevToolsBar.RecentFiles.RecentFilesView"
 					enable="true"
-				
-					  />	<!--Height ="*Bind(DataSource=Bonus630DevToolsBarDS;Path=ItemWidth;BindType=TwoWay)"-->
+			
+					  />
+	
+			<!--Height ="*Bind(DataSource=Bonus630DevToolsBarDS;Path=ItemWidth;BindType=TwoWay)"-->
 
 
 

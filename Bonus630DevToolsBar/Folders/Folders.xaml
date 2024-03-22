@@ -23,6 +23,7 @@
                 </MenuItem>
             </ContextMenu>
             <converters:NullVisibilityConverter x:Key="NullVisibilityConverter" />
+            <converters:InvertEmptyStringToVisibilityConverter x:Key="InvertEmptyStringToVisibilityConverter" />
 
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/RunCommandDocker/Styles/Colors.xaml"/>
@@ -50,7 +51,7 @@
                              CommandParameter="{Binding}" Command="{Binding DataContext.OpenFolderCommand,RelativeSource=
                         {RelativeSource Mode=FindAncestor,AncestorType=ItemsControl}}" Tag="{Binding DataContext,RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}}">
                         <Grid>
-                            <Label Content="{Binding Index}" />
+                            <Label Content="{Binding Index}" Visibility="{Binding IconePath,Converter={StaticResource InvertEmptyStringToVisibilityConverter}}"/>
                             <Image Source="{Binding Icone,TargetNullValue={x:Null}}" Width="30" Height="30" Margin="1"
                                Visibility="{Binding RelativeSource={RelativeSource Mode=Self},Path=Source,Converter={StaticResource NullVisibilityConverter}}"/>
                         </Grid>

@@ -249,6 +249,7 @@
     <Compile Include="Converters\PathToImageConverter.cs" />
     <Compile Include="Converters\StringLenToVisibilityConverter.cs" />
     <Compile Include="Converters\TypeToBoolConverter.cs" />
+    <Compile Include="CQLRunner\CQLModel.cs" />
     <Compile Include="CQLRunner\CQLRunner.xaml.cs">
       <DependentUpon>CQLRunner.xaml</DependentUpon>
     </Compile>
@@ -280,6 +281,7 @@
     <Compile Include="DrawUIExplorer\DataClass\TableData.cs" />
     <Compile Include="DrawUIExplorer\Models\BlockingObservableCollection.cs" />
     <Compile Include="Folders\Folder.cs" />
+    <Compile Include="Folders\FolderModel.cs" />
     <Compile Include="Folders\Folders.xaml.cs">
       <DependentUpon>Folders.xaml</DependentUpon>
     </Compile>
@@ -316,7 +318,7 @@
     </Compile>
     <Compile Include="RecentFiles\RecentFilesViewModel.cs" />
     <Compile Include="RecentFiles\RecentFileViewModel.cs" />
-    <Compile Include="RecentFiles\SQLiteManager.cs" />
+    <Compile Include="SQLiteManager.cs" />
     <Compile Include="RunCommandDocker\BindingCommand.cs" />
     <Compile Include="RunCommandDocker\Command.cs" />
     <Compile Include="RunCommandDocker\CommandProxy.cs" />
