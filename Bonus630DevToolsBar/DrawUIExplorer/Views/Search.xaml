@@ -29,16 +29,16 @@
     <Grid Margin="0,0,0,0">
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="290"/>
+            <RowDefinition Height="330"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0"  >
             <Grid.RowDefinitions>
-                <RowDefinition Height="2*"/>
-                <RowDefinition Height="2*"/>
-                <RowDefinition Height="2*" />
-                <RowDefinition Height="3*"/>
-                <RowDefinition Height="2*"/>
+                <RowDefinition Height="52"/>
+                <RowDefinition Height="68"/>
+                <RowDefinition Height="68" />
+                <RowDefinition Height="86"/>
+                <RowDefinition Height="52"/>
             </Grid.RowDefinitions>
             <GroupBox Grid.Row="0" Header="Guid Value" Margin="0,2,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="400">
                 <StackPanel Orientation="Horizontal">
@@ -62,7 +62,13 @@
                             Margin="8,4,0,0" Height="22" VerticalAlignment="Top" HorizontalAlignment="Left" Width="22" x:Name="btn_setguid" />
                 </StackPanel>
             </GroupBox>
-            <GroupBox Grid.Row="1" Header="Tags"  VerticalAlignment="Top" HorizontalAlignment="Left" Width="400">
+            <GroupBox Grid.Row="1"  VerticalAlignment="Top" HorizontalAlignment="Center" Width="400">
+                <GroupBox.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Tags:" />
+                        <Label Content="{Binding CatchedTagForTagName}" Visibility="{Binding Tags.Count,Converter={StaticResource IntVisibilityConverter}}" />
+                    </StackPanel>
+                </GroupBox.Header>
                 <StackPanel Orientation="Horizontal">
                     <ComboBox HorizontalAlignment="Left" Margin="5,4,0,0" VerticalAlignment="Top" Width="300" x:Name="cb_tags" Tag="TagName" ItemsSource="{Binding Tags}" SelectedItem="{Binding Tag}"/>
                     <Button Content="List" HorizontalAlignment="Left" Margin="8,4,0,0" Width="40" x:Name="btn_getTags"  Height="26" VerticalAlignment="Top"  Tag="TagName"  
@@ -71,7 +77,13 @@
                             CommandParameter="{Binding RelativeSource={RelativeSource Self},Path=Tag}" Command="{Binding AddParam}"/>
                 </StackPanel>
             </GroupBox>
-            <GroupBox Grid.Row="2" Header="Attribute Name"  VerticalAlignment="Top" HorizontalAlignment="Left" Width="400">
+            <GroupBox Grid.Row="2"  VerticalAlignment="Top" HorizontalAlignment="Left" Width="400">
+                <GroupBox.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Attribute Names:" />
+                        <Label Content="{Binding CatchedTagForAttName}" Visibility="{Binding AttributesName.Count,Converter={StaticResource IntVisibilityConverter}}" />
+                    </StackPanel>
+                </GroupBox.Header>
                 <StackPanel Orientation="Horizontal">
                     <CheckBox Content="Only" x:Name="cb_uniqueName" VerticalAlignment="Center" IsChecked="{Binding UniqueName}"/>
                     <ComboBox HorizontalAlignment="Left" Margin="5,6,0,0" VerticalAlignment="Top" Width="255" x:Name="cb_attributeName"  
@@ -82,7 +94,13 @@
                             CommandParameter="{Binding RelativeSource={RelativeSource Self},Path=Tag}" Command="{Binding AddParam}" Height="24" VerticalAlignment="Top"/>
                 </StackPanel>
             </GroupBox>
-            <GroupBox Grid.Row="3" Header="Attribute Value"  VerticalAlignment="Top" HorizontalAlignment="Left" Width="400">
+            <GroupBox Grid.Row="3" VerticalAlignment="Top" HorizontalAlignment="Left" Width="400">
+                <GroupBox.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Attribute Values:" />
+                        <Label Content="{Binding CatchedTagForAttValue}" Visibility="{Binding AttributesValue.Count,Converter={StaticResource IntVisibilityConverter}}" />
+                    </StackPanel>
+                </GroupBox.Header>
                 <StackPanel  VerticalAlignment="Top">
                     <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
                         <RadioButton Content="Equals" Width="80" IsChecked="True" x:Name="rb_att_equals"  Margin="0,-3.335,0,3.335"
@@ -136,15 +154,15 @@
                 </StackPanel>
             </GroupBox>
             <GroupBox Grid.Row="4" Header="Search in"  VerticalAlignment="Top" HorizontalAlignment="Left" Width="400">
-                <StackPanel Height="52" VerticalAlignment="Top">
-                    <StackPanel Orientation="Horizontal" Margin="0,6,0,0" Height="24">
-                        <RadioButton Content="{Binding GlobalDataName,FallbackValue=uiConfig}"  Margin="8,0,0,0" x:Name="rb_allTag"  
+
+                <StackPanel Orientation="Horizontal" Margin="0,6,0,0" Height="24">
+                    <RadioButton Content="{Binding GlobalDataName,FallbackValue=uiConfig}"  Margin="8,0,0,0" x:Name="rb_allTag"  
                                      CommandParameter="{Binding RelativeSource={RelativeSource Self},Path=IsChecked}" Command="{Binding SetGlobalData}"  VerticalAlignment="Center" HorizontalAlignment="Left"/>
 
-                        <RadioButton Content="{Binding LocalDataName,FallbackValue=Items}" IsChecked="True" x:Name="rb_currentTag" 
+                    <RadioButton Content="{Binding LocalDataName,FallbackValue=Items}" IsChecked="True" x:Name="rb_currentTag" 
                                      CommandParameter="{Binding RelativeSource={RelativeSource Self},Path=IsChecked}" Command="{Binding SetLocalData}"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="8,0,0,0"/>
-                    </StackPanel>
                 </StackPanel>
+
             </GroupBox>
             <!--<Label Content="Searching in:" HorizontalAlignment="Left" VerticalAlignment="Top" Height="30" Margin="0,1,0,0"/>
         <Label Content=":" Name="lba_tagname" HorizontalAlignment="Left" Margin="83,0,0,0" VerticalAlignment="Top" FontSize="14" FontWeight="Bold" Background="{x:Null}" Foreground="#FF990B0B" Height="30"/>-->

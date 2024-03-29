@@ -36,7 +36,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
         public event Action<string, MsgType> NewMessage;
         //public event PropertyChangedEventHandler PropertyChanged;
         public event Action<IBasicData> CurrentBasicDataChanged;
-
+        public event Action<bool> InCorelChanged;
         public IBasicData ListPrimaryItens { get; set; }
         public IBasicData CurrentBasicData
         {
@@ -58,9 +58,19 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
         public Corel.Interop.VGCore.Application CorelApp
         {
             get { return app; }
+            set { app = value;  }
         }
         public string FilePath { get; private set; }
-        public bool InCorel { get; private set; }
+
+        private bool inCorel;
+        public bool InCorel 
+        { 
+            get { return inCorel; } 
+            set { inCorel = value; 
+                if (InCorelChanged != null) 
+                    InCorelChanged(value);  
+            } 
+        }
         public string Title { get; private set; }
         public string IconsFolder { get; private set; }
         public CorelAutomation CorelAutomation { get; private set; }
@@ -170,13 +180,24 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
                 throw new Exception("Guids list is null");
             if (!ignoreError && string.IsNullOrEmpty(IconsFolder))
                 throw new Exception("IconsFolders is invalid!");
+
+            //Process.Start(IconsFolder);
+            //System.Windows.Forms.MessageBox.Show(guid);
+
             foreach (var item in guids)
             {
+                //if(item.Key == 22)
+                //    basicData.Icon = string.Format("{0}\\{1}.png", IconsFolder, item.Key);
+                
+
                 if (item.Value.Contains(guid))
                     dispatcher.Invoke(new Action(() =>
                     {
-
+#if X8 || X7
                         basicData.Icon = string.Format("{0}\\{1}.png", IconsFolder, item.Key);
+#else
+                        basicData.Icon = string.Format("{0}\\{1}.png", IconsFolder, item.Key+1);
+#endif
                         return;
                     }));
             }
@@ -238,34 +259,81 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
             {
                 //commandName = commandName.ToLowerInvariant();
                 string result = "";
-                string[] pierces = commandName.Split(" ".ToCharArray());
+                commandName = commandName.Trim(' ','\r','\n','\t');
+                string[] pierces = commandName.Split(" ".ToCharArray(),StringSplitOptions.RemoveEmptyEntries);
                 int j = 0;
                 List<object> param = new List<object>();
-                while (!string.IsNullOrEmpty(pierces[j]) || pierces[j] == " ")
+                commandName = pierces[0];
+                //while (!string.IsNullOrEmpty(pierces[j]) || pierces[j] == " ")
+                //{
+                //    if (!string.IsNullOrEmpty(pierces[j]) && pierces[j] != " ")
+                //    {
+                //        commandName = pierces[j];
+                //        j++;
+                //        break;
+                //    }
+                //    j++;
+                //    if (j >= pierces.Length)
+                //        break;
+                //}
+                //while (j < pierces.Length && (!string.IsNullOrEmpty(pierces[j]) || pierces[j] == " "))
+                //{
+                //    if (!string.IsNullOrEmpty(pierces[j]) && pierces[j] != " ")
+                //    {
+                //        param.Add(pierces[j]);
+                //    }
+                //    j++;
+                //}
+                bool isQuote = false;
+                for (int i = 1; i < pierces.Length; i++)
                 {
-                    if (!string.IsNullOrEmpty(pierces[j]) && pierces[j] != " ")
+                    if (isQuote)
+                        param[param.Count-1] = param[param.Count-1] + " " + pierces[i];
+                    else
+                        param.Add(pierces[i]);
+                    if (pierces[i].StartsWith("\""))
+                        isQuote = true;
+                    if (pierces[i].EndsWith("\""))
+                        isQuote = false;
+                    if (pierces[i].Contains("\"") && pierces[i].Length<2)
                     {
-                        commandName = pierces[j];
-                        j++;
-                        break;
+                        
+                        return "Badly formed command, you cannot start or end a string with spaces";
                     }
-                    j++;
-                    if (j >= pierces.Length)
-                        break;
                 }
-                while (j < pierces.Length && (!string.IsNullOrEmpty(pierces[j]) || pierces[j] == " "))
+
+                if (isQuote)
                 {
-                    if (!string.IsNullOrEmpty(pierces[j]) && pierces[j] != " ")
-                    {
-                        param.Add(pierces[j]);
-                    }
-                    j++;
+                    return "Badly formed command, check the quotes";
                 }
+
+                bool commandNotFound = true;
                 for (int i = 0; i < commands.Length; i++)
                 {
-                    if (commands[i].Name == commandName)
-                        result = commands[i].Invoke(inputCommands, param.ToArray()).ToString();
+                    if (commands[i].Name.Equals(commandName,StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        commandNotFound = false;
+                        int parCount = commands[i].GetParameters().Length;
+                        if(parCount!=param.Count)
+                        {
+                            return "Badly formed command, number of parameters is incorrect";
+                        }
+                        try
+                        {
+                            object o = commands[i].Invoke(inputCommands, param.ToArray());
+                            if (o != null)
+                                result = o.ToString();
+                            else
+                                result = "This command has no return";
+                        }
+                        catch(Exception e)
+                        {
+
+                        }
+                    }
                 }
+                if (commandNotFound)
+                    return string.Format("\"{0}\" It is not a recognized command, type \"Help\" for a list of valid commands", commandName);
                 return result;
             }
             catch (Exception err)
@@ -369,9 +437,9 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
             searchEngine.SearchAllTags(basicData);
         }
 
-        public string GetXml(IBasicData basicData)
+        public string GetXml(IBasicData basicData,bool xmlHeader = true)
         {
-            return xmlDecoder.GetXml(basicData);
+            return xmlDecoder.GetXml(basicData, xmlHeader);
         }
         private void SearchEngine_SearchResultEvent(IBasicData obj)
         {
@@ -566,6 +634,25 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
             if (LoadStarting != null)
                 LoadStarting(true, "Searching");
         }
+
+        //public void MergeData(IBasicData mainData, IBasicData toMergeData)
+        //{
+        //    if(mainData.Equals(toMergeData))
+        //    {
+        //        if (toMergeData.Childrens != null)
+        //        {
+        //            for (int i = 0; i < toMergeData.Childrens.Count; i++)
+        //            {
+        //                if(mainData.Childrens.Contains)
+        //            }
+        //        }
+        //    }
+        //    else
+        //    {
+        //        mainData.Add(toMergeData);
+        //    }
+        //}
+
         public string TryGetAnyCaption(IBasicData basicData)
         {
             string caption = "";

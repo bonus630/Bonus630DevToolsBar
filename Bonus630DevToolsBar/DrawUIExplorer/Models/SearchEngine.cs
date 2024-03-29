@@ -73,7 +73,9 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
             for (int i = 0; i < basicData.Childrens.Count; i++)
             {
                 if (basicData.Childrens[i].TagName == tagName)
+                {
                     searchResult.Add(basicData.Childrens[i]);
+                }
                 if (basicData.Childrens[i].Childrens.Count > 0)
                 {
                     getDataByTagName(basicData.Childrens[i], tagName);

@@ -379,7 +379,7 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
             // Page page = doc.ActivePage;
             page.SizeWidth = pageSize;
             page.SizeHeight = pageSize;
-
+            page.PrintExportBackground = false;
             page.Name = pageSize.ToString();
             double margin = pageSize / this.margin;
             double contourWidth = pageSize / this.contourWidth;
@@ -486,31 +486,31 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
 
             //string name = corelApp.ActiveShape.Name;
             string pngFile = string.Format("{0}\\{1}.png", folder, name);
-            Shape c = null;
-            if (Math.Round(sr.SizeWidth) < size || Math.Round(sr.SizeHeight) < size)
-            {
+            //Shape c = null;
+            //if (Math.Round(sr.SizeWidth) < size || Math.Round(sr.SizeHeight) < size)
+            //{
 
-                c = l.CreateRectangle2(0, 0, size, size);
-                c.Outline.SetNoOutline();
-                c.Fill.ApplyNoFill();
-                c.OrderToBack();
-                sr.CenterX = l.Page.CenterX;
-                sr.CenterY = l.Page.CenterY;
-                sr.Add(c);
-                //sr.AddToSelection();
+            //    c = l.CreateRectangle2(0, 0, size, size);
+            //    c.Outline.SetNoOutline();
+            //    c.Fill.ApplyNoFill();
+            //    c.OrderToBack();
+            //    sr.CenterX = l.Page.CenterX;
+            //    sr.CenterY = l.Page.CenterY;
+            //    sr.Add(c);
+            //    //sr.AddToSelection();
 
-            }
+            //}
             try
             {
 
-                ExportFilter ef = Doc.ExportBitmap(pngFile, cdrFilter.cdrPNG, cdrExportRange.cdrCurrentPage, cdrImageType.cdrRGBColorImage, size, size, resolution, resolution, Transparent: true);
+                ExportFilter ef = Doc.ExportBitmap(pngFile, cdrFilter.cdrPNG, cdrExportRange.cdrCurrentPage, cdrImageType.cdrRGBColorImage, size, size, resolution, resolution, Transparent: true,ExportArea:sr.BoundingBox);
                 ef.Finish();
             }
             catch { return string.Empty; }
             if (optimization)
                 Doc.EndCommandGroup();
-            if(c!=null)
-                c.Delete();
+            //if(c!=null)
+            //    c.Delete();
             return pngFile;
         }
         public void PrepareFiles(string folder)
@@ -1051,13 +1051,15 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
             }
 
         }
+
+        int pageCopiedSize = 0;
         private void MenuItemCopyPage_Click(object sender, RoutedEventArgs e)
         {
             System.Windows.Controls.MenuItem item = sender as System.Windows.Controls.MenuItem;
 
-            int size = Int32.Parse(item.Tag.ToString());
+            pageCopiedSize = Int32.Parse(item.Tag.ToString());
 
-            Page p = GetPageBySize(size);
+            Page p = GetPageBySize(pageCopiedSize);
 
             if (p != null)
             {
@@ -1084,6 +1086,46 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
             }
 
         }
+        private void MenuItemPastPageProp_Click(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Controls.MenuItem item = sender as System.Windows.Controls.MenuItem;
+
+            int size = Int32.Parse(item.Tag.ToString());
+
+            Page p = GetPageBySize(size);
+
+            if (p != null)
+            {
+                p.Activate();
+                Layer l = p.Layers.Find("Icon");
+                if (l != null)
+                {
+                   Shape pastedShape =  l.Paste();
+                    if (pageCopiedSize == 0)
+                        return;
+
+                    Page oriPage = GetPageBySize(pageCopiedSize);
+                    double scaleFactor = (double)size / pageCopiedSize;
+
+                  
+ 
+                    for(int i = 1;i<=pastedShape.Shapes.Count;i++)
+                    {
+                        ScaleOutline(pastedShape.Shapes[i]);
+                    }
+
+                    pastedShape.SizeWidth = pastedShape.SizeWidth * scaleFactor;
+                    pastedShape.SizeHeight = pastedShape.SizeHeight * scaleFactor;
+
+                    pastedShape.CenterX = p.CenterX;
+                    pastedShape.CenterY = p.CenterY;
+
+                    GoTo(size);
+
+                   
+                }
+            }
+        }
 
         private void MenuItemExportPage_Click(object sender, RoutedEventArgs e)
         {
@@ -1102,7 +1144,14 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
                 sfd.DefaultExt = ".png";
                 if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
-                    File.Copy(path, sfd.FileName);
+                    try
+                    {
+                        File.Copy(path, sfd.FileName, true);
+                    }
+                    catch(IOException ioe)
+                    {
+                        corelApp.MsgShow(ioe.Message);
+                    }
 
                 }
             }
@@ -1214,6 +1263,8 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
             Debug.WriteLine("DragEnter - ", "Dragging");
 
         }
+
+      
 
         private void StackPanel_DragLeave(object sender, DragEventArgs e)
         {

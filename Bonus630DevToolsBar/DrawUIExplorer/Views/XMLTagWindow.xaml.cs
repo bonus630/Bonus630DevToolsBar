@@ -91,11 +91,12 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
             treeView_Search.GotFocus += TreeView_SelectedItem;
 
             dataContext.XmlDecode += DataContext_XmlDecode;
-            inputControl.Core = core;
+            inputControl.Core(core);
             if (saveLoad.AutoOpenLastFile && !string.IsNullOrEmpty(saveLoad.LastFilePath))
             {
                 StartProcess(saveLoad.LastFilePath);
             }
+        
         }
 
         private void TreeView_SelectedItem(object sender, RoutedEventArgs e)
@@ -109,7 +110,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
                     UpdateDetailsNoAttached(tv.SelectedItem, e);
             }
         }
-      
+
 
         public void CallDialogFileSelect(bool drawui = true)
         {
@@ -150,6 +151,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
                 string startString = txt_xmlViewer.Text.Substring(0, txt_xmlViewer.CaretIndex);
                 string finalString = txt_xmlViewer.Text.Substring(txt_xmlViewer.CaretIndex);
                 txt_xmlViewer.Text = string.Format("{0}{1}{2}\n\r", startString, xmlEncoder.xmlEncode1(obj), finalString);
+                //txt_xmlViewer.CaretIndex = txt_xmlViewer.GetCharacterIndexFromLineIndex(txt_xmlViewer.LineCount - 1);
                 //txt_xmlViewer.AppendText(XmlEncode.xmlEncode((sender as MenuItemData).Data)+"\r\n");
             }));
         }
@@ -204,12 +206,13 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
             saveLoad.Save();
             this.Dispatcher.Invoke(new Action(() =>
            {
-               //InflateTreeView(core.ListPrimaryItens, treeView_Nodes);
-               tabControl_details.Visibility = Visibility.Visible;
-               search = new Search(core);
-               grid_search.Children.Add(search);
+          
+               //tabControl_details.Visibility = Visibility.Visible;
                details = new Details(core);
                grid_details.Children.Add(details);
+               ///--------
+                search = new Search(core);
+               grid_search.Children.Add(search);
                xslTester = new XSLTEster(core);
                grid_xslTester.Children.Add(xslTester);
                core.ListPrimaryItens.SetSelected(true, true, true);
@@ -242,113 +245,6 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
             }
             ));
         }
-
-        private void SetProgressBar(bool isIndeterminate, bool visible, string msg = "", MsgType msgType = MsgType.Console)
-        {
-            this.Dispatcher.Invoke(new Action(() =>
-            {
-                if (visible)
-                    pb_load.Visibility = Visibility.Visible;
-                else
-                    pb_load.Visibility = Visibility.Collapsed;
-                pb_load.IsIndeterminate = isIndeterminate;
-
-                if (!string.IsNullOrEmpty(msg))
-                {
-                    switch (msgType)
-                    {
-                        case MsgType.Event:
-                            txt_CorelEventViewer.AppendText(string.Format("{0}\r\n", msg));
-                            try
-                            {
-                                txt_CorelEventViewer.ScrollToLine(txt_CorelEventViewer.LineCount - 1);
-                            }
-                            catch { }
-                            break;
-                        case MsgType.Xml:
-                            txt_xmlViewer.AppendText(string.Format("{0}\r\n", msg));
-                            try
-                            {
-                                txt_xmlViewer.ScrollToLine(txt_xmlViewer.LineCount - 1);
-                            }
-                            catch { }
-                            break;
-                        default:
-                            ConsoleSetMsg(msg, msgType);
-                            break;
-
-                    }
-                }
-
-            }
-          ));
-        }
-        private void ConsoleSetMsg(string msg,MsgType msgType)
-        {
-            Brush color = (SolidColorBrush)this.FindResource("Default.Static.Foreground");
-            switch (msgType)
-            {
-              
-                case MsgType.Erro:
-                   color = Brushes.Crimson;
-                    break;
-                case MsgType.Result:
-                    color = Brushes.CadetBlue;
-                    break;
-                
-
-            }
-            string a = "";
-            if (saveLoad.ConsoleCounter)
-                a = (string.Format("{0}. {1}\r", msgCount, msg));
-            else
-                a = (string.Format("{0}\r", msg));
-            txt_console.Text = a;
-
-            TextRange tr;
-            txt_consoleFull.BeginChange();
-            if (saveLoad.ConsoleCounter)
-            {
-                tr = new TextRange(txt_consoleFull.Document.ContentEnd, txt_consoleFull.Document.ContentEnd);
-                tr.Text = string.Format("{0}. ", msgCount);
-                tr.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.DarkGray);
-                msgCount++;
-            }
-            if (msgType == MsgType.Link)
-            {
-                Paragraph p = new Paragraph();
-                Hyperlink link = new Hyperlink(new Run(msg));
-                link.NavigateUri = new Uri(msg);
-                link.RequestNavigate += (s, e) => { System.Diagnostics.Process.Start(e.Uri.ToString()); };
-                p.Inlines.Add(link);
-                txt_consoleFull.Document.Blocks.Add(p);
-            }
-            else
-            {
-                tr = new TextRange(txt_consoleFull.Document.ContentEnd, txt_consoleFull.Document.ContentEnd);
-                tr.Text = string.Format("{0}\r", msg);
-                tr.ApplyPropertyValue(TextElement.ForegroundProperty, color);
-            }
-            txt_consoleFull.EndChange();
-            //}
-            try
-            {
-                // txt_consoleFull.ScrollToEnd();
-                txt_consoleFull.Dispatcher.Invoke(() =>
-                {
-                    Rect r = txt_consoleFull.Document.ContentEnd.GetCharacterRect(LogicalDirection.Backward);
-                    txt_consoleFull.ScrollToVerticalOffset(r.Y);
-                });
-
-            }
-            catch { }
-        }
-
-
-
-
-
-
         private void UpdateDetails(object sender, RoutedEventArgs args)
         {
             // IBasicData data = (sender as TreeViewItemData).Data;
@@ -366,7 +262,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
                 core.HighLightItemHelper.UpdateLayoutMode(data);
             if (parent != null && (parent == "treeView_Nodes" || parent == "treeView_Search"))
             {
-               
+
                 //treeView_Ref.Items.Clear();
                 dataContext.RefList.Clear();
                 if (!string.IsNullOrEmpty(data.GuidRef))
@@ -380,7 +276,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
                     dataContext.RefList.Add(refBasicData);
                     treeView_Ref.ItemsSource = dataContext.RefList;
                 }
-                
+
                 if (treeView_Ref.Items.Count == 0 && treeView_Search.Items.Count == 0)
                     gridRef.Visibility = Visibility.Collapsed;
                 else
@@ -429,6 +325,115 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
             //lba_tagName.Content = data.TagName;
             // args.Handled = true;
         }
+
+        private void SetProgressBar(bool isIndeterminate, bool visible, string msg = "", MsgType msgType = MsgType.Console)
+        {
+            this.Dispatcher.Invoke(new Action(() =>
+            {
+                if (visible)
+                    pb_load.Visibility = Visibility.Visible;
+                else
+                    pb_load.Visibility = Visibility.Collapsed;
+                pb_load.IsIndeterminate = isIndeterminate;
+
+                if (!string.IsNullOrEmpty(msg))
+                {
+                    switch (msgType)
+                    {
+                        case MsgType.Event:
+                            txt_CorelEventViewer.AppendText(string.Format("{0}\r\n", msg));
+                            try
+                            {
+                                txt_CorelEventViewer.ScrollToLine(txt_CorelEventViewer.LineCount - 1);
+                            }
+                            catch { }
+                            break;
+                        case MsgType.Xml:
+                            txt_xmlViewer.AppendText(string.Format("{0}\r\n", msg));
+                            try
+                            {
+                                txt_xmlViewer.ScrollToLine(txt_xmlViewer.LineCount - 1);
+                                tabControl_Details.SelectedIndex = 1;
+                            }
+                            catch { }
+                            break;
+                        default:
+                            ConsoleSetMsg(msg, msgType);
+                            break;
+
+                    }
+                }
+
+            }
+          ));
+        }
+        private void ConsoleSetMsg(string msg, MsgType msgType)
+        {
+            Brush color = (SolidColorBrush)this.FindResource("Default.Static.Foreground");
+            switch (msgType)
+            {
+
+                case MsgType.Erro:
+                    color = Brushes.Crimson;
+                    break;
+                case MsgType.Result:
+                    color = Brushes.CadetBlue;
+                    break;
+
+
+
+            }
+            string a = "";
+            if (saveLoad.ConsoleCounter)
+                a = (string.Format("{0}. {1}\r", msgCount, msg));
+            else
+                a = (string.Format("{0}\r", msg));
+            txt_console.Text = a;
+
+            TextRange tr;
+            txt_consoleFull.BeginChange();
+            if (saveLoad.ConsoleCounter)
+            {
+                tr = new TextRange(txt_consoleFull.Document.ContentEnd, txt_consoleFull.Document.ContentEnd);
+                tr.Text = string.Format("{0}. ", msgCount);
+                tr.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.DarkGray);
+                msgCount++;
+            }
+            if (msgType == MsgType.Link)
+            {
+                Paragraph p = new Paragraph();
+                Hyperlink link = new Hyperlink(new Run(msg));
+                link.NavigateUri = new Uri(msg);
+                link.RequestNavigate += (s, e) => { System.Diagnostics.Process.Start(e.Uri.ToString()); };
+                p.Inlines.Add(link);
+                txt_consoleFull.Document.Blocks.Add(p);
+            }
+            else
+            {
+                tr = new TextRange(txt_consoleFull.Document.ContentEnd, txt_consoleFull.Document.ContentEnd);
+                tr.Text = string.Format("{0}\r", msg);
+                tr.ApplyPropertyValue(TextElement.ForegroundProperty, color);
+            }
+            txt_consoleFull.EndChange();
+            //}
+            try
+            {
+                 txt_consoleFull.ScrollToEnd();
+                txt_consoleFull.Dispatcher.Invoke(() =>
+                {
+                    Rect r = txt_consoleFull.Document.ContentEnd.GetCharacterRect(LogicalDirection.Backward);
+                    txt_consoleFull.ScrollToVerticalOffset(r.Y);
+                });
+
+            }
+            catch { }
+        }
+
+
+
+
+
+
         private void GenerateContextMenu(TreeViewItemData treeViewItemData)
         {
             //ContextMenu contextMenu = new ContextMenu();
@@ -655,28 +660,28 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
 
 
         #endregion
-        private void txt_inputCommand_PreviewKeyUp(object sender, System.Windows.Input.KeyEventArgs e)
-        {
-            TextBox textBox = sender as TextBox;
-            Debug.WriteLine(textBox.CaretIndex);
-            if (e.Key == System.Windows.Input.Key.Enter)
-            {
-                string command = "";
-                command = textBox.GetLineText(textBox.GetLineIndexFromCharacterIndex(textBox.CaretIndex));
-                command.Trim(" ".ToCharArray());
-                Debug.WriteLine(command);
-                textBox.AppendText(Environment.NewLine);
-                //textBox.GetLineText()
-                textBox.AppendText(core.RunCommand(command));
-                textBox.AppendText(Environment.NewLine);
+        //private void txt_inputCommand_PreviewKeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        //{
+        //    TextBox textBox = sender as TextBox;
+        //    Debug.WriteLine(textBox.CaretIndex);
+        //    if (e.Key == System.Windows.Input.Key.Enter)
+        //    {
+        //        string command = "";
+        //        command = textBox.GetLineText(textBox.GetLineIndexFromCharacterIndex(textBox.CaretIndex));
+        //        command.Trim(" ".ToCharArray());
+        //        Debug.WriteLine(command);
+        //        textBox.AppendText(Environment.NewLine);
+        //        //textBox.GetLineText()
+        //        textBox.AppendText(core.RunCommand(command));
+        //        textBox.AppendText(Environment.NewLine);
 
-                textBox.CaretIndex = textBox.Text.Length - 1;
+        //        textBox.CaretIndex = textBox.Text.Length - 1;
 
-            }
-            e.Handled = false;
+        //    }
+        //    e.Handled = false;
 
 
-        }
+        //}
 
         private void btn_clearConsole_Click(object sender, RoutedEventArgs e)
         {
@@ -690,6 +695,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
                     txt_xmlViewer.Text = "";
                     break;
                 case 2:
+                    msgCount = 1;
                     //txt_consoleFull.Text = "";
                     txt_consoleFull.Document.Blocks.Clear();
                     break;

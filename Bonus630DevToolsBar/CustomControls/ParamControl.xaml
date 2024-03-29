@@ -23,16 +23,17 @@
         </Grid.ColumnDefinitions>
         <Image Grid.Column="0" Style="{DynamicResource AddDelegateImg}" Width="20" Height="20" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="This parameter will use the function return as value"
                Visibility="{Binding  RelativeSource={RelativeSource AncestorType=UserControl},Path=IsFunc,Converter={StaticResource BoolVisibilityConverter}}" />
+        
         <TextBox Grid.Column="1"  x:Name="txt_paramValue" Height="28" Text="{Binding  RelativeSource={RelativeSource AncestorType=UserControl},Path=ParamValue, Converter={StaticResource TypeToStringConverter}}"
                  VerticalContentAlignment="Center"
                  Visibility="{Binding  RelativeSource={RelativeSource AncestorType=UserControl},Path=IsVariant,Converter={StaticResource BoolVisibilityConverter}}" />
 
-        <local:NumericTextBox Grid.Column="1"  x:Name="numeric_paramValue" NumericType="_Int"  Text="{Binding  RelativeSource={RelativeSource AncestorType=UserControl},Path=ParamValue, Converter={StaticResource TypeToStringConverter}}"
-                 VerticalContentAlignment="Center" 
+        <local:NumericTextBox Grid.Column="1"  x:Name="numeric_paramValue" NumericType="_Int" VerticalContentAlignment="Center"  
+                              Text="{Binding  RelativeSource={RelativeSource AncestorType=UserControl},Path=ParamValue, Converter={StaticResource TypeToStringConverter}}"
                               Visibility="{Binding  RelativeSource={RelativeSource AncestorType=UserControl},Path=IsInteger,Converter={StaticResource BoolVisibilityConverter}}"/>
 
-        <local:NumericTextBox Grid.Column="1"  DecimalPlaces="9" NumericType="_Double" Text="{Binding  RelativeSource={RelativeSource AncestorType=UserControl},Path=ParamValue, Converter={StaticResource TypeToStringConverter}}"
-                 VerticalContentAlignment="Center"  
+        <local:NumericTextBox Grid.Column="1" x:Name="decimal_paramValue" DecimalPlaces="9" NumericType="_Double" VerticalContentAlignment="Center" 
+                              Text="{Binding  RelativeSource={RelativeSource AncestorType=UserControl},Path=ParamValue, Converter={StaticResource TypeToStringConverter}}"
                               Visibility="{Binding  RelativeSource={RelativeSource AncestorType=UserControl},Path=IsDecimal,Converter={StaticResource BoolVisibilityConverter}}"/>
         <!--Text="{Binding RelativeSource={RelativeSource AncestorType=local:ParamControl},Path=ParamValue,Converter={StaticResource TypeToStringConverter}}"--> 
                  <!--Visibility="{Binding RelativeSource={RelativeSource AncestorType=local:ParamControl},Path=ParamType,Converter={StaticResource TypeToVisibilityConverter}, ConverterParameter={x:Type System:String}}" />-->

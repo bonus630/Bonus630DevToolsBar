@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.DataClass
 {
@@ -25,6 +26,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.DataClass
         private bool isSelected = false;
         private bool isSpecialType = false;
         private string text;
+        private string label = "";
         protected bool isContainer = false;
 
         //protected IBasicData prevSelected;
@@ -34,6 +36,11 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.DataClass
         {
             get { return text; }
             set { text = value; OnPropertyChanged(); }
+        }
+        public string Label
+        {
+            get { return label; }
+            set { label = value; OnPropertyChanged(); }
         }
         //Teste getresource
         private string icon;
@@ -75,6 +82,13 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.DataClass
             get { return childrenSelected; }
             set { childrenSelected = value; OnPropertyChanged(); }
         }
+        private SolidColorBrush markColor;
+
+        public SolidColorBrush MarkColor
+        {
+            get { return markColor; }
+            set { markColor = value; OnPropertyChanged(); }
+        }
         private bool marked;
 
         public bool Marked
@@ -82,7 +96,6 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.DataClass
             get { return marked; }
             set { marked = value; OnPropertyChanged(); }
         }
-
         public BasicData()
         {
             this.type = typeof(T);

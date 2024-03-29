@@ -22,10 +22,43 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Controls
         public InputCommandsView()
         {
             InitializeComponent();
+            txt_formInputCommand.KeyUp += TextBox_KeyUp;
+            txt_formInputCommand.KeyDown += TextBox_KeyDown;
+            //txt_formInputCommand.Click += Txt_formInputCommand_Click;
+
+            txt_formInputCommand.GotFocus += Txt_formInputCommand_GotFocus;
+            txt_formInputCommand.LostFocus += Txt_formInputCommand_LostFocus;
             autoCompleteInputCommand();
             userCommands = new List<string>();
+           
+
         }
-        public Core Core { get; set; }
+
+        private void Txt_formInputCommand_LostFocus(object sender, EventArgs e)
+        {
+            Debug.WriteLine("Txt_formInputCommand LostFocus");
+        }
+
+        private void Txt_formInputCommand_GotFocus(object sender, EventArgs e)
+        {
+            Debug.WriteLine("Txt_formInputCommand GetFocus");
+        }
+
+        private void Txt_formInputCommand_Click(object sender, EventArgs e)
+        {
+            Debug.WriteLine("Txt_formInputCommand MouseClick");
+            txt_formInputCommand.Focus();
+            
+        }
+        private Core core;
+        public void Core(Core core)
+        {
+            this.core = core;
+            core.InCorelChanged += (v) => { autoCompleteInputCommand(); };
+        }
+
+       
+
         private void autoCompleteInputCommand()
         {
             autoCompleteStringCollection = new System.Windows.Forms.AutoCompleteStringCollection();
@@ -43,8 +76,34 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Controls
             txt_formInputCommand.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
             txt_formInputCommand.AutoCompleteCustomSource = autoCompleteStringCollection;
             txt_formInputCommand.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
-           
             txt_formInputCommand.Focus();
+        }
+        private void TextBox_KeyDown(object sender,System.Windows.Forms.KeyEventArgs e)
+        {
+            if (userCommands.Count == 0)
+                return;
+            if (e.KeyCode == System.Windows.Forms.Keys.Up)
+            {
+
+                if (currentCommandIndex ==0)
+                    return;
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+                Debug.WriteLine("Txt_formInputCommand Keydown UP ");
+
+            }
+            if (e.KeyCode == System.Windows.Forms.Keys.Down)
+            {
+
+                if (currentCommandIndex == userCommands.Count - 1)
+                    return;
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+                Debug.WriteLine("Txt_formInputCommand Keydown DOWN ");
+            }
+          
+
+           
         }
         private void TextBox_KeyUp(object sender, System.Windows.Forms.KeyEventArgs e)
         {
@@ -57,6 +116,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Controls
                 command = textBox.Text;
                 command.Trim(" ".ToCharArray());
                 Debug.WriteLine(command);
+                string result = core.RunCommand(command);
 
                 // txt_inputCommandResult.AppendText(Environment.NewLine);
                 //textBox.GetLineText()
@@ -64,36 +124,50 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Controls
                 currentCommandIndex=0;
                 txt_inputCommandResult.AppendText(command);
                 txt_inputCommandResult.AppendText(Environment.NewLine);
-                string result = Core.RunCommand(command);
+                
                 if (!string.IsNullOrEmpty(result))
                 {
                     txt_inputCommandResult.AppendText(result);
                     txt_inputCommandResult.AppendText(Environment.NewLine);
                     txt_formInputCommand.Text = "";
                 }
+                txt_inputCommandResult.Focus();
+                txt_inputCommandResult.CaretIndex = txt_inputCommandResult.Text.Length;
+                txt_inputCommandResult.ScrollToEnd();
                 txt_formInputCommand.Focus();
                 // textBox.CaretIndex = textBox.Text.Length - 1;
               
             }
             //Need fix this
+
+            if (autoCompleteStringCollection.Contains(txt_formInputCommand.Text))
+                return;
+
             if (e.KeyCode == System.Windows.Forms.Keys.Up)
             {
+               
                 if (userCommands.Count == 0)
                     return;
                 if (currentCommandIndex > 0)
+                {
                     currentCommandIndex--;
-                txt_formInputCommand.Text = userCommands[currentCommandIndex];
-                e.Handled = true;
+                    Debug.WriteLine("Txt_formInputCommand Keyup UP: " + userCommands[currentCommandIndex]);
+                    txt_formInputCommand.Text = userCommands[currentCommandIndex];
+                    
+                }
 
             }
             if (e.KeyCode == System.Windows.Forms.Keys.Down)
             {
+               
                 if (userCommands.Count == 0)
                     return;
-                if (currentCommandIndex < userCommands.Count)
+                if (currentCommandIndex < userCommands.Count - 1)
+                {
                     currentCommandIndex++;
-                txt_formInputCommand.Text = userCommands[currentCommandIndex - 1];
-                e.Handled = true;
+                    Debug.WriteLine("Txt_formInputCommand Keyup DOWN: " + userCommands[currentCommandIndex]);
+                    txt_formInputCommand.Text = userCommands[currentCommandIndex];
+                }
             }
 
            
@@ -101,41 +175,43 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Controls
 
         }
 
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
-        {
-            txt_formInputCommand.Focus();
-        }
-
-        private void UserControl_GotFocus(object sender, RoutedEventArgs e)
-        {
-            txt_formInputCommand.Focus();
-        }
-        protected override void OnGotFocus(RoutedEventArgs e)
-        {
-            base.OnGotFocus(e);
-            txt_formInputCommand.Focus();
-        }
+     
+     
         private void txt_inputCommandResult_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             var wpfKey = e.Key == System.Windows.Input.Key.System ? e.SystemKey : e.Key;
             var winformModifiers = e.KeyboardDevice.Modifiers.ToWinforms();
             var winformKeys = (System.Windows.Forms.Keys)System.Windows.Input.KeyInterop.VirtualKeyFromKey(wpfKey);
+            if(winformKeys==System.Windows.Forms.Keys.Enter)
+            {
+                var textbox = (sender as TextBox);
+                int count = 0;
+                int caret = textbox.CaretIndex;
+                string text = "";
+                for (int i = 0; i < textbox.LineCount; i++)
+                {
+                    if(caret > count && caret < count+ textbox.GetLineLength(i))
+                    {
+                        text = textbox.GetLineText(i);
+                        break;
+                    }
+                    count += textbox.GetLineLength(i);
+                }
+                if(!string.IsNullOrEmpty(text))
+                {
+                    txt_formInputCommand.Text = text;
+                }
+            }
+
+
             txt_formInputCommand.Focus();
             TextBox_KeyUp(txt_formInputCommand, new System.Windows.Forms.KeyEventArgs(winformKeys));
             e.Handled = false;
         }
 
-        private void txt_formInputCommand_PreviewKeyDown(object sender, System.Windows.Forms.PreviewKeyDownEventArgs e)
-        {
-           
-            
+    
 
-        }
-
-        private void UserControl_FocusableChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            txt_formInputCommand.Focus();
-        }
+        
     }
   
 }

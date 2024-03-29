@@ -29,44 +29,10 @@ namespace br.com.Bonus630DevToolsBar.DataSource
 
         public Bonus630DevToolsBarDataSource(DataSourceProxy proxy, Application corelApp) : base(proxy, corelApp)
         {
-            // corelApp.OnApplicationEvent += CorelApp_OnApplicationEvent;
-            //corelApp.OnPluginCommand += CorelApp_OnPluginCommand;
-        }
-
-        private void CorelApp_OnPluginCommand(string CommandID)
-        {
-            System.Windows.Forms.MessageBox.Show(CommandID);
-        }
-
-        // private int test = 1;
-        private void CorelApp_OnApplicationEvent(string EventName, ref object[] Parameters)
-        {
-               // CQLContext = test ++;
-            if (EventName.Equals("FrameworkManagerToolbarListChanged"))
-            {
-                int x = 0, y = 0, w = 0, h = 0;
-                CorelApp.FrameWork.Automation.GetItemScreenRect("fa65d0c1-879b-4ef5-9465-af09e00e91ab", "fa65d0c1-879b-4ef5-9465-af09e00e91ab", out x, out y, out w, out h);
-                //ItemWidth = h;
-                //if (h == 40)
-                //{
-                //    this.Width = 26;
-                //    this.Height = 26;
-                //}
-                //else if (h == 48)
-                //{
-                //    this.Width = 32;
-                //    this.Height = 32;
-                //}
-                //else
-                //{
-                //    this.Width = 20;
-                //    this.Height = 20;
-                //}
-
-            }
-        }
-
      
+        }
+
+    
 
         // You can change caption/icon dynamically setting a new value here 
         //or loading the value from resource specifying the id of the caption/icon 
@@ -127,19 +93,6 @@ namespace br.com.Bonus630DevToolsBar.DataSource
             {
                 cqlContext = value;
                 NotifyPropertyChanged();
-            }
-        }
-        private int itemWidth = 20;
-        //private Application corelApp;
-
-        public int ItemWidth
-        {
-            get { return itemWidth; }
-            set
-            {
-                itemWidth = value;
-                NotifyPropertyChanged();
-
             }
         }
    

@@ -154,7 +154,6 @@ namespace br.com.Bonus630DevToolsBar.CustomControls
                     return;
                 }
             }
-
             e.Handled = stop;
             Debug.WriteLine("TXT:" + (sender as TextBox).Text);
         }
@@ -182,6 +181,9 @@ namespace br.com.Bonus630DevToolsBar.CustomControls
         }
         private void OnValueChanged()
         {
+            double.TryParse(Text.Replace(toReplaceSymbol, regionSymbol), out _value);
+            Value = _value;
+
             if (prevValue == Value && textChangedByValue)
             {
                 textChangedByValue = false;
@@ -189,8 +191,6 @@ namespace br.com.Bonus630DevToolsBar.CustomControls
             }
             else
             {
-                double.TryParse(Text.Replace(toReplaceSymbol, regionSymbol), out _value);
-                Value = _value;
                 prevValue = Value;
             }
             if (ValueChangedEvent != null)
@@ -239,7 +239,6 @@ namespace br.com.Bonus630DevToolsBar.CustomControls
             NumericTextBox ntx = d as NumericTextBox;
             ntx.textChangedByValue = true;
             ntx.Text = e.NewValue.ToString();
-
         }
         #endregion
 

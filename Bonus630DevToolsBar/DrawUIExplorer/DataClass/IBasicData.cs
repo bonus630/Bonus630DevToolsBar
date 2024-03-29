@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Windows.Media;
 
 
 namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.DataClass
@@ -11,6 +12,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.DataClass
         string GuidRef { get; set; }
         string TagName { get; set; }
         string Text { get; set; }
+        string Label { get; set; }
         //teste getresource
         string Icon { get; set; }
         string Caption { get; set; }
@@ -18,6 +20,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.DataClass
         bool IsContainer { get; }
         bool ChildrenSelected { get; set; }
         bool Marked { get; set; }
+        SolidColorBrush MarkColor { get; set; }
         void SetSelected(bool isSelected, bool? isExpands, bool update, bool recursive = false);
         int XmlChildrenID { get; }
         int PathIndex { get; }

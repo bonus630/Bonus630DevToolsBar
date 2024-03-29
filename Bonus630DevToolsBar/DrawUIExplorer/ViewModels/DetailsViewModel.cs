@@ -17,7 +17,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
         public DetailsViewModel(Core core) : base(core)
         {
             corelAutomation = new CorelAutomation(core.CorelApp, core);
-            this.core = core;
+            this.Core = core;
             corelApp = core.CorelApp;
             RunBindCommand = new ViewModels.Commands.AttributeCommand(attributeContentExec, attributeContentCanExec);
             RunBindWithParamCommand = new ViewModels.Commands.AttributeCommand(attributeContentExecWithParam, attributeContentCanExec);
@@ -135,7 +135,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
             //Index = basicData.XmlChildreID;
             //IndexRef = basicData.XmlChildreParentID;
             //Text = basicData.Text;
-            temp = core.Route;
+            temp = Core.Route;
             string route = "";
             for (int i = 0; i < temp.Count; i++)
             {
@@ -175,11 +175,11 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
         }
         private void attributeSearchGuid(Attribute attribute)
         {
-            core.FindByGuid(core.ListPrimaryItens.Childrens, attribute.Value);
+            Core.FindByGuid(Core.ListPrimaryItens.Childrens, attribute.Value);
         }
         private void attributeSearchItem(Attribute attribute)
         {
-            core.FindItemContainsGuidRef(core.ListPrimaryItens, attribute.Value);
+            Core.FindItemContainsGuidRef(Core.ListPrimaryItens, attribute.Value);
         }
         private void attributeCopy(Attribute attribute)
         {
@@ -221,18 +221,18 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
         }
         private void importInCorel(string obj)
         {
-            if (core.InCorel)
-                if (core.CorelApp.ActiveDocument != null && core.CorelApp.ActiveLayer != null)
-                    core.CorelApp.ActiveLayer.Import(obj);
+            if (Core.InCorel)
+                if (Core.CorelApp.ActiveDocument != null && Core.CorelApp.ActiveLayer != null)
+                    Core.CorelApp.ActiveLayer.Import(obj);
         }
         private void openIconsFolder(string obj)
         {
-            System.Diagnostics.Process.Start(core.IconsFolder);
+            System.Diagnostics.Process.Start(Core.IconsFolder);
         }
         private bool canImportInCorel()
         {
-            if (core.InCorel)
-                if (core.CorelApp.ActiveDocument != null && core.CorelApp.ActiveLayer != null)
+            if (Core.InCorel)
+                if (Core.CorelApp.ActiveDocument != null && Core.CorelApp.ActiveLayer != null)
                     return true;
             return false;
         }
@@ -266,7 +266,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
                 {
                     string t = "";
                     //caption = core.SearchItemFromGuidRef(core.ListPrimaryItens, basicData.GetAttribute(searchs[i])).Caption;
-                    Caption = tryGetAnyCaption(core.SearchItemFromGuidRef(core.ListPrimaryItens, CurrentBasicData.GetAttribute(searchs[i])), out t);
+                    Caption = tryGetAnyCaption(Core.SearchItemFromGuidRef(Core.ListPrimaryItens, CurrentBasicData.GetAttribute(searchs[i])), out t);
                     CaptionLocalization = searchs[i];
 
                 }
@@ -310,7 +310,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
                     string guid = basicData.GetAttribute(searchs[i]);
                     if (!string.IsNullOrEmpty(guid))
                     {
-                        caption = tryGetAnyCaption(core.SearchItemFromGuidRef(core.ListPrimaryItens, guid), out method);
+                        caption = tryGetAnyCaption(Core.SearchItemFromGuidRef(Core.ListPrimaryItens, guid), out method);
                         method = searchs[i];
                     }
                 }

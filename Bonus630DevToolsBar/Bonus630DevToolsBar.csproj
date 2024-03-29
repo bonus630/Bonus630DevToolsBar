@@ -244,6 +244,7 @@
     <Compile Include="Converters\ImagePathConverter.cs" />
     <Compile Include="Converters\ImagePathConverterD.cs" />
     <Compile Include="Converters\InvertEmptyStringToVisibilityConverter.cs" />
+    <Compile Include="Converters\MarkerColorBaseDataConverter.cs" />
     <Compile Include="Converters\MultiItemConverter.cs" />
     <Compile Include="Converters\NormalizeImagePathConverter.cs" />
     <Compile Include="Converters\PathToImageConverter.cs" />
@@ -265,9 +266,6 @@
     </Compile>
     <Compile Include="CustomControls\IconTextBox.xaml.cs">
       <DependentUpon>IconTextBox.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="CustomControls\Image.xaml.cs">
-      <DependentUpon>Image.xaml</DependentUpon>
     </Compile>
     <Compile Include="CustomControls\NumericTextBox.xaml.cs">
       <DependentUpon>NumericTextBox.xaml</DependentUpon>
@@ -473,10 +471,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="CustomControls\IconTextBox.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="CustomControls\Image.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -911,10 +905,11 @@
   </ItemGroup>
   <PropertyGroup>
     <StartAction>Program</StartAction>
+    <!-- <StartProgram>$(CurrentCorelPath)Addons\Bonus630DevToolsBar\DrawUIExplorer.exe</StartProgram>-->
     <StartProgram>$(CurrentCorelPath)CorelDRW.exe</StartProgram>
   </PropertyGroup>
   <!-- DependsOnTargets="CopyFiles" Condition="'$(Configuration)' == 'Release'" -->
-  <Target Name="CreateShortcuts" DependsOnTargets="CopyFiles" AfterTargets="Build">
+  <Target Name="CreateShortcuts" DependsOnTargets="CopyFiles" AfterTargets="Build" Condition="$(Configuration.Contains('Release'))">
     <Message Text="Create Shortcuts" />
     <Exec Command="&quot;$(CurrentCorelPath)Addons\$(SolutionName)\CreateShortcuts.exe&quot;" />
   </Target>

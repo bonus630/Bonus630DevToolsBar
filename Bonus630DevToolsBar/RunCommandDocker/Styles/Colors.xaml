@@ -259,6 +259,11 @@
 
     <!--#endregion colors styles resource-->
 
+    <SolidColorBrush x:Key="Red" Color="Red" />
+    <SolidColorBrush x:Key="Green" Color="Green" />
+
+
+
     <!--default controls colors-->
     <LinearGradientBrush x:Key="ComboBox.Static.Background" EndPoint="0,1" StartPoint="0,0">
         <GradientStop Color="#FFF0F0F0" Offset="0.0"/>

@@ -117,7 +117,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
                 if (localData)
                     SearchBasicData = this.CurrentBasicData;
                 LocalDataName = this.CurrentBasicData.TagName;
-                GlobalDataName = core.ListPrimaryItens.TagName;
+                GlobalDataName = Core.ListPrimaryItens.TagName;
             //}
         }
         protected override void UpdateNoAttached(IBasicData basicData)
@@ -182,6 +182,22 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
             get { return globalDataName; }
             set { globalDataName = value; OnPropertyChanged(); }
         }
+        private string catchedTagForTagName, catchedTagForAttName, catchedTagForAttValue;
+        public string CatchedTagForTagName
+        {
+            get { return catchedTagForTagName; }
+            set { catchedTagForTagName = value; OnPropertyChanged(); }
+        }
+        public string CatchedTagForAttName
+        {
+            get { return catchedTagForAttName; }
+            set { catchedTagForAttName = value; OnPropertyChanged(); }
+        }
+        public string CatchedTagForAttValue
+        {
+            get { return catchedTagForAttValue; }
+            set { catchedTagForAttValue = value; OnPropertyChanged(); }
+        }
         private void addParam(string tag)
         {
             try
@@ -229,7 +245,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
             }
             catch (Exception erro)
             {
-                core.DispactchNewMessage(erro.Message, MsgType.Console);
+                Core.DispactchNewMessage(erro.Message, MsgType.Console);
             }
 
         }
@@ -246,12 +262,15 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
             {
                 case "TagName":
                         Tags  = setCollection(tags,searchEngine.SearchAllTags(this.CurrentBasicData));
+                        CatchedTagForTagName = this.CurrentBasicData.TagName;
                     break;
                 case "AttributeName":
                         AttributesName = setCollection(attributesName,searchEngine.SearchAllAttributesName(this.CurrentBasicData, SearchOrderResult.ASC));
+                    CatchedTagForAttName = this.CurrentBasicData.TagName;
                     break;
                 case "AttributeValue":
                         AttributesValue = setCollection(attributesValue,searchEngine.SearchAllAttributesValue(this.CurrentBasicData, SearchOrderResult.ASC));
+                        CatchedTagForAttValue = this.CurrentBasicData.TagName;
                     break;
             }
 
@@ -357,7 +376,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
             if (s)
             {
                 localData = false;
-                SearchBasicData = core.ListPrimaryItens;
+                SearchBasicData = Core.ListPrimaryItens;
             }
         }
     }

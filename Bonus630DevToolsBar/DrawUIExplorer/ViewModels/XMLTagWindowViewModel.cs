@@ -1,12 +1,15 @@
 ﻿using br.com.Bonus630DevToolsBar.DrawUIExplorer.DataClass;
 using br.com.Bonus630DevToolsBar.DrawUIExplorer.Models;
 using br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels.Commands;
+using br.com.Bonus630DevToolsBar.Properties;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Reflection;
+using System.Resources;
 using System.Windows;
+using System.Windows.Media;
 using System.Windows.Threading;
 
 namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
@@ -21,12 +24,13 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
         public XMLTagWindowViewModel(Core core) : base(core)
         {
             dispatcher = Dispatcher.CurrentDispatcher;
-            autoCompleteInputCommand();
+            //autoCompleteInputCommand();
             this.mainList = new ObservableCollection<IBasicData>();
             this.refList = new ObservableCollection<IBasicData>();
             this.searchList = new ObservableCollection<IBasicData>();
             core.LoadListsFinish += Core_LoadListsFinish;
             core.SearchResultEvent += Core_SearchResultEvent;
+            core.InCorelChanged += (b) => InCorel = b;
             initializeCommands();
         }
 
@@ -42,7 +46,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
             //mainList.Add(core.ListPrimaryItens);
             dispatcher.Invoke(new Action(() =>
             {
-                mainList.Add(core.ListPrimaryItens);
+                mainList.Add(Core.ListPrimaryItens);
                 OnPropertyChanged("MainList");
             }));
         }
@@ -107,7 +111,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
         public BaseDataCommand GetDockersGuidCommand { get; protected set; }
         public BaseDataCommand GetIUnknownTypesCommand { get; protected set; }
         public BaseDataCommand RemoveMeCommand { get; protected set; }
-        public BaseDataCommand MarkCommand { get; protected set; }
+        public RoutedCommand<Tuple<SolidColorBrush, IBasicData>> MarkCommand { get; protected set; }
         public BaseDataCommand UnMarkCommand { get; protected set; }
 
 
@@ -133,25 +137,38 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
             GetDockersCaptionCommand = new BaseDataCommand(GetDockersCaptionExec, IsDockers);
             GetDockersGuidCommand = new BaseDataCommand(GetDockersGuidExec, IsDockers);
             RemoveMeCommand = new BaseDataCommand(RemoveMeExec, IsSearchData);
-            MarkCommand = new BaseDataCommand(Mark, IsUnMarked);
-            UnMarkCommand = new BaseDataCommand(Mark, IsMarked);
+            MarkCommand = new RoutedCommand<Tuple<SolidColorBrush,IBasicData>>(MarkColor, IsUnMarked);
+            UnMarkCommand = new BaseDataCommand(UnMark, IsMarked);
             HighLightCommand = new SimpleCommand(showHighLightItem);
             LayoutCommand = new BaseDataCommand(layoutAdorms, IsComplexLayout);
         }
 
-        private void Mark(IBasicData data)
+        private void MarkColor(Tuple<SolidColorBrush,IBasicData> data)
         {
-            data.Marked = !data.Marked;
+            data.Item2.Marked = true;
+            data.Item2.MarkColor = data.Item1;
         }
-        private bool IsUnMarked(IBasicData data)
+        private bool IsUnMarked(object data)
         {
-            return !data.Marked;
+            return true;
+            //verificar
+            Console.WriteLine(data.GetType());
+            return true;
+            //return !(data as IBasicData).Marked;
         } 
+        private bool IsMarked(object data)
+        {
+            return IsUnMarked(data);
+        }
         private bool IsMarked(IBasicData data)
         {
             return data.Marked;
         }
-
+        private void UnMark(IBasicData data)
+        {
+            data.Marked = false;
+            data.MarkColor = Brushes.Transparent;
+        }
         private bool IsDockers(IBasicData basicData)
         {
             if (basicData.TagName == "dockers")
@@ -202,16 +219,19 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
         }
         private bool HasGuid(IBasicData basicData)
         {
-            if (!string.IsNullOrEmpty(basicData.Guid))
+            if (!string.IsNullOrEmpty(basicData.Guid) && Core.InCorel)
                 return true;
             return false;
         }
         private void FindRefExec(DataClass.Attribute att)
         {
-            core.FindByGuid(core.ListPrimaryItens.Childrens, att.Value);
+            Core.FindByGuid(Core.ListPrimaryItens.Childrens, att.Value);
         }
         private bool IsAttributeRef(DataClass.Attribute att)
         {
+            //Console.WriteLine("Attribute {0}",att);
+           // return false;
+            //verificar
             if (att.Name == "guid" || att.Name == "guidRef")
                 return false;
             return att.IsGuid;
@@ -255,7 +275,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
         }
         private void GetCaptionTextExec(IBasicData basicData)
         {
-            core.DispactchNewMessage(CorelCmd.GetCaption(basicData.Guid), MsgType.Console);
+            Core.DispactchNewMessage(CorelCmd.GetCaption(basicData.Guid), MsgType.Console);
         }
         private void ItemInvokeExec(IBasicData basicData)
         {
@@ -263,7 +283,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
         }
         private void IUnknownTypeInvokeExec(IBasicData basicData)
         {
-            List<Type> types = core.GetIUnknown(basicData);
+            List<Type> types = Core.GetIUnknown(basicData);
 
             string r = "";
             for (int i = 0; i < types.Count; i++)
@@ -274,7 +294,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
                     r += "," + types[i].Name;
             }
             r = string.Format("Types:{0}", r);
-            core.DispactchNewMessage(r, MsgType.Result);
+            Core.DispactchNewMessage(r, MsgType.Result);
 
         }
         readonly List<string> guidDockersNotOpen = new List<string>()
@@ -283,10 +303,11 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
             "e328ca81-0c4e-4109-9208-cc4dfcc018b0",
             "0799f357-efd9-45b0-acf5-1e2915bcdc1a"
         };
+        
         private void GetDockersCaptionExec(IBasicData basicData)
         {
 
-            core.DispactchNewMessage("Corel will open all Dockers, please wait...", MsgType.Console);
+            Core.DispactchNewMessage("Corel will open all Dockers, please wait...", MsgType.Console);
 
             for (int i = 0; i < basicData.Childrens.Count; i++)
             {
@@ -296,15 +317,15 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
                     try
                     {
                         Clipboard.SetText(temp.Guid);
-                        core.DispactchNewMessage("Dockers Caption is copied!", MsgType.Result);
+                        Core.DispactchNewMessage("Dockers Caption is copied!", MsgType.Result);
                     }
                     catch (Exception e)
                     {
-                        core.DispactchNewMessage("Error when copying", MsgType.Erro);
+                        Core.DispactchNewMessage("Error when copying", MsgType.Erro);
                     }
                     if (string.IsNullOrEmpty(temp.Caption))
                     {
-                        temp.Caption = core.CorelApp.FrameWork.Automation.GetCaptionText(temp.Guid);
+                        temp.Caption = Core.CorelApp.FrameWork.Automation.GetCaptionText(temp.Guid);
                     }
                     if (string.IsNullOrEmpty(temp.Caption))
                     {
@@ -312,15 +333,15 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
                         {
 
                             //System.Windows.MessageBox.Show("Test");
-                            core.CorelApp.FrameWork.ShowDocker(temp.Guid);
-                            temp.Caption = core.CorelApp.FrameWork.Automation.GetCaptionText(temp.Guid);
-                            core.CorelApp.FrameWork.HideDocker(temp.Guid);
+                            Core.CorelApp.FrameWork.ShowDocker(temp.Guid);
+                            temp.Caption = Core.CorelApp.FrameWork.Automation.GetCaptionText(temp.Guid);
+                            Core.CorelApp.FrameWork.HideDocker(temp.Guid);
                         }
                         catch { }
                     }
                 }
             }
-            core.DispactchNewMessage("All Dockers crawleds", MsgType.Console);
+            Core.DispactchNewMessage("All Dockers crawleds", MsgType.Console);
 
 
         }
@@ -338,11 +359,11 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
             try
             {
                 Clipboard.SetText(guid);
-                core.DispactchNewMessage("Dockers Guids copied!", MsgType.Result);
+                Core.DispactchNewMessage("Dockers Guids copied!", MsgType.Result);
             }
             catch (Exception e)
             {
-                core.DispactchNewMessage("Error when copying", MsgType.Erro);
+                Core.DispactchNewMessage("Error when copying", MsgType.Erro);
             }
         }
 
@@ -351,11 +372,11 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
             try
             {
                 System.Windows.Clipboard.SetText(basicData.Guid);
-                core.DispactchNewMessage(string.Format("Copied:>    {0}", basicData.Guid), MsgType.Result);
+                Core.DispactchNewMessage(string.Format("Copied:>    {0}", basicData.Guid), MsgType.Result);
             }
             catch (Exception e)
             {
-                core.DispactchNewMessage("Error when copying", MsgType.Erro);
+                Core.DispactchNewMessage("Error when copying", MsgType.Erro);
             }
         }
         private void RemoveMeExec(IBasicData basicData)
@@ -371,7 +392,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
         }
         private void OpenEditor(IBasicData basicData)
         {
-            core.RunEditor(basicData);
+            Core.RunEditor(basicData);
         }
 
 
@@ -413,36 +434,36 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
         {
             Update(basicData);
         }
-        private void autoCompleteInputCommand()
-        {
-            AutoCompleteSource = new System.Windows.Forms.AutoCompleteStringCollection();
-            MethodInfo[] m = (typeof(InputCommands)).GetMethods(BindingFlags.Public | BindingFlags.Instance);
-            for (int i = 0; i < m.Length; i++)
-            {
-                AutoCompleteSource.Add(m[i].Name);
-            }
+        //private void autoCompleteInputCommand()
+        //{
+        //    AutoCompleteSource = new System.Windows.Forms.AutoCompleteStringCollection();
+        //    MethodInfo[] m = (typeof(InputCommands)).GetMethods(BindingFlags.Public | BindingFlags.Instance);
+        //    for (int i = 0; i < m.Length; i++)
+        //    {
+        //        AutoCompleteSource.Add(m[i].Name);
+        //    }
 
-        }
+        //}
 
 
 
         private void showHighLightItem()
         {
-            core.HighLightItemHelper.ShowHighLightItem(core.Route);
+            Core.HighLightItemHelper.ShowHighLightItem(Core.Route);
         }
         private void layoutAdorms(IBasicData basicData)
         {
-            core.HighLightItemHelper.InitializeLayoutMode(core.CurrentBasicData);
+            Core.HighLightItemHelper.InitializeLayoutMode(Core.CurrentBasicData);
         }
         private bool IsComplexLayout(IBasicData basicData)
         {
-            return true;
+            return Core.InCorel;
            // return basicData is DockerData || basicData is CommandBarData;
 
         }
         private void activeGuid()
         {
-           core.CorelAutomation.GetActiveGuidTool();
+           Core.CorelAutomation.GetActiveGuidTool();
         }
 
         private void config()

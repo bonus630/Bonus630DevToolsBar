@@ -17,16 +17,17 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels.Commands
         }
 
         public Action<T> action;
-        
+        public Predicate<object> predicate;
 
-        public RoutedCommand(Action<T> action)
+        public RoutedCommand(Action<T> execute, Predicate<object> canExecute = null)
         {
-            this.action = action;
+            this.action = execute;
+            this.predicate = canExecute;
         }
 
         public bool CanExecute(object parameter)
         {
-            return true;
+            return predicate != null ? predicate.Invoke(parameter) : true;
         }
 
         public void Execute(object parameter)

@@ -3,14 +3,18 @@ using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace br.com.Bonus630DevToolsBar.RecentFiles
 {
     public class RecentFilesViewModel : ViewModelBase
     {
+      
 
-       // public ICommand OpenFolderCommand { get; set; }
+    
+
+        // public ICommand OpenFolderCommand { get; set; }
 
         private ObservableCollection<RecentFileViewModel> files;
 

@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:br.com.Bonus630DevToolsBar.DrawUIExplorer.Controls"
              xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms" 
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800" Loaded="UserControl_Loaded" GotFocus="UserControl_GotFocus" FocusableChanged="UserControl_FocusableChanged">
+             d:DesignHeight="450" d:DesignWidth="800"  >
     <UserControl.Resources>
         <SolidColorBrush x:Key="TextBox.Static.Border" Color="#FFABAdB3"/>
         <SolidColorBrush x:Key="TextBox.MouseOver.Border" Color="#FF7EB4EA"/>
@@ -64,10 +64,11 @@
        
         <Grid Background="White">
         
-            <TextBox x:Name="txt_inputCommandResult"  BorderBrush="{x:Null}" Style="{DynamicResource TextBoxStyle1}" VerticalAlignment="Top" PreviewKeyDown="txt_inputCommandResult_PreviewKeyDown" />
+            <TextBox x:Name="txt_inputCommandResult" TextWrapping="Wrap"  BorderBrush="{x:Null}" Style="{DynamicResource TextBoxStyle1}" VerticalAlignment="Top" 
+                     PreviewKeyDown="txt_inputCommandResult_PreviewKeyDown" VerticalScrollBarVisibility="Auto" />
             
             <WindowsFormsHost Name="formHost" VerticalAlignment="Bottom" >
-                <wf:TextBox x:Name="txt_formInputCommand" Multiline="false" Dock="Fill" KeyUp="TextBox_KeyUp" AutoCompleteMode="SuggestAppend" BorderStyle="None" PreviewKeyDown="txt_formInputCommand_PreviewKeyDown" />
+                <wf:TextBox x:Name="txt_formInputCommand" Multiline="false" Dock="Fill" BorderStyle="None"  />
             </WindowsFormsHost>
 
         </Grid>

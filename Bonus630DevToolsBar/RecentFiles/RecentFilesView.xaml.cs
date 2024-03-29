@@ -2,6 +2,7 @@
 using br.com.Bonus630DevToolsBar.RunCommandDocker.Styles;
 using Corel.Interop.VGCore;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -36,6 +37,7 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
             {
 
                 this.corelApp = app as corel.Application;
+            
                 stylesController = new StylesController(this.Resources, this.corelApp);
                 recentFileModel = new RecentFileModel(this.corelApp.VersionMajor);
                 dataContext = new RecentFilesViewModel();
@@ -44,6 +46,7 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
                 this.corelApp.DocumentOpen += CorelApp_DocumentOpen;
                 this.corelApp.DocumentClose += CorelApp_DocumentClose;
                 this.corelApp.DocumentAfterSave += CorelApp_DocumentAfterSave;
+                
 
             }
             catch
@@ -53,6 +56,10 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
             this.Loaded += RecentFilesView_Loaded;
             this.Unloaded += RecentFilesView_Unloaded;
         }
+
+    
+
+    
 
         private void CorelApp_DocumentAfterSave(Document Doc, bool SaveAs, string FileName)
         {
@@ -83,7 +90,7 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
             this.DataContext = dataContext;
             stylesController.LoadThemeFromPreference();
             Load();
-
+            
 
         }
 
@@ -225,10 +232,12 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
         }
         private void UpdateAutoLoad(int id, bool autoLoad)
         {
-            var r = dataContext.GetItem(id);
+            //var r = dataContext.GetItem(id);
+            var r = dataContext[id];
             if (r != null)
             {
                 r.AutoLoad = autoLoad;
+                
                 recentFileModel.UpdateFile(r.ID, r.Index, r.Name, r.FullName, r.OpenTimes, r.OpenedTime, autoLoad);
             }
         }

@@ -11,9 +11,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
     public abstract class ViewModelDataBase : ViewModelBase
     {
         private IBasicData basicData;
-        //BitmapSource copy =  Properties.Resources.copy1.GetBitmapSource();
-        //BitmapSource paste = Properties.Resources.paste.GetBitmapSource();
-        //BitmapSource highLight = Properties.Resources.light.GetBitmapSource();
+   
         public IBasicData CurrentBasicData
         {
             get { return basicData; }
@@ -21,7 +19,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
         }
         public ViewModelDataBase(Core core)
         {
-            this.core = core;
+            this.Core = core;
             if (core.InCorel)
                 core.CurrentBasicDataChanged += Update;
             else
@@ -29,15 +27,12 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
 
 
         }
-        protected Core core;
+        public  Core Core { get; set; }
 
         protected abstract void Update(IBasicData basicData);
 
         protected abstract void UpdateNoAttached(IBasicData basicData);
 
-        //public BitmapSource CopyMenuItemImg { get { return copy; } }
-        //public BitmapSource PasteMenuItemImg { get { return paste; } }
-        //public BitmapSource HighLightButtonImg { get { return highLight; } }
 
     }
 }

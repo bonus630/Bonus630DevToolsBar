@@ -173,7 +173,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
             GetXPath(basicData, true);
             return this.xPath;
         }
-        public string GetXml(IBasicData basicData)
+        public string GetXml(IBasicData basicData , bool xmlHeader = true)
         {
             GetXPath(basicData);
             string text = "";
@@ -190,6 +190,8 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
             }
             //temp.DocumentElement.Attributes.Remove(temp.DocumentElement.GetAttribute("encoding").);
             text = Beautify(temp);
+            if (!xmlHeader)
+                text = text.Remove(0, 22);
             return text;
         }
         public string Beautify(string xmlString)

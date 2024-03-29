@@ -57,20 +57,20 @@
             <StatusBarItem Grid.Column="1" Padding="3,0">
                 <StackPanel Orientation="Horizontal" Background="Transparent" Visibility="{Binding InCorel,Converter={StaticResource InvertBoolVisibilityConverter}}">
 
-                    <Button  HorizontalAlignment="Left" Margin="7,0,2,0" Width="20" Height="20" HorizontalContentAlignment="Left" 
-                                 VerticalContentAlignment="Top" Padding="1,0" BorderBrush="{x:Null}" Background="#ffeaeaea" VerticalAlignment="Top" 
+                    <Button  HorizontalAlignment="Left" Margin="7,0,2,0" Width="18" Height="18" HorizontalContentAlignment="Left" 
+                                 VerticalContentAlignment="Top" Padding="1,0" BorderBrush="{x:Null}" Background="#ffeaeaea" VerticalAlignment="Center" 
                                  Click="ChangeTheme_EventHandler" Tag="Theme_LightestGrey" ToolTip="LightestGrey"
                                  />
-                    <Button  HorizontalAlignment="Left" Margin="7,0,2,0" Width="20" Height="20" HorizontalContentAlignment="Left" 
-                                 VerticalContentAlignment="Top" Padding="1,0" BorderBrush="{x:Null}" Background="#ffe2e2e2" VerticalAlignment="Top" 
+                    <Button  HorizontalAlignment="Left" Margin="7,0,2,0" Width="18" Height="18" HorizontalContentAlignment="Left" 
+                                 VerticalContentAlignment="Top" Padding="1,0" BorderBrush="{x:Null}" Background="#ffe2e2e2" VerticalAlignment="Center" 
                                  Click="ChangeTheme_EventHandler" Tag="Theme_MediumGrey" ToolTip="MediumGrey"
                                  />
-                    <Button  HorizontalAlignment="Left" Margin="7,0,2,0" Width="20" Height="20" HorizontalContentAlignment="Left" 
-                                 VerticalContentAlignment="Top" Padding="1,0" BorderBrush="{x:Null}" Background="#ff323232" VerticalAlignment="Top" 
+                    <Button  HorizontalAlignment="Left" Margin="7,0,2,0" Width="18" Height="18" HorizontalContentAlignment="Left" 
+                                 VerticalContentAlignment="Top" Padding="1,0" BorderBrush="{x:Null}" Background="#ff323232" VerticalAlignment="Center" 
                                  Click="ChangeTheme_EventHandler" Tag="Theme_DarkGrey" ToolTip="DarkGrey"
                                  />
-                    <Button  HorizontalAlignment="Left" Margin="7,0,2,0" Width="20" Height="20" HorizontalContentAlignment="Left" 
-                                 VerticalContentAlignment="Top" Padding="1,0" BorderBrush="{x:Null}" Background="Black" VerticalAlignment="Top" 
+                    <Button  HorizontalAlignment="Left" Margin="7,0,2,0" Width="18" Height="18" HorizontalContentAlignment="Left" 
+                                 VerticalContentAlignment="Top" Padding="1,0" BorderBrush="{x:Null}" Background="Black" VerticalAlignment="Center" 
                                  Click="ChangeTheme_EventHandler" Tag="Theme_Black" ToolTip="Black"
                                  />
 
@@ -163,9 +163,9 @@ d="m11.633 12.191 0.45 -0.447c2.081 0.069 2.114 -0.005 2.206 -0.219l0.572 -1.392
                 <Border  Style="{DynamicResource BorderTitleStyle}">
                     <Label Content="Main Tree:" Grid.Row="0" FontFamily="Segoe UI Black" />
                 </Border>
+                
                 <TreeView  Grid.Row="1"  x:Name="treeView_Nodes"  Margin="0" BorderBrush="{x:Null}" Background="#FFE3FDD4" 
                            VirtualizingStackPanel.IsVirtualizing="True" VirtualizingStackPanel.VirtualizationMode="Recycling">
-
                     <TreeView.ItemContainerStyle>
                         <Style TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource TreeViewItemStyle}">
                             <Setter Property="KeyboardNavigation.TabNavigation" Value="Continue"/>
@@ -179,7 +179,9 @@ d="m11.633 12.191 0.45 -0.447c2.081 0.069 2.114 -0.005 2.206 -0.219l0.572 -1.392
                                     <Setter Property="Background" Value="{DynamicResource TreeViewItem.Children.Selected.Background}" />
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding Path=Marked}" Value="true">
-                                    <Setter Property="Background" Value="{DynamicResource Footer.Static.Background}" />
+                                    <Setter Property="Background" Value="{Binding Path=MarkColor}" />
+                                    <Setter Property="Foreground" Value="Black" />
+                                    <Setter Property="FontWeight" Value="Bold" />
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
@@ -187,7 +189,7 @@ d="m11.633 12.191 0.45 -0.447c2.081 0.069 2.114 -0.005 2.206 -0.219l0.572 -1.392
 
                     <TreeView.ItemTemplate>
                         <HierarchicalDataTemplate  ItemsSource="{Binding Path=Childrens}">
-                            <HeaderedContentControl Header="{Binding Path=TagValue}" Focusable="False"/>
+                            <HeaderedContentControl Header="{Binding Path=TagValue}" Focusable="False" ToolTip="{Binding Label}" />
                         </HierarchicalDataTemplate>
                     </TreeView.ItemTemplate>
                 </TreeView>
@@ -204,9 +206,9 @@ d="m11.633 12.191 0.45 -0.447c2.081 0.069 2.114 -0.005 2.206 -0.219l0.572 -1.392
                 <Border Grid.RowSpan="2" Grid.Row="0" Style="{DynamicResource BorderTitleStyle}">
                     <Label Content="Ref Tree:"  FontFamily="Segoe UI Black"/>
                 </Border>
+                
                 <TreeView  x:Name="treeView_Ref" Grid.Row="2" Margin="0" BorderBrush="{x:Null}" Background="#FFE3FDD4" 
                            VirtualizingStackPanel.IsVirtualizing="True" VirtualizingStackPanel.VirtualizationMode="Recycling">
-
                     <TreeView.ItemContainerStyle>
                         <Style TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource TreeViewItemStyle}">
                             <Setter Property="KeyboardNavigation.TabNavigation" Value="Continue"/>
@@ -220,24 +222,25 @@ d="m11.633 12.191 0.45 -0.447c2.081 0.069 2.114 -0.005 2.206 -0.219l0.572 -1.392
                                     <Setter Property="Background" Value="{DynamicResource TreeViewItem.Children.Selected.Background}" />
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding Path=Marked}" Value="true">
-                                    <Setter Property="Background" Value="{DynamicResource Footer.Static.Background}" />
+                                    <Setter Property="Background" Value="{Binding Path=MarkColor}" />
+                                    <Setter Property="Foreground" Value="Black" />
+                                    <Setter Property="FontWeight" Value="Bold" />
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
                     </TreeView.ItemContainerStyle>
-
                     <TreeView.ItemTemplate>
                         <HierarchicalDataTemplate  ItemsSource="{Binding Path=Childrens}">
-                            <HeaderedContentControl Header="{Binding Path=TagValue}" Focusable="False"/>
+                            <HeaderedContentControl Header="{Binding Path=TagValue}" Focusable="False" ToolTip="{Binding Label}" />
                         </HierarchicalDataTemplate>
                     </TreeView.ItemTemplate>
                 </TreeView>
+                
                 <Border Grid.Row="3" Style="{DynamicResource BorderTitleStyle}">
                     <Label Content="Search Tree:"   FontFamily="Segoe UI Black"/>
                 </Border>
                 <TreeView VerticalAlignment="Stretch"  Grid.Row="4" x:Name="treeView_Search" Margin="0,2,0,0" BorderBrush="{x:Null}" 
                            VirtualizingStackPanel.IsVirtualizing="True" VirtualizingStackPanel.VirtualizationMode="Recycling">
-
                     <TreeView.ItemContainerStyle>
                         <Style TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource TreeViewItemStyle}">
                             <Setter Property="KeyboardNavigation.TabNavigation" Value="Continue"/>
@@ -251,7 +254,9 @@ d="m11.633 12.191 0.45 -0.447c2.081 0.069 2.114 -0.005 2.206 -0.219l0.572 -1.392
                                     <Setter Property="Background" Value="{DynamicResource TreeViewItem.Children.Selected.Background}" />
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding Path=Marked}" Value="true">
-                                    <Setter Property="Background" Value="{DynamicResource Footer.Static.Background}" />
+                                    <Setter Property="Background" Value="{Binding Path=MarkColor}" />
+                                    <Setter Property="Foreground" Value="Black" />
+                                    <Setter Property="FontWeight" Value="Bold" />
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
@@ -259,10 +264,16 @@ d="m11.633 12.191 0.45 -0.447c2.081 0.069 2.114 -0.005 2.206 -0.219l0.572 -1.392
 
                     <TreeView.ItemTemplate>
                         <HierarchicalDataTemplate  ItemsSource="{Binding Path=Childrens}">
-                            <HeaderedContentControl Header="{Binding Path=TagValue}" Focusable="False"/>
+                            <HeaderedContentControl Header="{Binding Path=TagValue}" Focusable="False" ToolTip="{Binding Label}" >
+                              
+                                   
+                                    
+                             
+                            </HeaderedContentControl>
                         </HierarchicalDataTemplate>
                     </TreeView.ItemTemplate>
                 </TreeView>
+           
             </Grid>
         </DockPanel>
         <Grid DockPanel.Dock="Bottom" Height="{Binding ConsoleExpanded, Converter={StaticResource BoolHeightConverter}}" VerticalAlignment="Bottom"  Margin="2,2,2,0"  Name="grid_consoles">
@@ -299,23 +310,23 @@ d="m11.633 12.191 0.45 -0.447c2.081 0.069 2.114 -0.005 2.206 -0.219l0.572 -1.392
                 </TabItem>-->
                 <TabItem Header="Xml Viewer" Style="{DynamicResource TabItemStyle}">
                     <Grid>
-                        <ScrollViewer  VerticalScrollBarVisibility="Auto" Template="{DynamicResource ScrollViewerControlTemplate}">
-                            <TextBox ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" x:Name="txt_xmlViewer"/>
-                        </ScrollViewer>
+                        <!--<ScrollViewer  VerticalScrollBarVisibility="Auto" Template="{DynamicResource ScrollViewerControlTemplate}">-->
+                            <TextBox TextWrapping="Wrap" AcceptsReturn="True" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" x:Name="txt_xmlViewer"/>
+                        <!--</ScrollViewer>-->
                     </Grid>
                 </TabItem>
                 <TabItem Header="Console" Style="{DynamicResource TabItemStyle}">
                     <Grid >
-                        <ScrollViewer  VerticalScrollBarVisibility="Auto"  Template="{DynamicResource ScrollViewerControlTemplate}">
+                        <!--<ScrollViewer  VerticalScrollBarVisibility="Auto"  Template="{DynamicResource ScrollViewerControlTemplate}">-->
                             <RichTextBox ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto"  x:Name="txt_consoleFull" />
-                        </ScrollViewer>
+                        <!--</ScrollViewer>-->
                     </Grid>
                 </TabItem>
                 <TabItem Header="Corel EventViewer" Visibility="{Binding InCorel,Converter={StaticResource BoolVisibilityConverter}}" Style="{DynamicResource TabItemStyle}">
                     <Grid>
-                        <ScrollViewer  VerticalScrollBarVisibility="Auto">
-                            <TextBox ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" x:Name="txt_CorelEventViewer" />
-                        </ScrollViewer>
+                        <!--<ScrollViewer  VerticalScrollBarVisibility="Auto">-->
+                            <TextBox TextWrapping="Wrap" AcceptsReturn="True" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" x:Name="txt_CorelEventViewer" />
+                        <!--</ScrollViewer>-->
                     </Grid>
                 </TabItem>
 

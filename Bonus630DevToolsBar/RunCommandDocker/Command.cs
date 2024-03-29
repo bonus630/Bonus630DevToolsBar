@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
@@ -509,9 +510,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             }
         }
         #region Timer
-        //Thread TimerThread ;
-       // DispatcherTimer dispatcherTimer;
-       // bool timerRunning = false;
+ 
         private string elapsedTime;
         public string ElapsedTime
         {
@@ -522,33 +521,26 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                 OnPropertyChanged("ElapsedTime");
             }
         }
-        private DateTime StartTime { get; set; }
-        //private DateTime EndTime { get; set; }
+  
+        private Stopwatch stopwatch;
+
         public void StartTimer()
         {
-            //timerRunning = true;
-            StartTime = DateTime.Now;
+            if (stopwatch == null)
+            {
+                stopwatch = new Stopwatch();
+                stopwatch.Start();
+            }
+            else
+                stopwatch.Restart();
             ElapsedTime = "";
-            //dispatcherTimer = new DispatcherTimer();
-            //dispatcherTimer.Interval = TimeSpan.FromMilliseconds(1000);
-            //dispatcherTimer.Tick += DispatcherTimer_Tick;
-            //dispatcherTimer.Start();
-            // TimerThread = new Thread(new ThreadStart(RunTimer));
-            // TimerThread.IsBackground = true;
-            // TimerThread.Start();
+      
         }
         public void EndTimer()
         {
-            //timerRunning = false;
-           // dispatcherTimer.Stop();
-            ElapsedTime = (new DateTime(DateTime.Now.Subtract(StartTime).Ticks)).ToString("H:mm:ss.ff");
+            ElapsedTime = stopwatch.Elapsed.ToString(@"h\:mm\:ss\.fff");
         }
-     
 
-        //private void DispatcherTimer_Tick(object sender, EventArgs e)
-        //{
-        //    ElapsedTime = (new DateTime(DateTime.Now.Subtract(StartTime).Ticks)).ToString("H:mm:ss.ff");
-        //}
         #endregion Timer
         public bool LastRunFails { get { return lastRunFails; }
             set { lastRunFails = value;

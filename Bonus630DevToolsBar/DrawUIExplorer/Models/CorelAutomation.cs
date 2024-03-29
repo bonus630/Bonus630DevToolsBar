@@ -11,6 +11,9 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Reflection;
 using System.Windows.Controls;
+using br.com.Bonus630DevToolsBar.RunCommandDocker;
+using System.Windows.Media;
+
 
 
 namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
@@ -37,7 +40,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
         public string GetActiveMenuItemGuid(int index)
         {
 #if X7
-            return "";
+            return "This command is not avaliable in X7";
 #else
             return corelApp.FrameWork.Automation.GetActiveMenuItemGuid(index);
 #endif
@@ -189,6 +192,30 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
         }
         public void CommandBarMode(IBasicData basicData, bool show = true)
         {
+            try
+            {
+                if (basicData.Childrens.Count == 1)
+                {
+                    object r = this.RunBindDataSource(basicData.Childrens[0].GetAttribute("currentMode"), false, "");
+                    if (r != null)
+                    {
+                        for (int i = 0; i < basicData.Childrens[0].Childrens.Count; i++)
+                        {
+                            if (basicData.Childrens[0].Childrens[i].ContainsAttributeValue(r.ToString()))
+                            {
+                                basicData.Childrens[0].Childrens[i].Marked = true;
+                                basicData.Childrens[0].Childrens[i].MarkColor = Brushes.CadetBlue;
+                                core.DispactchNewMessage("CommandBarMode: " + r.ToString(), MsgType.Result);
+                                core.DispactchNewMessage(string.Format("modeData in position {0} is Marked with Cadet Blue color! ", basicData.Childrens[0].Childrens[i].XmlChildrenID), MsgType.Result);
+                                return;
+                            }
+                        } 
+                    }
+                    //[0] = { currentMode = '*Bind(DataSource=PropertyBarDS;Path=BarMode)'}
+                }
+            }
+            catch { }
+
             string commandBarCaption = GetItemCaption(basicData);
             this.CommandBarMode(commandBarCaption, true);
         }
@@ -251,9 +278,9 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
         {
             corelApp.FrameWork.Automation.InvokeDialogItem(dialogGuid, itemGuid);
         }
-        public void RunBindDataSource(string value, bool invoke = false,string param = "")
+        public object RunBindDataSource(string value, bool invoke = false,string param = "")
         {
-            string o = "";
+            string o = "";object result = null;
             Type type = null;
             try
             {
@@ -263,6 +290,12 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
                 string datasource = match.Groups["datasource"].Value;
                 string path = match.Groups["path"].Value;
                 DataSourceProxy dsp = corelApp.FrameWork.Application.DataContext.GetDataSource(datasource);
+                core.DispactchNewMessage("DataContext Categories: {0}", MsgType.Result, corelApp.FrameWork.Application.DataContext.Categories);
+                if (dsp == null)
+                {
+                    core.DispactchNewMessage("Failed to retrieve DataSource: {0}", MsgType.Erro, datasource);
+                    return result;
+                }
                 if (invoke)
                 {
                     dsp.InvokeMethod(path);
@@ -275,9 +308,10 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
                     else
                     {
                         object j = dsp.GetProperty(path);
+                        result = j;
                         if(j==null)
                         {
-                            core.DispactchNewMessage("Path:{0} returns null", MsgType.Result,path);
+                            core.DispactchNewMessage("Path: {0} returns null", MsgType.Result,path);
                         }
                         type = j.GetType();
                         o = j.ToString();
@@ -310,6 +344,9 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
                 o = erro.Message;
                 core.DispactchNewMessage(o, MsgType.Erro);
             }
+           
+                return result;
+            
         }
         public void RunBindWithParamDataSource(string value, bool invoke = false, string param = "")
         {

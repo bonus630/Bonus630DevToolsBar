@@ -18,6 +18,7 @@
             </Setter.Value>
         </Setter>
     </Style>
+   
     <Style  TargetType="Window">
         <!-- Defina as propriedades desejadas, como Background (fundo) e Foreground (fonte) -->
         <Setter Property="Background" Value="{DynamicResource Footer.Static.Background}" />
@@ -45,6 +46,7 @@
     </Style>
     <Style  TargetType="{x:Type MenuItem}">
         <Setter Property="Background" Value="{DynamicResource Default.Static.Background}"/>
+        <!--<Setter Property="Background" Value="Transparent"/>-->
         <Setter Property="Foreground" Value="{DynamicResource Default.Static.Foreground}"/>
         <Setter Property="Template">
             <Setter.Value>
@@ -114,6 +116,11 @@
     <Style TargetType="ToolTip">
         <Setter Property="Background" Value="{DynamicResource Container.Text.Static.Background}"/>
         <Setter Property="Foreground" Value="{DynamicResource Default.Static.Foreground}"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Content, RelativeSource={RelativeSource Self}}" Value="">
+                <Setter Property="Visibility" Value="Collapsed"/>
+            </DataTrigger>
+        </Style.Triggers>
     </Style>
     <Style TargetType="TextBox">
         <Setter Property="Background" Value="{DynamicResource Container.Text.Static.Background}" />

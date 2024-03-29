@@ -2,12 +2,42 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:Converters="clr-namespace:br.com.Bonus630DevToolsBar.Converters"
                     xmlns:custom="clr-namespace:br.com.Bonus630DevToolsBar.CustomControls"
-                    xmlns:local="clr-namespace:br.com.Bonus630DevToolsBar.DrawUIExplorer.DataClass">
+                    xmlns:local="clr-namespace:br.com.Bonus630DevToolsBar.DrawUIExplorer.DataClass"
+                    xmlns:System="clr-namespace:System;assembly=mscorlib"              
+                    xmlns:Collections="clr-namespace:System.Collections;assembly=mscorlib"            
+                    >
 
     <Converters:BoolVisibilityConverter x:Key="BoolVisibilityConverter" />
     <Converters:IntAttVisibilityMultiConverter x:Key="IntAttVisibilityMultiConverter" />
     <Converters:FilterAttributesConverter x:Key="FilterAttributesConverter" />
+    <Converters:MarkerColorBaseDataConverter x:Key="MarkerConverter" />
 
+    <x:Array x:Key="MenuColors" Type="{x:Type Color}">
+        <Color>#ff6633</Color>
+        <Color>#e823c4</Color>
+        <Color>#ff0000</Color>
+        <Color>#00ff00</Color>
+        <Color>#006633</Color>
+        <Color>#669933</Color>
+        <Color>#00ffff</Color>
+        <Color>#6b23e8</Color>
+        <Color>#0000ff</Color>
+    </x:Array>
+    <!--<XmlDataProvider x:Key="MenuColors" XPath="/Colors/*" >
+        <x:XData>
+            <Colors  xmlns="">
+            <SColor>#ff6633</SColor>
+            <SColor>#e823c4</SColor>
+            <SColor>#ff0000</SColor>
+            <SColor>#00ff00</SColor>
+            <SColor>#006633</SColor>
+            <SColor>#669933</SColor>
+            <SColor>#00ffff</SColor>
+            <SColor>#6b23e8</SColor>
+            <SColor>#0000ff</SColor>
+            </Colors> 
+        </x:XData>
+    </XmlDataProvider>-->
     <ContextMenu x:Key="contextMenu">
         <ContextMenu.Resources>
             <CollectionViewSource x:Key="refSource" Source="{Binding Attributes,Converter={StaticResource FilterAttributesConverter}}" >
@@ -29,7 +59,7 @@
                                             <ColumnDefinition Width="*"/>
                                         </Grid.ColumnDefinitions>
                                         <ContentPresenter x:Name="PART_ICON_PRESENTER" Grid.Column="0" ContentSource="Icon" Margin="5,2,5,2"/>
-                             
+
                                         <Grid Background="{DynamicResource NumericTextBox.Static.Background}" Grid.Column="1"  >
                                             <ContentPresenter Margin="5,0,5,0" ContentSource="Header" VerticalAlignment="Center" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
                                         </Grid>
@@ -53,7 +83,7 @@
                                 <Trigger Property="IsPressed" Value="true">
                                     <Setter Property="Background" TargetName="PART_BG" Value="{DynamicResource TabItem.Selected.MouseOver.Background}"/>
                                 </Trigger>
-                
+
                             </ControlTemplate.Triggers>
 
 
@@ -62,7 +92,7 @@
                 </Setter>
                 <Setter Property="Header" Value="{Binding Name}" />
                 <Setter Property="CommandParameter" Value="{Binding}" />
-                <Setter Property="Command" Value="{Binding Path=DataContext.FindRef, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TreeView}}"></Setter>
+                <Setter Property="Command" Value="{Binding Path=DataContext.FindRef, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TreeView}}"/>
                 <Setter Property="Visibility" Value="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}"/>
                 <Setter Property="Icon">
                     <Setter.Value>
@@ -70,19 +100,58 @@
                     </Setter.Value>
                 </Setter>
             </Style>
-            
-        
+            <Style x:Key="ColorMenu" TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
+                <Setter Property="IsEnabled" Value="True"/>
+                <Setter Property="Header" Value="  "/>
+                <Setter Property="Icon" Value=""/>
+                <Setter Property="Width" Value="20"/>
+                <Setter Property="Visibility" Value="Visible"/>
+                <Setter Property="Command" Value="{Binding Path=DataContext.MarkCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TreeView}}" />
+                <Setter Property="CommandParameter">
+                    <Setter.Value>
+                        <MultiBinding Converter="{StaticResource MarkerConverter}" >
+                            <Binding Path="Background" RelativeSource="{RelativeSource Mode=Self}"/>
+                            <Binding Path="." />
+                        </MultiBinding>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type MenuItem}">
+                            <Border x:Name="PART_BG" Width="20" Height="20" BorderBrush="{DynamicResource Default.Static.Background}" Background="{TemplateBinding Background}" BorderThickness="1" />
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="true">
+                                    <Setter Property="BorderBrush" TargetName="PART_BG" Value="{DynamicResource Button.MouseOver.Border}"/>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="true">
+                                    <Setter Property="BorderBrush" TargetName="PART_BG" Value="{DynamicResource TabItem.Selected.MouseOver.Background}"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
         </ContextMenu.Resources>
 
         <ContextMenu.ItemsSource>
             <CompositeCollection>
                 <CollectionContainer Collection="{Binding Source={StaticResource refSource}}" />
-                <MenuItem Header="Mark" 
-		  CommandParameter="{Binding}" Command="{Binding Path=DataContext.MarkCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TreeView}}"
-			   Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}">
+
+                <MenuItem Header="Mark" CommandParameter="{Binding}" Command="{Binding Path=DataContext.MarkCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TreeView}}"
+                          Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}">
                     <MenuItem.Icon>
                         <Image Style="{DynamicResource CheckmarkShapeRangeImage}" />
                     </MenuItem.Icon>
+                    <MenuItem Style="{DynamicResource ColorMenu}" Background="#ff6633" />
+                    <MenuItem Style="{DynamicResource ColorMenu}" Background="#e823c4" />
+                    <MenuItem Style="{DynamicResource ColorMenu}" Background="#ff0000" />
+                    <MenuItem Style="{DynamicResource ColorMenu}" Background="#00ff00" />
+                    <MenuItem Style="{DynamicResource ColorMenu}" Background="#006633" />
+                    <MenuItem Style="{DynamicResource ColorMenu}" Background="#669933" />
+                    <MenuItem Style="{DynamicResource ColorMenu}" Background="#00ffff" />
+                    <MenuItem Style="{DynamicResource ColorMenu}" Background="#6b23e8" />
+                    <MenuItem Style="{DynamicResource ColorMenu}" Background="#0000ff" />
                 </MenuItem>
 
                 <MenuItem Header="UnMark" 
@@ -92,8 +161,6 @@
                         <Image Style="{DynamicResource UncheckmarkShapeRangeImage}" />
                     </MenuItem.Icon>
                 </MenuItem>
-
-
                 <MenuItem Header="XML" 
 		  CommandParameter="{Binding}" Command="{Binding Path=DataContext.XmlCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TreeView}}"
 			   Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}">
@@ -114,7 +181,7 @@
 
                 <MenuItem Header="Layout Mode" 
 		  CommandParameter="{Binding}" Command="{Binding Path=DataContext.LayoutCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TreeView}}"
-			   Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TreeView}, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}">
+			   Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}">
 
                     <MenuItem.Icon>
                         <Image Style="{DynamicResource ShowLayoutImg}"/>

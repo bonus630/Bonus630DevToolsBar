@@ -22,6 +22,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
         string resultFile;
         public string xmlfile;
         private int fontSize = 9;
+        public event Action<string> AddMoreText;
         public int FontSize
         {
             get { return fontSize; }
@@ -53,6 +54,16 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
                 controlHeight = value; OnPropertyChanged();
             }
         }
+        private int xmlTextBoxCaretIndex = 0;
+        public int XmlTextBoxCaretIndex
+        {
+            get { return xmlTextBoxCaretIndex; }
+            set
+            {
+                xmlTextBoxCaretIndex = value; 
+                OnPropertyChanged();
+            }
+        }
         private string xmlText;
         public string XmlText
         {
@@ -72,6 +83,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
             set { resultText = value; OnPropertyChanged(); }
         }
         public SimpleCommand GenXmlCommand { get { return new SimpleCommand(GenXmlText); } }
+        public SimpleCommand AddXmlCommand { get { return new SimpleCommand(AddXmlText); } }
         public SimpleCommand ProcessCommand { get { return new SimpleCommand(process); } }
 
 
@@ -106,7 +118,12 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
         //int level = 0;
         private void GenXmlText()
         {
-            XmlText = core.GetXml(this.CurrentBasicData);
+            XmlText = Core.GetXml(this.CurrentBasicData);
+        }
+        private void AddXmlText()
+        {
+            if (AddMoreText != null)
+                AddMoreText(Core.GetXml(this.CurrentBasicData,false));
         }
         private void process()
         {
@@ -123,11 +140,11 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
                 xslCompiledTransform.Load(xslFile);
                 xslCompiledTransform.Transform(xmlfile, resultFile);
                 ResultText = File.ReadAllText(resultFile);
-                this.core.DispactchNewMessage("Xsl Transform Sucess, the result is in Result Box", MsgType.Console);
+                this.Core.DispactchNewMessage("Xsl Transform Sucess, the result is in Result Box", MsgType.Result);
             }
-            catch (XmlException erro) { this.core.DispactchNewMessage(erro.Message, MsgType.Console); }
-            catch (XsltException erro) { this.core.DispactchNewMessage(erro.Message, MsgType.Console); }
-            catch (Exception erro) { this.core.DispactchNewMessage(erro.Message, MsgType.Console); }
+            catch (XmlException erro) { this.Core.DispactchNewMessage(erro.Message, MsgType.Erro); }
+            catch (XsltException erro) { this.Core.DispactchNewMessage(erro.Message, MsgType.Erro); }
+            catch (Exception erro) { this.Core.DispactchNewMessage(erro.Message, MsgType.Erro); }
         }
         private XmlReader CreateXmlReader(string text)
         {

@@ -1,22 +1,10 @@
 ﻿using br.com.Bonus630DevToolsBar.RunCommandDocker;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Drawing.Imaging;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace br.com.Bonus630DevToolsBar.CustomControls
 {
@@ -25,6 +13,7 @@ namespace br.com.Bonus630DevToolsBar.CustomControls
     /// </summary>
     public partial class ParamControl : UserControl, INotifyPropertyChanged
     {
+        //Temos um bug, ao teclar enter para executar a ação o valor nao foi atualizado ainda, será que foi corrigido!!!
         public static readonly DependencyProperty ParamValueProperty = DependencyProperty.Register("ParamValue", typeof(object), typeof(ParamControl), new FrameworkPropertyMetadata(default(object), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnParamValueChanged));
         public object ParamValue
         {
@@ -34,7 +23,6 @@ namespace br.com.Bonus630DevToolsBar.CustomControls
         public static void OnParamValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             ((ParamControl)d).ParamValue = e.NewValue;
-
             ((ParamControl)d).ChangeParam();
         }
         public static readonly DependencyProperty ParamTypeProperty = DependencyProperty.Register("ParamType", typeof(Type), typeof(ParamControl), new FrameworkPropertyMetadata(default(Type), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnParamTypeChanged));
@@ -46,7 +34,6 @@ namespace br.com.Bonus630DevToolsBar.CustomControls
         public static void OnParamTypeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             ((ParamControl)d).ParamType = (Type)e.NewValue;
-
             ((ParamControl)d).ChangeParam();
         }
         public static readonly DependencyProperty ParamOptionsProperty = DependencyProperty.Register("ParamOptions", typeof(ObservableCollection<object>), typeof(ParamControl), new FrameworkPropertyMetadata(default(ObservableCollection<object>), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnParamOptionsChanged));
@@ -58,7 +45,6 @@ namespace br.com.Bonus630DevToolsBar.CustomControls
         public static void OnParamOptionsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             ((ParamControl)d).ParamOptions = (ObservableCollection<object>)e.NewValue;
-
             ((ParamControl)d).ChangeParam();
         }
         private bool isFuncParam = false;
@@ -110,16 +96,18 @@ namespace br.com.Bonus630DevToolsBar.CustomControls
             get { return isEnum; }
             set { isEnum = value; OnPropertyChanged(); }
         }
-
-
         public ParamControl()
         {
             InitializeComponent();
             txt_paramValue.TextChanged += Txt_paramValue_TextChanged;
-
+            numeric_paramValue.ValueChangedEvent += Numeric_paramValue_ValueChangedEvent;
+            decimal_paramValue.ValueChangedEvent += Numeric_paramValue_ValueChangedEvent;
         }
 
-
+        private void Numeric_paramValue_ValueChangedEvent(double obj)
+        {
+            ParamValue = obj;
+        }
 
         private void Txt_paramValue_TextChanged(object sender, TextChangedEventArgs e)
         {

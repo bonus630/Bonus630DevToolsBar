@@ -326,8 +326,8 @@
                                                     <Label Grid.Row="1" Grid.Column="0" Content="Value:" />
                                                     <!--<TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Value,Converter={StaticResource TypeToStringConverter}}" 
                                                              VerticalContentAlignment="Center" Width="144"  />-->
-                                                    <custom:ParamControl Grid.Row="1" Grid.Column="1" ParamValue="{Binding Value}" ParamType="{Binding ArgumentType}" ParamOptions="{Binding Options}"
-                                                             VerticalContentAlignment="Center" Width="144" >
+                                                    <custom:ParamControl Grid.Row="1" Grid.Column="1" VerticalContentAlignment="Center" Width="144"  
+                                                                         ParamValue="{Binding Value}" ParamType="{Binding ArgumentType}" ParamOptions="{Binding Options}" >
                                                         <custom:ParamControl.InputBindings>
                                                             <KeyBinding Key="Enter" CommandParameter="{Binding Parent}" Command="{Binding Path=Parent.Parent.Parent.Parent.ExecuteCommand}"/>
                                                         </custom:ParamControl.InputBindings>
