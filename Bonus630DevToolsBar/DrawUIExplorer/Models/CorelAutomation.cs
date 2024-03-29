@@ -13,6 +13,7 @@ using System.Reflection;
 using System.Windows.Controls;
 using br.com.Bonus630DevToolsBar.RunCommandDocker;
 using System.Windows.Media;
+using System.Windows.Input;
 
 
 
@@ -361,6 +362,8 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
             }
             catch { }
             Views.ParamBox pb = new Views.ParamBox();
+
+
             pb.ChangeTheme(result);
             if ((bool) pb.ShowDialog())
             {

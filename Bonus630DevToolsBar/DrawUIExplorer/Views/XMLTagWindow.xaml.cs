@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 
@@ -23,7 +24,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
 
     public partial class XMLTagWindow : System.Windows.Window
     {
-
+         
 
         Core core;
         Details details;
@@ -56,7 +57,9 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
         }
         public XMLTagWindow(string filePath)
         {
+
             InitializeComponent();
+      
             stylesController = new StylesController(this.Resources, ChangeTheme);
             init();
         }
@@ -109,6 +112,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
                 else
                     UpdateDetailsNoAttached(tv.SelectedItem, e);
             }
+       
         }
 
 

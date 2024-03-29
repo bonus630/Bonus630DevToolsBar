@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
+
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -26,7 +27,20 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
         public ParamBox()
         {
             InitializeComponent();
+   
+            
             StylesController = new StylesController(this.Resources);
+            this.Loaded += ParamBox_Loaded;
+        }
+
+        private void ParamBox_Loaded(object sender, RoutedEventArgs e)
+        {
+            Point point = Mouse.GetPosition(this);
+            Point screenPoint = PointToScreen(point);
+
+            this.Top = screenPoint.Y - 60;
+            this.Left = screenPoint.X - 60;
+            txt_param.Focus();
         }
 
         private void btn_ok_Click(object sender, RoutedEventArgs e)
