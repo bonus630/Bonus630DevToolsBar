@@ -32,8 +32,8 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
             string text = txt_xml.Text.Trim('\n','\r','\t');
             //int line = txt_xml.GetLineIndexFromCharacterIndex(txt_xml.CaretIndex);
             //int lineLength = txt_xml.GetLineLength(line);
-
-            txt_xml.Text = xSLTesterViewModel.Core.FormatXml(text.Insert(txt_xml.CaretIndex, obj));
+            txt_xml.SelectedText = obj;
+            txt_xml.Text = xSLTesterViewModel.Core.FormatXml(txt_xml.Text);
 
         }
         private void Format()
@@ -42,15 +42,19 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
         }
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            if (File.Exists(xSLTesterViewModel.xslFile))
+            if (!xSLTesterViewModel.Loaded)
             {
-                //txt_xsl.Text = File.ReadAllText(xSLTesterViewModel.xslFile);
-                xSLTesterViewModel.XslText = File.ReadAllText(xSLTesterViewModel.xslFile);
-            }
-            if (File.Exists(xSLTesterViewModel.xmlfile))
-            {
-                xSLTesterViewModel.XmlText = File.ReadAllText(xSLTesterViewModel.xmlfile);
-                //txt_xml.Text = File.ReadAllText(xSLTesterViewModel.xmlfile);
+                if (File.Exists(xSLTesterViewModel.xslFile))
+                {
+                    //txt_xsl.Text = File.ReadAllText(xSLTesterViewModel.xslFile);
+                    xSLTesterViewModel.XslText = File.ReadAllText(xSLTesterViewModel.xslFile);
+                }
+                if (File.Exists(xSLTesterViewModel.xmlfile))
+                {
+                    xSLTesterViewModel.XmlText = File.ReadAllText(xSLTesterViewModel.xmlfile);
+                    //txt_xml.Text = File.ReadAllText(xSLTesterViewModel.xmlfile);
+                }
+                xSLTesterViewModel.Loaded = true;
             }
         }
 

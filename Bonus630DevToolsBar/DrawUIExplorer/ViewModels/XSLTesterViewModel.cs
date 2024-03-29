@@ -9,6 +9,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Xsl;
+using System.Diagnostics.Eventing.Reader;
+using System.Text.RegularExpressions;
 
 namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
 {
@@ -23,6 +25,9 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
         public string xmlfile;
         private int fontSize = 9;
         public event Action<string> AddMoreText;
+
+        public bool Loaded { get; set; }
+
         public int FontSize
         {
             get { return fontSize; }
@@ -97,6 +102,8 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
         {
             xmlDoc = new XmlDocument();
             xslCompiledTransform = new XslCompiledTransform(true);
+        
+                     
             path = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "DrawUIExplorer");
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
@@ -123,13 +130,24 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
         private void AddXmlText()
         {
             if (AddMoreText != null)
-                AddMoreText(Core.GetXml(this.CurrentBasicData,false));
+            {
+                try
+                {
+                    AddMoreText(Core.GetXml(this.CurrentBasicData, false));
+                }
+                catch(Exception e)
+                {
+                    this.Core.DispactchNewMessage(e.Message, MsgType.Erro);
+                }
+            }
         }
         private void process()
         {
+            
             try
             {
                 string path = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "DrawUIExplorer");
+                ResultText = string.Empty;
                 if (!Directory.Exists(path))
                     Directory.CreateDirectory(path);
                 string xslFile = path + "\\temp.xslt";
@@ -139,12 +157,35 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
                 File.WriteAllText(xmlfile, XmlText);
                 xslCompiledTransform.Load(xslFile);
                 xslCompiledTransform.Transform(xmlfile, resultFile);
-                ResultText = File.ReadAllText(resultFile);
+                ResultText = File.ReadAllText(resultFile);  
+                //Regex regex = new Regex(@"^\s*$");
+                //foreach (var line in File.ReadLines(resultFile))
+                //{
+                //    if (!regex.IsMatch(line))
+                //        ResultText += line;
+
+                //}
+                //ResultText = Core.FormatXml(ResultText);
                 this.Core.DispactchNewMessage("Xsl Transform Sucess, the result is in Result Box", MsgType.Result);
             }
-            catch (XmlException erro) { this.Core.DispactchNewMessage(erro.Message, MsgType.Erro); }
-            catch (XsltException erro) { this.Core.DispactchNewMessage(erro.Message, MsgType.Erro); }
-            catch (Exception erro) { this.Core.DispactchNewMessage(erro.Message, MsgType.Erro); }
+            catch (XmlException erro) { 
+                if(erro.InnerException != null)
+                    ResultText = erro.InnerException.Message;
+                else
+                    ResultText = erro.Message;
+                    this.Core.DispactchNewMessage(ResultText, MsgType.Erro); 
+            }
+            catch (XsltException erro) {
+                if (erro.InnerException != null)
+                    ResultText = erro.InnerException.Message;
+                else
+                    ResultText = erro.Message;
+                this.Core.DispactchNewMessage(ResultText, MsgType.Erro);
+            }
+            catch (Exception erro) { 
+                this.Core.DispactchNewMessage(erro.Message, MsgType.Erro);
+            }
+         
         }
         private XmlReader CreateXmlReader(string text)
         {

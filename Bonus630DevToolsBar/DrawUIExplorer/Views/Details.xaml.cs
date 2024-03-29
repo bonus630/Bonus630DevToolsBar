@@ -34,6 +34,12 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
             string content = (sender as Label).Content.ToString();
             Clipboard.SetText(content);
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            string content = lba_route.Content.ToString();
+            Clipboard.SetText(content);
+        }
     }
 
 }

@@ -122,14 +122,24 @@
             <Label Content="{Binding CurrentBasicData.Text}" Margin="54,0,0,0" />
         </Grid>
         <Grid>
-            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Hidden" Margin="66,0,0,0" Template="{DynamicResource ScrollViewerControlTemplate}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="10" />
+            </Grid.ColumnDefinitions>
+            <Label Content="xPath:" Grid.Column="0" Height="26" VerticalAlignment="Top" HorizontalAlignment="Left" Width="40" />
+            <ScrollViewer Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Hidden" VerticalContentAlignment="Top"  Template="{DynamicResource ScrollViewerControlTemplate}">
                 <Label Content="{Binding Route}"  Name="lba_route" Background="{x:Null}"  FontWeight="Bold" Height="31" VerticalAlignment="Top" HorizontalAlignment="Left" MouseDoubleClick="lba_route_MouseDoubleClick">
                     <Label.ToolTip>
                         <Label Content="Double Click to Copy" />
                     </Label.ToolTip>
                 </Label>
             </ScrollViewer>
-            <Label Content="xPath:" Height="26" VerticalAlignment="Top" HorizontalAlignment="Left" Width="40" />
+            <Button Grid.Column="3" Style="{StaticResource NoBorderButton}" ToolTip="Copy" Click="Button_Click" VerticalAlignment="Top" Width="20" Height="20">
+                <Image Style="{DynamicResource CopyMenuItemImg}" />
+            </Button>
         </Grid>
 
 

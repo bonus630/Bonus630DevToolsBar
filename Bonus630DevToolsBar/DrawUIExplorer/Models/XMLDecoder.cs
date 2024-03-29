@@ -189,9 +189,16 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
                 }
             }
             //temp.DocumentElement.Attributes.Remove(temp.DocumentElement.GetAttribute("encoding").);
-            text = Beautify(temp);
-            if (!xmlHeader)
-                text = text.Remove(0, 22);
+            try
+            {
+                text = Beautify(temp);
+                if (!xmlHeader)
+                    text = text.Remove(0, 22);
+            }
+            catch(XmlException e)
+            {
+                throw new Exception("Many root elements!");
+            }
             return text;
         }
         public string Beautify(string xmlString)
