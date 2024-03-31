@@ -42,20 +42,20 @@
 					 onInvoke="*Bind(DataSource=Bonus630DevToolsBarDS;Path=RunIconCreatorHelper)"
 					  icon="guid://d0a371e7-9fad-4e1c-8159-b285d67c0497"
 					  type="button"  enable="true" />
-			
+
 			<!-- IconCreatorHelper button -->
 			<itemData guid="d0a371e7-9fad-4e1c-8159-b285d67c0497"
 					 check="*Docker('488c069a-7535-4af9-9c88-eda17c4808f7')"
 					  icon="guid://d0a371e7-9fad-4e1c-8159-b285d67c0497"
 					  type="checkButton"  enable="true"/>
-			
+
 			<!-- IconCreatorHelper Loader button-->
 			<itemData guid="657042cb-3594-43a1-80bf-c8a27fd43146"
 					  onInvoke="*Bind(DataSource=Bonus630DevToolsBarDS;Path=LoadIcon)"
 					  icon="guid://657042cb-3594-43a1-80bf-c8a27fd43146"
-					  caption="Select a icon"		  
+					  caption="Select a icon"
 					  type="button"  enable="true"/>
-			<!---->
+
 
 			<!-- DrawUI Explorer Button-->
 			<itemData guid="942df043-e3e2-4d0e-83ee-a456557ac093"
@@ -91,8 +91,9 @@
 					enable="true"
 					caption="Drag your GMS here!"
 			/>
-			
-			<!--GMS Dragger Dialog test --><!--
+
+			<!--GMS Dragger Dialog test -->
+			<!--
 			<itemData guid="3b3f72b8-0129-4316-b8a3-40e4758ba9bc"
 					type="placeHolder"
 					enable="true"
@@ -106,32 +107,41 @@
 					  onInvoke="*Bind(DataSource=Bonus630DevToolsBarDS;Path=ReloadNRestoreUserGMS)"
 					  icon="guid://9b07d7af-da14-4cd8-9db9-7da214ee1d4a"
 					  dropDownRef='b0a4b2ff-7bf5-47c3-a92a-16e2a4520746'
-					  type="dropDownDlgBtn"  enable="true" arrowStyle='down'/>
-			
+					  type="dropDownDlgBtn"  enable="true" arrowStyle='down'/>0
+
+			<!--Reload GMS invoker-->
+			<itemData guid="f5f80b6a-5ca4-42e1-84df-6f51b728bb89"
+			  onInvoke="*Bind(DataSource=Bonus630DevToolsBarDS;Path=CallGMSReloader)"
+			  icon="guid://9b07d7af-da14-4cd8-9db9-7da214ee1d4a"
+			  captionRef="9b07d7af-da14-4cd8-9db9-7da214ee1d4a"
+			  toolTipRef="9b07d7af-da14-4cd8-9db9-7da214ee1d4a"
+			  type="button"  enable="true"/>
+					  
+
 			<!--PopUp GMS-->
 			<itemData guid="b0a4b2ff-7bf5-47c3-a92a-16e2a4520746"
 					type="wpfhost"
 					hostedType="Addons\Bonus630DevToolsBar\Bonus630DevToolsBar.dll,br.com.Bonus630DevToolsBar.GMSDragger.GMSLoader"
 					enable="true"/>
-			
+
 			<!-- Command Bar Builder-->
 			<itemData guid="f9691f7a-27cc-405b-b2f4-de164246bcbd"
 					 onInvoke="*Bind(DataSource=Bonus630DevToolsBarDS;Path=RunCommandBarBuilder)"
 					  icon="guid://f9691f7a-27cc-405b-b2f4-de164246bcbd"
 					  type="button"  enable="true" />
-			
+
 			<!-- Unload and Delete GMS-->
 			<itemData guid="571db7b2-8cae-4b99-b241-a56ecd61f90e"
 					  onInvoke="*Bind(DataSource=Bonus630DevToolsBarDS;Path=UnloadNDeleteUserGMS)"
 					  icon="guid://571db7b2-8cae-4b99-b241-a56ecd61f90e"
 					  type="button"  enable="true"/>
-			
+
 			<!--CQL Runner-->
 			<itemData guid="08bdac37-d2b9-42ad-a498-5335df9783c7"
 					type="wpfhost"
 					hostedType="Addons\Bonus630DevToolsBar\Bonus630DevToolsBar.dll,br.com.Bonus630DevToolsBar.CQLRunner.CQLRunner"
-					enable="true"/>	
-			
+					enable="true"/>
+
 			<!--DropdownButton CqL-->
 			<itemData guid='51b24cfb-b8df-411f-886c-4c5520e931a4' type='dropDownDlgBtn' arrowStyle='down'
 					  caption='*Bind(DataSource=Bonus630DevToolsBarDS;Path=CQLCaption)'
@@ -145,15 +155,21 @@
 					type="wpfhost"
 					hostedType="Addons\Bonus630DevToolsBar\Bonus630DevToolsBar.dll,br.com.Bonus630DevToolsBar.CQLRunner.CQLRunner"
 					enable="true"/>
-			
-					
+
+
 			<!--cql reference guid-->
 			<itemData guid="d61f1ede-79aa-4255-8f96-307e6f63c204"
 			  onInvoke="*Bind(DataSource=Bonus630DevToolsBarDS;Path=OpenCQLGuide)"
 			  icon="guid://d61f1ede-79aa-4255-8f96-307e6f63c204"
 			  type="button"  enable="true"/>
 
-		
+			<!--CQL invoker-->
+			<itemData guid="4eb59647-454a-45d2-9bec-dc7942e0f4d3"
+			  onInvoke="*Bind(DataSource=Bonus630DevToolsBarDS;Path=CallCQL)"
+			  icon="guid://51b24cfb-b8df-411f-886c-4c5520e931a4"
+			  captionRef="51b24cfb-b8df-411f-886c-4c5520e931a4"
+			  toolTipRef="51b24cfb-b8df-411f-886c-4c5520e931a4"
+			  type="button"  enable="true"/>
 
 			<!--DropdownButton Folders-->
 			<itemData guid='680d03b3-2da0-4314-bc79-fa6b26471e22' type='dropDownDlgBtn' arrowStyle='down'
@@ -169,6 +185,14 @@
 					hostedType="Addons\Bonus630DevToolsBar\Bonus630DevToolsBar.dll,br.com.Bonus630DevToolsBar.Folders.Folders"
 					enable="true"/>
 
+			<!--Folder invoker-->
+			<itemData guid="bc914454-91d6-490c-ac9e-e5b630b80d20"
+			  onInvoke="*Bind(DataSource=Bonus630DevToolsBarDS;Path=CallFolders)"
+			  icon="guid://680d03b3-2da0-4314-bc79-fa6b26471e22"
+			  captionRef="680d03b3-2da0-4314-bc79-fa6b26471e22"
+			  tooltipRef="680d03b3-2da0-4314-bc79-fa6b26471e22"
+			  type="button"  enable="true"/>
+
 			<!--IconCreatorHelper-->
 			<itemData guid="ed9bead6-3acf-43a9-887e-9c5c3f30a681"
 					type="wpfhost"
@@ -180,7 +204,7 @@
 			  onInvoke="*Bind(DataSource=Bonus630DevToolsBarDS;Path=PrintScreen)"
 			  icon="guid://b5c5d8c0-e3d0-44dd-822f-2e61190c870b"
 			  type="button"  enable="true"/>
-			
+
 			<!--Recent Files-->
 			<itemData guid="7d15e9c7-2431-4841-a5aa-9eaa5b581230"
 					type="wpfhost"
@@ -188,7 +212,7 @@
 					enable="true"
 			
 					  />
-	
+
 			<!--Height ="*Bind(DataSource=Bonus630DevToolsBarDS;Path=ItemWidth;BindType=TwoWay)"-->
 
 
@@ -209,68 +233,69 @@
 							type="toolbar"
 							dock="fill"
 							>
-				
-					<toolbar dock="fill">
-						<!--1 Data Source-->
-						<item  guidRef="9d86b3ac-5c08-4c95-9c22-288173525877" dock="top"/>
-						<!--2 Run Command Docker Button-->
-						<item  guidRef="7acb54e6-084e-494f-ad31-2718f34ddad2" dock="top"/>
-						<!--3 Separator-->
-						<item guidRef="266435b4-6e53-460f-9fa7-f45be187d400" />
-						<!--4 DrawUI Explorer Button-->
-						<item  guidRef="942df043-e3e2-4d0e-83ee-a456557ac093" />
-						<!--5 Shortcut Button-->
-						<item  guidRef="b0bc23ba-086b-46d1-ae04-ee36aa9003a4" dock="top"/>
-						<!--6 Separator-->
-						<item guidRef="266435b4-6e53-460f-9fa7-f45be187d400" />
-						<!--7 GMS Dragger-->
-						<item  guidRef="3b3f72b8-0129-4316-b8a3-40e4758ba9bc" />
-						<!--8 Macro Manager-->
-						<item guidRef="13d17830-0ba8-4f71-85e0-6df0a1051eee" dock="top" />
-						<!--9 CommandBar Builder-->
-						<item guidRef="f9691f7a-27cc-405b-b2f4-de164246bcbd" dock="top" />
-						<!--10 Reload Gms -->
-						<item  guidRef="9b07d7af-da14-4cd8-9db9-7da214ee1d4a" dock="top"/>
-						<!--11 Unload and Delete GMS -->
-						<item  guidRef="571db7b2-8cae-4b99-b241-a56ecd61f90e" dock="top"/>
-						<!--12 Separator-->
-						<item guidRef="266435b4-6e53-460f-9fa7-f45be187d400" />
-					
-						<!--13 CqlRunner -->
-						<item  guidRef="51b24cfb-b8df-411f-886c-4c5520e931a4" />	
-						<!--14 CqlHelp -->
-						<item  guidRef="d61f1ede-79aa-4255-8f96-307e6f63c204" />	
-						<!--15 Separator-->
-						<item guidRef="266435b4-6e53-460f-9fa7-f45be187d400" />
-						<!--16 Folders-->
-						<item guidRef="680d03b3-2da0-4314-bc79-fa6b26471e22" />
-						<!--17 Separator-->
-						<item guidRef="266435b4-6e53-460f-9fa7-f45be187d400" />
-						
-						<!--18 Icon Toolset -->
-						<item guidRef="d0a371e7-9fad-4e1c-8159-b285d67c0497" />
-						<!--19 Icon test slot loader-->
-						<item guidRef="657042cb-3594-43a1-80bf-c8a27fd43146" />
-						
-						<!--20 Theme-->
-						<item guidRef="c7203f61-2886-4bf1-bdbd-7ed54af38659" />
-						
-						<!--20 Separator-->
-						<item guidRef="266435b4-6e53-460f-9fa7-f45be187d400" />
-						<!--21 PrintScreen-->
-						<item guidRef="b5c5d8c0-e3d0-44dd-822f-2e61190c870b" />
-						
-						<!--22 Separator-->
-						<item guidRef="266435b4-6e53-460f-9fa7-f45be187d400" />
-						
-					
-						
-						<!--23 Recent Files -->
-						<item  guidRef="7d15e9c7-2431-4841-a5aa-9eaa5b581230" dock="fill"/>
-						<!--<item  guidRef="118bad9e-cab3-4810-883e-843626f798ae" dock="top"/>-->
 
-					</toolbar>
-				
+				<toolbar dock="fill">
+					<!--1 Data Source-->
+					<item  guidRef="9d86b3ac-5c08-4c95-9c22-288173525877" dock="top"/>
+					<!--2 Run Command Docker Button-->
+					<item  guidRef="7acb54e6-084e-494f-ad31-2718f34ddad2" dock="top"/>
+					<!--3 Separator-->
+					<item guidRef="266435b4-6e53-460f-9fa7-f45be187d400" />
+					<!--4 DrawUI Explorer Button-->
+					<item  guidRef="942df043-e3e2-4d0e-83ee-a456557ac093" />
+					<!--5 Shortcut Button-->
+					<item  guidRef="b0bc23ba-086b-46d1-ae04-ee36aa9003a4" dock="top"/>
+					<!--6 Separator-->
+					<item guidRef="266435b4-6e53-460f-9fa7-f45be187d400" />
+					<!--7 GMS Dragger-->
+					<item  guidRef="3b3f72b8-0129-4316-b8a3-40e4758ba9bc" />
+					<!--8 Macro Manager-->
+					<item guidRef="13d17830-0ba8-4f71-85e0-6df0a1051eee" dock="top" />
+					<!--9 CommandBar Builder-->
+					<item guidRef="f9691f7a-27cc-405b-b2f4-de164246bcbd" dock="top" />
+					<!--10 Reload Gms -->
+					<item  guidRef="9b07d7af-da14-4cd8-9db9-7da214ee1d4a" dock="top"/>
+					<!--11 Unload and Delete GMS -->
+					<item  guidRef="571db7b2-8cae-4b99-b241-a56ecd61f90e" dock="top"/>
+					<!--12 Separator-->
+					<item guidRef="266435b4-6e53-460f-9fa7-f45be187d400" />
+
+					<!--13 CqlRunner -->
+					<item  guidRef="51b24cfb-b8df-411f-886c-4c5520e931a4" />
+					<!--14 CqlHelp -->
+					<item  guidRef="d61f1ede-79aa-4255-8f96-307e6f63c204" />
+					<!--15 Separator-->
+					<item guidRef="266435b4-6e53-460f-9fa7-f45be187d400" />
+					<!--16 Folders-->
+					<item guidRef="680d03b3-2da0-4314-bc79-fa6b26471e22" />
+
+					<!--17 Separator-->
+					<item guidRef="266435b4-6e53-460f-9fa7-f45be187d400" />
+
+					<!--18 Icon Toolset -->
+					<item guidRef="d0a371e7-9fad-4e1c-8159-b285d67c0497" />
+					<!--19 Icon test slot loader-->
+					<item guidRef="657042cb-3594-43a1-80bf-c8a27fd43146" />
+
+					<!--20 Theme-->
+					<item guidRef="c7203f61-2886-4bf1-bdbd-7ed54af38659" />
+
+					<!--20 Separator-->
+					<item guidRef="266435b4-6e53-460f-9fa7-f45be187d400" />
+					<!--21 PrintScreen-->
+					<item guidRef="b5c5d8c0-e3d0-44dd-822f-2e61190c870b" />
+
+					<!--22 Separator-->
+					<item guidRef="266435b4-6e53-460f-9fa7-f45be187d400" />
+
+
+
+					<!--23 Recent Files -->
+					<item  guidRef="7d15e9c7-2431-4841-a5aa-9eaa5b581230" dock="fill"/>
+					<!--<item  guidRef="118bad9e-cab3-4810-883e-843626f798ae" dock="top"/>-->
+
+				</toolbar>
+
 			</commandBarData>
 		</xsl:copy>
 	</xsl:template>
@@ -328,7 +353,7 @@
 
 		</xsl:copy>
 	</xsl:template>
-	
+
 	<xsl:template match="uiConfig/dialogs">
 		<xsl:copy>
 			<xsl:apply-templates select="node()|@*"/>
@@ -362,61 +387,63 @@
 	<xsl:template match="/dockHost[@guid='930211f2-174f-2783-47c8-ac28b179bac7']">
 		<xsl:copy-of select="."/>
 		<viewHost guid="60b73b65-2952-43b3-95b4-bcfd77a767e1" category="view+docker" selectedView="488c069a-7535-4af9-9c88-eda17c4808f7" dock="bottom">
-			
+
 			<dockerData guidRef="488c069a-7535-4af9-9c88-eda17c4808f7" category="view+docker"/>
 		</viewHost>
 
-	
+
 	</xsl:template>
-	
-		<xsl:template match="/uiConfig/customizationList/container">
+
+	<xsl:template match="/uiConfig/customizationList/container">
 		<xsl:copy>
 			<xsl:apply-templates select="node()|@*"/>
 			<modeData guid="9d86b3ac-5c08-4c95-9c22-288173525877" >
 				<!--WPF control cant add here, will breaks coreldraw-->
-						<!--1 Data Source-->
-						<!--<item  guidRef="9d86b3ac-5c08-4c95-9c22-288173525877"/>-->
-						<!--2 Run Command Docker Button-->
-						<item  guidRef="7acb54e6-084e-494f-ad31-2718f34ddad2" />
-					
-						<!--4 DrawUI Explorer Button-->
-						<item  guidRef="942df043-e3e2-4d0e-83ee-a456557ac093" />
-						<!--5 Shortcut Button-->
-						<item  guidRef="b0bc23ba-086b-46d1-ae04-ee36aa9003a4" />
-					
-						<!--7 GMS Dragger-->
-						<!--<item  guidRef="3b3f72b8-0129-4316-b8a3-40e4758ba9bc" />-->
-						<!--8 Macro Manager-->
-						<!--<item guidRef="13d17830-0ba8-4f71-85e0-6df0a1051eee" />-->	
-						<!--9 CommandBar Builder-->
-						<item guidRef="f9691f7a-27cc-405b-b2f4-de164246bcbd" />
-						<!--10 Reload Gms -->
-						<item  guidRef="9b07d7af-da14-4cd8-9db9-7da214ee1d4a" />
-						<!--11 Unload and Delete GMS -->
-						<item  guidRef="571db7b2-8cae-4b99-b241-a56ecd61f90e" />
-				
-					
-						<!--12 CqlRunner -->
-						<item  guidRef="51b24cfb-b8df-411f-886c-4c5520e931a4" />	
-						<!--13 CqlHelp -->
-						<item  guidRef="d61f1ede-79aa-4255-8f96-307e6f63c204" />	
-						
-						<!--16 Folders-->
-						<item guidRef="680d03b3-2da0-4314-bc79-fa6b26471e22" />
-			
-						
-						<!--18 IconCreatorHelper-->
-						<item guidRef="d0a371e7-9fad-4e1c-8159-b285d67c0497" />
-						<!--19 IconCreatorHelper loader-->
-						<item guidRef="657042cb-3594-43a1-80bf-c8a27fd43146" />
-						<!--21 PrintScreen-->
-						<item guidRef="b5c5d8c0-e3d0-44dd-822f-2e61190c870b" />
-						
-					
-						<!--21 Recent Files -->
-						<!--<item  guidRef="7d15e9c7-2431-4841-a5aa-9eaa5b581230" />-->
-						
-			
+				<!--1 Data Source-->
+				<!--<item  guidRef="9d86b3ac-5c08-4c95-9c22-288173525877"/>-->
+				<!--2 Run Command Docker Button-->
+				<item  guidRef="7acb54e6-084e-494f-ad31-2718f34ddad2" />
+
+				<!--4 DrawUI Explorer Button-->
+				<item  guidRef="942df043-e3e2-4d0e-83ee-a456557ac093" />
+				<!--5 Shortcut Button-->
+				<item  guidRef="b0bc23ba-086b-46d1-ae04-ee36aa9003a4" />
+
+				<!--7 GMS Dragger-->
+				<!--<item  guidRef="3b3f72b8-0129-4316-b8a3-40e4758ba9bc" />-->
+				<!--8 Macro Manager-->
+				<!--<item guidRef="13d17830-0ba8-4f71-85e0-6df0a1051eee" />-->
+				<!--9 CommandBar Builder-->
+				<item guidRef="f9691f7a-27cc-405b-b2f4-de164246bcbd" />
+				<!--10 Reload Gms -->
+				<!--<item  guidRef="9b07d7af-da14-4cd8-9db9-7da214ee1d4a" />-->
+				<item  guidRef="f5f80b6a-5ca4-42e1-84df-6f51b728bb89" />
+				<!--11 Unload and Delete GMS -->
+				<item  guidRef="571db7b2-8cae-4b99-b241-a56ecd61f90e" />
+
+
+				<!--12 CqlRunner -->
+				<!--<item  guidRef="51b24cfb-b8df-411f-886c-4c5520e931a4" />-->
+				<item  guidRef="4eb59647-454a-45d2-9bec-dc7942e0f4d3" />
+				<!--13 CqlHelp -->
+				<item  guidRef="d61f1ede-79aa-4255-8f96-307e6f63c204" />
+
+				<!--16 Folders-->
+				<!--<item guidRef="680d03b3-2da0-4314-bc79-fa6b26471e22" />-->
+				<item guidRef="bc914454-91d6-490c-ac9e-e5b630b80d20" />
+
+				<!--18 IconCreatorHelper-->
+				<item guidRef="d0a371e7-9fad-4e1c-8159-b285d67c0497" />
+				<!--19 IconCreatorHelper loader-->
+				<item guidRef="657042cb-3594-43a1-80bf-c8a27fd43146" />
+				<!--21 PrintScreen-->
+				<item guidRef="b5c5d8c0-e3d0-44dd-822f-2e61190c870b" />
+
+
+				<!--21 Recent Files -->
+				<!--<item  guidRef="7d15e9c7-2431-4841-a5aa-9eaa5b581230" />-->
+
+
 			</modeData>
 
 		</xsl:copy>

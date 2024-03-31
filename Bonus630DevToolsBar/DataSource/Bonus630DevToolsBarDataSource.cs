@@ -256,9 +256,6 @@ namespace br.com.Bonus630DevToolsBar.DataSource
                     if (item.ID.Equals("657042cb-3594-43a1-80bf-c8a27fd43146"))
                         item.SetIcon2(of.FileName);
                 }
-
-
-
             }
         }
         public void PrintScreen()
@@ -275,7 +272,19 @@ namespace br.com.Bonus630DevToolsBar.DataSource
            cropper.SetFolderPath(file, path);
            cropper.Show(); 
         }
-
+      
+        public void CallFolders()
+        {
+            CorelApp.FrameWork.Automation.InvokeItem("d13b83a4-3ef6-4ead-b95d-44d467dc47f5");
+        } 
+        public void CallCQL()
+        {
+            CorelApp.FrameWork.Automation.InvokeItem("8a8ca94c-cc61-4f14-b24d-cbd447d2fd56");
+        } 
+        public void CallGMSReloader()
+        {
+            CorelApp.FrameWork.Automation.InvokeItem("b0a4b2ff-7bf5-47c3-a92a-16e2a4520746");
+        }
         
     }
 

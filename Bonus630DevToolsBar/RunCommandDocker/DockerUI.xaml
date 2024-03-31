@@ -314,14 +314,14 @@
                                             <DataTemplate>
                                                 <Grid>
                                                     <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="110" />
                                                         <ColumnDefinition Width="*"/>
                                                     </Grid.ColumnDefinitions>
                                                     <Grid.RowDefinitions>
                                                         <RowDefinition />
                                                         <RowDefinition />
                                                     </Grid.RowDefinitions>
-                                                    <Label Grid.Row="0" Grid.Column="0" Content="{Binding Name}" />
+                                                    <Label Grid.Row="0" Grid.Column="0" Content="{Binding Name}" ToolTip="{Binding Name}"/>
                                                     <Label Grid.Row="0" Grid.Column="1" Content="{Binding ArgumentType.Name}" ToolTip="{Binding ArgumentType.FullName}"/>
                                                     <Label Grid.Row="1" Grid.Column="0" Content="Value:" />
                                                     <!--<TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Value,Converter={StaticResource TypeToStringConverter}}" 
