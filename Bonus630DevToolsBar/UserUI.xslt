@@ -92,11 +92,16 @@
 			<!--IconLoader-->
 			<xsl:if test="not(./item[@guidRef='657042cb-3594-43a1-80bf-c8a27fd43146'])">
 				<item guidRef="657042cb-3594-43a1-80bf-c8a27fd43146"/>
+			</xsl:if>	
+			<!--Theme-->
+			<xsl:if test="not(./item[@guidRef='c7203f61-2886-4bf1-bdbd-7ed54af38659'])">
+				<item dock="fill" guidRef="c7203f61-2886-4bf1-bdbd-7ed54af38659"/>
 			</xsl:if>
 			<!--PrintScreen-->
 			<xsl:if test="not(./item[@guidRef='b5c5d8c0-e3d0-44dd-822f-2e61190c870b'])">
 				<item dock="fill" guidRef="b5c5d8c0-e3d0-44dd-822f-2e61190c870b"/>
-			</xsl:if>
+			</xsl:if>	
+	
 			<!--Recent Files-->
 			<xsl:if test="not(./item[@guidRef='7d15e9c7-2431-4841-a5aa-9eaa5b581230'])">
 				<item dock="fill" guidRef="7d15e9c7-2431-4841-a5aa-9eaa5b581230"/>

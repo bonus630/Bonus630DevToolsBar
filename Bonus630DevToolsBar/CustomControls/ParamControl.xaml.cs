@@ -106,12 +106,13 @@ namespace br.com.Bonus630DevToolsBar.CustomControls
 
         private void Numeric_paramValue_ValueChangedEvent(double obj)
         {
-            ParamValue = obj;
+            if(IsDecimal || IsInteger)
+                ParamValue = obj;
         }
 
         private void Txt_paramValue_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (txt_paramValue.Text.Length == 0)
+            if (txt_paramValue.Text.Length == 0 && IsVariant)
             {
                 this.ParamValue = null;
                 ChangeParam();

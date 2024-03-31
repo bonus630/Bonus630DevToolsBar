@@ -252,7 +252,8 @@
 						<!--19 Icon test slot loader-->
 						<item guidRef="657042cb-3594-43a1-80bf-c8a27fd43146" />
 						
-						
+						<!--20 Theme-->
+						<item guidRef="c7203f61-2886-4bf1-bdbd-7ed54af38659" />
 						
 						<!--20 Separator-->
 						<item guidRef="266435b4-6e53-460f-9fa7-f45be187d400" />
@@ -261,6 +262,8 @@
 						
 						<!--22 Separator-->
 						<item guidRef="266435b4-6e53-460f-9fa7-f45be187d400" />
+						
+					
 						
 						<!--23 Recent Files -->
 						<item  guidRef="7d15e9c7-2431-4841-a5aa-9eaa5b581230" dock="fill"/>

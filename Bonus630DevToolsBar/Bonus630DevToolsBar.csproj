@@ -905,8 +905,8 @@
   </ItemGroup>
   <PropertyGroup>
     <StartAction>Program</StartAction>
-    <StartProgram>$(CurrentCorelPath)Addons\Bonus630DevToolsBar\DrawUIExplorer.exe</StartProgram>
-   <!--  <StartProgram>$(CurrentCorelPath)CorelDRW.exe</StartProgram>-->
+    <!-- <StartProgram>$(CurrentCorelPath)Addons\Bonus630DevToolsBar\DrawUIExplorer.exe</StartProgram>-->
+    <StartProgram>$(CurrentCorelPath)CorelDRW.exe</StartProgram>
   </PropertyGroup>
   <!-- DependsOnTargets="CopyFiles" Condition="'$(Configuration)' == 'Release'" -->
   <Target Name="CreateShortcuts" DependsOnTargets="CopyFiles" AfterTargets="Build" Condition="$(Configuration.Contains('Release'))">
