@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:br.com.Bonus630DevToolsBar.GMSDragger"
         xmlns:converters="clr-namespace:br.com.Bonus630DevToolsBar.Converters"  Width="600" MinHeight="260" d:DataContext="{d:DesignInstance Type=local:MacrosManager}"
         mc:Ignorable="d"
-        Title="Macro Installation Wizard">
+        Title="Place macro in Command Bar Wizard">
     <Window.Resources>
         <ResourceDictionary>
             <converters:PathToImageConverter x:Key="PathToImageConverter" />
@@ -27,7 +27,7 @@
 
     </Window.Resources>
     <StackPanel>
-        <GroupBox Header="Check Macro command and icon.:" Margin="10,0,10,0">
+        <GroupBox Header="Check Macro command and icon.:" Margin="10,10,10,0">
             <ItemsControl ItemsSource="{Binding Commands}" Margin="10">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
@@ -38,7 +38,7 @@
                             </Grid.ColumnDefinitions>
                             <CheckBox Grid.Column="0" IsChecked="{Binding Add}" Content="{Binding Command}" VerticalAlignment="Center"/>
 
-                            <ComboBox Grid.Column="1" ItemsSource="{Binding Path=DataContext.Icos, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type Window}}}" Height="40" Width="46" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Margin="10,0,10,0">
+                            <ComboBox Grid.Column="1" ItemsSource="{Binding Path=DataContext.Icos, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type Window}}}" Height="40" Width="66" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Margin="10,0,10,0">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
                                         <Image Width="32" Height="32" Source="{Binding Converter={StaticResource PathToImageConverter}}" />
@@ -57,8 +57,9 @@
             <ComboBox ItemsSource="{Binding CommandBars}" IsEditable="True" Text="{Binding NewCommandBar,Mode=TwoWay}" SelectedItem="{Binding SelectedCommandBar}" Margin="10" VerticalContentAlignment="Center"/>
         </GroupBox>
         <StackPanel Orientation="Horizontal" Margin="10" >
-            <Button Content="OK" Click="Button_Click" Height="40" Width="60" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
-            <Button Content="Cancel" Click="Button_Click_1" Height="40" Width="80" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="10,0,0,0"/>
+            <Button Content="Put to bar" Click="Button_Click" Height="40" Width="140" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />
+
+            <Button Content="Just copy" Click="Button_Click_1" Height="40" Width="80" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="10,0,0,0"/>
         </StackPanel>
     </StackPanel>
 </Window>

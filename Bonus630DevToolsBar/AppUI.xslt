@@ -107,7 +107,7 @@
 					  onInvoke="*Bind(DataSource=Bonus630DevToolsBarDS;Path=ReloadNRestoreUserGMS)"
 					  icon="guid://9b07d7af-da14-4cd8-9db9-7da214ee1d4a"
 					  dropDownRef='b0a4b2ff-7bf5-47c3-a92a-16e2a4520746'
-					  type="dropDownDlgBtn"  enable="true" arrowStyle='down'/>0
+					  type="dropDownDlgBtn"  enable="true" arrowStyle='down'/>
 
 			<!--Reload GMS invoker-->
 			<itemData guid="f5f80b6a-5ca4-42e1-84df-6f51b728bb89"
