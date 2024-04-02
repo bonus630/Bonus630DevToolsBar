@@ -33,43 +33,53 @@
     </Button.ToolTip>-->
     <!--<Popup x:Name="popup_button" IsOpen="False" StaysOpen="True" Placement="Left" >-->
     <Border BorderThickness="1">
-        <ListView ItemsSource="{Binding Files}" HorizontalAlignment="Stretch" SelectionMode="Single" >
-            <ListView.ItemContainerStyle>
-                <Style TargetType="ListViewItem">
-                    <EventSetter Event="MouseDoubleClick" Handler="ListView_MouseDoubleClick"/>
-                </Style>
-            </ListView.ItemContainerStyle>
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <Grid Height="24" Margin="0,2,0,2" Width="414">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="2"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="10"/>
-                            <ColumnDefinition Width="24"/>
+        <Grid>
+
+            <ListView ItemsSource="{Binding Files}" HorizontalAlignment="Stretch" SelectionMode="Single" >
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <EventSetter Event="MouseDoubleClick" Handler="ListView_MouseDoubleClick"/>
+                    </Style>
+                </ListView.ItemContainerStyle>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Height="24" Margin="0,2,0,2" Width="414">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2"/>
+                                <ColumnDefinition Width="2"/>
+                                <ColumnDefinition Width="24"/>
+                                <ColumnDefinition Width="2"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="10"/>
+                                <ColumnDefinition Width="24"/>
+                                <ColumnDefinition Width="2"/>
 
 
 
-                        </Grid.ColumnDefinitions>
+                            </Grid.ColumnDefinitions>
 
-                        <Rectangle Fill="{DynamicResource Footer.Static.Background}" Grid.Column="0" />
-                        <Label Grid.Column="1" Content="{Binding Name}" HorizontalAlignment="Stretch" ToolTip="{Binding FullName}" />
-                        
-                            <c:IconButton Grid.Column="3" ToolTip="Unload GMS" Icon="trash.png"  
+                            <Rectangle Fill="{DynamicResource Footer.Static.Background}" Grid.Column="0" />
+                            <Label Grid.Column="4" Content="{Binding Name}" HorizontalAlignment="Stretch" ToolTip="{Binding FullName}" />
+
+                            <c:IconButton Grid.Column="2" ToolTip="Edit GMS" Icon="Edit.png" Margin="2"  
+                                CommandParameter="{Binding FullName}"  Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}, Path=DataContext.OpenGMSCommand}"
+                                      />
+
+                            <c:IconButton Grid.Column="6" ToolTip="Unload GMS" Icon="trash.png"  
                                 CommandParameter="{Binding FullName}"  Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}, Path=DataContext.UnloadGMSCommand}"
-                                      Visibility="{Binding Extension,Converter={StaticResource FileExtensionToVisibilityConverter},ConverterParameter=.gms}"
-                                 />
-                            <c:IconButton Grid.Column="3" Margin="2,0,0,0" ToolTip="Load GMS"  Icon="VbeReload.png"
+                                      Visibility="{Binding Extension,Converter={StaticResource FileExtensionToVisibilityConverter},ConverterParameter=.gms}" />
+                            <c:IconButton Grid.Column="6" Margin="2,0,0,0" ToolTip="Load GMS"  Icon="VbeReload.png"
                                 CommandParameter="{Binding FullName}"  Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}, Path=DataContext.LoadGMSCommand}"
-                                      Visibility="{Binding Extension,Converter={StaticResource FileExtensionToVisibilityConverter},ConverterParameter=.bak}"
-                                 />
-                       
+                                      Visibility="{Binding Extension,Converter={StaticResource FileExtensionToVisibilityConverter},ConverterParameter=.bak}" />
 
 
-                    </Grid>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            
+        </Grid>
     </Border>
     <!--</Popup>
 </Button>-->

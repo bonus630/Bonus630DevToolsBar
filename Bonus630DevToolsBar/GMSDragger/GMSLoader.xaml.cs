@@ -37,7 +37,7 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
         private ObservableCollection<MyFile> files;
         public ICommand UnloadGMSCommand { get; set; }
         public ICommand LoadGMSCommand { get; set; }
-        //public ICommand OpenVBACommand { get; set; }
+        public ICommand OpenGMSCommand { get; set; }
 
 
         public ObservableCollection<MyFile> Files
@@ -60,7 +60,7 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
                 stylesController = new StylesController(this.Resources, this.corelApp);
                 UnloadGMSCommand = new br.com.Bonus630DevToolsBar.RunCommandDocker.BindingCommand<string>(UnloadGMS);
                 LoadGMSCommand = new br.com.Bonus630DevToolsBar.RunCommandDocker.BindingCommand<string>(LoadGMS);
-                //OpenVBACommand = new br.com.Bonus630DevToolsBar.RunCommandDocker.BindingCommand<string>(LoadVBA);
+                OpenGMSCommand = new br.com.Bonus630DevToolsBar.RunCommandDocker.BindingCommand<string>(LoadVBA);
                 this.Loaded += GMSLoader_Loaded;
             }
             catch

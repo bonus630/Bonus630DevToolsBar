@@ -19,6 +19,7 @@ Key Features:
 
 * Docker-based alternative to the CorelDRAW VSTA editor.
 * Support for macro creation in both C# and VB languages.
+* Ability to import native CorelDraw VSTA macros in CGSAddon format
 * Flexibility to use any editor, including basic text editors like Notepad.
 * Built-in C# and VB project templates for quick start.
 * Integration of MSBuild command for easy DLL compilation.
@@ -26,6 +27,10 @@ Key Features:
 * Ability to create macros with parameters and return values.
 * Compatibility for using a macro with return value as a parameter for another macro.
 * Simple object inspector for exploring methods and properties of .NET and VGCore objects.
+* Jobs run in the background
+* Shaperange Manager
+* Pin the most useds commands
+* Console and throw returns
 
 The RunCommandDocker tool offers an enhanced development experience for CorelDRAW macros. It allows you to work with both C# and VB languages, use your preferred editor, and compile your macros into DLLs using the MSBuild command. You can specify a specific folder to store the DLLs and take advantage of macros with parameters and return values, as well as leverage macros as parameters in other macros.
 
@@ -44,7 +49,7 @@ Key Features:
 * XSLT testing to validate transformations.
 * Icon extraction feature for extracting icons from the file.
 * Item highlighting for improved visibility.
-* Open dockers and dialogs directly from the tool.
+* Open dockers, dialogs and invoke items directly from the tool.
 * Run data sources for testing and verification.
 
 The DrawUIExplorer tool simplifies the process of working with drawui.xml and workspace files in CorelDRAW. It allows you to navigate and search through the file structure effortlessly, organize elements with branching, and validate XSLT transformations. You can extract icons, highlight specific items for better visibility, and directly access dockers and dialogs from within the tool. Additionally, you can run data sources to test and verify their functionality.
@@ -163,10 +168,10 @@ Key Features:
 
 
 * Folder Shortcuts:
-Pin shortcuts to designated folders, creating a quick and easy-to-access menu for your frequently used directories.
+Pin shortcuts to designated folders,websites,programs or files, creating a quick and easy-to-access menu for your frequently used directories.
 
 * Custom Icons:
-Personalize your folder shortcuts by assigning custom icons, adding a visually appealing and intuitive element to your organizational system.
+Personalize your folder, websites, programs or files, shortcuts by assigning custom icons, adding a visually appealing and intuitive element to your organizational system.
 
 * Enhanced Accessibility:
 Streamline your workflow by having instant access to your most-used folders directly from the popup interface.
