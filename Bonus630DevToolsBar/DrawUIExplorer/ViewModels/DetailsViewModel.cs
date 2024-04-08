@@ -16,8 +16,9 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
         private Corel.Interop.VGCore.Application corelApp;
         public DetailsViewModel(Core core) : base(core)
         {
-            corelAutomation = new CorelAutomation(core.CorelApp, core);
+            corelAutomation = new CorelAutomation(core);
             this.Core = core;
+            this.Core.InCorelChanged += Core_InCorelChanged;
             corelApp = core.CorelApp;
             RunBindCommand = new ViewModels.Commands.AttributeCommand(attributeContentExec, attributeContentCanExec);
             RunBindWithParamCommand = new ViewModels.Commands.AttributeCommand(attributeContentExecWithParam, attributeContentCanExec);
@@ -31,7 +32,10 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
 
         }
 
-
+        private void Core_InCorelChanged(bool obj)
+        {
+            corelAutomation.CorelApp = this.Core.CorelApp;
+        }
 
         public Commands.AttributeCommand RunBindCommand { get; set; }
         public Commands.AttributeCommand RunBindWithParamCommand { get; set; }
@@ -63,34 +67,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
             get { return captionLocalization; }
             set { captionLocalization = value; OnPropertyChanged(); }
         }
-        //private string guid;
-
-        //public string Guid
-        //{
-        //    get { return guid; }
-        //    set { guid = value; NotifyPropertyChanged(); }
-        //}
-        //private string guidRef;
-
-        //public string GuidRef
-        //{
-        //    get { return guidRef; }
-        //    set { guidRef = value; NotifyPropertyChanged(); }
-        //}
-        //private int treeLevel = 0;
-
-        //public int TreeLevel
-        //{
-        //    get { return treeLevel; }
-        //    set { treeLevel = value; NotifyPropertyChanged(); }
-        //}
-        //private List<Attribute> attributes;
-
-        //public List<Attribute> Attributes
-        //{
-        //    get { return attributes; }
-        //    set { attributes = value; NotifyPropertyChanged(); }
-        //}
+    
 
         private int index = 0;
 
@@ -336,89 +313,11 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
             }
         }
 
-        //private void btn_showTreeView_Click(object sender, RoutedEventArgs e)
-        //{
-        //    try
-        //    {
-        //        showHighLightItem();
-        //    }
-        //    catch (System.Exception erro)
-        //    {
-        //        core.DispactchNewMessage(erro.Message,MsgType.Console);
-        //    }
-
-        //}
         private void showHighLight()
         {
 
         }
-        //private void showHighLightItem()
-        //{
-        //    try
-        //    {
-        //        IBasicData itemData = this.basicData;
-        //        IBasicData parentItemData = parentItemData = basicData.Parent;
-        //        IBasicData specialData = null;
-
-        //        if (basicData.IsSpecialType)
-        //        {
-        //            specialData = basicData;
-        //        }
-        //        else
-        //        {
-        //            while ((specialData.GetType() != typeof(CommandBarData) || specialData.GetType() == typeof(DockerData)
-        //           || specialData.GetType() == typeof(DialogData)) && specialData.Parent != null)
-        //            {
-        //                specialData = specialData.Parent;
-        //            }
-        //        }
-        //        //string guidItem = temp[temp.Count - 1].Guid;
-        //        //DataClass.IBasicData basicData = core.SearchItemContainsGuidRef(core.ListPrimaryItens, guidItem);
-        //        while (string.IsNullOrEmpty(parentItemData.Guid) && parentItemData.Parent != null)
-        //        {
-        //            parentItemData = parentItemData.Parent;
-        //        }
-        //        if (specialData.GetType() == typeof(CommandBarData))
-        //        {
-        //            corelApp.FrameWork.Automation.ShowBar(specialData.Guid, true);
-        //            specialData = new CommandBarData();
-        //            specialData.Guid = specialData.Guid;
-        //        }
-        //        if (specialData.GetType() == typeof(DockerData))
-        //        {
-        //            if (!corelApp.FrameWork.IsDockerVisible(specialData.Guid))
-        //            {
-        //                corelApp.FrameWork.ShowDocker(specialData.Guid);
-        //                specialData = new DockerData();
-        //                specialData.Guid = specialData.Guid;
-        //            }
-        //        }
-        //        if (specialData.GetType() == typeof(DialogData))
-        //        {
-
-        //            corelApp.FrameWork.ShowDialog(specialData.Guid)
-        //            specialData = new DialogData();
-        //            specialData.Guid = specialData.Guid;
-        //        }
-        //        LoadHighLightForm(basicData, parentItemData, specialData);
-        //    }
-        //    catch (System.Exception erro)
-        //    {
-        //        core.DispactchNewMessage(erro.Message);
-        //    }
-        //}
-
-
-
-
-
-
-
-
-        //private void btn_getActiveGuid_Click(object sender, RoutedEventArgs e)
-        //{
-        //    copyItemCaptionAndGuid();
-        //}
+     
         public void copyItemCaptionAndGuid()
         {
 

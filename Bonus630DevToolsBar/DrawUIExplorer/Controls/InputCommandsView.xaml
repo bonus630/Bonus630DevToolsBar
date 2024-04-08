@@ -68,7 +68,7 @@
                      PreviewKeyDown="txt_inputCommandResult_PreviewKeyDown" VerticalScrollBarVisibility="Auto" />
             
             <WindowsFormsHost Name="formHost" VerticalAlignment="Bottom" >
-                <wf:TextBox x:Name="txt_formInputCommand" Multiline="false" Dock="Fill" BorderStyle="None"  />
+                <wf:TextBox x:Name="txt_formInputCommand" Multiline="false" Dock="Fill" BorderStyle="None" AcceptsTab="True" TabStop="False" />
             </WindowsFormsHost>
 
         </Grid>

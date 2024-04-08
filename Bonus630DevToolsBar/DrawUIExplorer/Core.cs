@@ -15,12 +15,12 @@ using System.Windows.Threading;
 
 namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
 {
-    public class Core
+    public class Core : IDisposable
     {
         XMLDecoder xmlDecoder;
         WorkspaceUnzip workspaceUnzip;
         string workerFolder;
-      
+
 
         Thread t;
 
@@ -49,8 +49,6 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
         }
         public SearchEngine SearchEngineGet { get { return this.searchEngine; } }
         private SearchEngine searchEngine;
-        private MethodInfo[] commands;
-        public MethodInfo[] Commands { get { return commands; } }
         private InputCommands inputCommands;
         private IBasicData currentData;
         private Corel.Interop.VGCore.Application app;
@@ -58,18 +56,19 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
         public Corel.Interop.VGCore.Application CorelApp
         {
             get { return app; }
-            set { app = value;  }
+            set { app = value; }
         }
         public string FilePath { get; private set; }
 
         private bool inCorel;
-        public bool InCorel 
-        { 
-            get { return inCorel; } 
-            set { inCorel = value; 
-                if (InCorelChanged != null) 
-                    InCorelChanged(value);  
-            } 
+        public bool InCorel
+        {
+            get { return inCorel; }
+            set
+            {
+                inCorel = value;
+                OnInCorelChanged(value);
+            }
         }
         public string Title { get; private set; }
         public string IconsFolder { get; private set; }
@@ -111,15 +110,8 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
         {
             if (corelApp != null)
             {
-                InCorel = true;
-                CorelAutomation = new CorelAutomation(corelApp, this);
-                this.app = corelApp;
-                this.HighLightItemHelper = new HighLightItemHelper(this.CorelAutomation, this.app);
-                corelApp.OnApplicationEvent += CorelApp_OnApplicationEvent;
-                //Teste get guids from resources
-                ResourcesExtractor = new ResourcesExtractor(CorelApp.ProgramPath);
-                SaveIcons();
-                ResourcesExtractor.GuidsIsLoaded += ResourcesExtractor_GuidsIsLoaded;
+                inCorel = true;
+                startCoreInCorel(corelApp);
             }
             FileInfo file = null;
             try
@@ -147,20 +139,77 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
                 return;
             }
             inputCommands = new InputCommands(this);
-            commands = (typeof(InputCommands)).GetMethods(BindingFlags.Public | BindingFlags.Instance);
             xmlDecoder = new XMLDecoder();
             xmlDecoder.LoadFinish += XmlDecoder_LoadFinish;
             Thread thread = new Thread(new ParameterizedThreadStart(LoadFile));
             thread.IsBackground = true;
             thread.Start(file);
         }
+        private void startCoreInCorel(Corel.Interop.VGCore.Application corelApp)
+        {
+            CorelAutomation = new CorelAutomation(this);
+            this.app = corelApp;
+            this.HighLightItemHelper = new HighLightItemHelper(this.CorelAutomation);
+            corelApp.OnApplicationEvent -= CorelApp_OnApplicationEvent;
+            corelApp.OnApplicationEvent += CorelApp_OnApplicationEvent;
+            //Teste get guids from resources
+            ResourcesExtractor = new ResourcesExtractor(CorelApp.ProgramPath);
+            SaveIcons();
+            ResourcesExtractor.GuidsIsLoaded -= ResourcesExtractor_GuidsIsLoaded;
+            ResourcesExtractor.GuidsIsLoaded += ResourcesExtractor_GuidsIsLoaded;
+        }
 
+        /// <summary>
+        /// Use this to performace search in a pierce of xml
+        /// </summary>
+        public void PartialStart(string filePath, Corel.Interop.VGCore.Application corelApp)
+        {
+            this.app = corelApp;
+            FileInfo file = null;
+            try
+            {
+                FileInfo fileOri = new FileInfo(filePath);
+                Title = filePath;
+                try
+                {
+                    if (!Directory.Exists(workerFolder))
+                        Directory.CreateDirectory(workerFolder);
+                }
+                catch (IOException ioE)
+                {
+                    DispactchNewMessage(ioE.Message, MsgType.Erro);
+                    return;
+                }
+                string newPath = workerFolder + "\\" + fileOri.Name;
+                if (File.Exists(newPath))
+                    File.Delete(newPath);
+                file = fileOri.CopyTo(newPath);
+            }
+            catch (IOException ioErro)
+            {
+                DispactchNewMessage(ioErro.Message, MsgType.Erro);
+                return;
+            }
+            xmlDecoder = new XMLDecoder();
+            xmlDecoder.LoadFinish += XmlDecoder_LoadFinish;
+            Thread thread = new Thread(new ParameterizedThreadStart(LoadFile));
+            thread.IsBackground = true;
+            thread.Start(file);
+
+        }
+        private void OnInCorelChanged(bool inCorel)
+        {
+            if (inCorel)
+                startCoreInCorel(this.CorelApp);
+            if (InCorelChanged != null)
+                InCorelChanged(inCorel);
+        }
         private void ResourcesExtractor_GuidsIsLoaded(Dictionary<UInt16, List<string>> obj)
         {
             guidIsLoaded = true;
             TestGetResourceRCDATA(obj);
         }
-        private Dictionary<UInt16, List<string>> guids;
+        private Dictionary<UInt16, List<string>> guids = new Dictionary<ushort, List<string>>();
         public void SetIcon(IBasicData basicData, bool ignoreError = true)
         {
             if (!string.IsNullOrEmpty(basicData.Icon))
@@ -173,13 +222,19 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
                 if (ignoreError)
                     return;
                 else
-                    throw new Exception("The guid is empty!");
+                    DispactchNewMessage("The guid is empty!", MsgType.Erro);
             }
             Dispatcher dispatcher = Dispatcher.CurrentDispatcher;
-            if (!ignoreError && guids == null)
-                throw new Exception("Guids list is null");
+            //if (!ignoreError && guids == null)
+            //{
+            //    DispactchNewMessage("Guids list is null", MsgType.Erro);
+            //    return;
+            //}
             if (!ignoreError && string.IsNullOrEmpty(IconsFolder))
-                throw new Exception("IconsFolders is invalid!");
+            {
+                DispactchNewMessage("IconsFolders is invalid!", MsgType.Erro);
+                return;
+            }
 
             //Process.Start(IconsFolder);
             //System.Windows.Forms.MessageBox.Show(guid);
@@ -188,16 +243,16 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
             {
                 //if(item.Key == 22)
                 //    basicData.Icon = string.Format("{0}\\{1}.png", IconsFolder, item.Key);
-                
+
 
                 if (item.Value.Contains(guid))
                     dispatcher.Invoke(new Action(() =>
                     {
-#if X8 || X7
+                        //#if X8 || X7
                         basicData.Icon = string.Format("{0}\\{1}.png", IconsFolder, item.Key);
-#else
-                        basicData.Icon = string.Format("{0}\\{1}.png", IconsFolder, item.Key+1);
-#endif
+                        //#else
+                        //                        basicData.Icon = string.Format("{0}\\{1}.png", IconsFolder, item.Key+1);
+                        //#endif
                         return;
                     }));
             }
@@ -244,7 +299,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
                 string eventName = EventName;
                 for (int i = 0; i < Parameters.Length; i++)
                 {
-                    eventName += "\n\t Param[" + i + "] => " + Parameters[i].GetType() + " = " + Parameters[i].ToString()+";";
+                    eventName += "\n\t Param[" + i + "] => " + Parameters[i].GetType() + " = " + Parameters[i].ToString() + ";";
                 }
                 DispactchNewMessage(eventName, MsgType.Event);
             }
@@ -259,45 +314,26 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
             {
                 //commandName = commandName.ToLowerInvariant();
                 string result = "";
-                commandName = commandName.Trim(' ','\r','\n','\t');
-                string[] pierces = commandName.Split(" ".ToCharArray(),StringSplitOptions.RemoveEmptyEntries);
+                commandName = commandName.Trim(' ', '\r', '\n', '\t');
+                string[] pierces = commandName.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                 int j = 0;
                 List<object> param = new List<object>();
                 commandName = pierces[0];
-                //while (!string.IsNullOrEmpty(pierces[j]) || pierces[j] == " ")
-                //{
-                //    if (!string.IsNullOrEmpty(pierces[j]) && pierces[j] != " ")
-                //    {
-                //        commandName = pierces[j];
-                //        j++;
-                //        break;
-                //    }
-                //    j++;
-                //    if (j >= pierces.Length)
-                //        break;
-                //}
-                //while (j < pierces.Length && (!string.IsNullOrEmpty(pierces[j]) || pierces[j] == " "))
-                //{
-                //    if (!string.IsNullOrEmpty(pierces[j]) && pierces[j] != " ")
-                //    {
-                //        param.Add(pierces[j]);
-                //    }
-                //    j++;
-                //}
+         
                 bool isQuote = false;
                 for (int i = 1; i < pierces.Length; i++)
                 {
                     if (isQuote)
-                        param[param.Count-1] = param[param.Count-1] + " " + pierces[i];
+                        param[param.Count - 1] = param[param.Count - 1] + " " + pierces[i];
                     else
                         param.Add(pierces[i]);
                     if (pierces[i].StartsWith("\""))
                         isQuote = true;
                     if (pierces[i].EndsWith("\""))
                         isQuote = false;
-                    if (pierces[i].Contains("\"") && pierces[i].Length<2)
+                    if (pierces[i].Contains("\"") && pierces[i].Length < 2)
                     {
-                        
+
                         return "Badly formed command, you cannot start or end a string with spaces";
                     }
                 }
@@ -308,13 +344,14 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
                 }
 
                 bool commandNotFound = true;
+                var commands = (typeof(InputCommands)).GetMethods(BindingFlags.Public | BindingFlags.Instance);
                 for (int i = 0; i < commands.Length; i++)
                 {
-                    if (commands[i].Name.Equals(commandName,StringComparison.InvariantCultureIgnoreCase))
+                    if (commands[i].Name.Equals(commandName, StringComparison.InvariantCultureIgnoreCase))
                     {
                         commandNotFound = false;
                         int parCount = commands[i].GetParameters().Length;
-                        if(parCount!=param.Count)
+                        if (parCount != param.Count)
                         {
                             return "Badly formed command, number of parameters is incorrect";
                         }
@@ -326,7 +363,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
                             else
                                 result = "This command has no return";
                         }
-                        catch(Exception e)
+                        catch (Exception e)
                         {
 
                         }
@@ -437,7 +474,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
             searchEngine.SearchAllTags(basicData);
         }
 
-        public string GetXml(IBasicData basicData,bool xmlHeader = true)
+        public string GetXml(IBasicData basicData, bool xmlHeader = true)
         {
             return xmlDecoder.GetXml(basicData, xmlHeader);
         }
@@ -456,7 +493,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
             StreamReader fs = null;
             if (file == null)
             {
-                DispactchNewMessage("Load file erro", MsgType.Erro); 
+                DispactchNewMessage("Load file erro", MsgType.Erro);
                 return;
             }
             if (LoadStarting != null)
@@ -469,7 +506,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
                     workspaceUnzip = new WorkspaceUnzip(file);
                     fs = workspaceUnzip.XmlStreamReader;
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     DispactchNewMessage(e.Message, MsgType.Erro);
                     return;
@@ -497,7 +534,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
             sb = null;
             fs.Close();
             fs.Dispose();
-            if(workspaceUnzip!=null)
+            if (workspaceUnzip != null)
                 workspaceUnzip.Dispose();
             try
             {
@@ -521,7 +558,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
                 LoadListsFinish();
             FilePath = file.FullName;
             //Teste para pegar os guids do RCDATA
-            if(InCorel)
+            if (InCorel)
                 ResourcesExtractor.GetGuids();
             //listIsLoaded = true;
             //TestGetResourceRCDATA();
@@ -540,7 +577,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
             if (!Directory.Exists(IconsFolder))
                 Directory.CreateDirectory(IconsFolder);
             DispactchNewMessage("Save icons in: " + IconsFolder, MsgType.Console);
-         
+
             Action saveIcons = new Action(() =>
             {
                 // ResourcesExtractor.SaveIcons(IconsFolder);
@@ -555,49 +592,26 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
 
                 psi.Start();
             });
-            t = new Thread(new ThreadStart(saveIcons));
+            Action saveIcons2 = new Action(() =>
+            {
+                try
+                {
+                    ResourcesExtractor.SaveIcons(IconsFolder);
+                }
+                catch (Exception e)
+                {
+                    DispactchNewMessage(e.Message, MsgType.Erro);
+                }
+            });
+            t = new Thread(new ThreadStart(saveIcons2));
             t.IsBackground = true;
+            t.Priority = ThreadPriority.Lowest;
             t.Start();
         }
         private bool listIsLoaded = false;
         private bool guidIsLoaded = false;
         private int c = 1;
-        //public void TestGetResourceRCDATA(Dictionary<UInt16,List<string>> guids)
-        //{
-        //    DispactchNewMessage("Getting icons Guids", MsgType.Console);
-        //    Dispatcher dispatcher = Dispatcher.CurrentDispatcher;
 
-        //    //t = new Thread(new ThreadStart(new Action(() =>
-        //    //{
-        //    //return;
-        //    //if (!listIsLoaded || !guidIsLoaded)
-        //    //    return;
-        //    // List<string> guids = ResourcesExtractor.GetGuids();
-        //    //List<IBasicData> datas = new List<IBasicData>();
-        //    foreach (var item in guids)
-        //    {
-        //        List<string> guidL = item.Value;
-        //        for (int i = 0; i < guidL.Count; i++)
-        //        {
-
-        //            IBasicData refBasicData = searchEngine.SearchAllAttributesValueNoEvent(ListPrimaryItens, guidL[i]);
-        //            //datas.Add(refBasicData);
-        //            for (int r = 0; r < refBasicData.Childrens.Count; r++)
-        //            {
-        //                dispatcher.Invoke(new Action(() =>
-        //                {
-        //                    refBasicData.Childrens[r].Icon = string.Format("{0}\\{1}.png",IconsFolder, item.Key);
-        //                }));
-
-        //            }
-        //        }
-        //    }
-        //    DispactchNewMessage("Icons crawleds", MsgType.Console);
-        //    //})));
-        //    //t.IsBackground = true;
-        //    //t.Start();
-        //    // Debug.WriteLine(datas.Count);
-        //}
         public void DispactchNewMessage(string message, MsgType msgType)
         {
 
@@ -716,7 +730,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
             try
             {
                 int line = xmlDecoder.GetLineNumber(basicData);
-                if(line == -1)
+                if (line == -1)
                 {
                     DispactchNewMessage("Error when trying to find the line number", MsgType.Erro);
                     return;
@@ -733,12 +747,29 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
                 process.StartInfo.Arguments = string.Format(Properties.Settings.Default.EditorArguments, args);
                 process.Start();
             }
-            catch(Exception erro)
+            catch (Exception erro)
             {
                 DispactchNewMessage(erro.Message, MsgType.Erro);
             }
-            
+
         }
+
+        public void Dispose()
+        {
+            if (ListPrimaryItens != null)
+            {
+                ListPrimaryItens.Childrens.Clear();
+                ListPrimaryItens = null;
+            }
+            inputCommands = null;
+            //commands = null;
+            xmlDecoder = null;
+            CorelAutomation = null;
+            this.HighLightItemHelper = null;
+            ResourcesExtractor = null;
+            Dispose();
+        }
+
     }
 
     public enum MsgType

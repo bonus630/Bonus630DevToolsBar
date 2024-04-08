@@ -39,7 +39,10 @@ namespace br.com.Bonus630DevToolsBar.ControlsShorcutsCDRAddon
             }
             dataContext = new DockerUIViewModel(this.corelApp);
             this.DataContext = dataContext;
+           
         }
+       
+      
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {

@@ -23,10 +23,10 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
 
         private readonly Type[] SupportedLayoutTypes = { typeof(DockerData), typeof(DialogData), typeof(CommandBarData) };
 
-        public HighLightItemHelper(CorelAutomation automation, Application corelApp)
+        public HighLightItemHelper(CorelAutomation automation)
         {
             this.automation = automation;
-            this.corelApp = corelApp;
+            this.corelApp = automation.Core.CorelApp;
         }
         public void ShowHighLightItem(List<IBasicData> temp)
         {

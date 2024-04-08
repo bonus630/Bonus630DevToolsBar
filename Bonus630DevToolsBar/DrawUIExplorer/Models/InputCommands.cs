@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 
 namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
@@ -25,7 +26,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
         [InCorelAtt(true)]
         public string CQL(string strCQL)
         {
-           return core.CorelApp.Evaluate(strCQL).ToString();
+            return core.CorelApp.Evaluate(strCQL).ToString();
         }
         [InCorelAtt(true)]
         public void InvokeItem(string strItemGuid)
@@ -43,9 +44,19 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
             core.HighLightItemHelper.ShowHighLightItem(strItemGuid, strItemParentGuid);
         }
         [InCorelAtt(true)]
-        public void RunMacro(string strMacro) 
+        public void RunMacro(string strMacro)
         {
             core.CorelAutomation.RunMacro(strMacro);
+        }
+        [InCorelAtt(true)]
+        public void RunJavascript(string strMacro)
+        {
+            core.CorelAutomation.RunJavascript(strMacro);
+        }
+        [InCorelAtt(true)]
+        public void RunVSTA(string strMacro)
+        {
+            core.CorelAutomation.RunVSTA(strMacro);
         }
         [InCorelAtt(false)]
         public void AddLabelToActiveTag(string strLabel)
@@ -58,7 +69,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
             int version = 0;
             if (core.InCorel)
             {
-                
+
                 try
                 {
                     version = core.CorelApp.VersionMajor;
@@ -66,16 +77,16 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
                     core.InCorel = false;
                     core.CorelApp.ToString();
                 }
-                catch 
+                catch
                 {
-                    core.DispactchNewMessage("Coreldraw {0} disattached", MsgType.Erro,version);
+                    core.DispactchNewMessage("Coreldraw {0} disattached", MsgType.Erro, version);
                 }
             }
             else
             {
-               
+                core.DispactchNewMessage("Starting connection!", MsgType.Console);
                 Int32.TryParse(versionMajor, out version);
-                if(version==0)
+                if (version == 0)
                 {
                     core.DispactchNewMessage("Invalid version", MsgType.Erro);
                 }
@@ -83,37 +94,64 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
                 {
                     try
                     {
-                        Type pia_type = Type.GetTypeFromProgID(string.Format("CorelDRAW.Application.{0}",version));
-                        core.CorelApp = (Corel.Interop.VGCore.Application) Activator.CreateInstance(pia_type);
+                        Type pia_type = Type.GetTypeFromProgID(string.Format("CorelDRAW.Application.{0}", version));
+                        core.CorelApp = (Corel.Interop.VGCore.Application)Activator.CreateInstance(pia_type);
 
                         int i = 0;
-                        while (core.CorelApp == null || i > 50)
+                        while (core.CorelApp == null && i < 60)
                         {
-                            if (core.CorelApp != null)
-                            {
-                                core.InCorel = true;
-                                core.DispactchNewMessage("Sucess to connect!", MsgType.Result);
-                            }
                             i++;
                             Thread.Sleep(1000);
+                            core.DispactchNewMessage("Waiting connection. Time out: {0}s", MsgType.Console, i);
+                        }
+                        if (core.CorelApp != null)
+                        {
+                            core.InCorel = true;
+                            core.CorelApp.Visible = true;
+                            core.DispactchNewMessage("Sucess to connect!", MsgType.Result);
                         }
                     }
                     catch
                     {
-                        core.DispactchNewMessage("Failed to start CorelDraw",MsgType.Erro);
-                        
+                        core.DispactchNewMessage("Failed to start CorelDraw", MsgType.Erro);
+
                     }
-                
+
                 });
                 thread.IsBackground = true;
                 thread.Start();
             }
         }
+
         [InCorelAtt(true)]
         public string CorelVersionMajor()
         {
             return core.CorelApp.VersionMajor.ToString();
         }
+        [DllImport("user32.dll")]
+        public static extern int MapVirtualKey(uint uCode, uint uMapType);
+
+        [InCorelAtt(false)]
+        public string MapKeyCode(string VirtualKeyCode)
+        {
+            UInt32 keyCode = 0;
+            if (UInt32.TryParse(VirtualKeyCode, out keyCode))
+            {
+
+                int scanCode = MapVirtualKey(keyCode, 0);
+                Key key = KeyInterop.KeyFromVirtualKey((int)keyCode);
+                return string.Format("KeyCode: {0} | ScanCode: {1} | Key: {2}", keyCode, scanCode, key);
+            }
+            else
+            {
+                core.DispactchNewMessage("Param format invalid!", MsgType.Erro);
+                return "";
+            }
+        }
+
+
+
+
         [InCorelAtt(false)]
         public string Help()
         {
@@ -123,7 +161,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
             m = m.OrderBy(r => r.Name).ToList();
             for (int i = 0; i < m.Count; i++)
             {
-                InCorelAtt corelAtt =  (InCorelAtt)m[i].GetCustomAttribute(typeof(InCorelAtt), false);
+                InCorelAtt corelAtt = (InCorelAtt)m[i].GetCustomAttribute(typeof(InCorelAtt), false);
 
                 if (corelAtt.Value && core.InCorel || !corelAtt.Value)
                 {
@@ -143,7 +181,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
             }
             return result;
         }
-       
+
     }
     [System.AttributeUsage(System.AttributeTargets.Method)]
     public class InCorelAtt : System.Attribute

@@ -53,6 +53,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
             this.app = app;
             stylesController = new StylesController(this.Resources, this.app, ChangeTheme);
             this.Loaded += (s, e) => { stylesController.LoadThemeFromPreference(); };
+          
             init();
         }
         public XMLTagWindow(string filePath)
@@ -73,7 +74,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
             btn_workSpace.Click += (s, e) => { CallDialogFileSelect(false); };
             dataContext = new XMLTagWindowViewModel(core);
             this.DataContext = dataContext;
-            corelCmd = new CorelAutomation(this.app, core);
+            corelCmd = new CorelAutomation(core);
             dataContext.CorelCmd = corelCmd;
             core.LoadXmlFinish += Core_LoadFinish;
             core.FilePorcentLoad += Core_FilePorcentLoad;
@@ -84,6 +85,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
             core.LoadFinish += Core_LoadFinish1;
             core.NewMessage += Core_NewMessage;
             core.RequestUIHideVisibleChanged += Core_RequestUIHideVisibleChanged;
+            core.InCorelChanged += Core_InCorelChanged;
             core.MainWindowHandler = new WindowInteropHelper(this).Handle;
 
             treeView_Nodes.SelectedItemChanged += TreeView_SelectedItem;
@@ -100,6 +102,11 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
                 StartProcess(saveLoad.LastFilePath);
             }
         
+        }
+
+        private void Core_InCorelChanged(bool obj)
+        {
+            corelCmd.CorelApp = this.core.CorelApp;
         }
 
         private void TreeView_SelectedItem(object sender, RoutedEventArgs e)

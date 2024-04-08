@@ -13,11 +13,11 @@ using System.Linq;
 
 namespace br.com.Bonus630DevToolsBar.ControlsShorcutsCDRAddon.ViewModels
 {
-    public class DockerUIViewModel : ViewModelBase
+    public class DockerUIViewModel : ViewModelBase,IDisposable
     {
         private Application corelApp;
         public ObservableCollection<Shortcut> Shortcuts { get; set; }
-        private ObservableCollection<Shortcut> AllItems = new ObservableCollection<Shortcut>(); 
+        private ObservableCollection<Shortcut> AllItems = new ObservableCollection<Shortcut>();
         private Core core;
         private readonly string keyName = "keySequence";
         private readonly string itemRef = "itemRef";
@@ -50,12 +50,12 @@ namespace br.com.Bonus630DevToolsBar.ControlsShorcutsCDRAddon.ViewModels
             this.corelApp = corelApp;
             this.dispatcher = Dispatcher.CurrentDispatcher;
             core = new Core();
-            core.StartCore(Path.Combine(this.corelApp.Path, "UIConfig\\DrawUI.xml"), this.corelApp);
-            core.ResourcesExtractor.GetGuids();
+            core.PartialStart(Path.Combine(this.corelApp.Path, "UIConfig\\DrawUI.xml"), this.corelApp);
             core.LoadListsFinish += Core_LoadListsFinish;
             core.SearchResultEvent += Core_SearchResultEvent;
-        }
 
+        }
+       
         private void Core_SearchResultEvent(DrawUIExplorer.DataClass.IBasicData obj)
         {
             Shortcut s;
@@ -80,7 +80,7 @@ namespace br.com.Bonus630DevToolsBar.ControlsShorcutsCDRAddon.ViewModels
                         s.Control = control;
                     }
                     s.Guid = obj.Childrens[i].GetAttribute(itemRef);
-                    s.Name = core.CorelAutomation.GetCaption(s.Guid,true);
+                    s.Name = this.GetCaption(s.Guid, true);
                     dispatcher.Invoke(() =>
                     {
                         if (!this.AllItems.Contains(s))
@@ -90,6 +90,20 @@ namespace br.com.Bonus630DevToolsBar.ControlsShorcutsCDRAddon.ViewModels
                         }
                     });
                 }
+            }
+        }
+        private string GetCaption(string guid, bool removeAmpersand = false)
+        {
+            try
+            {
+                if (removeAmpersand)
+                    return this.corelApp.FrameWork.Automation.GetCaptionText(guid).Replace("&", "");
+                return this.corelApp.FrameWork.Automation.GetCaptionText(guid);
+            }
+
+            catch (Exception e)
+            {
+                return e.Message;
             }
         }
         private void Core_LoadListsFinish()
@@ -113,7 +127,7 @@ namespace br.com.Bonus630DevToolsBar.ControlsShorcutsCDRAddon.ViewModels
                 this.corelApp.FrameWork.Automation.InvokeItem(shortcut.Guid);
             }
             catch { }
-        }  
+        }
         public void CopyGuid(Shortcut shortcut)
         {
             try
@@ -144,14 +158,14 @@ namespace br.com.Bonus630DevToolsBar.ControlsShorcutsCDRAddon.ViewModels
             }
             else
             {
-                if(SearchTerm.Length==1)
+                if (SearchTerm.Length == 1)
                     Shortcuts = new ObservableCollection<Shortcut>(
-                   AllItems.Where<Shortcut>(item => item.Name.StartsWith(SearchTerm,StringComparison.OrdinalIgnoreCase) || 
+                   AllItems.Where<Shortcut>(item => item.Name.StartsWith(SearchTerm, StringComparison.OrdinalIgnoreCase) ||
                    item.Key.StartsWith(SearchTerm, StringComparison.OrdinalIgnoreCase)));
                 else
-                Shortcuts = new ObservableCollection<Shortcut>(
-                    AllItems.Where<Shortcut>(item => item.Name.IndexOf(SearchTerm,StringComparison.OrdinalIgnoreCase) >=0
-                    || item.Guid.IndexOf(SearchTerm)>=0));
+                    Shortcuts = new ObservableCollection<Shortcut>(
+                        AllItems.Where<Shortcut>(item => item.Name.IndexOf(SearchTerm, StringComparison.OrdinalIgnoreCase) >= 0
+                        || item.Guid.IndexOf(SearchTerm) >= 0));
             }
 
             OnPropertyChanged("Shortcuts");
@@ -168,6 +182,13 @@ namespace br.com.Bonus630DevToolsBar.ControlsShorcutsCDRAddon.ViewModels
             OnPropertyChanged("Shortcuts");
         }
 
+        public void Dispose()
+        {
+            Shortcuts.Clear();
+            AllItems.Clear();
+            core.Dispose();
+            Dispose();
+        }
     }
     public class RunCommand : ICommand
     {
