@@ -64,7 +64,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
             core.CurrentBasicData.Label = strLabel;
         }
         [InCorelAtt(false)]
-        public void AttachDisattachCorelDRW(string versionMajor)
+        public void AttachDisattachCorelDRW(string intVersionMajor)
         {
             int version = 0;
             if (core.InCorel)
@@ -85,7 +85,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
             else
             {
                 core.DispactchNewMessage("Starting connection!", MsgType.Console);
-                Int32.TryParse(versionMajor, out version);
+                Int32.TryParse(intVersionMajor, out version);
                 if (version == 0)
                 {
                     core.DispactchNewMessage("Invalid version", MsgType.Erro);
@@ -132,10 +132,10 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
         public static extern int MapVirtualKey(uint uCode, uint uMapType);
 
         [InCorelAtt(false)]
-        public string MapKeyCode(string VirtualKeyCode)
+        public string MapKeyCode(string uintVirtualKeyCode)
         {
             UInt32 keyCode = 0;
-            if (UInt32.TryParse(VirtualKeyCode, out keyCode))
+            if (UInt32.TryParse(uintVirtualKeyCode, out keyCode))
             {
 
                 int scanCode = MapVirtualKey(keyCode, 0);
@@ -149,8 +149,36 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
             }
         }
 
+        [InCorelAtt(true)]
+        public void SetWindowSize(string intWidth, string intHeight)
+        {
+            int w = 0, h = 0;
+            if (Int32.TryParse(intWidth, out w) && Int32.TryParse(intHeight, out h))
+            {
+                core.CorelApp.AppWindow.Width = w;
+                core.CorelApp.AppWindow.Height = h;
+            }
+            else 
+            {
+                core.DispactchNewMessage("Param format invalid!", MsgType.Erro);
+                
+            }
+        }
+        [InCorelAtt(true)]
+        public void SetWindowPosition(string intX, string intHY)
+        {
+            int x= 0,y = 0;
+            if (Int32.TryParse(intX, out x) && Int32.TryParse(intHY, out y))
+            {
+                core.CorelApp.AppWindow.Left = x;
+                core.CorelApp.AppWindow.Top = y;
+            }
+            else
+            {
+                core.DispactchNewMessage("Param format invalid!", MsgType.Erro);
 
-
+            }
+        }
 
         [InCorelAtt(false)]
         public string Help()

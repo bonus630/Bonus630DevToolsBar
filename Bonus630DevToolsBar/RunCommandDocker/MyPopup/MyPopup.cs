@@ -35,6 +35,10 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker.MyPopup
             popupContent.ReflectedIsExpandedEvent += (reflected) => { GetChildrens(reflected); };
             this.Child = popupContent;
         }
+        private bool IsValueType(object propertyValue)
+        {
+            return propertyValue == null || propertyValue.GetType().IsValueType || propertyValue.GetType().Equals(typeof(string));
+        }
         protected override void OnOpened(EventArgs e)
         {
             if (ToReflect != null && !ToReflect.GetType().IsValueType)
@@ -79,7 +83,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker.MyPopup
             Reflected item = null;
             if (string.IsNullOrEmpty(parent.Name))
                 parent.Name = obj.GetType().FullName;
-         
+
             if (parent.Name.Equals("Item"))
             {
                 mainType = parent.Parent.Value.GetType();
@@ -92,7 +96,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker.MyPopup
                 //var generics = parent.Parent.Value as dynamic;
                 //mainType = parent.Parent.GetType();
                 var property = mainType.GetProperties().FirstOrDefault(p => p.Name.Equals("Item"));
-                int counter = (int)mainType.GetProperties().FirstOrDefault(p => (p.Name.Equals("Count") || p.Name.Equals("Length"))).GetValue(obj,null);
+                int counter = (int)mainType.GetProperties().FirstOrDefault(p => (p.Name.Equals("Count") || p.Name.Equals("Length"))).GetValue(obj, null);
                 if (property != null)
                 {
                     object v = null;
@@ -101,7 +105,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker.MyPopup
                     {
                         ParameterInfo[] parameters = property.GetIndexParameters();
                         int index = 0;
-                       while (index <= counter)
+                        while (index <= counter)
                         {
                             try
                             {
@@ -111,14 +115,14 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker.MyPopup
                                 else
                                 {
                                     Type vType = v.GetType();
-                                    isValueType =  vType.IsValueType || vType.Equals(typeof(string));
+                                    isValueType = vType.IsValueType || vType.Equals(typeof(string));
                                 }
                                 item = new Reflected() { Name = string.Format("{0}[{1}]", property.Name, index), Value = v, IsValueType = isValueType, Parent = parent };
                                 if (index == 0)
                                     parent.Childrens[0] = item;
                                 else
                                     parent.Childrens.Add(item);
-                                if (!isValueType && v!=null)
+                                if (!isValueType && v != null)
                                 {
                                     //Here can use recursivity to fill all treeview nodes
                                     item.Childrens = new ObservableCollection<Reflected>();
@@ -126,11 +130,11 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker.MyPopup
                                 }
                             }
                             catch { }
-                           // Childrens.Add(item);
+                            // Childrens.Add(item);
                             index++;
                         }
-                        
-                  
+
+
                     }
                     catch { }
                 }
@@ -153,7 +157,22 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker.MyPopup
                 //    Childrens.Add(item);
                 //}
             }
-            else if(isValueType)
+            else if (parent.Name.Equals("SyncRoot"))
+            {
+
+                if (parent.Value is Array && (parent.Value as Array).Length > 0)
+                {
+                    bool vType = IsValueType((parent.Value as Array).GetValue(0));
+                    object _value;
+                    for (int i = 0; i < (parent.Value as Array).Length; i++)
+                    {
+                        _value = (parent.Value as Array).GetValue(i);
+                        parent.Childrens.Add(new Reflected() { Name = string.Format("[{0}]", i), Value = _value, IsValueType = IsValueType(_value), Parent = parent });
+                    }
+
+                }
+            }
+            else if (isValueType)
             {
                 Reflected children = new Reflected() { Name = mainType.Name, Value = parent.Value, IsValueType = isValueType, Parent = parent };
                 parent.Add(children);
@@ -162,8 +181,9 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker.MyPopup
             {
                 FillProperties(parent);
             }
+            //Test for a value type arrays
 
-            
+
         }
         private void FillProperties(Reflected parent)
         {
@@ -177,12 +197,10 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker.MyPopup
             var properties = mainType.GetProperties();
             bool isCollection = false;
             Type _interface = mainType.GetInterfaces().FirstOrDefault(r => r.Name.Equals("ICollection") || r.Name.Equals("IList") || r.Name.Equals("IEnumerable"));
-
+            var item = properties.FirstOrDefault(p => p.Name.Equals("Item"));
             if (mainType.IsArray || _interface != null)
             {
-
                 isCollection = true;
-
             }
             foreach (var property in properties)
             {
@@ -194,24 +212,20 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker.MyPopup
                     if (parameters.Length == 0)
                     {
                         propertyValue = property.GetValue(obj, null);
-                        isValueType = propertyValue == null || propertyValue.GetType().IsValueType || propertyValue.GetType().Equals(typeof(string));
+                        isValueType = IsValueType(propertyValue);
                         if (isValueType)
                             children = new Reflected() { Name = property.Name, Value = propertyValue, IsValueType = isValueType, Parent = parent };
                         else
                             children = CreateNoValueTypeChildren(parent, property.Name, propertyValue);
                     }
-
                     else
                     {
-                        children = CreateNoValueTypeChildren(parent, property.Name, obj); 
+                        children = CreateNoValueTypeChildren(parent, property.Name, obj);
                     }
-
                 }
-                catch (TargetInvocationException tie) { children = CreateExceptionChildren(parent,property.Name, tie.Message); }
+                catch (TargetInvocationException tie) { children = CreateExceptionChildren(parent, property.Name, tie.Message); }
                 catch (AccessViolationException ave) { children = CreateExceptionChildren(parent, property.Name, ave.Message); }
                 catch (Exception ex) { children = CreateExceptionChildren(parent, property.Name, ex.Message); }
-
-
                 //if (!isValueType && propertyValue != null)
                 //{
                 //    Type _interface = mainType.GetInterfaces().FirstOrDefault(r => r.Name.Equals("ICollection") || r.Name.Equals("IList") || r.Name.Equals("IEnumerable"));
@@ -229,12 +243,14 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker.MyPopup
                 //        children.Childrens.Add(null);
                 //    }
                 //}
-
                 Childrens.Add(children);
             }
+
+
+
             parent.Childrens = Childrens;
         }
-        private Reflected CreateNoValueTypeChildren(Reflected parent,string name, object obj)
+        private Reflected CreateNoValueTypeChildren(Reflected parent, string name, object obj)
         {
             Reflected item = new Reflected() { Name = name, Value = obj, IsValueType = false, Parent = parent };
             item.Childrens = new ObservableCollection<Reflected>();
@@ -242,7 +258,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker.MyPopup
             return item;
 
         }
-        private Reflected CreateExceptionChildren(Reflected parent,string name,string msg)
+        private Reflected CreateExceptionChildren(Reflected parent, string name, string msg)
         {
             Reflected item = new Reflected() { Name = name, Value = msg, IsValueType = true, Parent = parent, Error = true };
             return item;
