@@ -425,8 +425,10 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
 
             if (this.SelectedCommand != null && this.SelectedCommand.Items != null)
             {
-                return this.SelectedCommand.Items.FirstOrDefault(r => r.IsSelectedBase);
-
+                Argument arg =  this.SelectedCommand.Items.FirstOrDefault(r => r.IsSelectedBase);
+                if (arg == null && this.selectedCommand.Items.Count > 0)
+                    arg = this.selectedCommand.Items[0];
+                return arg;
             }
             return null;
         }

@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using form = System.Windows.Forms;
 
 namespace br.com.Bonus630DevToolsBar.Folders
@@ -40,7 +41,7 @@ namespace br.com.Bonus630DevToolsBar.Folders
             folderModel = new FolderModel((app as Corel.Interop.VGCore.Application).VersionMajor);
             _Folders = new ObservableCollection<Folder>();
             StartFolderShortcuts();
-
+           
             DataContext = this;
             try
             {
@@ -211,7 +212,7 @@ namespace br.com.Bonus630DevToolsBar.Folders
             }
             catch
             {
-
+                
             }
         }
      

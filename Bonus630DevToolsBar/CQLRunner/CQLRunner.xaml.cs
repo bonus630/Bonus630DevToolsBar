@@ -271,6 +271,7 @@ namespace br.com.Bonus630DevToolsBar.CQLRunner
             corelApp.Refresh();
 
             ScreenCurve.SetCurve(curve);
+            sr.AddToSelection();
             this.corelApp.EndDraw();
             ScreenCurve.Show();
         }

@@ -110,8 +110,9 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
         {
             if (corelApp != null)
             {
-                inCorel = true;
-                startCoreInCorel(corelApp);
+                this.app = corelApp;
+                InCorel = true;
+                //startCoreInCorel(corelApp);
             }
             FileInfo file = null;
             try

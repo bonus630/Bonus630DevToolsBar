@@ -32,7 +32,9 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             {
                 for (int i = 0; i < ShapesIds.Count; i++)
                 {
-                    sr.Add(corelApp.ActivePage.Shapes.FindShape(StaticID: ShapesIds[i]));
+                    Shape n = corelApp.ActivePage.Shapes.FindShape(StaticID: ShapesIds[i]);
+                    if(n!=null)
+                        sr.Add(n);
                 }
             }
             catch { }
@@ -52,6 +54,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                     if (!ShapesIds.Contains(id))
                         ShapesIds.Add(id);
                 }
+                ShapesIds.Sort();
             }
             catch { }
             OnPropertyChanged("Count");
@@ -64,6 +67,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                 {
                     ShapesIds.Remove(ShapesIds.Single(r => r == corelApp.ActiveSelection.Shapes[i].StaticID));
                 }
+                ShapesIds.Sort();
             }
             catch { }
             OnPropertyChanged("Count");

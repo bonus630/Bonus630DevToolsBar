@@ -186,7 +186,16 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
             for (int i = 0; i < dataContext.Count; i++)
             {
                 if (dataContext[i].AutoLoad)
-                    corelApp.OpenDocument(dataContext[i].FullName);
+                {
+                    try
+                    {
+                        corelApp.OpenDocument(dataContext[i].FullName);
+                    }
+                    catch(Exception e)
+                    {
+                        System.Windows.Forms.MessageBox.Show(e.Message);
+                    }
+                }
             }
         }
         private void CheckFileExits()
