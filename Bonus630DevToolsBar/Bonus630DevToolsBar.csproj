@@ -21,6 +21,12 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>bonus630.pfx</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <Import Project="$(CdrTargetPath)" Condition="Exists('$(CdrTargetPath)')" />
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -297,6 +303,7 @@
     <Compile Include="IconCreatorHelper\IconCreatorHelperUI.xaml.cs">
       <DependentUpon>IconCreatorHelperUI.xaml</DependentUpon>
     </Compile>
+    <Compile Include="IconCreatorHelper\MarkShapeCache.cs" />
     <Compile Include="PipesServerAndClient.cs" />
     <Compile Include="PrintScreen\Cropper.cs">
       <SubType>Form</SubType>
@@ -448,6 +455,7 @@
     <Compile Include="DataSource\DataSourceFactory.cs">
       <SubType>Code</SubType>
     </Compile>
+    <None Include="bonus630.pfx" />
     <None Include="RunCommandDocker\Templates\CdrCustomAttributes.cs" />
     <Compile Include="Settings.cs" />
     <Page Include="ControlsShorcutsCDRAddon\Views\DockerUI.xaml">
@@ -696,10 +704,16 @@
     <Content Include="MSBuildLogger.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="ProjectHelper.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Resources\folderBase.png" />
+    <Content Include="SetupCreator.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="SQLite.Interop.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

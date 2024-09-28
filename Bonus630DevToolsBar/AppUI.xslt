@@ -116,7 +116,7 @@
 			  captionRef="9b07d7af-da14-4cd8-9db9-7da214ee1d4a"
 			  toolTipRef="9b07d7af-da14-4cd8-9db9-7da214ee1d4a"
 			  type="button"  enable="true"/>
-					  
+
 
 			<!--PopUp GMS-->
 			<itemData guid="b0a4b2ff-7bf5-47c3-a92a-16e2a4520746"
@@ -205,6 +205,12 @@
 			  icon="guid://b5c5d8c0-e3d0-44dd-822f-2e61190c870b"
 			  type="button"  enable="true"/>
 
+			<!--Reopen Active Document-->
+			<itemData guid="948fe4ae-3a3f-4052-9194-7354476d3b1a"
+			  onInvoke="*Bind(DataSource=Bonus630DevToolsBarDS;Path=ReOpenDocument)"
+			  type="button"  enable="true"
+			  icon="guid://948fe4ae-3a3f-4052-9194-7354476d3b1a"	/>
+
 			<!--Recent Files-->
 			<itemData guid="7d15e9c7-2431-4841-a5aa-9eaa5b581230"
 					type="wpfhost"
@@ -288,9 +294,11 @@
 					<!--22 Separator-->
 					<item guidRef="266435b4-6e53-460f-9fa7-f45be187d400" />
 
+					<!--23 Reopen Active Document -->
+					<item  guidRef="948fe4ae-3a3f-4052-9194-7354476d3b1a"/>
 
 
-					<!--23 Recent Files -->
+					<!--24 Recent Files -->
 					<item  guidRef="7d15e9c7-2431-4841-a5aa-9eaa5b581230" dock="fill"/>
 					<!--<item  guidRef="118bad9e-cab3-4810-883e-843626f798ae" dock="top"/>-->
 
@@ -438,7 +446,8 @@
 				<item guidRef="657042cb-3594-43a1-80bf-c8a27fd43146" />
 				<!--21 PrintScreen-->
 				<item guidRef="b5c5d8c0-e3d0-44dd-822f-2e61190c870b" />
-
+				<!--22 Reopen Active Document -->
+				<item  guidRef="948fe4ae-3a3f-4052-9194-7354476d3b1a"/>
 
 				<!--21 Recent Files -->
 				<!--<item  guidRef="7d15e9c7-2431-4841-a5aa-9eaa5b581230" />-->

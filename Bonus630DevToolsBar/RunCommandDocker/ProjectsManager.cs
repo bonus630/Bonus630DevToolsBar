@@ -192,7 +192,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
 
                 //encontrar o comando pelo caminho vai garantir melhor desempenho
                 var commandNames = Properties.Settings.Default.PinnedCommands;
-                PinnedCommands.Clear();
+               // PinnedCommands.Clear();
 
                 for (int i = 0; i < commandNames.Count; i++)
                 {
@@ -201,13 +201,15 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                     // Command c1 = pinnedCommands.FirstOrDefault(m => m.ToString().Equals(commandNames[i]));
                     if (command != null)
                     {
-                        PinnedCommands.Add(command);
+                        if(!PinnedCommands.Contains(command))
+                            PinnedCommands.Add(command);
                     }
                 }
-                Properties.Settings.Default.PinnedCommands.Clear();
+                //Properties.Settings.Default.PinnedCommands.Clear();
                 foreach (var item in PinnedCommands)
                 {
-                    Properties.Settings.Default.PinnedCommands.Add(item.ToString());
+                    if(!Properties.Settings.Default.PinnedCommands.Contains(item.ToString()))
+                        Properties.Settings.Default.PinnedCommands.Add(item.ToString());
                 }
                 Properties.Settings.Default.Save();
                 OnPropertyChanged("PinnedCommands");

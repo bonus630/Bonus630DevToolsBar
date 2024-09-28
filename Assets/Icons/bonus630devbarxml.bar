@@ -136,7 +136,16 @@
       <Command>o</Command>
       <Enable>true</Enable>
       <Shortcut>shift+p</Shortcut>
-      <Icon>C:\Users\bonus\AppData\Local\Temp\tmpE272.ico</Icon>
+      <Icon>C:\Users\bonus\AppData\Local\Temp\tmpB35E.ico</Icon>
+    </CommandItem>
+    <CommandItem id="15">
+      <GmsFileId>0</GmsFileId>
+      <Caption>ReOpen Active Document</Caption>
+      <Command>p</Command>
+      <Enable>true</Enable>
+      <Shortcut>
+      </Shortcut>
+      <Icon>D:\C# Ed26-08-22\Bonus630DevToolsBar\Assets\Icons\Reload.ico</Icon>
     </CommandItem>
   </Commands>
 </CommandBar>

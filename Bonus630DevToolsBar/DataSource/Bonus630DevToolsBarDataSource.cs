@@ -14,6 +14,7 @@ namespace br.com.Bonus630DevToolsBar.DataSource
 {
     [ComVisible(true)]
     [ClassInterface(ClassInterfaceType.AutoDual)]
+    [Guid("e441ec18-dfd3-4c7e-86c2-61c3cf3272cb")]
     public class Bonus630DevToolsBarDataSource : BaseDataSource
     {
 
@@ -22,6 +23,7 @@ namespace br.com.Bonus630DevToolsBar.DataSource
         private string cqlTooltip = "Enter to Run";
         private string foldersCaption = "Open a folder";
         private string foldersTooltip = "Open a folder";
+        private string reopenDocumentCaption = "Reopen Active Document";
 
 
         private readonly string runCommandGuid = "5087687d-337d-4d0e-acaf-c0b1df967757";
@@ -32,10 +34,11 @@ namespace br.com.Bonus630DevToolsBar.DataSource
      
         }
 
-    
+
 
         // You can change caption/icon dynamically setting a new value here 
         //or loading the value from resource specifying the id of the caption/icon 
+     
         public string Caption
         {
             get { return caption; }
@@ -96,7 +99,15 @@ namespace br.com.Bonus630DevToolsBar.DataSource
             }
         }
    
-
+        public string ReOpenDocumentCaption
+        {
+            get { return reopenDocumentCaption; }
+            set
+            {
+                reopenDocumentCaption = value;
+                NotifyPropertyChanged();
+            }
+        }
         public string XmlItems
         {
             get
@@ -284,6 +295,20 @@ namespace br.com.Bonus630DevToolsBar.DataSource
         public void CallGMSReloader()
         {
             CorelApp.FrameWork.Automation.InvokeItem("b0a4b2ff-7bf5-47c3-a92a-16e2a4520746");
+        }  
+        public void ReOpenDocument()
+        {
+            try
+            {
+                if (CorelApp.ActiveDocument.Dirty)
+
+                {
+                    string path = CorelApp.ActiveDocument.FullFileName;
+                    CorelApp.ActiveDocument.Close();
+                    CorelApp.OpenDocument(path);
+                }
+            }
+            catch { }
         }
         
     }

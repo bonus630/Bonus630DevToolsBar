@@ -34,6 +34,8 @@
 				<resEntry id="f9691f7a-27cc-405b-b2f4-de164246bcbd" string="20013" icon="114"/>
 				<!--Print Screen -->
 				<resEntry id="b5c5d8c0-e3d0-44dd-822f-2e61190c870b" string="20014" icon="115"/>
+				<!--Reopen Active Document -->
+				<resEntry id="948fe4ae-3a3f-4052-9194-7354476d3b1a" string="20015" icon="116"/>
 
 			</resourceMap>
 		</resource>

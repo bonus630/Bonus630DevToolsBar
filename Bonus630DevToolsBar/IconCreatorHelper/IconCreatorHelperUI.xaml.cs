@@ -60,6 +60,7 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
 
 
         Thread updatePreviewsThread;
+        MarkShapeCache msc;
         //private bool running = false;
         //private bool firtTime = true;
 
@@ -103,6 +104,7 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
                     corelApp.CreateRGBColor(255,102,0)
                 };
                 ImgsControls = new List<System.Windows.Controls.Image> { img_16, img_32, img_48, img_64, img_128, img_256 };
+                msc = new MarkShapeCache(corelApp);
             }
             catch
             {
@@ -513,10 +515,10 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
             //    c.Delete();
             return pngFile;
         }
-        public void PrepareFiles(string folder)
+        public bool PrepareFiles(string folder)
         {
             if (!HasDoc())
-                return;
+                return false;
 
 
             int pageIndex = Doc.ActivePage.Index;
@@ -529,6 +531,7 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
 
             GoTo(Doc.Pages[pageIndex].Name);
             corelApp.EndDraw();
+            return true;
             // firtTime = false;
         }
         public string PrepareWorkerFolder()
@@ -917,18 +920,27 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
         {
             System.Windows.Forms.OpenFileDialog of = new System.Windows.Forms.OpenFileDialog();
             of.Multiselect = false;
+            of.Filter = "CDR - CorelDRAW (*.cdr)|*.cdr";
+            of.Title = "Select a CorelDRAW file";
             if (of.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                Doc = corelApp.OpenDocument(of.FileName);
-                //HasDoc = true;
-                docFilePath = of.FileName;
-                ExportFolder = PrepareWorkerFolder();
-                this.corelApp.Unit = cdrUnit.cdrPixel;
-                Doc.Unit = cdrUnit.cdrPixel;
-                StartWatcher();
-                update();
-                updateCks();
-                updateImgs();
+                try
+                {
+                    Doc = corelApp.OpenDocument(of.FileName);
+                    //HasDoc = true;
+                    docFilePath = of.FileName;
+                    ExportFolder = PrepareWorkerFolder();
+                    this.corelApp.Unit = cdrUnit.cdrPixel;
+                    Doc.Unit = cdrUnit.cdrPixel;
+                    StartWatcher();
+                    update();
+                    updateCks();
+                    updateImgs();
+                }
+                catch(Exception ex)
+                {
+                    this.corelApp.MsgShow(ex.Message);
+                }
             }
             // startThread();
         }
@@ -944,11 +956,13 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
             {
                 string path = string.Format("{0}bonus630\\IconCreator\\{1}.ico", Path.GetTempPath(), Guid.NewGuid());
                 PrepareWorkerFolder();
-                PrepareFiles(ExportFolder);
-                ExportToIco(path);
-          
-                await IconIsReadyAsync(path);
-                await SetIconAsync(path);
+                if (PrepareFiles(ExportFolder))
+                {
+                    ExportToIco(path);
+
+                    await IconIsReadyAsync(path);
+                    await SetIconAsync(path);
+                }
                 //this.Dispatcher.Invoke(() =>
                 //{
                 //    (sender as System.Windows.Controls.Button).IsEnabled = true;
@@ -1035,6 +1049,7 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
             }
 
         }
+       
 
         private void MenuItemClearPage_Click(object sender, RoutedEventArgs e)
         {
@@ -1064,7 +1079,10 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
             if (p != null)
             {
                 ShapeRange sr = GetShapeRange(p);
-                sr.Copy();
+                msc.StoreStaticIdCache(sr, pageCopiedSize);
+                //corelApp.ActiveSelectionRange.RemoveFromSelection();
+                //sr.AddToSelection();
+                //sr.Copy();
             }
 
         }
@@ -1100,9 +1118,20 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
                 Layer l = p.Layers.Find("Icon");
                 if (l != null)
                 {
-                   Shape pastedShape =  l.Paste();
+                    this.corelApp.BeginDraw();
+                    // var stp = corelApp.CreateStructPasteOptions();
+
+                    //ShapeRange pastedShape = l.PasteEx(null);
+
+                    ShapeRange pastedShape = msc.RecoverStaticIdCache(GetPageBySize(msc.PageSize));
+                    if(pastedShape != null)
+                       pastedShape = pastedShape.Duplicate();
+                    pastedShape.MoveToLayer(l);
+                   //Shape pastedShape =  l.Paste();
                     if (pageCopiedSize == 0)
                         return;
+                  //  Color c = corelApp.CreateRGBColor(100, 0, 0);
+                  //  pastedShape.Fill.ApplyUniformFill(c);
 
                     Page oriPage = GetPageBySize(pageCopiedSize);
                     double scaleFactor = (double)size / pageCopiedSize;
@@ -1113,7 +1142,7 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
                     {
                         ScaleOutline(pastedShape.Shapes[i]);
                     }
-
+                    //ScaleOutline(pastedShape);
                     pastedShape.SizeWidth = pastedShape.SizeWidth * scaleFactor;
                     pastedShape.SizeHeight = pastedShape.SizeHeight * scaleFactor;
 
@@ -1121,7 +1150,7 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
                     pastedShape.CenterY = p.CenterY;
 
                     GoTo(size);
-
+                    this.corelApp.EndDraw();
                    
                 }
             }

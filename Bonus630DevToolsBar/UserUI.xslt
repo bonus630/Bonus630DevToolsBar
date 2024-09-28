@@ -100,6 +100,10 @@
 			<!--PrintScreen-->
 			<xsl:if test="not(./item[@guidRef='b5c5d8c0-e3d0-44dd-822f-2e61190c870b'])">
 				<item dock="fill" guidRef="b5c5d8c0-e3d0-44dd-822f-2e61190c870b"/>
+			</xsl:if>		
+			<!--Reopen Active Document-->
+			<xsl:if test="not(./item[@guidRef='948fe4ae-3a3f-4052-9194-7354476d3b1a'])">
+				<item dock="fill" guidRef="948fe4ae-3a3f-4052-9194-7354476d3b1a"/>
 			</xsl:if>	
 	
 			<!--Recent Files-->

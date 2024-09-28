@@ -60,12 +60,12 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
             ObservableCollection<RecentFileViewModel> datas = new ObservableCollection<RecentFileViewModel>();
             try
             {
-                string condition = " ORDER BY time ASC";
+                string condition = " ORDER BY time DESC";
                 if (id != -1)
                     condition = " LIMIT " + id;
                 using (SQLiteCommand command = CreateConnection().CreateCommand())
                 {
-                    command.CommandText = string.Format("SELECT * FROM files{0};", condition);
+                    command.CommandText = string.Format("SELECT * FROM files ORDER BY time DESC{0};", condition);
 
                     using (SQLiteDataReader dataReader = command.ExecuteReader())
                     {
@@ -164,24 +164,27 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
         {
             BitmapSource preview = null;
             Bitmap b = null;
-            using (ZipArchive zipFile = new ZipArchive(File.Open(fullName, FileMode.Open)))
+            using (FileStream fs = new FileStream(fullName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
-                foreach (ZipArchiveEntry entry in zipFile.Entries)
+                using (ZipArchive zipFile = new ZipArchive(fs,ZipArchiveMode.Read))
                 {
-                    if (entry.FullName.Equals(thumbEntry1, StringComparison.OrdinalIgnoreCase))
+                    foreach (ZipArchiveEntry entry in zipFile.Entries)
                     {
-                        b = GetBitmapFromEntry(thumbEntry1, zipFile);
-                        break;
+                        if (entry.FullName.Equals(thumbEntry1, StringComparison.OrdinalIgnoreCase))
+                        {
+                            b = GetBitmapFromEntry(thumbEntry1, zipFile);
+                            break;
+                        }
+                        if (entry.FullName.Equals(thumbEntry2, StringComparison.OrdinalIgnoreCase))
+                        {
+                            b = GetBitmapFromEntry(thumbEntry2, zipFile);
+                            break;
+                        }
                     }
-                    if (entry.FullName.Equals(thumbEntry2, StringComparison.OrdinalIgnoreCase))
-                    {
-                        b = GetBitmapFromEntry(thumbEntry2, zipFile);
-                        break;
-                    }
+                    if (b != null)
+                        preview = Imaging.CreateBitmapSourceFromHBitmap(b.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+                    b.Dispose();
                 }
-                if (b != null)
-                    preview = Imaging.CreateBitmapSourceFromHBitmap(b.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
-                b.Dispose();
             }
             return preview;
         }
