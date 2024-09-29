@@ -38,16 +38,16 @@
 					  type="checkButton"  enable="true"/>
 
 			<!-- IconCreatorHelper button -->
-			<itemData guid="d0a371e7-9fad-4e1c-8159-b285d67c0497"
+			<!--<itemData guid="d0a371e7-9fad-4e1c-8159-b285d67c0497"
 					 onInvoke="*Bind(DataSource=Bonus630DevToolsBarDS;Path=RunIconCreatorHelper)"
 					  icon="guid://d0a371e7-9fad-4e1c-8159-b285d67c0497"
-					  type="button"  enable="true" />
+					  type="button"  enable="true" />-->
 
 			<!-- IconCreatorHelper button -->
 			<itemData guid="d0a371e7-9fad-4e1c-8159-b285d67c0497"
 					 check="*Docker('488c069a-7535-4af9-9c88-eda17c4808f7')"
 					  icon="guid://d0a371e7-9fad-4e1c-8159-b285d67c0497"
-					  type="checkButton"  enable="true"/>
+					  type="checkButton"  enable="true" />
 
 			<!-- IconCreatorHelper Loader button-->
 			<itemData guid="657042cb-3594-43a1-80bf-c8a27fd43146"
@@ -392,7 +392,7 @@
 
 	<!--<xsl:template match="/uiConfig/containers/container[@guid='bee85f91-3ad9-dc8d-48b5-d2a87c8b2109']/container[@guid='Framework_MainFrame-layout']/dockHost/dockHost/dockHost/dockHost/viewHost[@]">-->
 	<!--<xsl:template match="/uiConfig/containers/container[@guid='bee85f91-3ad9-dc8d-48b5-d2a87c8b2109']/container[@guid='Framework_MainFrame-layout']/dockHost/dockHost/dockHost/dockHost/viewHost[@guid='344da698-5b33-46ff-bfdf-4d8bc2906450']">-->
-	<xsl:template match="/dockHost[@guid='930211f2-174f-2783-47c8-ac28b179bac7']">
+	<!--<xsl:template match="/dockHost[@guid='930211f2-174f-2783-47c8-ac28b179bac7']">
 		<xsl:copy-of select="."/>
 		<viewHost guid="60b73b65-2952-43b3-95b4-bcfd77a767e1" category="view+docker" selectedView="488c069a-7535-4af9-9c88-eda17c4808f7" dock="bottom">
 
@@ -400,7 +400,7 @@
 		</viewHost>
 
 
-	</xsl:template>
+	</xsl:template>-->
 
 	<xsl:template match="/uiConfig/customizationList/container">
 		<xsl:copy>
