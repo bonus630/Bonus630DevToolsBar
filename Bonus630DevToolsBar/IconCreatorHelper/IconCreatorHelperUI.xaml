@@ -46,7 +46,11 @@
                         <Label Content="Past and Resize Proportionality" />
                     </MenuItem.ToolTip>
                 </MenuItem>
-                <MenuItem Header="Clear page" Tag="{Binding Path=PlacementTarget.Tag, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu},Mode=FindAncestor}}" Click="MenuItemClearPage_Click">
+                <MenuItem Header="replace pages with this one" Tag="{Binding Path=PlacementTarget.Tag, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu},Mode=FindAncestor}}" Click="MenuItemReplacePageg_Click" />
+                <!--<MenuItem.Icon>
+                        <Image Style="{DynamicResource ClearConsoleButtonImg}" />
+                    </MenuItem.Icon>-->
+                    <MenuItem Header="Clear page" Tag="{Binding Path=PlacementTarget.Tag, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu},Mode=FindAncestor}}" Click="MenuItemClearPage_Click">
                     <MenuItem.Icon>
                         <Image Style="{DynamicResource ClearConsoleButtonImg}" />
                     </MenuItem.Icon>
@@ -66,13 +70,13 @@
                 <!--<Setter Property="Background" Value="Red"/>-->
 
             </Style>
-
+            <converters:BoolVisibilityConverter x:Key="BoolToVisibilityConverter" />
             <!--<converters:IntVisibilityConverter x:Key="IntToVisibilityConverter" />
             <converters:NullVisibilityConverter x:Key="NullToVisibilityConverter" />
             <converters:TypeToVisibilityConverter x:Key="TypeToVisibilityConverter" />
             <converters:TypeToStringConverter x:Key="TypeToStringConverter" />
             <converters:InvertBoolVisibilityConverter x:Key="ReverseBoolVisibilityConverter" />
-            <converters:BoolVisibilityConverter x:Key="BoolToVisibilityConverter" />
+           
             <converters:EmptyStringToVisibilityConverter x:Key="EmptyStringToVisibilityConverter" />-->
             <ResourceDictionary.MergedDictionaries>
                 <!--pack://application:,,,/Bonus630DevToolsBar;component/-->
@@ -131,7 +135,8 @@
                             <CheckBox x:Name="ck_16" Tag="16" VerticalContentAlignment="Center" Click="ck_Click"/>
                             <StackPanel Margin="2" Background="Transparent" IsEnabled="{Binding ElementName=ck_16,Path=IsChecked}">
                                 <Label  Content="16x16" FontWeight="Bold"/>
-                                <Border Style="{StaticResource bBorder}"  Width="18" Height="18" Tag="16"  MouseUp="img_MouseUp">
+                                <Border Visibility="{Binding ElementName=ck_16,Path=IsChecked,Converter={StaticResource BoolToVisibilityConverter}}" 
+                                        Style="{StaticResource bBorder}"  Width="18" Height="18" Tag="16"  MouseUp="img_MouseUp">
                                         <Image Width="16" Height="16" x:Name="img_16" />
                                 </Border>
                             </StackPanel>
@@ -142,7 +147,8 @@
                             <CheckBox x:Name="ck_32" Tag="32" VerticalContentAlignment="Center" Click="ck_Click"/>
                             <StackPanel Margin="2" Background="Transparent"  IsEnabled="{Binding ElementName=ck_32,Path=IsChecked}">
                                 <Label  Content="32X32" />
-                                <Border  Style="{StaticResource bBorder}"  Width="34" Height="34" Tag="32"  MouseUp="img_MouseUp">
+                                <Border  Visibility="{Binding ElementName=ck_32,Path=IsChecked,Converter={StaticResource BoolToVisibilityConverter}}" 
+                                         Style="{StaticResource bBorder}"  Width="34" Height="34" Tag="32"  MouseUp="img_MouseUp">
                                     <Image Width="32" Height="32" x:Name="img_32" />
                                 </Border>
                             </StackPanel>
@@ -152,7 +158,8 @@
                             <CheckBox x:Name="ck_48" Tag="48" VerticalContentAlignment="Center" Click="ck_Click"/>
                             <StackPanel Margin="2" Background="Transparent" IsEnabled="{Binding ElementName=ck_48,Path=IsChecked}">
                                 <Label  Content="48X48" FontWeight="Bold"/>
-                                <Border  Style="{StaticResource bBorder}"  Width="50" Height="50" Tag="48"  MouseUp="img_MouseUp">
+                                <Border  Visibility="{Binding ElementName=ck_48,Path=IsChecked,Converter={StaticResource BoolToVisibilityConverter}}" 
+                                         Style="{StaticResource bBorder}"  Width="50" Height="50" Tag="48"  MouseUp="img_MouseUp">
                                     <Image Width="48" Height="48" x:Name="img_48" />
                                 </Border>
                             </StackPanel>
@@ -162,7 +169,8 @@
                             <CheckBox x:Name="ck_64" Tag="64" VerticalContentAlignment="Center" Click="ck_Click"/>
                             <StackPanel Margin="2" Background="Transparent" IsEnabled="{Binding ElementName=ck_64,Path=IsChecked}">
                                 <Label  Content="64X64" FontWeight="Bold"/>
-                                <Border  Style="{StaticResource bBorder}"  Width="66" Height="66" Tag="64"  MouseUp="img_MouseUp">
+                                <Border  Visibility="{Binding ElementName=ck_64,Path=IsChecked,Converter={StaticResource BoolToVisibilityConverter}}" 
+                                         Style="{StaticResource bBorder}"  Width="66" Height="66" Tag="64"  MouseUp="img_MouseUp">
                                     <Image Width="64" Height="64" x:Name="img_64"/>
                                 </Border>
                             </StackPanel>
@@ -172,7 +180,8 @@
                             <CheckBox x:Name="ck_128" Tag="128" VerticalContentAlignment="Center" Click="ck_Click"/>
                             <StackPanel Margin="2" Background="Transparent" IsEnabled="{Binding ElementName=ck_128,Path=IsChecked}">
                                 <Label  Content="128X128" FontWeight="Bold"/>
-                                <Border  Style="{StaticResource bBorder}"  Width="130" Height="130" Tag="128"  MouseUp="img_MouseUp">
+                                <Border  Visibility="{Binding ElementName=ck_128,Path=IsChecked,Converter={StaticResource BoolToVisibilityConverter}}" 
+                                         Style="{StaticResource bBorder}"  Width="130" Height="130" Tag="128"  MouseUp="img_MouseUp">
                                     <Image Width="128" Height="128" x:Name="img_128" Tag="128" />
                                 </Border>
                             </StackPanel>
@@ -182,7 +191,8 @@
                             <CheckBox x:Name="ck_256" Tag="256" VerticalContentAlignment="Center" Click="ck_Click"/>
                             <StackPanel Margin="2" Background="Transparent"  IsEnabled="{Binding ElementName=ck_256,Path=IsChecked}">
                                 <Label  Content="256X256" FontWeight="Bold"/>
-                                <Border  Style="{StaticResource bBorder}"  Width="258" Height="258" Tag="256"  MouseUp="img_MouseUp">
+                                <Border  Visibility="{Binding ElementName=ck_256,Path=IsChecked,Converter={StaticResource BoolToVisibilityConverter}}" 
+                                         Style="{StaticResource bBorder}"  Width="258" Height="258" Tag="256"  MouseUp="img_MouseUp">
                                     <Image Width="256" Height="256" x:Name="img_256"/>
                                 </Border>
                             </StackPanel>

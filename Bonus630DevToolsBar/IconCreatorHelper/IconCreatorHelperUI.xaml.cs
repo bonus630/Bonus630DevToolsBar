@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Drawing.IconLib;
 using System.IO;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -128,6 +129,54 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
             WhiteImage = new System.Windows.Media.Imaging.BitmapImage(new Uri(file));
 
         }
+        string docFilePath = string.Empty;
+        public void Initialize()
+        {
+            if (CreateDocument())
+            {
+                //if (Doc == null)
+                //    return;
+                // startThread();
+                if (resolutions.Count == 0)
+                {
+                    PreparePage(Doc.Pages[1], 16);
+                    updateCks();
+                    return;
+                }
+                corelApp.BeginDraw();
+                int nPages = Doc.Pages.Count;
+
+                if (nPages < resolutions.Count)
+                    Doc.InsertPages(resolutions.Count - nPages, false, 1);
+
+
+                for (int i = 1; i <= Doc.Pages.Count; i++)
+                {
+                    PreparePage(Doc.Pages[i], resolutions[i - 1], false);
+                }
+                corelApp.EndDraw();
+                PreparePreviewFolder();
+                PrepareFiles(PreviewFolder);
+                updateImgs();
+                Doc.Save();
+                if (!Doc.Dirty)
+                    lba_DocumentName.Content = Doc.Name;
+                
+                Doc.QueryClose += Doc_QueryClose;
+                
+                StartWatcher();
+            }
+
+        }
+        
+        private void Doc_QueryClose(ref bool Cancel)
+        {
+            
+            lba_DocumentName.Content = string.Empty;
+            PreparePreviewFolder();
+          
+
+        }
         private void update()
         {
             //while (running)
@@ -148,24 +197,32 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
         }
         private System.Windows.Media.Imaging.BitmapImage GetImage(int size)
         {
-            System.Windows.Media.Imaging.BitmapImage image = new System.Windows.Media.Imaging.BitmapImage();
-            string file = string.Format("{0}\\{1}.png", PreviewFolder, size);
-            if (File.Exists(file))
+            try
             {
-                using (FileStream fs = new FileStream(file, FileMode.Open,FileAccess.Read,FileShare.ReadWrite))
+                System.Windows.Media.Imaging.BitmapImage image = new System.Windows.Media.Imaging.BitmapImage();
+                string file = string.Format("{0}\\{1}.png", PreviewFolder, size);
+                if (File.Exists(file))
                 {
-                    image.BeginInit();
-                    image.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad;
-                    image.StreamSource = fs;
-                    image.EndInit();
+                    using (FileStream fs = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                    {
+                        image.BeginInit();
+                        image.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad;
+                        image.StreamSource = fs;
+                        image.EndInit();
+                    }
                 }
+                else
+                {
+                    return null;
+                    //return WhiteImage;
+                }
+                return image;
             }
-            else
+            catch(FileNotFoundException ex)
             {
+                Debug.WriteLine(ex.Message);
                 return null;
-                //return WhiteImage;
             }
-            return image;
         }
         private void updateImgs()
         {
@@ -204,6 +261,7 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
 
                 ck.IsChecked = true;
                 if (!resolutions.Contains(size))
+   
                     resolutions.Add(size);
             }
             else
@@ -273,50 +331,6 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
 
         }
 
-        string docFilePath = string.Empty;
-        public void Initialize()
-        {
-            if (CreateDocument())
-            {
-                //if (Doc == null)
-                //    return;
-                // startThread();
-                if (resolutions.Count == 0)
-                {
-                    PreparePage(Doc.Pages[1], 16);
-                    updateCks();
-                    return;
-                }
-                corelApp.BeginDraw();
-                int nPages = Doc.Pages.Count;
-
-                if (nPages < resolutions.Count)
-                    Doc.InsertPages(resolutions.Count - nPages, false, 1);
-
-
-                for (int i = 1; i <= Doc.Pages.Count; i++)
-                {
-                    PreparePage(Doc.Pages[i], resolutions[i - 1], false);
-                }
-                corelApp.EndDraw();
-                PreparePreviewFolder();
-                PrepareFiles(PreviewFolder);
-                updateImgs();
-                Doc.Save();
-                if(!Doc.Dirty)
-                    lba_DocumentName.Content = Doc.Name;
-                Doc.QueryClose += Doc_QueryClose;
-                StartWatcher();
-            }
-
-        }
-
-        private void Doc_QueryClose(ref bool Cancel)
-        {
-            lba_DocumentName.Content = string.Empty;
-            PreparePreviewFolder();
-            
-        }
 
         private void startThread()
         {
@@ -451,6 +465,7 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
             page.GuidesLayer.MoveAbove(page.Layers[1]);
             //layer.Editable = false;
             sr.Lock();
+          
            // c.Layer.Activate();
             if (optimization)
                 Doc.EndCommandGroup();
@@ -759,7 +774,8 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
         {
             string folder = Path.Combine(Path.GetTempPath(), "bonus630\\IconCreator\\Preview");
             string pngFile = string.Empty;
-            while(pngFile == string.Empty)
+            Debug.WriteLine("UpdatePreviewThreadWork Start - " + size, "Threads");
+            while (pngFile == string.Empty)
             {
                 pngFile = ExportPng(size.ToString(), folder, (int)size, GetPageBySize((int)size), true);
                 if (pngFile == string.Empty)
@@ -772,7 +788,7 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
                 Thread.Sleep(100);
             }
            // updateImgByFileName(size.ToString());
-            Debug.WriteLine("UpdatePreviewThreadWork - " + size, "Threads");
+            Debug.WriteLine("UpdatePreviewThreadWork End - " + size, "Threads");
         }
 
         private void StartWatcher()
@@ -807,7 +823,17 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
             {
                 try
                 {
-                    startupdatePreviewThread(Int32.Parse(corelApp.ActivePage.Name));
+                    ShapeRange sr = GetShapeRange(corelApp.ActivePage);
+                    if (sr.Count == 0)
+                    {
+                        string pngFile = string.Format("{0}\\{1}.png", PreviewFolder, corelApp.ActivePage.Name);
+                        if (File.Exists(pngFile))
+                        {
+                            File.Delete(pngFile);
+                        }
+                    }
+                    else
+                        startupdatePreviewThread(Int32.Parse(corelApp.ActivePage.Name));
                     //ShapeRange sr = GetShapeRange(corelApp.ActivePage);
                     //if (sr.Count <= count)
                     //{
@@ -863,13 +889,21 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
                 return page;
             for (int i = 1; i <= Doc.Pages.Count; i++)
             {
-                if (Math.Round(Doc.Pages[i].SizeWidth) == size)
+                if (int.Parse(Doc.Pages[i].Name) == size)
                 {
                     page = Doc.Pages[i];
                     break;
                 }
             }
             return page;
+        }
+        private ShapeRange GetShapeRangeBySize(int size)
+        {
+            Page p = GetPageBySize(size);
+            ShapeRange sr = corelApp.CreateShapeRange();
+            if (p != null)
+                sr = GetShapeRange(p);
+            return sr;
         }
         private Layer GetIconLayer(int size)
         {
@@ -993,6 +1027,74 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
             //}
             //catch { }
             return sr;
+        }
+        private void PastShapesProp(int size,bool enableEvents = true)
+        {
+            //Temos um problema aqui
+            Page p = GetPageBySize(size);
+
+            if (p != null)
+            {
+                p.Activate();
+                Layer l = p.Layers.Find("Icon");
+                if (l != null)
+                {
+                    this.corelApp.BeginDraw(enableEvents:enableEvents);
+                    // var stp = corelApp.CreateStructPasteOptions();
+
+                    //ShapeRange pastedShape = l.PasteEx(null);
+
+                    ShapeRange pastedShape = msc.RecoverStaticIdCache(GetPageBySize(msc.PageSize));
+                    if (pastedShape == null || pastedShape.Count == 0)
+                        return;
+                    double leftX = msc.Left;
+                    double bottomY= msc.Bottom;
+                    if (pastedShape != null)
+                        pastedShape = pastedShape.Duplicate();
+                    pastedShape.MoveToLayer(l);
+                    //Shape pastedShape =  l.Paste();
+                   // if (pageCopiedSize == 0)
+                  //      return;
+                    //  Color c = corelApp.CreateRGBColor(100, 0, 0);
+                    //  pastedShape.Fill.ApplyUniformFill(c);
+
+                    //Page oriPage = GetPageBySize(pageCopiedSize);
+                    double scaleFactor = (double)size / msc.PageSize;
+
+
+
+                    for (int i = 1; i <= pastedShape.Shapes.Count; i++)
+                    {
+                        ScaleOutline(pastedShape.Shapes[i]);
+                    }
+
+
+                    //ScaleOutline(pastedShape);
+                    pastedShape.SizeWidth = pastedShape.SizeWidth * scaleFactor;
+                    pastedShape.SizeHeight = pastedShape.SizeHeight * scaleFactor;
+                    pastedShape.LeftX  = leftX * scaleFactor;
+                    pastedShape.BottomY = bottomY * scaleFactor;
+                    //pastedShape.CenterX = p.CenterX;
+                    //pastedShape.CenterY = p.CenterY;
+
+                  
+                    this.corelApp.EndDraw();
+
+                }
+            }
+        }
+        private void CopyShapesToProp()
+        {
+            Page p = GetPageBySize(pageCopiedSize);
+
+            if (p != null)
+            {
+                ShapeRange sr = GetShapeRange(p);
+                msc.StoreStaticIdCache(sr, pageCopiedSize);
+                //corelApp.ActiveSelectionRange.RemoveFromSelection();
+                //sr.AddToSelection();
+                //sr.Copy();
+            }
         }
 
         #region Wpf events
@@ -1173,16 +1275,8 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
 
             pageCopiedSize = Int32.Parse(item.Tag.ToString());
 
-            Page p = GetPageBySize(pageCopiedSize);
-
-            if (p != null)
-            {
-                ShapeRange sr = GetShapeRange(p);
-                msc.StoreStaticIdCache(sr, pageCopiedSize);
-                //corelApp.ActiveSelectionRange.RemoveFromSelection();
-                //sr.AddToSelection();
-                //sr.Copy();
-            }
+            CopyShapesToProp();
+        
 
         }
 
@@ -1206,53 +1300,9 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
         private void MenuItemPastPageProp_Click(object sender, RoutedEventArgs e)
         {
             System.Windows.Controls.MenuItem item = sender as System.Windows.Controls.MenuItem;
-
             int size = Int32.Parse(item.Tag.ToString());
-
-            Page p = GetPageBySize(size);
-
-            if (p != null)
-            {
-                p.Activate();
-                Layer l = p.Layers.Find("Icon");
-                if (l != null)
-                {
-                    this.corelApp.BeginDraw();
-                    // var stp = corelApp.CreateStructPasteOptions();
-
-                    //ShapeRange pastedShape = l.PasteEx(null);
-
-                    ShapeRange pastedShape = msc.RecoverStaticIdCache(GetPageBySize(msc.PageSize));
-                    if(pastedShape != null)
-                       pastedShape = pastedShape.Duplicate();
-                    pastedShape.MoveToLayer(l);
-                   //Shape pastedShape =  l.Paste();
-                    if (pageCopiedSize == 0)
-                        return;
-                  //  Color c = corelApp.CreateRGBColor(100, 0, 0);
-                  //  pastedShape.Fill.ApplyUniformFill(c);
-
-                    Page oriPage = GetPageBySize(pageCopiedSize);
-                    double scaleFactor = (double)size / pageCopiedSize;
-
-                  
- 
-                    for(int i = 1;i<=pastedShape.Shapes.Count;i++)
-                    {
-                        ScaleOutline(pastedShape.Shapes[i]);
-                    }
-                    //ScaleOutline(pastedShape);
-                    pastedShape.SizeWidth = pastedShape.SizeWidth * scaleFactor;
-                    pastedShape.SizeHeight = pastedShape.SizeHeight * scaleFactor;
-
-                    pastedShape.CenterX = p.CenterX;
-                    pastedShape.CenterY = p.CenterY;
-
-                    GoTo(size);
-                    this.corelApp.EndDraw();
-                   
-                }
-            }
+            PastShapesProp(size);
+            GoTo(size);
         }
 
         private void MenuItemExportPage_Click(object sender, RoutedEventArgs e)
@@ -1392,7 +1442,27 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
 
         }
 
-      
+        private void MenuItemReplacePageg_Click(object sender, RoutedEventArgs e)
+        {
+            corelApp.EventsEnabled = false;
+            MenuItemCopyPage_Click(sender, e);
+            for (int i = 0; i < resolutions.Count; i++)
+            {
+                if (resolutions[i] != pageCopiedSize)
+                {
+                    GetShapeRangeBySize(resolutions[i]).Delete();
+                    PastShapesProp(resolutions[i],false);
+                }
+            }
+
+            update();
+           
+            updateImgs();
+
+
+            GoTo(pageCopiedSize);
+            corelApp.EventsEnabled = true;
+        }
 
         private void StackPanel_DragLeave(object sender, DragEventArgs e)
         {

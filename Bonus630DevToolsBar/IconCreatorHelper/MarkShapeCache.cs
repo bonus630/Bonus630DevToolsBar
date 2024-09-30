@@ -17,11 +17,15 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
         }
 
         private List<int> staticIdCache = new List<int>();
-        public int PageSize{get;private set;}   
+        public int PageSize{get;private set;}  
+        public double Left { get; private set; }
+        public double Bottom { get; private set; }
         public void StoreStaticIdCache(ShapeRange sr,int pageSize)
         {
             staticIdCache.Clear();
             this.PageSize = pageSize;
+            this.Left = sr.LeftX;
+            this.Bottom = sr.BottomY;
             try
             {
 
@@ -48,7 +52,7 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
                 }
             }
             catch { }
-
+            
             return sr;
         }
     }
