@@ -76,7 +76,7 @@ namespace br.com.Bonus630DevToolsBar.ControlsShorcutsCDRAddon.ViewModels
            },
                 this.corelApp, new List<string>() { "shortcutKeyTables" }, !firstUse);
 
-            if (!firstUse)
+            if (firstUse)
             {
                 dsp.SetProperty("ShortcutDockerFirstUse", false);
             }

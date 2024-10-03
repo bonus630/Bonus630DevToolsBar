@@ -210,6 +210,8 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
                     for (int i = 0; i < filesPath.Count; i++)
                     {
                         string t = WorkerFolder + "\\partial" + i.ToString("00") + corelApp.VersionMajor + ".xml";
+                        if (!useCache && File.Exists(t))
+                            File.Delete(t);
                         files.Add(t);
                         xmlDecoder.ExtractTagsToNewXml(filesPath[i], t, listTags);
                     }
