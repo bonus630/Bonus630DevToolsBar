@@ -97,6 +97,17 @@ namespace br.com.Bonus630DevToolsBar.DataSource
                 cqlContext = value;
                 NotifyPropertyChanged();
             }
+        }    
+        private bool shortcutDockerFirstUse = true;
+
+        public bool ShortcutDockerFirstUse
+        {
+            get { return shortcutDockerFirstUse; }
+            set
+            {
+                shortcutDockerFirstUse = value;
+                NotifyPropertyChanged();
+            }
         }
    
         public string ReOpenDocumentCaption
@@ -306,6 +317,7 @@ namespace br.com.Bonus630DevToolsBar.DataSource
                     string path = CorelApp.ActiveDocument.FullFileName;
                     CorelApp.ActiveDocument.Close();
                     CorelApp.OpenDocument(path);
+                    CorelApp.Refresh();
                 }
             }
             catch { }

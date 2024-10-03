@@ -9,13 +9,17 @@ using br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels;
 using br.com.Bonus630DevToolsBar.ControlsShorcutsCDRAddon.Models;
 using Corel.Interop.VGCore;
 using System.Linq;
+using System.Net.Configuration;
+using System.Diagnostics.Eventing.Reader;
+using br.com.Bonus630DevToolsBar.DrawUIExplorer.Models;
 
 
 namespace br.com.Bonus630DevToolsBar.ControlsShorcutsCDRAddon.ViewModels
 {
-    public class DockerUIViewModel : ViewModelBase,IDisposable
+    public class DockerUIViewModel : ViewModelBase, IDisposable
     {
         private Application corelApp;
+        private bool firstUse = false;
         public ObservableCollection<Shortcut> Shortcuts { get; set; }
         private ObservableCollection<Shortcut> AllItems = new ObservableCollection<Shortcut>();
         private Core core;
@@ -42,6 +46,9 @@ namespace br.com.Bonus630DevToolsBar.ControlsShorcutsCDRAddon.ViewModels
 
         public DockerUIViewModel(Application corelApp)
         {
+            var dsp = corelApp.FrameWork.Application.DataContext.GetDataSource(ControlUI.DataSourceName);
+            firstUse = (bool)dsp.GetProperty("ShortcutDockerFirstUse");
+
             Shortcuts = new ObservableCollection<Shortcut>();
             RunCommand = new RunCommand(InvokeItem);
             CopyGuidCommand = new RunCommand(CopyGuid);
@@ -50,12 +57,36 @@ namespace br.com.Bonus630DevToolsBar.ControlsShorcutsCDRAddon.ViewModels
             this.corelApp = corelApp;
             this.dispatcher = Dispatcher.CurrentDispatcher;
             core = new Core();
-            core.PartialStart(Path.Combine(this.corelApp.Path, "UIConfig\\DrawUI.xml"), this.corelApp);
+
+            using (FileStream fs = new FileStream(string.Format("{0}{1}.cdws", this.corelApp.UserWorkspacePath, this.corelApp.ActiveWorkspace.Name),
+                FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                WorkspaceUnzip workspaceUnzip = new WorkspaceUnzip(fs);
+                StreamReader sr = workspaceUnzip.XmlStreamReader;
+                try
+                {
+                    File.WriteAllText(string.Format("{0}\\ExtractWorkspace.xml", core.WorkerFolder), sr.ReadToEnd());
+                }
+                catch (Exception e)
+                {
+                    throw e;
+                }
+            }
+            core.PartialStart(new List<string>() { Path.Combine(this.corelApp.Path, "UIConfig\\DrawUI.xml"),string.Format("{0}\\ExtractWorkspace.xml", core.WorkerFolder)
+           },
+                this.corelApp, new List<string>() { "shortcutKeyTables" }, !firstUse);
+
+            if (!firstUse)
+            {
+                dsp.SetProperty("ShortcutDockerFirstUse", false);
+            }
+
+
             core.LoadListsFinish += Core_LoadListsFinish;
             core.SearchResultEvent += Core_SearchResultEvent;
 
         }
-       
+
         private void Core_SearchResultEvent(DrawUIExplorer.DataClass.IBasicData obj)
         {
             Shortcut s;

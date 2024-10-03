@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using System.Xml.Linq;
 using System.Xml.XPath;
 using br.com.Bonus630DevToolsBar.DrawUIExplorer.DataClass;
 
@@ -33,12 +34,12 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
                 FilePath = new List<string>();
             FilePath.Add(filePath);
             xmlDocument = new XmlDocument();
-          
+
             try
             {
                 xmlDocument.LoadXml(this.xmlString);
             }
-            catch(XmlException erro)
+            catch (XmlException erro)
             {
                 throw erro;
             }
@@ -47,12 +48,70 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
             rootNodeData.SetXmlChildreID(0);
             rootNodeData.TagName = "uiConfig";
             FirstItens = rootNodeData;
-            loadXmlNodes(rootNodeData,xmlDocument.ChildNodes.Item(1));
+            loadXmlNodes(rootNodeData, xmlDocument.ChildNodes.Item(1));
             if (LoadFinish != null)
             {
                 isBusy = false;
                 LoadFinish();
             }
+        }
+        public void ExtractTagsToNewXml(string filePath, string xmlSavePath, List<string> listTags)
+        {
+            using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                if (!File.Exists(xmlSavePath))
+                {
+                    using (FileStream fsCreate = File.Create(xmlSavePath)) { }
+                }
+                using (FileStream xmlStream = new FileStream(xmlSavePath, FileMode.Append, FileAccess.Write, FileShare.ReadWrite))
+                {
+                    using (XmlReader reader = XmlReader.Create(fs))
+                    {
+
+                        byte[] xmlHeader = Encoding.UTF8.GetBytes("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+                        xmlStream.Write(xmlHeader, 0, xmlHeader.Length);
+
+                        while (reader.Read())
+                        {
+                            if (reader.NodeType == XmlNodeType.Element && listTags.Contains(reader.Name))
+                            {
+
+                                string t = reader.ReadOuterXml();
+                                byte[] buffer = Encoding.UTF8.GetBytes(t);
+                                xmlStream.Write(buffer, 0, buffer.Length);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        public void MergeXmlFilesForTags(List<string> tagNames, List<string> filePaths, string outputFilePath)
+        {
+            XDocument combinedDoc = new XDocument(
+                new XDeclaration("1.0", "utf-8", "yes")
+                
+            );
+
+            foreach (string tagName in tagNames)
+            {
+                XElement combinedTagElement = new XElement(tagName);
+
+                foreach (string filePath in filePaths)
+                {
+                    XDocument doc = XDocument.Load(filePath);
+
+                    XElement tagElement = doc.Element(tagName);
+
+                    if (tagElement != null)
+                    {
+                        combinedTagElement.Add(tagElement.Elements());
+                    }
+                }
+
+                combinedDoc.Add(combinedTagElement);
+            }
+
+            combinedDoc.Save(outputFilePath);
         }
         //private int count = 0;
         private void loadXmlNodes(IBasicData parentBasicData, XmlNode xmlNode)
@@ -65,9 +124,9 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
             foreach (XmlNode item in FirstsNodes)
             {
                 string tagName = item.Name;
-               // Debug.WriteLine(tagName);
-                
-                switch(tagName)
+                // Debug.WriteLine(tagName);
+
+                switch (tagName)
                 {
                     case "userData":
                         tempBasicData = new UserData();
@@ -104,17 +163,18 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
                         break;
                     default:
                         tempBasicData = new OtherData();
-                    break;
+                        break;
                 }
-                
-                if (tempBasicData != null && parentBasicData !=null)
+
+                if (tempBasicData != null && parentBasicData != null)
                 {
                     tempBasicData.TagName = tagName;
                     tempBasicData.SetXmlChildreID(index);
                     tempBasicData.SetXmlChildreParentID(parentBasicData.XmlChildrenID);
                     tempBasicData.Parent = parentBasicData;
                     index++;
-                    try {
+                    try
+                    {
                         if (item.Attributes != null)
                         {
                             foreach (XmlAttribute att in item.Attributes)
@@ -144,9 +204,9 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
                     else
                         tempBasicData.Text = item.Value;
                 }
-                
+
             }
-            
+
         }
         private void GetXPath(IBasicData basicData, bool intern)
         {
@@ -165,7 +225,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
                 ;
                 GetXPath(basicData.Parent, true);
             }
-            
+
         }
         public string GetXPath(IBasicData basicData)
         {
@@ -173,7 +233,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
             GetXPath(basicData, true);
             return this.xPath;
         }
-        public string GetXml(IBasicData basicData , bool xmlHeader = true)
+        public string GetXml(IBasicData basicData, bool xmlHeader = true)
         {
             GetXPath(basicData);
             string text = "";
@@ -182,7 +242,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
             XmlAttributeCollection xmlAttributeCollection = temp.FirstChild.Attributes;
             for (int i = 0; i < xmlAttributeCollection.Count; i++)
             {
-                if(xmlAttributeCollection[i].Name == "encoding")
+                if (xmlAttributeCollection[i].Name == "encoding")
                 {
                     temp.FirstChild.Attributes.Remove(xmlAttributeCollection[i]);
                     break;
@@ -195,7 +255,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
                 if (!xmlHeader)
                     text = text.Remove(0, 22);
             }
-            catch(XmlException e)
+            catch (XmlException e)
             {
                 throw new Exception("Many root elements!");
             }
@@ -210,20 +270,20 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
         private string Beautify(XmlDocument doc)
         {
             StringBuilder sb = new StringBuilder();
-            
+
             XmlWriterSettings settings = new XmlWriterSettings
             {
                 Indent = true,
                 IndentChars = "\t",
                 NewLineChars = "\r\n",
                 NewLineHandling = NewLineHandling.Replace,
-                Encoding = Encoding.GetEncoding("ISO-8859-1") 
-        };
+                Encoding = Encoding.GetEncoding("ISO-8859-1")
+            };
             using (XmlWriter writer = XmlWriter.Create(sb, settings))
             {
                 doc.Save(writer);
             }
-            return sb.ToString().Replace(" encoding=\"utf-16\""," ");
+            return sb.ToString().Replace(" encoding=\"utf-16\"", " ");
         }
 
         internal bool IsXMLString(string text)
@@ -254,12 +314,12 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
                 var element = navigator.SelectSingleNode(path);
                 return (IXmlLineInfo)element != null ? ((IXmlLineInfo)element).LineNumber : -1;
             }
-            catch(Exception ex) 
-            { 
-                
+            catch (Exception ex)
+            {
+
                 return -1;
             }
         }
     }
-   
+
 }

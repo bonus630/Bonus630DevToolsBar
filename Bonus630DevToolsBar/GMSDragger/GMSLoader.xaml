@@ -72,7 +72,18 @@
                                 CommandParameter="{Binding FullName}"  Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}, Path=DataContext.LoadGMSCommand}"
                                       Visibility="{Binding Extension,Converter={StaticResource FileExtensionToVisibilityConverter},ConverterParameter=.bak}" />
 
+                            <Grid.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="Copy Path" CommandParameter="{Binding}" 
+                                          Command="{Binding Path=PlacementTarget.DataContext.CopyGMSFilePathCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}"    >
 
+                                    </MenuItem>
+                                    <MenuItem Header="Copy GMS" CommandParameter="{Binding}" 
+                                          Command="{Binding Path=PlacementTarget.DataContext.CopyGMSFileCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}" >
+
+                                    </MenuItem>
+                                </ContextMenu>
+                            </Grid.ContextMenu>
 
                         </Grid>
                     </DataTemplate>

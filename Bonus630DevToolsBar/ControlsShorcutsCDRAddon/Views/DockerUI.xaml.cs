@@ -13,6 +13,7 @@ namespace br.com.Bonus630DevToolsBar.ControlsShorcutsCDRAddon
         private corel.Application corelApp;
         private StylesController stylesController;
         private DockerUIViewModel dataContext;
+        
         //public static readonly DependencyProperty testandoProperty = DependencyProperty.Register("Testando", typeof(int), typeof(ControlsShorcutsCDRAddon.DockerUI), new FrameworkPropertyMetadata(100));
 
         //public delegate void InvokeEvent();

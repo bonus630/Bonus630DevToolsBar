@@ -4,6 +4,7 @@ using Corel.Interop.VGCore;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -38,7 +39,8 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
         public ICommand UnloadGMSCommand { get; set; }
         public ICommand LoadGMSCommand { get; set; }
         public ICommand OpenGMSCommand { get; set; }
-
+     
+   
 
         public ObservableCollection<MyFile> Files
         {
@@ -61,6 +63,8 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
                 UnloadGMSCommand = new br.com.Bonus630DevToolsBar.RunCommandDocker.BindingCommand<string>(UnloadGMS);
                 LoadGMSCommand = new br.com.Bonus630DevToolsBar.RunCommandDocker.BindingCommand<string>(LoadGMS);
                 OpenGMSCommand = new br.com.Bonus630DevToolsBar.RunCommandDocker.BindingCommand<string>(LoadVBA);
+           
+      
                 this.Loaded += GMSLoader_Loaded;
             }
             catch
@@ -85,6 +89,8 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
             LoadUnload(file);
             this.corelApp.FrameWork.Automation.InvokeItem("28e16db6-6339-440d-af0d-f58ac27c115d");
         }
+   
+    
         private void LoadUnload(string file, bool load = true)
         {
 
@@ -204,12 +210,15 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
             get { return fullName; }
             set { fullName = value; SetNewName(); OnFilesChanged("FullName"); }
         }
-
+        public ICommand CopyGMSFilePathCommand { get; set; }
+        public ICommand CopyGMSFileCommand { get; set; }
+ 
         public MyFile(string fullname)
         {
          
             FullName = fullname;
-           
+            CopyGMSFileCommand = new br.com.Bonus630DevToolsBar.RunCommandDocker.BindingCommand<MyFile>(CopyGMSFile);
+            CopyGMSFilePathCommand = new br.com.Bonus630DevToolsBar.RunCommandDocker.BindingCommand<MyFile>(CopyGMSFilePath);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -222,6 +231,16 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
         {
             Name = fullName.Substring(fullName.LastIndexOf("\\")+1);
             Extension = Name.Substring(name.LastIndexOf("."));
+        }
+        private void CopyGMSFile(MyFile file)
+        {
+            System.Windows.Clipboard.SetFileDropList(new StringCollection() { file.FullName });
+
+        }
+        private void CopyGMSFilePath(MyFile file)
+        {
+            System.Windows.Clipboard.SetText(file.FullName);
+
         }
     }
 

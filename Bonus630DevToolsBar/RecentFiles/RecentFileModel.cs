@@ -7,6 +7,7 @@ using System.IO.Compression;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media.Imaging;
+using System.Xml;
 
 namespace br.com.Bonus630DevToolsBar.RecentFiles
 {
@@ -15,13 +16,13 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
         private readonly string thumbEntry1 = "previews/thumbnail.png";
         private readonly string thumbEntry2 = "metadata/thumbnails/thumbnail.bmp";
         //private readonly string table = "files";
-       // private readonly string primaryKey = "id";
+        // private readonly string primaryKey = "id";
 
 
-        public RecentFileModel(int corelVersion):base("RecentFiles", "recent-files",corelVersion,"files","id")
+        public RecentFileModel(int corelVersion) : base("RecentFiles", "recent-files", corelVersion, "files", "id")
 
         {
-            
+
             this.CreateTable("CREATE TABLE IF NOT EXISTS files(id INTEGER PRIMARY KEY,_index INTEGER,count INTEGER,autoload INTEGER,name Varchar(50),path Varchar(256),time INTEGER);");
         }
 
@@ -89,8 +90,8 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
             return datas;
         }
 
-       // bool autoload = false, int openTimes = 1, long openedTime = 0
-        public void UpdateFile(int id, int index,string name,string fullName, int openTimes =1, long openedTime=0, bool autoload=false)
+        // bool autoload = false, int openTimes = 1, long openedTime = 0
+        public void UpdateFile(int id, int index, string name, string fullName, int openTimes = 1, long openedTime = 0, bool autoload = false)
         {
             try
             {
@@ -113,7 +114,7 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
             catch { }
         }
 
-      
+
         //public void InsertOrIncrementCount(string name, string path, int index, long time)
         //{
 
@@ -156,37 +157,54 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
 
         // }
 
-  
 
 
 
-        public BitmapSource GetThumb(string fullName)
+
+        public object[] GetThumbAndVersion(string fullName)
         {
             BitmapSource preview = null;
             Bitmap b = null;
+            object[] result = new object[2];
+            bool thumbFinded = false;
+            bool corelVersionFinded = false;
             using (FileStream fs = new FileStream(fullName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
-                using (ZipArchive zipFile = new ZipArchive(fs,ZipArchiveMode.Read))
+                using (ZipArchive zipFile = new ZipArchive(fs, ZipArchiveMode.Read))
                 {
                     foreach (ZipArchiveEntry entry in zipFile.Entries)
                     {
                         if (entry.FullName.Equals(thumbEntry1, StringComparison.OrdinalIgnoreCase))
                         {
                             b = GetBitmapFromEntry(thumbEntry1, zipFile);
-                            break;
+                           
+                            thumbFinded = true;
+
                         }
                         if (entry.FullName.Equals(thumbEntry2, StringComparison.OrdinalIgnoreCase))
                         {
                             b = GetBitmapFromEntry(thumbEntry2, zipFile);
-                            break;
+                           
+                            thumbFinded = true;
+
                         }
+                        if(entry.FullName.Equals("META-INF/metadata.xml"))
+                        {
+                            result[1] = GetCorelVersion(entry.FullName, zipFile);
+                            corelVersionFinded = true;
+                        }
+                        if (thumbFinded && corelVersionFinded)
+                            break;
                     }
                     if (b != null)
+                    {
                         preview = Imaging.CreateBitmapSourceFromHBitmap(b.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+                        result[0] = preview;
+                    }
                     b.Dispose();
                 }
             }
-            return preview;
+            return result;
         }
         private Bitmap GetBitmapFromEntry(string entry, ZipArchive zipFile)
         {
@@ -204,6 +222,38 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
             catch { return null; }
         }
 
-      
+        private int GetCorelVersion(string entry, ZipArchive zipFile)
+        {
+            int corelVersion = 0;
+
+            // if (entry.Name.Equals("META-INF/metadata.xml"))
+
+            var xmlEntry = zipFile.GetEntry(entry);
+            using (Stream stEntry = xmlEntry.Open())
+            {
+                using (StreamReader sr = new StreamReader(stEntry))
+                {
+                    string xml = sr.ReadToEnd();
+                    XmlDocument doc = new XmlDocument();
+                    doc.LoadXml(xml);
+                    XmlNodeList elList = doc.GetElementsByTagName("rdf:Description")[0].ChildNodes;
+                    for (int i = 0; i < elList.Count; i++)
+                    {
+                        XmlNode node = elList[i];
+                        if (node.Name.Contains("CoreVersion"))
+                        {
+                            corelVersion = Int32.Parse(node.InnerText.Substring(0, 2));
+                            return corelVersion;
+                        }
+                    }
+                }
+            }
+
+
+
+            return corelVersion;
+
+        }
+
     }
 }

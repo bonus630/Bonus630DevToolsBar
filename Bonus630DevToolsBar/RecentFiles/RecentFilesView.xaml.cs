@@ -9,6 +9,7 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 using corel = Corel.Interop.VGCore;
 
 
@@ -161,7 +162,9 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
             {
                 try
                 {
-                    dataContext[id].Thumb = recentFileModel.GetThumb(dataContext[id].FullName);
+                    object[] r = recentFileModel.GetThumbAndVersion(dataContext[id].FullName);
+                    dataContext[id].Thumb = (BitmapSource)r[0];
+                    dataContext[id].Version = (int)r[1];
                 }
                 catch { }
 

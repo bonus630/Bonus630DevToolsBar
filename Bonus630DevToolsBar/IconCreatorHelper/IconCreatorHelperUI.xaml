@@ -125,7 +125,7 @@
                 </custom:DraggableGrid>
 
 
-                <ScrollViewer  HorizontalScrollBarVisibility="Disabled">
+                <ScrollViewer  HorizontalScrollBarVisibility="Disabled" >
                     <!--<StackPanel Orientation="Horizontal">-->
                     <StackPanel >
 
@@ -134,7 +134,7 @@
                                     Drop="StackPanel_Drop" DragOver="StackPanel_DragOver" DragEnter="StackPanel_DragEnter" DragLeave="StackPanel_DragLeave">
                             <CheckBox x:Name="ck_16" Tag="16" VerticalContentAlignment="Center" Click="ck_Click"/>
                             <StackPanel Margin="2" Background="Transparent" IsEnabled="{Binding ElementName=ck_16,Path=IsChecked}">
-                                <Label  Content="16x16" FontWeight="Bold"/>
+                                <Label  Content="16x16*" FontWeight="Bold"/>
                                 <Border Visibility="{Binding ElementName=ck_16,Path=IsChecked,Converter={StaticResource BoolToVisibilityConverter}}" 
                                         Style="{StaticResource bBorder}"  Width="18" Height="18" Tag="16"  MouseUp="img_MouseUp">
                                         <Image Width="16" Height="16" x:Name="img_16" />
@@ -157,7 +157,7 @@
                                     Drop="StackPanel_Drop" DragOver="StackPanel_DragOver" DragEnter="StackPanel_DragEnter" DragLeave="StackPanel_DragLeave">
                             <CheckBox x:Name="ck_48" Tag="48" VerticalContentAlignment="Center" Click="ck_Click"/>
                             <StackPanel Margin="2" Background="Transparent" IsEnabled="{Binding ElementName=ck_48,Path=IsChecked}">
-                                <Label  Content="48X48" FontWeight="Bold"/>
+                                <Label  Content="48X48*" FontWeight="Bold"/>
                                 <Border  Visibility="{Binding ElementName=ck_48,Path=IsChecked,Converter={StaticResource BoolToVisibilityConverter}}" 
                                          Style="{StaticResource bBorder}"  Width="50" Height="50" Tag="48"  MouseUp="img_MouseUp">
                                     <Image Width="48" Height="48" x:Name="img_48" />
@@ -168,7 +168,7 @@
                                     Drop="StackPanel_Drop" DragOver="StackPanel_DragOver" DragEnter="StackPanel_DragEnter" DragLeave="StackPanel_DragLeave">
                             <CheckBox x:Name="ck_64" Tag="64" VerticalContentAlignment="Center" Click="ck_Click"/>
                             <StackPanel Margin="2" Background="Transparent" IsEnabled="{Binding ElementName=ck_64,Path=IsChecked}">
-                                <Label  Content="64X64" FontWeight="Bold"/>
+                                <Label  Content="64X64*" FontWeight="Bold"/>
                                 <Border  Visibility="{Binding ElementName=ck_64,Path=IsChecked,Converter={StaticResource BoolToVisibilityConverter}}" 
                                          Style="{StaticResource bBorder}"  Width="66" Height="66" Tag="64"  MouseUp="img_MouseUp">
                                     <Image Width="64" Height="64" x:Name="img_64"/>
@@ -190,7 +190,7 @@
                                     Drop="StackPanel_Drop" DragOver="StackPanel_DragOver" DragEnter="StackPanel_DragEnter" DragLeave="StackPanel_DragLeave">
                             <CheckBox x:Name="ck_256" Tag="256" VerticalContentAlignment="Center" Click="ck_Click"/>
                             <StackPanel Margin="2" Background="Transparent"  IsEnabled="{Binding ElementName=ck_256,Path=IsChecked}">
-                                <Label  Content="256X256" FontWeight="Bold"/>
+                                <Label  Content="256X256*" FontWeight="Bold"/>
                                 <Border  Visibility="{Binding ElementName=ck_256,Path=IsChecked,Converter={StaticResource BoolToVisibilityConverter}}" 
                                          Style="{StaticResource bBorder}"  Width="258" Height="258" Tag="256"  MouseUp="img_MouseUp">
                                     <Image Width="256" Height="256" x:Name="img_256"/>

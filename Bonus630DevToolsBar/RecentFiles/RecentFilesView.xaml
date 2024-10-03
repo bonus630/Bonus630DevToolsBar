@@ -141,6 +141,7 @@
                                     <StackPanel Orientation="Horizontal">
                                         <Ellipse Fill="Green" Width="6" Height="6" VerticalAlignment="Center" Visibility="{Binding AutoLoad,Converter={StaticResource BooleanToVisibilityConverter}}"/>
                                         <Label Content="{Binding Name,FallbackValue=Nome do arquivo.cdr}" ToolTip="{Binding FullName}" />
+                                        <Label Content="{Binding Version,FallbackValue=0}" FontWeight="Bold" />
                                     </StackPanel>
                                 </StackPanel>
                             </Border>

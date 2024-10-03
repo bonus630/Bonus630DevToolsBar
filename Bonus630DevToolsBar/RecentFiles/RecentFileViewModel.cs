@@ -63,6 +63,13 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
             get { return fileOpenTimes; }
             set { fileOpenTimes = value; OnPropertyChanged(); }
         }
+        private int version;
+
+        public int Version
+        {
+            get { return version; }
+            set { version = value; OnPropertyChanged(); }
+        }
         private long fileOpenedTime;
 
         public long OpenedTime

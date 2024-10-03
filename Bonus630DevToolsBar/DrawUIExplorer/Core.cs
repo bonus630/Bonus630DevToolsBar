@@ -19,7 +19,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
     {
         XMLDecoder xmlDecoder;
         WorkspaceUnzip workspaceUnzip;
-        string workerFolder;
+        public string WorkerFolder { get; private set; }
 
 
         Thread t;
@@ -82,7 +82,17 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
 
         public Core()
         {
-            workerFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\bonus630\\DrawUIExplorer";
+            WorkerFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\bonus630\\DrawUIExplorer";
+            try
+            {
+                if (!Directory.Exists(WorkerFolder))
+                    Directory.CreateDirectory(WorkerFolder);
+            }
+            catch (IOException ioE)
+            {
+                DispactchNewMessage(ioE.Message, MsgType.Erro);
+                return;
+            }
         }
         private List<IBasicData> getRoute()
         {
@@ -119,17 +129,8 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
             {
                 FileInfo fileOri = new FileInfo(filePath);
                 Title = filePath;
-                try
-                {
-                    if (!Directory.Exists(workerFolder))
-                        Directory.CreateDirectory(workerFolder);
-                }
-                catch (IOException ioE)
-                {
-                    DispactchNewMessage(ioE.Message, MsgType.Erro);
-                    return;
-                }
-                string newPath = workerFolder + "\\" + fileOri.Name;
+             
+                string newPath = WorkerFolder + "\\" + fileOri.Name;
                 if (File.Exists(newPath))
                     File.Delete(newPath);
                 file = fileOri.CopyTo(newPath);
@@ -171,17 +172,8 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
             {
                 FileInfo fileOri = new FileInfo(filePath);
                 Title = filePath;
-                try
-                {
-                    if (!Directory.Exists(workerFolder))
-                        Directory.CreateDirectory(workerFolder);
-                }
-                catch (IOException ioE)
-                {
-                    DispactchNewMessage(ioE.Message, MsgType.Erro);
-                    return;
-                }
-                string newPath = workerFolder + "\\" + fileOri.Name;
+           
+                string newPath = WorkerFolder + "\\" + fileOri.Name;
                 if (File.Exists(newPath))
                     File.Delete(newPath);
                 file = fileOri.CopyTo(newPath);
@@ -197,6 +189,43 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
             thread.IsBackground = true;
             thread.Start(file);
 
+        }
+        public void PartialStart(List<string> filesPath, Corel.Interop.VGCore.Application corelApp, List<string> listTags, bool useCache = true)
+        {
+            //vamos refatoral isso depois
+            this.app = corelApp;
+            FileInfo file = null;
+            xmlDecoder = new XMLDecoder();
+            try
+            {
+                FileInfo[] fileOri = new FileInfo[filesPath.Count];
+                Title = filesPath[0];
+            
+                string newPath = WorkerFolder + "\\partial" + corelApp.VersionMajor + ".xml";
+                if (!useCache && File.Exists(newPath))
+                            File.Delete(newPath);
+                if (!useCache || !File.Exists(newPath))
+                {
+                    List<string> files = new List<string>();
+                    for (int i = 0; i < filesPath.Count; i++)
+                    {
+                        string t = WorkerFolder + "\\partial" + i.ToString("00") + corelApp.VersionMajor + ".xml";
+                        files.Add(t);
+                        xmlDecoder.ExtractTagsToNewXml(filesPath[i], t, listTags);
+                    }
+                    xmlDecoder.MergeXmlFilesForTags(listTags, files, newPath);
+                }
+                file = new FileInfo(newPath);
+            }
+            catch (IOException ioErro)
+            {
+                DispactchNewMessage(ioErro.Message, MsgType.Erro);
+                return;
+            }
+            xmlDecoder.LoadFinish += XmlDecoder_LoadFinish;
+            Thread thread = new Thread(new ParameterizedThreadStart(LoadFile));
+            thread.IsBackground = true;
+            thread.Start(file);
         }
         private void OnInCorelChanged(bool inCorel)
         {
@@ -269,17 +298,8 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
             {
                 FileInfo fileOri = new FileInfo(filePath);
                 Title = filePath;
-                try
-                {
-                    if (!Directory.Exists(workerFolder))
-                        Directory.CreateDirectory(workerFolder);
-                }
-                catch (IOException ioE)
-                {
-                    DispactchNewMessage(ioE.Message, MsgType.Erro);
-                    return;
-                }
-                string newPath = workerFolder + "\\" + fileOri.Name;
+          
+                string newPath = WorkerFolder + "\\" + fileOri.Name;
                 if (File.Exists(newPath))
                     File.Delete(newPath);
                 file = fileOri.CopyTo(newPath);
@@ -320,7 +340,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
                 int j = 0;
                 List<object> param = new List<object>();
                 commandName = pierces[0];
-         
+
                 bool isQuote = false;
                 for (int i = 1; i < pierces.Length; i++)
                 {
@@ -567,7 +587,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
         }
         private void SaveIcons()
         {
-            IconsFolder = Path.Combine(workerFolder, string.Format("Icons_CDR{0}", CorelApp.VersionMajor));
+            IconsFolder = Path.Combine(WorkerFolder, string.Format("Icons_CDR{0}", CorelApp.VersionMajor));
             string fileName = Path.Combine(CorelApp.AddonPath, "Bonus630DevToolsBar\\IconsExtractor.exe");
             if (!File.Exists(fileName))
             {

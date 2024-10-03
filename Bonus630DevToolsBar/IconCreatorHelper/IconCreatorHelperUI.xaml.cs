@@ -168,7 +168,39 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
             }
 
         }
-        
+        private void OpenDocument()
+        {
+            System.Windows.Forms.OpenFileDialog of = new System.Windows.Forms.OpenFileDialog();
+            of.Multiselect = false;
+            of.Filter = "CDR - CorelDRAW (*.cdr)|*.cdr";
+            of.Title = "Select a CorelDRAW file";
+            if (of.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                try
+                {
+                    Doc = corelApp.OpenDocument(of.FileName);
+                    //HasDoc = true;
+                    docFilePath = of.FileName;
+                    lba_DocumentName.Content = Doc.Name;
+                    ExportFolder = PrepareWorkerFolder();
+                    this.corelApp.Unit = cdrUnit.cdrPixel;
+                    Doc.Unit = cdrUnit.cdrPixel;
+                    PreparePreviewFolder();
+                    PrepareFiles(PreviewFolder);
+                    update();
+                    updateCks();
+                    updateImgs();
+                    StartWatcher();
+                    Doc.QueryClose += Doc_QueryClose;
+                }
+                catch (Exception ex)
+                {
+                    this.corelApp.MsgShow(ex.Message);
+                }
+            }
+            // startThread();
+        }
+
         private void Doc_QueryClose(ref bool Cancel)
         {
             
@@ -1115,35 +1147,7 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
 
         private void btn_openDocumento_Click(object sender, RoutedEventArgs e)
         {
-            System.Windows.Forms.OpenFileDialog of = new System.Windows.Forms.OpenFileDialog();
-            of.Multiselect = false;
-            of.Filter = "CDR - CorelDRAW (*.cdr)|*.cdr";
-            of.Title = "Select a CorelDRAW file";
-            if (of.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
-                try
-                {
-                    Doc = corelApp.OpenDocument(of.FileName);
-                    //HasDoc = true;
-                    docFilePath = of.FileName;
-                    lba_DocumentName.Content = Doc.Name;
-                    ExportFolder = PrepareWorkerFolder();
-                    this.corelApp.Unit = cdrUnit.cdrPixel;
-                    Doc.Unit = cdrUnit.cdrPixel;
-                    PreparePreviewFolder();
-                    PrepareFiles(PreviewFolder);
-                    update();
-                    updateCks();
-                    updateImgs();
-                    StartWatcher();
-                    Doc.QueryClose += Doc_QueryClose;
-                }
-                catch(Exception ex)
-                {
-                    this.corelApp.MsgShow(ex.Message);
-                }
-            }
-            // startThread();
+            OpenDocument();
         }
 
         private async void btn_previewIcon_Click(object sender, RoutedEventArgs e)
@@ -1207,7 +1211,7 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
                 double contourWidth = res / this.contourWidth;
                 if (contourWidth < 2)
                     contourWidth = 2;
-                corelApp.BeginDraw();
+                corelApp.BeginDraw(enableEvents:true);
                 ShapeRange sr = corelApp.ActiveSelectionRange;
                 for (int i = 1; i <= sr.Count; i++)
                 {
