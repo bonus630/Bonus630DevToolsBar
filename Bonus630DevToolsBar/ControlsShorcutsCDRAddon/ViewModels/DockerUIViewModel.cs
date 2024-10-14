@@ -65,14 +65,14 @@ namespace br.com.Bonus630DevToolsBar.ControlsShorcutsCDRAddon.ViewModels
                 StreamReader sr = workspaceUnzip.XmlStreamReader;
                 try
                 {
-                    File.WriteAllText(string.Format("{0}\\ExtractWorkspace.xml", core.WorkerFolder), sr.ReadToEnd());
+                    File.WriteAllText(string.Format("{0}\\ExtractWorkspace{1}.xml", core.WorkerFolder,this.corelApp.VersionMajor), sr.ReadToEnd());
                 }
                 catch (Exception e)
                 {
                     throw e;
                 }
             }
-            core.PartialStart(new List<string>() { Path.Combine(this.corelApp.Path, "UIConfig\\DrawUI.xml"),string.Format("{0}\\ExtractWorkspace.xml", core.WorkerFolder)
+            core.PartialStart(new List<string>() { Path.Combine(this.corelApp.Path, "UIConfig\\DrawUI.xml"),string.Format("{0}\\ExtractWorkspace{1}.xml", core.WorkerFolder,this.corelApp.VersionMajor)
            },
                 this.corelApp, new List<string>() { "shortcutKeyTables" }, !firstUse);
 

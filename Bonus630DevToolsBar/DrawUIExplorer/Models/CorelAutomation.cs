@@ -458,19 +458,14 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
         }
         public void HideDocker(string guid)
         {
-
             try
             {
-
                 this.CorelApp.FrameWork.HideDocker(guid);
-
             }
             catch (Exception erro)
             {
                 core.DispactchNewMessage(erro.Message, MsgType.Erro);
             }
-
-
         }
         //public int GetCommandBarIndexByGuid(string guid)
         //{

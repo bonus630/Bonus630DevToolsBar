@@ -1,4 +1,5 @@
-﻿using Corel.Interop.VGCore;
+﻿using Bonus630DevToolsBar;
+using Corel.Interop.VGCore;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -9,6 +10,7 @@ using System.Threading;
 
 //using System.Windows.Forms;
 using System.Windows.Interop;
+
 
 namespace br.com.Bonus630DevToolsBar.DataSource
 {
@@ -29,7 +31,7 @@ namespace br.com.Bonus630DevToolsBar.DataSource
         private readonly string runCommandGuid = "5087687d-337d-4d0e-acaf-c0b1df967757";
         private readonly string shortcutsCommandGuid = "512194ae-a540-4979-8991-bcadded6726e";
 
-        public Bonus630DevToolsBarDataSource(DataSourceProxy proxy, Application corelApp) : base(proxy, corelApp)
+        public Bonus630DevToolsBarDataSource(DataSourceProxy proxy, Corel.Interop.VGCore.Application corelApp) : base(proxy, corelApp)
         {
      
         }
@@ -312,12 +314,37 @@ namespace br.com.Bonus630DevToolsBar.DataSource
             try
             {
                 if (CorelApp.ActiveDocument.Dirty)
-
                 {
+                    double x = 0, y = 0, w = 0, h = 0;
+                    int activePage = 1;
+                    List<int> staticID = new List<int>();
+                    for (int i = 1; i <= CorelApp.ActiveSelection.Shapes.Count; i++)
+                    {
+                        int id = CorelApp.ActiveSelection.Shapes[i].StaticID;
+                        if (!staticID.Contains(id))
+                            staticID.Add(id);
+                    }
+                    CorelApp.ActiveWindow.ActiveView.GetViewArea(out x, out y, out w, out h);
+                    activePage = CorelApp.ActivePage.Index;
                     string path = CorelApp.ActiveDocument.FullFileName;
+                    
+                    CorelApp.BeginDraw();
                     CorelApp.ActiveDocument.Close();
                     CorelApp.OpenDocument(path);
-                    CorelApp.Refresh();
+                    if(CorelApp.ActiveDocument.Pages.Count >= activePage)
+                        CorelApp.ActiveDocument.Pages[activePage].Activate();
+                    CorelApp.ActiveWindow.ActiveView.SetViewArea(x, y, w, h);
+                    try
+                    {
+                        for (int i = 0; i < staticID.Count; i++)
+                        {
+                            Shape n = CorelApp.ActivePage.Shapes.FindShape(StaticID: staticID[i]);
+                            if (n != null)
+                                n.AddToSelection();
+                        }
+                    }
+                    catch { }
+                    CorelApp.EndDraw();
                 }
             }
             catch { }

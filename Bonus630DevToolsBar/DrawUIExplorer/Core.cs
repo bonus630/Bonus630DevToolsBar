@@ -129,7 +129,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
             {
                 FileInfo fileOri = new FileInfo(filePath);
                 Title = filePath;
-             
+
                 string newPath = WorkerFolder + "\\" + fileOri.Name;
                 if (File.Exists(newPath))
                     File.Delete(newPath);
@@ -172,7 +172,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
             {
                 FileInfo fileOri = new FileInfo(filePath);
                 Title = filePath;
-           
+
                 string newPath = WorkerFolder + "\\" + fileOri.Name;
                 if (File.Exists(newPath))
                     File.Delete(newPath);
@@ -200,10 +200,10 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
             {
                 FileInfo[] fileOri = new FileInfo[filesPath.Count];
                 Title = filesPath[0];
-            
+
                 string newPath = WorkerFolder + "\\partial" + corelApp.VersionMajor + ".xml";
                 if (!useCache && File.Exists(newPath))
-                            File.Delete(newPath);
+                    File.Delete(newPath);
                 if (!useCache || !File.Exists(newPath))
                 {
                     List<string> files = new List<string>();
@@ -212,8 +212,15 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
                         string t = WorkerFolder + "\\partial" + i.ToString("00") + corelApp.VersionMajor + ".xml";
                         if (!useCache && File.Exists(t))
                             File.Delete(t);
-                        files.Add(t);
-                        xmlDecoder.ExtractTagsToNewXml(filesPath[i], t, listTags);
+                        try
+                        {
+                            xmlDecoder.ExtractTagsToNewXml(filesPath[i], t, listTags);
+                            files.Add(t);
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.WriteLine(e.Message);
+                        }
                     }
                     xmlDecoder.MergeXmlFilesForTags(listTags, files, newPath);
                 }
@@ -300,7 +307,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
             {
                 FileInfo fileOri = new FileInfo(filePath);
                 Title = filePath;
-          
+
                 string newPath = WorkerFolder + "\\" + fileOri.Name;
                 if (File.Exists(newPath))
                     File.Delete(newPath);
@@ -689,7 +696,13 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
         //        mainData.Add(toMergeData);
         //    }
         //}
-
+        public string TryGetAnyCaption(string itemGuid)
+        {
+            IBasicData data = searchEngine.SearchItemFromGuid(this.ListPrimaryItens, itemGuid);
+            if (data != null)
+                return TryGetAnyCaption(data);
+            return string.Empty;
+        }
         public string TryGetAnyCaption(IBasicData basicData)
         {
             string caption = "";

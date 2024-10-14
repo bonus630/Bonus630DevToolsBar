@@ -125,7 +125,7 @@
                 <DataTemplate>
                     <Button  Tag="{Binding FullName}" VerticalAlignment="Stretch"
                              Width="20" Height="20" MaxHeight="48" MaxWidth="48" 
-                             Click="Button_Click" MouseEnter="Button_MouseEnter">
+                             Click="Button_Click" MouseEnter="Button_MouseEnter" Margin="0,0,2,0">
                         <Grid Width="18" Height="18">
                                <Rectangle Fill="Green" Height="2" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" 
                            Visibility="{Binding AutoLoad,Converter={StaticResource BooleanToVisibilityConverter}}"/>

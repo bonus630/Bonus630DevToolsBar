@@ -424,6 +424,19 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
                 SearchFinished();
 
         }
+        public IBasicData SearchItemFromGuid(IBasicData list, string guid)
+        {
+            for (int i = 0; i < list.Childrens[2].Childrens.Count; i++)
+            {
+                if (list.Childrens[2].Childrens[i].Guid == guid)
+                {
+                    return list.Childrens[2].Childrens[i];
+                   
+                }
+             
+            }
+            return null;
+        }
         public void SearchItemContainsGuidRefEvent(IBasicData list, string guid)
         {
             IBasicData result = SearchItemContainsGuidRef(list, guid, true);

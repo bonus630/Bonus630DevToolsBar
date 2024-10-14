@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<CommandBar version="2.0" name="bar teste">
+<CommandBar version="2.0" name="Bonus630DevToolsBar">
   <GmsFiles>
     <Gms id="0">D:\CDRGMS\elvin_Contour_black.gms</Gms>
   </GmsFiles>
@@ -7,7 +7,7 @@
     <CommandItem id="0">
       <GmsFileId>0</GmsFileId>
       <Caption>Bonus630DevTools</Caption>
-      <Command>a</Command>
+      <Command>DataSource</Command>
       <Enable>true</Enable>
       <Shortcut>
       </Shortcut>
@@ -16,7 +16,7 @@
     <CommandItem id="1">
       <GmsFileId>0</GmsFileId>
       <Caption>Run Command Docker</Caption>
-      <Command>b</Command>
+      <Command>Run Command Docker</Command>
       <Enable>true</Enable>
       <Shortcut>
       </Shortcut>
@@ -25,7 +25,7 @@
     <CommandItem id="2">
       <GmsFileId>0</GmsFileId>
       <Caption>DrawUI Explorer Window</Caption>
-      <Command>c</Command>
+      <Command>DrawUI Explorer</Command>
       <Enable>true</Enable>
       <Shortcut>
       </Shortcut>
@@ -34,7 +34,7 @@
     <CommandItem id="3">
       <GmsFileId>0</GmsFileId>
       <Caption>Shortcuts Docker</Caption>
-      <Command>d</Command>
+      <Command>Shortcuts Docker</Command>
       <Enable>true</Enable>
       <Shortcut>
       </Shortcut>
@@ -43,16 +43,16 @@
     <CommandItem id="4">
       <GmsFileId>0</GmsFileId>
       <Caption>Drag GMS here</Caption>
-      <Command>e</Command>
+      <Command>Drag GMS</Command>
       <Enable>true</Enable>
       <Shortcut>
       </Shortcut>
-      <Icon />
+      <Icon>D:\C# Ed26-08-22\Bonus630DevToolsBar\Assets\Icons\drag.ico</Icon>
     </CommandItem>
     <CommandItem id="5">
       <GmsFileId>0</GmsFileId>
       <Caption>GMS Reloader</Caption>
-      <Command>f</Command>
+      <Command>GMS Reloader</Command>
       <Enable>true</Enable>
       <Shortcut>
       </Shortcut>
@@ -61,7 +61,7 @@
     <CommandItem id="6">
       <GmsFileId>0</GmsFileId>
       <Caption>Unload all GMS</Caption>
-      <Command>g</Command>
+      <Command>Unload all GMS</Command>
       <Enable>true</Enable>
       <Shortcut>
       </Shortcut>
@@ -70,7 +70,7 @@
     <CommandItem id="7">
       <GmsFileId>0</GmsFileId>
       <Caption>CQL input box</Caption>
-      <Command>h</Command>
+      <Command>CQL</Command>
       <Enable>true</Enable>
       <Shortcut>
       </Shortcut>
@@ -79,7 +79,7 @@
     <CommandItem id="8">
       <GmsFileId>0</GmsFileId>
       <Caption>CQL Reference Guide</Caption>
-      <Command>i</Command>
+      <Command>CQL Reference</Command>
       <Enable>true</Enable>
       <Shortcut>
       </Shortcut>
@@ -88,7 +88,7 @@
     <CommandItem id="9">
       <GmsFileId>0</GmsFileId>
       <Caption>Folders</Caption>
-      <Command>j</Command>
+      <Command>Folders</Command>
       <Enable>true</Enable>
       <Shortcut>
       </Shortcut>
@@ -97,7 +97,7 @@
     <CommandItem id="10">
       <GmsFileId>0</GmsFileId>
       <Caption>Auto Load</Caption>
-      <Command>k</Command>
+      <Command>Auto Loader</Command>
       <Enable>true</Enable>
       <Shortcut>
       </Shortcut>
@@ -106,7 +106,7 @@
     <CommandItem id="11">
       <GmsFileId>0</GmsFileId>
       <Caption>Icon Toolset Docker</Caption>
-      <Command>l</Command>
+      <Command>Icon Toolset</Command>
       <Enable>true</Enable>
       <Shortcut>
       </Shortcut>
@@ -115,16 +115,16 @@
     <CommandItem id="12">
       <GmsFileId>0</GmsFileId>
       <Caption>Icon test slot</Caption>
-      <Command>m</Command>
+      <Command>icon test slot</Command>
       <Enable>true</Enable>
       <Shortcut>
       </Shortcut>
-      <Icon>D:\C# Ed26-08-22\Bonus630DevToolsBar\Assets\Icons\fileIcon.ico</Icon>
+      <Icon>D:\C# Ed26-08-22\Bonus630DevToolsBar\Assets\Icons\icone-test.ico</Icon>
     </CommandItem>
     <CommandItem id="13">
       <GmsFileId>0</GmsFileId>
       <Caption>CommandBar Builder</Caption>
-      <Command>n</Command>
+      <Command>Commandbar builder</Command>
       <Enable>true</Enable>
       <Shortcut>
       </Shortcut>
@@ -133,15 +133,15 @@
     <CommandItem id="14">
       <GmsFileId>0</GmsFileId>
       <Caption>Print Screen</Caption>
-      <Command>o</Command>
+      <Command>printscreen</Command>
       <Enable>true</Enable>
       <Shortcut>shift+p</Shortcut>
-      <Icon>C:\Users\bonus\AppData\Local\Temp\tmpB35E.ico</Icon>
+      <Icon>C:\Users\bonus\AppData\Local\Temp\tmp1683.ico</Icon>
     </CommandItem>
     <CommandItem id="15">
       <GmsFileId>0</GmsFileId>
       <Caption>ReOpen Active Document</Caption>
-      <Command>p</Command>
+      <Command>reopen</Command>
       <Enable>true</Enable>
       <Shortcut>
       </Shortcut>

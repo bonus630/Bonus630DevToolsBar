@@ -28,30 +28,32 @@
     </Window.Resources>
     <StackPanel>
         <GroupBox Header="Check Macro command and icon.:" Margin="10,10,10,0">
-            <ItemsControl ItemsSource="{Binding Commands}" Margin="10">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Grid  Height="40">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" SharedSizeGroup="Column1" />
-                                <ColumnDefinition Width="Auto" SharedSizeGroup="Column2" />
-                            </Grid.ColumnDefinitions>
-                            <CheckBox Grid.Column="0" IsChecked="{Binding Add}" Content="{Binding Command}" VerticalAlignment="Center"/>
+            <Grid Grid.IsSharedSizeScope="True">
+                <ItemsControl ItemsSource="{Binding Commands}" Margin="10">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid  Height="40">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="Column1" />
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="Column2" />
+                                </Grid.ColumnDefinitions>
+                                <CheckBox Grid.Column="0" IsChecked="{Binding Add}" Content="{Binding Command}" VerticalAlignment="Center"/>
 
-                            <ComboBox Grid.Column="1" ItemsSource="{Binding Path=DataContext.Icos, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type Window}}}" Height="40" Width="66" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Margin="10,0,10,0">
-                                <ComboBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <Image Width="32" Height="32" Source="{Binding Converter={StaticResource PathToImageConverter}}" />
-                                    </DataTemplate>
-                                </ComboBox.ItemTemplate>
-                                <ComboBox.SelectedItem>
-                                    <Binding Path="Ico" Mode="TwoWay" />
-                                </ComboBox.SelectedItem>
-                            </ComboBox>
-                        </Grid>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-              </ItemsControl>
+                                <ComboBox Grid.Column="1" ItemsSource="{Binding Path=DataContext.Icos, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type Window}}}" Height="40" Width="66" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Margin="10,0,10,0">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <Image Width="32" Height="32" Source="{Binding Converter={StaticResource PathToImageConverter}}" />
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                    <ComboBox.SelectedItem>
+                                        <Binding Path="Ico" Mode="TwoWay" />
+                                    </ComboBox.SelectedItem>
+                                </ComboBox>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Grid>
         </GroupBox>
         <GroupBox Header="Choose a  CommandBar.:" Margin="10,0,10,0">
             <ComboBox ItemsSource="{Binding CommandBars}" IsEditable="True" Text="{Binding NewCommandBar,Mode=TwoWay}" SelectedItem="{Binding SelectedCommandBar}" Margin="10" VerticalContentAlignment="Center"/>
@@ -59,7 +61,8 @@
         <StackPanel Orientation="Horizontal" Margin="10" >
             <Button Content="Put to bar" Click="Button_Click" Height="40" Width="140" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />
 
-            <Button Content="Just copy" Click="Button_Click_1" Height="40" Width="80" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="10,0,0,0"/>
+            <Button Content="Just copy" Name="btn_copy" Click="btn_copy_Click" Height="40" Width="80" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="10,0,0,0"/>
+            <Button Content="Cancel" x:Name="btn_cancel" Click="btn_cancel_Click" Height="40" Width="80" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="10,0,0,0"/>
         </StackPanel>
     </StackPanel>
 </Window>

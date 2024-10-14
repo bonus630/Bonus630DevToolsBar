@@ -275,6 +275,7 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
             OpenFileDialog of = new OpenFileDialog();
             of.Filter = "Any File (*.*)|*.*";
             of.Title = "Select any file(s)";
+            of.Multiselect = true;
             if ((bool)of.ShowDialog())
             {
                 InstallThis(of.FileNames);

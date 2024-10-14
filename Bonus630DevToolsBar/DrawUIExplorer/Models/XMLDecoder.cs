@@ -57,6 +57,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
         }
         public void ExtractTagsToNewXml(string filePath, string xmlSavePath, List<string> listTags)
         {
+            bool anyTagNotFound = true;
             using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
                 if (!File.Exists(xmlSavePath))
@@ -75,7 +76,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
                         {
                             if (reader.NodeType == XmlNodeType.Element && listTags.Contains(reader.Name))
                             {
-
+                                anyTagNotFound = false;
                                 string t = reader.ReadOuterXml();
                                 byte[] buffer = Encoding.UTF8.GetBytes(t);
                                 xmlStream.Write(buffer, 0, buffer.Length);
@@ -84,6 +85,8 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
                     }
                 }
             }
+            if(anyTagNotFound)
+                throw new Exception("no tags found");
         }
         public void MergeXmlFilesForTags(List<string> tagNames, List<string> filePaths, string outputFilePath)
         {

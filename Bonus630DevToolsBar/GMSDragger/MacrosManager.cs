@@ -14,6 +14,7 @@ using c = Corel.Interop.VGCore;
 using Corel.Interop.VGCore;
 using System.Runtime.CompilerServices;
 using System.Xml.Linq;
+using System.Security.Cryptography;
 
 
 namespace br.com.Bonus630DevToolsBar.GMSDragger
@@ -30,7 +31,7 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
     }
     public class MacrosManager : MMBase
     {
-        string rarExePath = string.Empty;
+
         c.Application corelApp;
         private ObservableCollection<string> icos;
 
@@ -97,322 +98,304 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
                 CommandBars.Add(corelApp.FrameWork.CommandBars[i].Name);
             }
             processFiles2(files);
+
             CommandManager cm = new CommandManager(this, theme);
-            bool install = (bool)cm.ShowDialog();
+            Status install = cm.ShowDialog();
 
-            if (!string.IsNullOrEmpty(NewCommandBar) && !commandBars.Contains(newCommandBar) && install)
+
+            if (!string.IsNullOrEmpty(NewCommandBar) && !commandBars.Contains(newCommandBar) && install.Equals(Status.CreateCommandBar))
                 this.corelApp.FrameWork.CommandBars.Add(newCommandBar);
-            for (int i = 0; i < this.Commands.Count; i++)
-            {
-                string name = Path.GetFileName(this.Commands[i].FilePath);
-                string dest = string.Format("{0}{1}", this.corelApp.GMSManager.UserGMSPath, name);
-                try
+            List<string> controlsID =  new List<string>();;
+            if (!install.Equals(Status.Cancel))
+            { 
+                for (int i = 0; i < this.Commands.Count; i++)
                 {
-                    File.Copy(this.Commands[i].FilePath, dest);
-                }
-                catch { }
-                this.corelApp.GMSManager.Projects.Load(dest);
-                c.Control c = null;
-                if (install)
-                {
-                    var dsp = corelApp.FrameWork.Application.DataContext.GetDataSource("MacroMgrDockerDS");
-                    string xmlString = (string)dsp.GetProperty("MacroItemList");
-                    if (string.IsNullOrEmpty(xmlString))
-                        return;
-
-                    XDocument xdoc = XDocument.Parse(xmlString);
-
-                    string[] paths = this.commands[i].Command.Split(new char[] { '.' }, options: StringSplitOptions.RemoveEmptyEntries);
-
-                    XElement resultElement = FindElementByPath(xdoc.Root, "VBA", paths);
-
-                    if (resultElement != null)
-                    {
-                        dsp.SetProperty("CurrentMacroItem", resultElement.ToString());
-                        dsp.InvokeMethod("OnAssignHotkey");
-
-
-                    }
-                    c = corelApp.FrameWork.CommandBars[newCommandBar].Controls.AddCustomButton("2cc24a3e-fe24-4708-9a74-9c75406eebcd", this.commands[i].Command);
-
-                }
-                if (!string.IsNullOrEmpty(this.Commands[i].Ico))
-                {
-                    name = Path.GetFileName(this.commands[i].Ico);
-                    dest = string.Format("{0}{1}", this.corelApp.GMSManager.UserGMSPath, name);
+                    string name = Path.GetFileName(this.Commands[i].FilePath);
+                    string dest = string.Format("{0}{1}", this.corelApp.GMSManager.UserGMSPath, name);
                     try
                     {
-                        File.Copy(this.Commands[i].Ico, dest);
-                        if(install)
-                         c.SetIcon2(dest);
+                        File.Copy(this.Commands[i].FilePath, dest);
+                    }
+                    catch { }
+                    this.corelApp.GMSManager.Projects.Load(dest);
+                    c.Control c = null;
+                   
+                    if (install.Equals(Status.CreateCommandBar))
+                    {
+                       
+                        var dsp = corelApp.FrameWork.Application.DataContext.GetDataSource("MacroMgrDockerDS");
+                        string xmlString = (string)dsp.GetProperty("MacroItemList");
+                        if (string.IsNullOrEmpty(xmlString))
+                            return;
+
+                        XDocument xdoc = XDocument.Parse(xmlString);
+
+                        string[] paths = this.commands[i].Command.Split(new char[] { '.' }, options: StringSplitOptions.RemoveEmptyEntries);
+
+                        XElement resultElement = FindElementByPath(xdoc.Root, "VBA", paths);
+
+                        if (resultElement != null)
+                        {
+                            dsp.SetProperty("CurrentMacroItem", resultElement.ToString());
+                            dsp.InvokeMethod("OnAssignHotkey");
+
+
+                        }
+                        c = corelApp.FrameWork.CommandBars[newCommandBar].Controls.AddCustomButton("2cc24a3e-fe24-4708-9a74-9c75406eebcd", this.commands[i].Command);
+                        controlsID.Add(c.ID);
+                    }
+                }
+               
+            }
+            if (install.Equals(Status.CreateCommandBar))
+            {
+                this.corelApp.FrameWork.CommandBars[newCommandBar].Visible = true;
+
+                SetIcons(controlsID);
+              
+                
+            }
+        }
+        private void SetIcons(List<string> controlsID)
+        {
+
+            for (int i = 0; i < this.Commands.Count; i++)
+            {
+                if (!string.IsNullOrEmpty(this.Commands[i].Ico))
+                {
+                    string name = Path.GetFileName(this.commands[i].Ico);
+                    string dest = string.Format("{0}{1}", this.corelApp.GMSManager.UserGMSPath, name);
+                    try
+                    {
+                        if(!File.Exists(dest))
+                            File.Copy(this.Commands[i].Ico, dest);
+                        c.Controls controls =  corelApp.FrameWork.CommandBars[newCommandBar].Controls;
+                        for (int k = 1; k <= controls.Count; k++)
+                        {
+                            if (controls[k].ID == controlsID[i])
+                            {
+                                controls[k].SetIcon2(dest);
+                                break;
+                            }
+
+                        }
+                        
                     }
                     catch { }
                 }
             }
-            if(install)
-                this.corelApp.FrameWork.CommandBars[newCommandBar].Visible = true;
         }
-    
 
-    private XElement FindElementByPath(XElement parentElement, string targetGuid, string[] paths)
-    {
-        XElement currentElement = parentElement
-            .Elements("itemData")
-            .FirstOrDefault(e => (string)e.Attribute("guid") == targetGuid);
-
-        foreach (string path in paths)
+        private XElement FindElementByPath(XElement parentElement, string targetGuid, string[] paths)
         {
-            if (currentElement != null)
+            XElement currentElement = parentElement
+                .Elements("itemData")
+                .FirstOrDefault(e => (string)e.Attribute("guid") == targetGuid);
+
+            foreach (string path in paths)
             {
-                currentElement = currentElement
-                    .Elements("container")
-                    .Elements("itemData")
-                    .FirstOrDefault(e => (string)e.Attribute("text") == path);
-            }
-
-            if (currentElement == null)
-            {
-                return null;
-            }
-        }
-
-        return currentElement;
-    }
-    private void processZip(string zipFile)
-    {
-        try
-        {
-            string path = GetTempDir();
-            ZipFile.ExtractToDirectory(zipFile, path);
-            processFolder(path);
-        }
-        catch (Exception e)
-        {
-            System.Windows.Forms.MessageBox.Show("zip erro!");
-        }
-    }
-    private void processRar(string rarFile)
-    {
-        if (string.IsNullOrEmpty(rarExePath))
-            rarExePath = FindWinrarPath();
-        if (string.IsNullOrEmpty(rarExePath))
-        {
-            System.Windows.Forms.MessageBox.Show("Winrar not founded!");
-            return;
-        }
-        rarExePath = Path.Combine(rarExePath, "Rar.exe");
-        using (Process processo = new Process())
-        {
-            string path = GetTempDir();
-            processo.StartInfo.FileName = rarExePath;
-            processo.StartInfo.Arguments = string.Format("x \"{0}\" \"{1}\"", rarFile, path);
-            processo.StartInfo.UseShellExecute = false;
-            processo.StartInfo.RedirectStandardOutput = true;
-            processo.StartInfo.CreateNoWindow = true;
-
-            processo.Start();
-            processo.WaitForExit();
-            processFolder(path);
-        }
-    }
-    private string GetTempDir()
-    {
-        string path = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
-        Directory.CreateDirectory(path);
-        return path;
-    }
-    private string FindWinrarPath()
-    {
-        string[] paths = { @"C:\Program Files\WinRAR", @"C:\Program Files (x86)\WinRAR" };
-
-        foreach (string path in paths)
-        {
-            if (Directory.Exists(path))
-            {
-                return path;
-            }
-        }
-        string chaveRegistro = @"SOFTWARE\WinRAR";
-        using (RegistryKey key = Registry.LocalMachine.OpenSubKey(chaveRegistro))
-        {
-            if (key != null)
-            {
-                object valor = key.GetValue("Path");
-                if (valor != null)
+                if (currentElement != null)
                 {
-                    return valor.ToString();
+                    currentElement = currentElement
+                        .Elements("container")
+                        .Elements("itemData")
+                        .FirstOrDefault(e => (string)e.Attribute("text") == path);
+                }
+
+                if (currentElement == null)
+                {
+                    return null;
                 }
             }
+
+            return currentElement;
         }
-        var openFileDialog = new System.Windows.Forms.OpenFileDialog();
-        openFileDialog.Title = "Select WinRAR.exe";
-        openFileDialog.Filter = "Rar.exe (Rar.exe)|*.exe";
-        openFileDialog.Multiselect = false;
-
-        if (openFileDialog.ShowDialog() == DialogResult.OK)
+        private void processZip(string zipFile)
         {
-            return openFileDialog.FileName;
+            try
+            {
+                string path = GetTempDir();
+                ZipFile.ExtractToDirectory(zipFile, path);
+                processFolder(path);
+            }
+            catch (Exception e)
+            {
+                System.Windows.Forms.MessageBox.Show("zip erro!");
+            }
+        }
+
+        private string GetTempDir()
+        {
+            string path = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+            Directory.CreateDirectory(path);
+            return path;
+        }
+
+        private void processFolder(string folderPath)
+        {
+            string[] files = Directory.GetFiles(folderPath);
+            string[] folders = Directory.GetDirectories(folderPath);
+            processFiles2(files);
+            for (int i = 0; i < folders.Length; i++)
+            {
+                processFolder(folders[i]);
+            }
+        }
+        private void processFiles2(string[] files)
+        {
+            SharpCompressManager sharpCompressManager = null;
+            for (int i = 0; i < files.Length; i++)
+            {
+                if (Directory.Exists(files[i]))
+                    processFolder(files[i]);
+                else
+                {
+                    string ext = Path.GetExtension(files[i]).ToLower();
+                    switch (ext)
+                    {
+                        case ".zip":
+                            processZip(files[i]);
+                            break;
+
+                        case ".rar":
+                            if (sharpCompressManager == null)
+                                sharpCompressManager = new SharpCompressManager();
+                            sharpCompressManager.EnqueueFile(files[i]);
+                            break;
+                        case ".gms":
+                            processGMS(files[i]);
+                            break;
+                        case ".ico":
+                            processICO(files[i]);
+                            break;
+                        default:
+                            processOthers(files[i]);
+                            break;
+                    }
+                }
+            }
+            if (sharpCompressManager != null)
+            {
+                sharpCompressManager.ProcessFiles();
+                processFolder(sharpCompressManager.TempPath);
+                //     System.Diagnostics.Process.Start(sharpCompressManager.TempPath);
+
+            }
+        }
+        private void processGMS(string path)
+        {
+            GMSProject gmp = corelApp.GMSManager.Projects.Load(path);
+            GMSMacros macros = gmp.Macros;
+
+            for (int r = 1; r <= macros.Count; r++)
+            {
+                string name = string.Format("{0}.{1}", gmp.Name, macros[r].Name);
+
+                Commands.Add(new MacroCommand(name) { FilePath = path });
+            }
+            gmp.Unload();
 
 
         }
-        return null;
-    }
-    private void processFolder(string folderPath)
-    {
-        string[] files = Directory.GetFiles(folderPath);
-        string[] folders = Directory.GetDirectories(folderPath);
-        processFiles2(files);
-        for (int i = 0; i < folders.Length; i++)
+        private void processICO(string path)
         {
-            processFolder(folders[i]);
+            Icos.Add(path);
         }
-    }
-    private void processFiles2(string[] files)
-    {
-
-        for (int i = 0; i < files.Length; i++)
+        private void processOthers(string path)
         {
-            if (Directory.Exists(files[i]))
-                processFolder(files[i]);
+            try
+            {
+                File.Copy(path, this.corelApp.GMSManager.UserGMSPath);
+
+            }
+            catch { }
+        }
+        private PTYPE getType(string path)
+        {
+            if (Directory.Exists(path))
+                return PTYPE.FOLDER;
             else
             {
-                string ext = Path.GetExtension(files[i]).ToLower();
+                string ext = Path.GetExtension(path).ToLower();
                 switch (ext)
                 {
                     case ".zip":
-                        processZip(files[i]);
-                        break;
-
+                        return PTYPE.ZIP;
                     case ".rar":
-                        processRar(files[i]);
-                        break;
+                        return PTYPE.RAR;
                     case ".gms":
-                        processGMS(files[i]);
-                        break;
+                        return PTYPE.GMS;
                     case ".ico":
-                        processICO(files[i]);
-                        break;
+                        return PTYPE.ICO;
                     default:
-                        processOthers(files[i]);
-                        break;
+                        return PTYPE.OTHERS;
+
+
+
                 }
             }
         }
-    }
-    private void processGMS(string path)
-    {
-        GMSProject gmp = corelApp.GMSManager.Projects.Load(path);
-        GMSMacros macros = gmp.Macros;
-
-        for (int r = 1; r <= macros.Count; r++)
+        enum PTYPE
         {
-            string name = string.Format("{0}.{1}", gmp.Name, macros[r].Name);
-
-            Commands.Add(new MacroCommand(name) { FilePath = path });
+            FOLDER,
+            ZIP,
+            RAR,
+            GMS,
+            ICO,
+            OTHERS
         }
-        gmp.Unload();
-
 
     }
-    private void processICO(string path)
+
+    public class MacroCommand : MMBase
     {
-        Icos.Add(path);
-    }
-    private void processOthers(string path)
-    {
-        try
+        public string FilePath
         {
-            File.Copy(path, this.corelApp.GMSManager.UserGMSPath);
-
+            get;
+            set;
         }
-        catch { }
-    }
-    private PTYPE getType(string path)
-    {
-        if (Directory.Exists(path))
-            return PTYPE.FOLDER;
-        else
+        private string ico;
+        public string Ico
         {
-            string ext = Path.GetExtension(path).ToLower();
-            switch (ext)
+            get { return ico; }
+            set
             {
-                case ".zip":
-                    return PTYPE.ZIP;
-                case ".rar":
-                    return PTYPE.RAR;
-                case ".gms":
-                    return PTYPE.GMS;
-                case ".ico":
-                    return PTYPE.ICO;
-                default:
-                    return PTYPE.OTHERS;
-
-
-
+                ico = value;
+                OnPropertyChanged();
             }
         }
-    }
-    enum PTYPE
-    {
-        FOLDER,
-        ZIP,
-        RAR,
-        GMS,
-        ICO,
-        OTHERS
-    }
 
-}
 
-public class MacroCommand : MMBase
-{
-    public string FilePath
-    {
-        get;
-        set;
-    }
-    private string ico;
-    public string Ico
-    {
-        get { return ico; }
-        set
+        private string command;
+
+        public string Command
         {
-            ico = value;
-            OnPropertyChanged();
+            get { return command; }
+            set { command = value; OnPropertyChanged(); }
+
         }
-    }
+        private bool add;
 
 
-    private string command;
-
-    public string Command
-    {
-        get { return command; }
-        set { command = value; OnPropertyChanged(); }
-
-    }
-    private bool add;
-
-
-    public bool Add
-    {
-        get { return add; }
-        set
+        public bool Add
         {
-            add = value;
-            OnPropertyChanged();
+            get { return add; }
+            set
+            {
+                add = value;
+                OnPropertyChanged();
+            }
         }
-    }
 
-    public MacroCommand()
-    {
+        public MacroCommand()
+        {
+
+        }
+        public MacroCommand(string command)
+        {
+            Command = command;
+        }
 
     }
-    public MacroCommand(string command)
-    {
-        Command = command;
-    }
-
-}
 
 }

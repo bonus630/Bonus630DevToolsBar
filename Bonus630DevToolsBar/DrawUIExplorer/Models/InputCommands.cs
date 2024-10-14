@@ -42,6 +42,16 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
         public void TryHighLightItem(string strItemGuid, string strItemParentGuid)
         {
             core.HighLightItemHelper.ShowHighLightItem(strItemGuid, strItemParentGuid);
+           
+        }  
+        [InCorelAtt(true)]
+        public string TryGetAnyCaption(string strItemGuid)
+        {
+            string result = string.Empty;
+            result = core.TryGetAnyCaption(strItemGuid);
+            if (result.Equals(string.Empty))
+                result = "Caption not founded!";
+            return result;
         }
         [InCorelAtt(true)]
         public void RunMacro(string strMacro)

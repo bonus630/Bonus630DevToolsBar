@@ -475,7 +475,16 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         private void CopyReturnsValue(object o)
         {
             if (o != null)
-                Clipboard.SetText(o.ToString());
+            {
+                if (Utils.IsCollectionOfValueTypeOrString(o))
+                {
+                    Clipboard.SetText(Utils.ConcatenateValues(o));
+                }
+                else
+                {
+                    Clipboard.SetText(o.ToString());
+                }
+            }
         }
         public bool SelectFolder()
         {
