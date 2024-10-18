@@ -128,6 +128,8 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
             string file = Path.Combine(corelApp.AddonPath, "Bonus630DevToolsBar\\Images\\white-quad.png");
             WhiteImage = new System.Windows.Media.Imaging.BitmapImage(new Uri(file));
 
+            if (CheckDocument(this.corelApp.ActiveDocument))
+                PrepareDoc(this.corelApp.ActiveDocument.FileName);
         }
         string docFilePath = string.Empty;
         public void Initialize()
@@ -141,7 +143,7 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
                 {
                     PreparePage(Doc.Pages[1], 16);
                     updateCks();
-                    return;
+                    //return;
                 }
                 corelApp.BeginDraw();
                 int nPages = Doc.Pages.Count;
@@ -178,25 +180,10 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
             {
                 try
                 {
-                    Doc = corelApp.OpenDocument(of.FileName);
-                    if(!CheckDocument(Doc))
-                    {
-                        this.corelApp.MsgShow("This is not valid file!");
+                    if (!CheckDocument(corelApp.OpenDocument(of.FileName)))
                         return;
-                    }    
                     //HasDoc = true;
-                    docFilePath = of.FileName;
-                    lba_DocumentName.Content = Doc.Name;
-                    ExportFolder = PrepareWorkerFolder();
-                    this.corelApp.Unit = cdrUnit.cdrPixel;
-                    Doc.Unit = cdrUnit.cdrPixel;
-                    PreparePreviewFolder();
-                    PrepareFiles(PreviewFolder);
-                    update();
-                    updateCks();
-                    updateImgs();
-                    StartWatcher();
-                    Doc.QueryClose += Doc_QueryClose;
+                    PrepareDoc(of.FileName);
                 }
                 catch (Exception ex)
                 {
@@ -204,6 +191,21 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
                 }
             }
             // startThread();
+        }
+        private void PrepareDoc(string filePath)
+        {
+            docFilePath = filePath;
+            lba_DocumentName.Content = Doc.Name;
+            ExportFolder = PrepareWorkerFolder();
+            this.corelApp.Unit = cdrUnit.cdrPixel;
+            Doc.Unit = cdrUnit.cdrPixel;
+            PreparePreviewFolder();
+            PrepareFiles(PreviewFolder);
+            update();
+            updateCks();
+            updateImgs();
+            StartWatcher();
+            Doc.QueryClose += Doc_QueryClose;
         }
 
         private void Doc_QueryClose(ref bool Cancel)
@@ -218,19 +220,25 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
         {
             try
             {
+                this.Doc = doc;
+                if (this.Doc == null)
+                    return false;
                 for (int i = 0; i < PreFixedSizes.Count; i++)
                 {
                     Page p = GetPageBySize(PreFixedSizes[i]);
                     if (p != null)
                         return true;
                 }
-                
+                this.corelApp.MsgShow("This is not valid Document for this tool!");
+                Doc = null;
                 return false;
             }
             catch
             {
 
             }
+           
+           
             return false;
         }
         private void update()

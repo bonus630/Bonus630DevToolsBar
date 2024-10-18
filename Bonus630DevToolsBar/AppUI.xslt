@@ -25,7 +25,7 @@
 			<itemData guid="9d86b3ac-5c08-4c95-9c22-288173525877"
 					  type="wpfhost"
 					  hostedType="Addons\Bonus630DevToolsBar\Bonus630DevToolsBar.dll,br.com.Bonus630DevToolsBar.ControlUI"
-					  enable="false"
+					  enable="true"
 					  caption="Bonus630DevToolBar"
 					  nonLocalizableName="Bonus630DevToolBar"
 					  

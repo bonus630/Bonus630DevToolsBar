@@ -12,11 +12,12 @@ namespace br.com.Bonus630DevToolsBar.DataSource
 {
     [ComVisible(true)]
     [ClassInterface(ClassInterfaceType.AutoDual)]
+    //[ClassInterface(ClassInterfaceType.None)]
     public class BaseDataSource : INotifyPropertyChanged
     {
         protected DataSourceProxy m_AppProxy;
         protected Application CorelApp;
-        public BaseDataSource(DataSourceProxy proxy,Application corelApp)
+        public BaseDataSource(DataSourceProxy proxy, Application corelApp)
         {
             this.m_AppProxy = proxy;
             this.CorelApp = corelApp;

@@ -7,9 +7,9 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Windows.Interop;
 
 //using System.Windows.Forms;
-using System.Windows.Interop;
 
 
 namespace br.com.Bonus630DevToolsBar.DataSource
@@ -17,6 +17,7 @@ namespace br.com.Bonus630DevToolsBar.DataSource
     [ComVisible(true)]
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [Guid("e441ec18-dfd3-4c7e-86c2-61c3cf3272cb")]
+    //[ClassInterface(ClassInterfaceType.None)]
     public class Bonus630DevToolsBarDataSource : BaseDataSource
     {
 
@@ -33,14 +34,14 @@ namespace br.com.Bonus630DevToolsBar.DataSource
 
         public Bonus630DevToolsBarDataSource(DataSourceProxy proxy, Corel.Interop.VGCore.Application corelApp) : base(proxy, corelApp)
         {
-     
+
         }
 
 
 
         // You can change caption/icon dynamically setting a new value here 
         //or loading the value from resource specifying the id of the caption/icon 
-     
+
         public string Caption
         {
             get { return caption; }
@@ -99,7 +100,7 @@ namespace br.com.Bonus630DevToolsBar.DataSource
                 cqlContext = value;
                 NotifyPropertyChanged();
             }
-        }    
+        }
         private bool shortcutDockerFirstUse = true;
 
         public bool ShortcutDockerFirstUse
@@ -111,7 +112,7 @@ namespace br.com.Bonus630DevToolsBar.DataSource
                 NotifyPropertyChanged();
             }
         }
-   
+
         public string ReOpenDocumentCaption
         {
             get { return reopenDocumentCaption; }
@@ -129,7 +130,7 @@ namespace br.com.Bonus630DevToolsBar.DataSource
 
                 return "<placeholderData> " +
                     "<itemData guid=\"1752053c-096c-4534-90b2-af8b101abac3\" />" +
-                  
+
                     " </placeholderData>";
             }
             set {; }
@@ -292,23 +293,23 @@ namespace br.com.Bonus630DevToolsBar.DataSource
                 path = CorelApp.ActiveDocument.FilePath;
                 file = CorelApp.ActiveDocument.FileName;
             }
-           PrintScreen.Cropper cropper = new PrintScreen.Cropper(CorelApp);
-           cropper.SetFolderPath(file, path);
-           cropper.Show(); 
+            PrintScreen.Cropper cropper = new PrintScreen.Cropper(CorelApp);
+            cropper.SetFolderPath(file, path);
+            cropper.Show();
         }
-      
+
         public void CallFolders()
         {
             CorelApp.FrameWork.Automation.InvokeItem("d13b83a4-3ef6-4ead-b95d-44d467dc47f5");
-        } 
+        }
         public void CallCQL()
         {
             CorelApp.FrameWork.Automation.InvokeItem("8a8ca94c-cc61-4f14-b24d-cbd447d2fd56");
-        } 
+        }
         public void CallGMSReloader()
         {
             CorelApp.FrameWork.Automation.InvokeItem("b0a4b2ff-7bf5-47c3-a92a-16e2a4520746");
-        }  
+        }
         public void ReOpenDocument()
         {
             try
@@ -327,11 +328,11 @@ namespace br.com.Bonus630DevToolsBar.DataSource
                     CorelApp.ActiveWindow.ActiveView.GetViewArea(out x, out y, out w, out h);
                     activePage = CorelApp.ActivePage.Index;
                     string path = CorelApp.ActiveDocument.FullFileName;
-                    
+
                     CorelApp.BeginDraw();
                     CorelApp.ActiveDocument.Close();
                     CorelApp.OpenDocument(path);
-                    if(CorelApp.ActiveDocument.Pages.Count >= activePage)
+                    if (CorelApp.ActiveDocument.Pages.Count >= activePage)
                         CorelApp.ActiveDocument.Pages[activePage].Activate();
                     CorelApp.ActiveWindow.ActiveView.SetViewArea(x, y, w, h);
                     try
@@ -349,7 +350,7 @@ namespace br.com.Bonus630DevToolsBar.DataSource
             }
             catch { }
         }
-        
+
     }
 
 }

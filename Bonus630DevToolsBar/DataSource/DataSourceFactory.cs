@@ -27,7 +27,7 @@ namespace br.com.Bonus630DevToolsBar.DataSource
         {
             foreach (string name in DataSourceList.Keys)
             {
-                ControlUI.corelApp.FrameWork.Application.RegisterDataSource(name, this);
+                bool registred = ControlUI.corelApp.FrameWork.Application.RegisterDataSource(name, this);
             }
         }
         public void CreateDataSource(string DataSourceName, DataSourceProxy Proxy, out object ppVal)
