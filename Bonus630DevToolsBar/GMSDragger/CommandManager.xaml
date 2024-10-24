@@ -26,43 +26,52 @@
         </ResourceDictionary>
 
     </Window.Resources>
-    <StackPanel>
-        <GroupBox Header="Check Macro command and icon.:" Margin="10,10,10,0">
-            <Grid Grid.IsSharedSizeScope="True">
-                <ItemsControl ItemsSource="{Binding Commands}" Margin="10">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Grid  Height="40">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" SharedSizeGroup="Column1" />
-                                    <ColumnDefinition Width="Auto" SharedSizeGroup="Column2" />
-                                </Grid.ColumnDefinitions>
-                                <CheckBox Grid.Column="0" IsChecked="{Binding Add}" Content="{Binding Command}" VerticalAlignment="Center"/>
+    <DockPanel LastChildFill="True">
+        <StackPanel DockPanel.Dock="Bottom"  Orientation="Horizontal" Margin="10" >
+            <Button Content="Put to bar" Click="Button_Click" Height="40" Width="140" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" 
+                    ToolTip="Adds the selected commands and icons to the selected toolbar." />
 
-                                <ComboBox Grid.Column="1" ItemsSource="{Binding Path=DataContext.Icos, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type Window}}}" Height="40" Width="66" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Margin="10,0,10,0">
-                                    <ComboBox.ItemTemplate>
-                                        <DataTemplate>
-                                            <Image Width="32" Height="32" Source="{Binding Converter={StaticResource PathToImageConverter}}" />
-                                        </DataTemplate>
-                                    </ComboBox.ItemTemplate>
-                                    <ComboBox.SelectedItem>
-                                        <Binding Path="Ico" Mode="TwoWay" />
-                                    </ComboBox.SelectedItem>
-                                </ComboBox>
-                            </Grid>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </Grid>
-        </GroupBox>
-        <GroupBox Header="Choose a  CommandBar.:" Margin="10,0,10,0">
-            <ComboBox ItemsSource="{Binding CommandBars}" IsEditable="True" Text="{Binding NewCommandBar,Mode=TwoWay}" SelectedItem="{Binding SelectedCommandBar}" Margin="10" VerticalContentAlignment="Center"/>
-        </GroupBox>
-        <StackPanel Orientation="Horizontal" Margin="10" >
-            <Button Content="Put to bar" Click="Button_Click" Height="40" Width="140" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />
-
-            <Button Content="Just copy" Name="btn_copy" Click="btn_copy_Click" Height="40" Width="80" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="10,0,0,0"/>
-            <Button Content="Cancel" x:Name="btn_cancel" Click="btn_cancel_Click" Height="40" Width="80" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="10,0,0,0"/>
+            <Button Content="Just copy" Name="btn_copy" Click="btn_copy_Click" Height="40" Width="80" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" 
+                    Margin="10,0,0,0" ToolTip="Only copies the gms associated with the selected commands."/>
+            <Button Content="Cancel" x:Name="btn_cancel" Click="btn_cancel_Click" Height="40" Width="80" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" 
+                    Margin="10,0,0,0"/>
         </StackPanel>
-    </StackPanel>
+        <GroupBox DockPanel.Dock="Bottom" Header="Choose a  CommandBar.:" Margin="10,0,10,0">
+            <ComboBox ItemsSource="{Binding CommandBars}" IsEditable="True" Text="{Binding NewCommandBar,Mode=TwoWay}" SelectedItem="{Binding SelectedCommandBar}" Margin="10" VerticalContentAlignment="Center"
+                      ToolTip="Select a command bar or type a new name to create a new one."/>
+        </GroupBox>
+        <GroupBox Header="Check Macro command and icon.:" Margin="10,10,10,0">
+            <ScrollViewer  VerticalScrollBarVisibility="Auto">
+                <Grid Grid.IsSharedSizeScope="True">
+
+                    <ItemsControl ItemsSource="{Binding Commands}" Margin="10" >
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid  Height="40">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" SharedSizeGroup="Column1" />
+                                        <ColumnDefinition Width="Auto" SharedSizeGroup="Column2" />
+                                    </Grid.ColumnDefinitions>
+                                    <CheckBox Grid.Column="0" IsChecked="{Binding Add}" Content="{Binding Command}" VerticalAlignment="Center" ToolTip="Check to add command"/>
+
+                                    <ComboBox Grid.Column="1" ItemsSource="{Binding Path=DataContext.Icos, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type Window}}}" Height="40" Width="66" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Margin="10,0,10,0"
+                                              ToolTip="Choose the icon for this command">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <Image Width="32" Height="32" Source="{Binding Converter={StaticResource PathToImageConverter}}" />
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                        <ComboBox.SelectedItem>
+                                            <Binding Path="Ico" Mode="TwoWay" />
+                                        </ComboBox.SelectedItem>
+                                    </ComboBox>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                </Grid>
+            </ScrollViewer>
+        </GroupBox>
+    </DockPanel>
 </Window>
