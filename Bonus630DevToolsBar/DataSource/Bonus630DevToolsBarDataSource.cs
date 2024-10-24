@@ -261,6 +261,17 @@ namespace br.com.Bonus630DevToolsBar.DataSource
             }
             catch { }
         }
+        public void RunGuidGen()
+        {
+            try
+            {
+                string path = Path.Combine(CorelApp.AddonPath,
+               ControlUI.AddonFolderName, "GuidGen.exe");
+
+               System.Diagnostics.Process.Start(path);
+            }
+            catch { }
+        }
         public void LoadIcon()
         {
             System.Windows.Forms.OpenFileDialog of = new System.Windows.Forms.OpenFileDialog();

@@ -262,6 +262,7 @@
     <Compile Include="Converters\MultiItemConverter.cs" />
     <Compile Include="Converters\NormalizeImagePathConverter.cs" />
     <Compile Include="Converters\PathToImageConverter.cs" />
+    <Compile Include="Converters\StringArrayToStringConverter.cs" />
     <Compile Include="Converters\StringLenToVisibilityConverter.cs" />
     <Compile Include="Converters\TypeToBoolConverter.cs" />
     <Compile Include="CQLRunner\CQLModel.cs" />
@@ -290,6 +291,7 @@
     <Compile Include="CustomControls\SVGButton.xaml.cs">
       <DependentUpon>SVGButton.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DrawUIExplorer\DataClass\DynamicData.cs" />
     <Compile Include="DrawUIExplorer\DataClass\TableData.cs" />
     <Compile Include="DrawUIExplorer\Models\BlockingObservableCollection.cs" />
     <Compile Include="Folders\Folder.cs" />
@@ -640,6 +642,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="DrawUIExplorer.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="GuidGen.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="GuidGen.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="IconLib.dll">

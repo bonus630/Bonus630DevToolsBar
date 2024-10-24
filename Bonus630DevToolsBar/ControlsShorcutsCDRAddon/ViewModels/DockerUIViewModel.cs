@@ -12,6 +12,8 @@ using System.Linq;
 using System.Net.Configuration;
 using System.Diagnostics.Eventing.Reader;
 using br.com.Bonus630DevToolsBar.DrawUIExplorer.Models;
+using System.Xml;
+using br.com.Bonus630DevToolsBar.DrawUIExplorer.DataClass;
 
 
 namespace br.com.Bonus630DevToolsBar.ControlsShorcutsCDRAddon.ViewModels
@@ -104,7 +106,11 @@ namespace br.com.Bonus630DevToolsBar.ControlsShorcutsCDRAddon.ViewModels
                         Boolean.TryParse(obj.Childrens[i].Childrens[0].GetAttribute(altAttribute), out alt);
                         s.Alt = alt;
                         if (obj.Childrens[i].Childrens[0].Childrens.Count > 0)
-                            s.Key = obj.Childrens[i].Childrens[0].Childrens[0].Text.Replace("VK", "");
+                        {
+                            s.Key = new string[obj.Childrens[i].Childrens[0].Childrens.Count];
+                            for(int j = 0;j< s.Key.Length;j++)
+                                s.Key[j] = obj.Childrens[i].Childrens[0].Childrens[j].Text.Replace("VK", "");
+                        }
                         Boolean.TryParse(obj.Childrens[i].Childrens[0].GetAttribute(shiftAttribute), out shift);
                         s.Shift = shift;
                         Boolean.TryParse(obj.Childrens[i].Childrens[0].GetAttribute(ctrlAttribute), out control);
@@ -112,6 +118,10 @@ namespace br.com.Bonus630DevToolsBar.ControlsShorcutsCDRAddon.ViewModels
                     }
                     s.Guid = obj.Childrens[i].GetAttribute(itemRef);
                     s.Name = this.GetCaption(s.Guid, true);
+                    if(string.IsNullOrEmpty(s.Name))
+                    {
+                        s.Name = GetCaptionFromWorkspace(s.Guid);
+                    }
                     dispatcher.Invoke(() =>
                     {
                         if (!this.AllItems.Contains(s))
@@ -136,6 +146,31 @@ namespace br.com.Bonus630DevToolsBar.ControlsShorcutsCDRAddon.ViewModels
             {
                 return e.Message;
             }
+        }
+        private bool workspaceRequestItems = true;
+        private string GetCaptionFromWorkspace(string itemGuid)
+        {
+            if (workspaceRequestItems)
+            {
+                string filePath = string.Format("{0}\\ExtractWorkspace{1}.xml", core.WorkerFolder, this.corelApp.VersionMajor);
+                IBasicData basicData = core.XmlDecoder.GetItemDataByGuidFromXml(filePath, itemGuid);
+                if (basicData == null)
+                    return "";
+                else
+                return basicData.Caption;
+                //XmlDocument xmlDocument = new XmlDocument();
+                //string xmlString = File.ReadAllText(filePath);
+                //try
+                //{
+                //    xmlDocument.LoadXml(xmlString);
+                //}
+                //catch (XmlException erro)
+                //{
+                //    throw erro;
+                //}
+                //core.XmlDecoder.LoadXmlNodes(core.ListPrimaryItens, xmlDocument.ChildNodes.Item(1).SelectSingleNode("items"));
+            }
+            return "";
         }
         private void Core_LoadListsFinish()
         {
@@ -192,7 +227,7 @@ namespace br.com.Bonus630DevToolsBar.ControlsShorcutsCDRAddon.ViewModels
                 if (SearchTerm.Length == 1)
                     Shortcuts = new ObservableCollection<Shortcut>(
                    AllItems.Where<Shortcut>(item => item.Name.StartsWith(SearchTerm, StringComparison.OrdinalIgnoreCase) ||
-                   item.Key.StartsWith(SearchTerm, StringComparison.OrdinalIgnoreCase)));
+                   item.Key[0].StartsWith(SearchTerm, StringComparison.OrdinalIgnoreCase)));
                 else
                     Shortcuts = new ObservableCollection<Shortcut>(
                         AllItems.Where<Shortcut>(item => item.Name.IndexOf(SearchTerm, StringComparison.OrdinalIgnoreCase) >= 0

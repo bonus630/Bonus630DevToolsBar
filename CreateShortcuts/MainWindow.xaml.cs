@@ -48,7 +48,7 @@ namespace CreateShortcuts
             shortcut.Save();
         }
 
-        private void CheckBox_Click(object sender, RoutedEventArgs e)
+        private void ck_drawui_Click(object sender, RoutedEventArgs e)
         {
             if ((bool)ck_drawui.IsChecked)
                 shortcuts.Add("DrawUIExplorer.exe");
@@ -56,15 +56,22 @@ namespace CreateShortcuts
                 shortcuts.Remove("DrawUIExplorer.exe");
         }
 
-        private void CheckBox_Click_1(object sender, RoutedEventArgs e)
+        private void ck_commandbar_Click(object sender, RoutedEventArgs e)
         {
-            if ((bool)ck_drawui.IsChecked)
+            if ((bool)ck_commandbar.IsChecked)
                 shortcuts.Add("CDRCommandBarBuilder.exe");
             else
                 shortcuts.Remove("CDRCommandBarBuilder.exe");
         }
+        private void ck_guidgen_Click(object sender, RoutedEventArgs e)
+        {
+            if ((bool)ck_guidgen.IsChecked)
+                shortcuts.Add("GuidGen.exe");
+            else
+                shortcuts.Remove("GuidGen.exe");
+        }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void btn_ok_Click(object sender, RoutedEventArgs e)
         {
             for (int i = 0; i < shortcuts.Count; i++)
             {
@@ -73,9 +80,10 @@ namespace CreateShortcuts
             this.Close();
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void btn_cancle_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }
+
     }
 }

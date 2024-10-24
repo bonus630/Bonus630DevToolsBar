@@ -136,7 +136,7 @@
       <Command>printscreen</Command>
       <Enable>true</Enable>
       <Shortcut>shift+p</Shortcut>
-      <Icon>C:\Users\bonus\AppData\Local\Temp\tmp1683.ico</Icon>
+      <Icon>C:\Users\bonus\AppData\Local\Temp\tmpDA62.ico</Icon>
     </CommandItem>
     <CommandItem id="15">
       <GmsFileId>0</GmsFileId>
@@ -146,6 +146,15 @@
       <Shortcut>
       </Shortcut>
       <Icon>D:\C# Ed26-08-22\Bonus630DevToolsBar\Assets\Icons\Reload.ico</Icon>
+    </CommandItem>
+    <CommandItem id="16">
+      <GmsFileId>0</GmsFileId>
+      <Caption>GuidGen</Caption>
+      <Command>GuidGen</Command>
+      <Enable>true</Enable>
+      <Shortcut>
+      </Shortcut>
+      <Icon>D:\C# Ed26-08-22\Bonus630DevToolsBar\Assets\Icons\GuidGen.ico</Icon>
     </CommandItem>
   </Commands>
 </CommandBar>

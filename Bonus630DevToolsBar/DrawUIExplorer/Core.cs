@@ -17,7 +17,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
 {
     public class Core : IDisposable
     {
-        XMLDecoder xmlDecoder;
+        public XMLDecoder XmlDecoder { get; protected set; }
         WorkspaceUnzip workspaceUnzip;
         public string WorkerFolder { get; private set; }
 
@@ -141,8 +141,8 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
                 return;
             }
             inputCommands = new InputCommands(this);
-            xmlDecoder = new XMLDecoder();
-            xmlDecoder.LoadFinish += XmlDecoder_LoadFinish;
+            XmlDecoder = new XMLDecoder();
+            XmlDecoder.LoadFinish += XmlDecoder_LoadFinish;
             Thread thread = new Thread(new ParameterizedThreadStart(LoadFile));
             thread.IsBackground = true;
             thread.Start(file);
@@ -183,8 +183,8 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
                 DispactchNewMessage(ioErro.Message, MsgType.Erro);
                 return;
             }
-            xmlDecoder = new XMLDecoder();
-            xmlDecoder.LoadFinish += XmlDecoder_LoadFinish;
+            XmlDecoder = new XMLDecoder();
+            XmlDecoder.LoadFinish += XmlDecoder_LoadFinish;
             Thread thread = new Thread(new ParameterizedThreadStart(LoadFile));
             thread.IsBackground = true;
             thread.Start(file);
@@ -195,7 +195,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
             //vamos refatoral isso depois
             this.app = corelApp;
             FileInfo file = null;
-            xmlDecoder = new XMLDecoder();
+            XmlDecoder = new XMLDecoder();
             try
             {
                 FileInfo[] fileOri = new FileInfo[filesPath.Count];
@@ -214,7 +214,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
                             File.Delete(t);
                         try
                         {
-                            xmlDecoder.ExtractTagsToNewXml(filesPath[i], t, listTags);
+                            XmlDecoder.ExtractTagsToNewXml(filesPath[i], t, listTags);
                             files.Add(t);
                         }
                         catch (Exception e)
@@ -222,7 +222,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
                             Debug.WriteLine(e.Message);
                         }
                     }
-                    xmlDecoder.MergeXmlFilesForTags(listTags, files, newPath);
+                    XmlDecoder.MergeXmlFilesForTags(listTags, files, newPath);
                 }
                 file = new FileInfo(newPath);
             }
@@ -231,7 +231,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
                 DispactchNewMessage(ioErro.Message, MsgType.Erro);
                 return;
             }
-            xmlDecoder.LoadFinish += XmlDecoder_LoadFinish;
+            XmlDecoder.LoadFinish += XmlDecoder_LoadFinish;
             Thread thread = new Thread(new ParameterizedThreadStart(LoadFile));
             thread.IsBackground = true;
             thread.Start(file);
@@ -411,16 +411,16 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
         }
         public bool IsXMLString(string text)
         {
-            return xmlDecoder.IsXMLString(text);
+            return XmlDecoder.IsXMLString(text);
         }
         public string FormatXml(string xml)
         {
-            return xmlDecoder.Beautify(xml);
+            return XmlDecoder.Beautify(xml);
         }
         private void XmlDecoder_LoadFinish()
         {
             if (this.LoadXmlFinish != null)
-                LoadXmlFinish(xmlDecoder.XmlString);
+                LoadXmlFinish(XmlDecoder.XmlString);
 
         }
 
@@ -506,7 +506,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
 
         public string GetXml(IBasicData basicData, bool xmlHeader = true)
         {
-            return xmlDecoder.GetXml(basicData, xmlHeader);
+            return XmlDecoder.GetXml(basicData, xmlHeader);
         }
         private void SearchEngine_SearchResultEvent(IBasicData obj)
         {
@@ -558,7 +558,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
                 if (FilePorcentLoad != null)
                     FilePorcentLoad(porcent);
             }
-            xmlDecoder.XmlString = sb.ToString();
+            XmlDecoder.XmlString = sb.ToString();
             if (LoadStarting != null)
                 LoadStarting(true, "Deserializing xml");
             sb = null;
@@ -568,7 +568,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
                 workspaceUnzip.Dispose();
             try
             {
-                xmlDecoder.Process(file.FullName);
+                XmlDecoder.Process(file.FullName);
             }
             catch (Exception erro)
             {
@@ -576,7 +576,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
                 return;
             }
 
-            ListPrimaryItens = xmlDecoder.FirstItens;
+            ListPrimaryItens = XmlDecoder.FirstItens;
             searchEngine = new SearchEngine();
             searchEngine.SearchResultEvent += SearchEngine_SearchResultEvent;
             searchEngine.GenericSearchResultEvent += SearchEngine_GenericSearchResultEvent;
@@ -698,7 +698,12 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
         //}
         public string TryGetAnyCaption(string itemGuid)
         {
-            IBasicData data = searchEngine.SearchItemFromGuid(this.ListPrimaryItens, itemGuid);
+            return TryGetAnyCaption(itemGuid, this.ListPrimaryItens);
+           
+        }
+        public string TryGetAnyCaption(string itemGuid, IBasicData basicData)
+        {
+            IBasicData data = searchEngine.SearchItemFromGuid(basicData, itemGuid);
             if (data != null)
                 return TryGetAnyCaption(data);
             return string.Empty;
@@ -765,7 +770,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
         {
             try
             {
-                int line = xmlDecoder.GetLineNumber(basicData);
+                int line = XmlDecoder.GetLineNumber(basicData);
                 if (line == -1)
                 {
                     DispactchNewMessage("Error when trying to find the line number", MsgType.Erro);
@@ -799,7 +804,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
             }
             inputCommands = null;
             //commands = null;
-            xmlDecoder = null;
+            XmlDecoder = null;
             CorelAutomation = null;
             this.HighLightItemHelper = null;
             ResourcesExtractor = null;

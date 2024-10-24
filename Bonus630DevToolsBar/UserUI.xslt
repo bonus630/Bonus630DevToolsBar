@@ -56,6 +56,10 @@
 				<xsl:if test="not(./item[@guidRef='13d17830-0ba8-4f71-85e0-6df0a1051eee'])">
 				<item guidRef="13d17830-0ba8-4f71-85e0-6df0a1051eee"/>
 			</xsl:if>
+			<!--GuidGen-->
+				<xsl:if test="not(./item[@guidRef='18f26b28-7ec8-4f46-a686-c1bb45a28d2d'])">
+				<item guidRef="18f26b28-7ec8-4f46-a686-c1bb45a28d2d"/>
+			</xsl:if>	
 			<!--CommandBar Builder-->
 				<xsl:if test="not(./item[@guidRef='f9691f7a-27cc-405b-b2f4-de164246bcbd'])">
 				<item guidRef="f9691f7a-27cc-405b-b2f4-de164246bcbd"/>

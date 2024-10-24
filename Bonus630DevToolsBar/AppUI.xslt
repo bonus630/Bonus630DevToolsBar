@@ -124,6 +124,11 @@
 					hostedType="Addons\Bonus630DevToolsBar\Bonus630DevToolsBar.dll,br.com.Bonus630DevToolsBar.GMSDragger.GMSLoader"
 					enable="true"/>
 
+			<!-- GuidGen-->
+			<itemData guid="18f26b28-7ec8-4f46-a686-c1bb45a28d2d"
+					 onInvoke="*Bind(DataSource=Bonus630DevToolsBarDS;Path=RunGuidGen)"
+					  icon="guid://18f26b28-7ec8-4f46-a686-c1bb45a28d2d"
+					  type="button"  enable="true" />
 			<!-- Command Bar Builder-->
 			<itemData guid="f9691f7a-27cc-405b-b2f4-de164246bcbd"
 					 onInvoke="*Bind(DataSource=Bonus630DevToolsBarDS;Path=RunCommandBarBuilder)"
@@ -257,48 +262,50 @@
 					<item  guidRef="3b3f72b8-0129-4316-b8a3-40e4758ba9bc" />
 					<!--8 Macro Manager-->
 					<item guidRef="13d17830-0ba8-4f71-85e0-6df0a1051eee" dock="top" />
-					<!--9 CommandBar Builder-->
+					<!--9 GuidGen-->
+					<item guidRef="18f26b28-7ec8-4f46-a686-c1bb45a28d2d" dock="top" />
+					<!--10 CommandBar Builder-->
 					<item guidRef="f9691f7a-27cc-405b-b2f4-de164246bcbd" dock="top" />
-					<!--10 Reload Gms -->
+					<!--11 Reload Gms -->
 					<item  guidRef="9b07d7af-da14-4cd8-9db9-7da214ee1d4a" dock="top"/>
-					<!--11 Unload and Delete GMS -->
+					<!--12 Unload and Delete GMS -->
 					<item  guidRef="571db7b2-8cae-4b99-b241-a56ecd61f90e" dock="top"/>
-					<!--12 Separator-->
+					<!--13 Separator-->
 					<item guidRef="266435b4-6e53-460f-9fa7-f45be187d400" />
 
-					<!--13 CqlRunner -->
+					<!--14 CqlRunner -->
 					<item  guidRef="51b24cfb-b8df-411f-886c-4c5520e931a4" />
-					<!--14 CqlHelp -->
+					<!--15 CqlHelp -->
 					<item  guidRef="d61f1ede-79aa-4255-8f96-307e6f63c204" />
-					<!--15 Separator-->
+					<!--16 Separator-->
 					<item guidRef="266435b4-6e53-460f-9fa7-f45be187d400" />
-					<!--16 Folders-->
+					<!--17 Folders-->
 					<item guidRef="680d03b3-2da0-4314-bc79-fa6b26471e22" />
 
-					<!--17 Separator-->
+					<!--18 Separator-->
 					<item guidRef="266435b4-6e53-460f-9fa7-f45be187d400" />
 
-					<!--18 Icon Toolset -->
+					<!--19 Icon Toolset -->
 					<item guidRef="d0a371e7-9fad-4e1c-8159-b285d67c0497" />
-					<!--19 Icon test slot loader-->
+					<!--20 Icon test slot loader-->
 					<item guidRef="657042cb-3594-43a1-80bf-c8a27fd43146" />
 
-					<!--20 Theme-->
+					<!--21 Theme-->
 					<item guidRef="c7203f61-2886-4bf1-bdbd-7ed54af38659" />
-
-					<!--20 Separator-->
-					<item guidRef="266435b4-6e53-460f-9fa7-f45be187d400" />
-					<!--21 PrintScreen-->
-					<item guidRef="b5c5d8c0-e3d0-44dd-822f-2e61190c870b" />
 
 					<!--22 Separator-->
 					<item guidRef="266435b4-6e53-460f-9fa7-f45be187d400" />
+					<!--23 PrintScreen-->
+					<item guidRef="b5c5d8c0-e3d0-44dd-822f-2e61190c870b" />
 
-					<!--23 Reopen Active Document -->
+					<!--24 Separator-->
+					<item guidRef="266435b4-6e53-460f-9fa7-f45be187d400" />
+
+					<!--25 Reopen Active Document -->
 					<item  guidRef="948fe4ae-3a3f-4052-9194-7354476d3b1a"/>
 
 
-					<!--24 Recent Files -->
+					<!--26 Recent Files -->
 					<item  guidRef="7d15e9c7-2431-4841-a5aa-9eaa5b581230" dock="fill"/>
 					<!--<item  guidRef="118bad9e-cab3-4810-883e-843626f798ae" dock="top"/>-->
 
@@ -421,35 +428,37 @@
 				<!--<item  guidRef="3b3f72b8-0129-4316-b8a3-40e4758ba9bc" />-->
 				<!--8 Macro Manager-->
 				<!--<item guidRef="13d17830-0ba8-4f71-85e0-6df0a1051eee" />-->
-				<!--9 CommandBar Builder-->
+				<!--9 GuidGen-->
+				<item guidRef="18f26b28-7ec8-4f46-a686-c1bb45a28d2d" />
+				<!--10 CommandBar Builder-->
 				<item guidRef="f9691f7a-27cc-405b-b2f4-de164246bcbd" />
-				<!--10 Reload Gms -->
+				<!--11 Reload Gms -->
 				<!--<item  guidRef="9b07d7af-da14-4cd8-9db9-7da214ee1d4a" />-->
 				<item  guidRef="f5f80b6a-5ca4-42e1-84df-6f51b728bb89" />
-				<!--11 Unload and Delete GMS -->
+				<!--12 Unload and Delete GMS -->
 				<item  guidRef="571db7b2-8cae-4b99-b241-a56ecd61f90e" />
 
 
-				<!--12 CqlRunner -->
+				<!--13 CqlRunner -->
 				<!--<item  guidRef="51b24cfb-b8df-411f-886c-4c5520e931a4" />-->
 				<item  guidRef="4eb59647-454a-45d2-9bec-dc7942e0f4d3" />
-				<!--13 CqlHelp -->
+				<!--14 CqlHelp -->
 				<item  guidRef="d61f1ede-79aa-4255-8f96-307e6f63c204" />
 
-				<!--16 Folders-->
+				<!--17 Folders-->
 				<!--<item guidRef="680d03b3-2da0-4314-bc79-fa6b26471e22" />-->
 				<item guidRef="bc914454-91d6-490c-ac9e-e5b630b80d20" />
 
-				<!--18 IconCreatorHelper-->
+				<!--19 IconCreatorHelper-->
 				<item guidRef="d0a371e7-9fad-4e1c-8159-b285d67c0497" />
-				<!--19 IconCreatorHelper loader-->
+				<!--20 IconCreatorHelper loader-->
 				<item guidRef="657042cb-3594-43a1-80bf-c8a27fd43146" />
-				<!--21 PrintScreen-->
+				<!--22 PrintScreen-->
 				<item guidRef="b5c5d8c0-e3d0-44dd-822f-2e61190c870b" />
-				<!--22 Reopen Active Document -->
+				<!--23 Reopen Active Document -->
 				<item  guidRef="948fe4ae-3a3f-4052-9194-7354476d3b1a"/>
 
-				<!--21 Recent Files -->
+				<!--22 Recent Files -->
 				<!--<item  guidRef="7d15e9c7-2431-4841-a5aa-9eaa5b581230" />-->
 
 

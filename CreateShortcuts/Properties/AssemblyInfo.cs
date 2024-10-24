@@ -10,7 +10,7 @@ using System.Windows;
 [assembly: AssemblyTitle("CreateShortcuts")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("bonus630")]
 [assembly: AssemblyProduct("CreateShortcuts")]
 [assembly: AssemblyCopyright("Copyright ©  2024")]
 [assembly: AssemblyTrademark("")]

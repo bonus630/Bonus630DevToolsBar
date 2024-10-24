@@ -11,7 +11,8 @@ namespace br.com.Bonus630DevToolsBar.ControlsShorcutsCDRAddon.Models
     {
         public Shortcut()
         {
-            Key = String.Empty;
+            Key = new string[] {
+            String.Empty };
         }
 
         public string Name { get; set; }
@@ -19,7 +20,7 @@ namespace br.com.Bonus630DevToolsBar.ControlsShorcutsCDRAddon.Models
         public bool Control { get; set; }
         public bool Shift { get; set; }
         public bool Alt { get; set; }
-        public string Key { get; set; }
+        public string[] Key { get; set; }
 
         public override bool Equals(object obj)
         {

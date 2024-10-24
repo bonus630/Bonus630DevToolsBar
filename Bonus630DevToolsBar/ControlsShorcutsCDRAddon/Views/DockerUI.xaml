@@ -5,10 +5,12 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:br.com.Bonus630DevToolsBar.ControlsShorcutsCDRAddon"
              xmlns:custom="clr-namespace:br.com.Bonus630DevToolsBar.CustomControls"
+             xmlns:converters="clr-namespace:br.com.Bonus630DevToolsBar.Converters"
              mc:Ignorable="d" 
              MinWidth="225" Loaded="UserControl_Loaded">
     <UserControl.Resources>
         <ResourceDictionary>
+            <converters:StringArrayToStringConverter x:Key="StringArrayToStringConverter" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/Images/Images.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/RunCommandDocker/Styles/Colors.xaml"/>
@@ -17,6 +19,7 @@
                 <ResourceDictionary Source="pack://application:,,,/Bonus630DevToolsBar;component/RunCommandDocker/Styles/ListComponentsStyles.xaml"/>
 
             </ResourceDictionary.MergedDictionaries>
+            
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
@@ -91,7 +94,7 @@
                         <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal">
                             <StackPanel Orientation="Horizontal">
                                 <Label Content="Key:" FontSize="11"/>
-                                <Label Content="{Binding Key}" FontSize="11" FontWeight="Bold" />
+                                <Label Content="{Binding Key,Converter={StaticResource StringArrayToStringConverter}}" FontSize="11" FontWeight="Bold" />
                             </StackPanel>
 
                         </StackPanel>

@@ -495,8 +495,8 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
             try
             {
                 value = value.Trim('\"');
-                string module = value.Substring(0, value.LastIndexOf("."));
-                string macro = value.Substring(value.LastIndexOf(".") + 1, value.Length - (module.Length + 1));
+                string module = value.Substring(0, value.IndexOf("."));
+                string macro = value.Substring(value.IndexOf(".") + 1, value.Length - (module.Length + 1));
                 object o = this.CorelApp.GMSManager.RunMacro(module, macro, args);
                 core.DispactchNewMessage("{0}", MsgType.Console, o);
             }

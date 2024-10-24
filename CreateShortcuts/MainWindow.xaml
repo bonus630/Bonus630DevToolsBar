@@ -5,18 +5,20 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CreateShortcuts"
         mc:Ignorable="d"
-        Title="Bonus630DevToolBar Installer" Width="340" Height="190" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" >
+        Title="Bonus630DevToolBar Installer" Width="340" Height="240" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" >
     <Grid Margin="10,0,0,0">
        
         <Grid.RowDefinitions>
             <RowDefinition Height="40" />
             <RowDefinition Height="40" />
             <RowDefinition Height="40" />
+            <RowDefinition Height="40" />
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Label Grid.Row="0"  VerticalAlignment="Center" Content="You would like to create shortcuts for the following tools:" />
-        <CheckBox Grid.Row="1"   x:Name="ck_drawui" VerticalAlignment="Center" Content="DrawUI Explorer Standalone" Click="CheckBox_Click"/>
-        <CheckBox Grid.Row="2"   x:Name="ck_commandbar" VerticalAlignment="Center" Content="Commandbar Builder Standalone" Click="CheckBox_Click_1"/>
-        <Button Grid.Row="3"   VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,4,10,4" Content="Next >>" Width="100" Height="20" Click="Button_Click"/>
+        <CheckBox Grid.Row="1"   x:Name="ck_drawui" VerticalAlignment="Center" Content="DrawUI Explorer Standalone" Click="ck_drawui_Click"/>
+        <CheckBox Grid.Row="2"   x:Name="ck_commandbar" VerticalAlignment="Center" Content="Commandbar Builder Standalone" Click="ck_commandbar_Click"/>
+        <CheckBox Grid.Row="3"   x:Name="ck_guidgen" VerticalAlignment="Center" Content="Guid Generator" Click="ck_guidgen_Click"/>
+        <Button Grid.Row="4"   VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,4,10,4" Content="Next >>" Width="100" Height="20" Click="btn_ok_Click"/>
     </Grid>
 </Window>

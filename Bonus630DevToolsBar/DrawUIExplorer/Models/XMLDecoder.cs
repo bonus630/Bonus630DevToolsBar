@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Navigation;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
@@ -48,7 +49,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
             rootNodeData.SetXmlChildreID(0);
             rootNodeData.TagName = "uiConfig";
             FirstItens = rootNodeData;
-            loadXmlNodes(rootNodeData, xmlDocument.ChildNodes.Item(1));
+            LoadXmlNodes(rootNodeData, xmlDocument.ChildNodes.Item(1));
             if (LoadFinish != null)
             {
                 isBusy = false;
@@ -71,7 +72,8 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
 
                         byte[] xmlHeader = Encoding.UTF8.GetBytes("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
                         xmlStream.Write(xmlHeader, 0, xmlHeader.Length);
-
+                        //byte[] configTag = Encoding.UTF8.GetBytes("<uiConfig>");
+                        //xmlStream.Write(configTag, 0, configTag.Length);
                         while (reader.Read())
                         {
                             if (reader.NodeType == XmlNodeType.Element && listTags.Contains(reader.Name))
@@ -82,17 +84,62 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
                                 xmlStream.Write(buffer, 0, buffer.Length);
                             }
                         }
+                        //configTag = Encoding.UTF8.GetBytes("</uiConfig>");
+                        //xmlStream.Write(configTag, 0, configTag.Length);
                     }
                 }
             }
-            if(anyTagNotFound)
+            if (anyTagNotFound)
                 throw new Exception("no tags found");
+        }
+        public IBasicData GetItemDataByGuidFromXml(string filePath, string itemGuid)
+        {
+
+            using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+
+                using (XmlReader reader = XmlReader.Create(fs))
+                {
+
+                    //byte[] configTag = Encoding.UTF8.GetBytes("<uiConfig>");
+                    //xmlStream.Write(configTag, 0, configTag.Length);
+                    while (reader.Read())
+                    {
+                        if (reader.NodeType == XmlNodeType.Element && reader.GetAttribute("guid")==itemGuid)
+                        {
+                            string caption = reader.GetAttribute("caption");
+                            IBasicData basicData;
+                            if (string.IsNullOrEmpty(caption))
+                            {
+                                basicData = new DynamicData();
+                                basicData.Caption = reader.GetAttribute("dynamicCommand");
+                                ((DynamicData)basicData).DynamicCommand = reader.GetAttribute("dynamicCommand");
+                                ((DynamicData)basicData).DynamicCategory = reader.GetAttribute("dynamicCategory");
+                            }
+                            else
+                            {
+                                basicData = new ItemData();
+                                basicData.Caption = reader.GetAttribute("caption");
+                            }
+                            basicData.Guid = itemGuid;
+
+                            return basicData;
+
+                        }
+                    }
+                    //configTag = Encoding.UTF8.GetBytes("</uiConfig>");
+                    //xmlStream.Write(configTag, 0, configTag.Length);
+                }
+
+            }
+            return null;
+
         }
         public void MergeXmlFilesForTags(List<string> tagNames, List<string> filePaths, string outputFilePath)
         {
             XDocument combinedDoc = new XDocument(
                 new XDeclaration("1.0", "utf-8", "yes")
-                
+
             );
 
             foreach (string tagName in tagNames)
@@ -117,7 +164,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
             combinedDoc.Save(outputFilePath);
         }
         //private int count = 0;
-        private void loadXmlNodes(IBasicData parentBasicData, XmlNode xmlNode)
+        public void LoadXmlNodes(IBasicData parentBasicData, XmlNode xmlNode)
         {
             // este simbolo faz ocorrer um erro no xml:  --&gt;
             //Debug.WriteLine(count++);
@@ -203,7 +250,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
                     tempBasicData.SetTreeLevel(parentBasicData.TreeLevel);
                     parentBasicData.Add(tempBasicData);
                     if (item.ChildNodes.Count > 0)
-                        loadXmlNodes(tempBasicData, item);
+                        LoadXmlNodes(tempBasicData, item);
                     else
                         tempBasicData.Text = item.Value;
                 }
