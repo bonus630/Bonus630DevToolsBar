@@ -24,7 +24,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
 
     public partial class XMLTagWindow : System.Windows.Window
     {
-         
+
 
         Core core;
         Details details;
@@ -52,15 +52,15 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
             InitializeComponent();
             this.app = app;
             stylesController = new StylesController(this.Resources, this.app, ChangeTheme);
-            this.Loaded += (s, e) => { stylesController.LoadThemeFromPreference(); };
-          
             init();
+            this.Loaded += (s, e) => { stylesController.LoadThemeFromPreference(); };
+
         }
         public XMLTagWindow(string filePath)
         {
 
             InitializeComponent();
-      
+
             stylesController = new StylesController(this.Resources, ChangeTheme);
             init();
         }
@@ -84,7 +84,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
             core.SearchResultEvent += Core_SearchResultEvent;
             core.LoadFinish += Core_LoadFinish1;
             core.NewMessage += Core_NewMessage;
-            core.RequestUIHideVisibleChanged += Core_RequestUIHideVisibleChanged;
+            core.WindowStateChanged += Core_RequestUIStateChanged;
             core.InCorelChanged += Core_InCorelChanged;
             core.MainWindowHandler = new WindowInteropHelper(this).Handle;
 
@@ -101,10 +101,14 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
             {
                 StartProcess(saveLoad.LastFilePath);
             }
-        
+            search = new Search(core);
+            grid_search.Children.Add(search);
+            xslTester = new XSLTEster(core);
+            grid_xslTester.Children.Add(xslTester);
+            ChangeTheme(stylesController.currentTheme);
         }
 
-        private void Core_InCorelChanged(bool obj)
+        private void Core_InCorelChanged(bool obj, int lastVersion)
         {
             corelCmd.CorelApp = this.core.CorelApp;
         }
@@ -119,7 +123,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
                 else
                     UpdateDetailsNoAttached(tv.SelectedItem, e);
             }
-       
+
         }
 
 
@@ -171,14 +175,16 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
         {
             core.MergeProcess(filePath);
         }
-        private void Core_RequestUIHideVisibleChanged(bool obj)
+        private void Core_RequestUIStateChanged(XMLTagWindowStates obj)
         {
             this.Dispatcher.Invoke(new Action(() =>
             {
-                if (obj)
+                if (obj.Equals(XMLTagWindowStates.Visible))
                     this.Visibility = Visibility.Visible;
-                else
+                if (obj.Equals(XMLTagWindowStates.Hidden))
                     this.Visibility = Visibility.Hidden;
+                if (obj.Equals(XMLTagWindowStates.Closing))
+                    this.Close();
             }
             ));
 
@@ -217,15 +223,16 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
             saveLoad.Save();
             this.Dispatcher.Invoke(new Action(() =>
            {
-          
+
                //tabControl_details.Visibility = Visibility.Visible;
                details = new Details(core);
                grid_details.Children.Add(details);
                ///--------
-                search = new Search(core);
-               grid_search.Children.Add(search);
-               xslTester = new XSLTEster(core);
-               grid_xslTester.Children.Add(xslTester);
+               //search = new Search(core);
+               //grid_search.Children.Add(search);
+               //xslTester = new XSLTEster(core);
+               //grid_xslTester.Children.Add(xslTester);
+               search.StartSearchEngine();
                core.ListPrimaryItens.SetSelected(true, true, true);
                ChangeTheme(stylesController.currentTheme);
                dockPanel_treeViews.Visibility = Visibility.Visible;
@@ -429,7 +436,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
             //}
             try
             {
-                 txt_consoleFull.ScrollToEnd();
+                txt_consoleFull.ScrollToEnd();
                 txt_consoleFull.Dispatcher.Invoke(() =>
                 {
                     Rect r = txt_consoleFull.Document.ContentEnd.GetCharacterRect(LogicalDirection.Backward);
@@ -743,11 +750,25 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
         {
             try
             {
-                details.StylesController.LoadStyle(theme);
-                search.StylesController.LoadStyle(theme);
-                xslTester.StylesController.LoadStyle(theme);
+                if (details != null)
+                    details.StylesController.LoadStyle(theme);
+                if (search != null)
+                    search.StylesController.LoadStyle(theme);
+                if (xslTester != null)
+                    xslTester.StylesController.LoadStyle(theme);
             }
             catch { }
+        }
+
+        private void btn_topMost_Click(object sender, RoutedEventArgs e)
+        {
+            this.Topmost = !this.Topmost;
+
+        }
+
+        private void btn_reattach_Click(object sender, RoutedEventArgs e)
+        {
+            core.RunCommand("Reattach");
         }
     }
 }

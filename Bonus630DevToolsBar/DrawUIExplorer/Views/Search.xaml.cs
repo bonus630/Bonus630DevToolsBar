@@ -1,6 +1,7 @@
 ﻿using br.com.Bonus630DevToolsBar.DrawUIExplorer.Models;
 using br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels;
 using br.com.Bonus630DevToolsBar.RunCommandDocker.Styles;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -34,7 +35,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
 
             //listView_tags.ItemsSource = null;
             //listView_tags.ItemsSource = this.AdvancedSearchListAction;
-            
+
         }
         private void btnDisableSearchItem(object sender, RoutedEventArgs e)
         {
@@ -46,6 +47,18 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
 
         }
 
-        
+        private void txt_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == System.Windows.Input.Key.Enter)
+            {
+                TextBox text = sender as TextBox;
+                searchViewModel.AddParam.Execute(text.Tag);
+            }
+        }
+
+        internal void StartSearchEngine()
+        {
+            searchViewModel.StartSeachEngine();
+        }
     }
 }

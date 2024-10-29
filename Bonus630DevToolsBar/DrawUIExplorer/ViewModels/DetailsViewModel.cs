@@ -32,7 +32,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
 
         }
 
-        private void Core_InCorelChanged(bool obj)
+        private void Core_InCorelChanged(bool obj,int lastVersion)
         {
             corelAutomation.CorelApp = this.Core.CorelApp;
         }

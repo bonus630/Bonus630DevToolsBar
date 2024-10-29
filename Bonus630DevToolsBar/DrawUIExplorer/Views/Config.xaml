@@ -324,6 +324,7 @@
                             <RowDefinition Height="40" />
                             <RowDefinition Height="24" />
                             <RowDefinition Height="30" />
+                            <RowDefinition Height="30" />
 
                         </Grid.RowDefinitions>
                         <!--<Rectangle Grid.Column="0" Fill="White" />-->
@@ -334,6 +335,7 @@
                         </StackPanel>
                         <CheckBox Grid.Row="2" IsChecked="{Binding AutoOpenLastFile,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="Auto Open Last File" Grid.ColumnSpan="3"  VerticalAlignment="Top" />
                         <TextBox Margin="20,0,0,0" Grid.Row="3" Text="{Binding LastFilePath}"  Grid.ColumnSpan="3"  VerticalAlignment="Top" ToolTip="{Binding LastFilePath}"/>
+                        <CheckBox Grid.Row="4" IsChecked="{Binding ClosesIfHostClose,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="Close together with the host" Grid.ColumnSpan="3"  VerticalAlignment="Top" />
 
 
                     </Grid>

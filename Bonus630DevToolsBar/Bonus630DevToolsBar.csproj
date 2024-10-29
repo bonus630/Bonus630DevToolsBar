@@ -294,6 +294,7 @@
     <Compile Include="DrawUIExplorer\DataClass\DynamicData.cs" />
     <Compile Include="DrawUIExplorer\DataClass\TableData.cs" />
     <Compile Include="DrawUIExplorer\Models\BlockingObservableCollection.cs" />
+    <Compile Include="DrawUIExplorer\XMLTagWindowStates.cs" />
     <Compile Include="Folders\Folder.cs" />
     <Compile Include="Folders\FolderModel.cs" />
     <Compile Include="Folders\Folders.xaml.cs">

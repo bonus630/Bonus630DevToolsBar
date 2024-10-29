@@ -42,8 +42,8 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
         public void TryHighLightItem(string strItemGuid, string strItemParentGuid)
         {
             core.HighLightItemHelper.ShowHighLightItem(strItemGuid, strItemParentGuid);
-           
-        }  
+
+        }
         [InCorelAtt(true)]
         public string TryGetAnyCaption(string strItemGuid)
         {
@@ -105,7 +105,8 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
                     try
                     {
                         Type pia_type = Type.GetTypeFromProgID(string.Format("CorelDRAW.Application.{0}", version));
-                        core.CorelApp = (Corel.Interop.VGCore.Application)Activator.CreateInstance(pia_type);
+                        var app = (Corel.Interop.VGCore.Application)Activator.CreateInstance(pia_type);
+                        core.CorelApp = app;
 
                         int i = 0;
                         while (core.CorelApp == null && i < 60)
@@ -133,6 +134,37 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
             }
         }
 
+        [InCorelAtt(false)]
+        public void Reattach()
+        {
+            if(core.CorelLastVersion > 0)
+            {
+                core.DispactchNewMessage("Starting connection!", MsgType.Console);
+                try
+                {
+                   
+                   // var app = (Corel.Interop.VGCore.Application)Marshal.GetActiveObject(string.Format("CorelDRAW.Application.{0}", core.CorelLastVersion));
+                    Type pia_type = Type.GetTypeFromProgID(string.Format("CorelDRAW.Application.{0}", core.CorelLastVersion));
+                    var app = (Corel.Interop.VGCore.Application)Activator.CreateInstance(pia_type);
+                    core.CorelApp = app;
+                    if (core.CorelApp != null)
+                    {
+                        core.InCorel = true;
+                        core.DispactchNewMessage("Sucess to connect!", MsgType.Result);
+                    }
+
+                }
+                catch(Exception e)
+                {
+                    core.DispactchNewMessage(e.Message, MsgType.Erro);
+                }
+            }
+            else
+            {
+                core.DispactchNewMessage("No version to reattach!", MsgType.Erro);
+            }
+        }
+        
         [InCorelAtt(true)]
         public string CorelVersionMajor()
         {
@@ -168,16 +200,16 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
                 core.CorelApp.AppWindow.Width = w;
                 core.CorelApp.AppWindow.Height = h;
             }
-            else 
+            else
             {
                 core.DispactchNewMessage("Param format invalid!", MsgType.Erro);
-                
+
             }
         }
         [InCorelAtt(true)]
         public void SetWindowPosition(string intX, string intHY)
         {
-            int x= 0,y = 0;
+            int x = 0, y = 0;
             if (Int32.TryParse(intX, out x) && Int32.TryParse(intHY, out y))
             {
                 core.CorelApp.AppWindow.Left = x;

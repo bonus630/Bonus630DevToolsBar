@@ -24,7 +24,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Controls
         public void Core(Core core)
         {
             this.core = core;
-            core.InCorelChanged += (v) => { autoCompleteInputCommand(); };
+            core.InCorelChanged += (v,l) => { autoCompleteInputCommand(); };
         }
         public InputCommandsView()
         {

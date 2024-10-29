@@ -42,6 +42,13 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
             get { return editor; }
             set { editor = value; }
         }
+        private bool closesIfHostClose = true;
+
+        public bool ClosesIfHostClose
+        {
+            get { return closesIfHostClose; }
+            set { closesIfHostClose = value;  }
+        }
         public SaveLoadConfig()
         {
             load();
@@ -52,6 +59,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
             Properties.Settings.Default.XslTesterFontSize = xslTesterFontSize;
             Properties.Settings.Default.LastFilePath = lastFilePath;
             Properties.Settings.Default.AutoOpenLastFile = autoOpenLastFile;
+            Properties.Settings.Default.ClosesIfHostClose = closesIfHostClose;
             Properties.Settings.Default.Editor = editor;
             Properties.Settings.Default.EditorArguments = editorArguments;
             Properties.Settings.Default.Save();
@@ -61,6 +69,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
             ConsoleCounter = Properties.Settings.Default.ConsoleCounter;
             XslTesterFontSize = Properties.Settings.Default.XslTesterFontSize;
             AutoOpenLastFile = Properties.Settings.Default.AutoOpenLastFile;
+            ClosesIfHostClose = Properties.Settings.Default.ClosesIfHostClose;
             LastFilePath = Properties.Settings.Default.LastFilePath;
             Editor = Properties.Settings.Default.Editor;
             EditorArguments = Properties.Settings.Default.EditorArguments;

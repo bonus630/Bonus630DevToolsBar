@@ -22,7 +22,8 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
     /// </summary>
     public partial class ParamBox : Window
     {
-        public string Param { get { return txt_param.Text; } }
+        private string param = "";
+        public string Param { get { return param; } }
         public StylesController StylesController { get; set; }
         public ParamBox()
         {
@@ -47,6 +48,11 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
         {
             this.DialogResult = true;
         }
+        private void btn_clipboard_Click(object sender, RoutedEventArgs e)
+        {
+            param = Clipboard.GetText();
+            this.DialogResult = true;
+        }
 
         private void btn_cancel_Click(object sender, RoutedEventArgs e)
         {
@@ -57,16 +63,31 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
             StylesController.LoadStyle(theme);
         }
 
+        private bool shift = false;
         private void txt_param_KeyUp(object sender, KeyEventArgs e)
         {
-            if(e.Key == Key.Enter)
+            if(e.Key == Key.LeftShift)
+                shift = false;
+            if(e.Key == Key.Enter && !shift)
             {
                 this.DialogResult = true;
             }
-            if(e.Key == Key.Escape)
+            if (e.Key == Key.Enter && shift)
+            {
+                txt_param.Text += Environment.NewLine;
+                txt_param.CaretIndex = txt_param.Text.Length;
+            }
+            if (e.Key == Key.Escape)
             {
                 this.DialogResult = false;
             }
+            param = txt_param.Text;
+        }
+
+        private void txt_param_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.LeftShift)
+                shift = true;
         }
     }
 }

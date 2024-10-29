@@ -40,6 +40,13 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
         {
             get { return autoOpenLastFile; }
             set { autoOpenLastFile = value; OnPropertyChanged(); }
+        }  
+        private bool closesIfHostClose = true;
+
+        public bool ClosesIfHostClose
+        {
+            get { return closesIfHostClose; }
+            set { closesIfHostClose = value; OnPropertyChanged(); }
         }
         private string lastFilePath;
         public string LastFilePath
@@ -80,6 +87,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
             saveLoad.AutoOpenLastFile = autoOpenLastFile;
             saveLoad.LastFilePath = lastFilePath;
             saveLoad.Editor = editor;
+            saveLoad.ClosesIfHostClose = closesIfHostClose;
             saveLoad.EditorArguments = editorArguments;
             saveLoad.Save();
             close();
@@ -92,6 +100,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
             LastFilePath = saveLoad.LastFilePath;
             Editor = saveLoad.Editor;
             EditorArguments = saveLoad.EditorArguments;
+            ClosesIfHostClose = saveLoad.ClosesIfHostClose;
         }
         private void close()
         {

@@ -17,6 +17,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
     class XMLTagWindowViewModel : ViewModelDataBase
     {
         private bool incorel = false;
+        
         private Dispatcher dispatcher;
         public CorelAutomation CorelCmd { get; set; }
         public event Action<IBasicData> XmlDecode;
@@ -30,8 +31,14 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
             this.searchList = new ObservableCollection<IBasicData>();
             core.LoadListsFinish += Core_LoadListsFinish;
             core.SearchResultEvent += Core_SearchResultEvent;
-            core.InCorelChanged += (b) => InCorel = b;
+            core.InCorelChanged += Core_InCorelChanged;
             initializeCommands();
+        }
+
+        private void Core_InCorelChanged(bool inCorel, int lastVersion)
+        {
+            InCorel = inCorel;
+            CanReattach = !inCorel && lastVersion > 0;
         }
 
         private void Core_SearchResultEvent(IBasicData obj)
@@ -56,6 +63,17 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
             set
             {
                 incorel = value;
+                OnPropertyChanged();
+                
+            }
+        }
+        private bool canReattach = false;
+        public bool CanReattach
+        {
+            get { return canReattach; }
+            set
+            {
+                canReattach = value;
                 OnPropertyChanged();
             }
         }
@@ -89,6 +107,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
         public SimpleCommand WorkSpaceCommand { get { return new SimpleCommand(workSpace); } }
         public SimpleCommand ExpandConsoleCommand { get { return new SimpleCommand(expandConsole); } }
         public SimpleCommand ActiveGuidCommand { get { return new SimpleCommand(activeGuid); } }
+
         public SimpleCommand HighLightCommand { get; protected set; }
         public BaseDataCommand LayoutCommand { get; protected set; }
 
@@ -137,13 +156,13 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
             GetDockersCaptionCommand = new BaseDataCommand(GetDockersCaptionExec, IsDockers);
             GetDockersGuidCommand = new BaseDataCommand(GetDockersGuidExec, IsDockers);
             RemoveMeCommand = new BaseDataCommand(RemoveMeExec, IsSearchData);
-            MarkCommand = new RoutedCommand<Tuple<SolidColorBrush,IBasicData>>(MarkColor, IsUnMarked);
+            MarkCommand = new RoutedCommand<Tuple<SolidColorBrush, IBasicData>>(MarkColor, IsUnMarked);
             UnMarkCommand = new BaseDataCommand(UnMark, IsMarked);
             HighLightCommand = new SimpleCommand(showHighLightItem);
             LayoutCommand = new BaseDataCommand(layoutAdorms, IsComplexLayout);
         }
 
-        private void MarkColor(Tuple<SolidColorBrush,IBasicData> data)
+        private void MarkColor(Tuple<SolidColorBrush, IBasicData> data)
         {
             data.Item2.Marked = true;
             data.Item2.MarkColor = data.Item1;
@@ -155,7 +174,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
             Console.WriteLine(data.GetType());
             return true;
             //return !(data as IBasicData).Marked;
-        } 
+        }
         private bool IsMarked(object data)
         {
             return IsUnMarked(data);
@@ -175,6 +194,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
                 return true;
             return false;
         }
+
         private bool IsTrue(IBasicData basicData)
         {
             return true;
@@ -230,7 +250,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
         private bool IsAttributeRef(DataClass.Attribute att)
         {
             //Console.WriteLine("Attribute {0}",att);
-           // return false;
+            // return false;
             //verificar
             if (att.Name == "guid" || att.Name == "guidRef")
                 return false;
@@ -303,7 +323,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
             "e328ca81-0c4e-4109-9208-cc4dfcc018b0",
             "0799f357-efd9-45b0-acf5-1e2915bcdc1a"
         };
-        
+
         private void GetDockersCaptionExec(IBasicData basicData)
         {
 
@@ -458,13 +478,14 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
         private bool IsComplexLayout(IBasicData basicData)
         {
             return Core.InCorel;
-           // return basicData is DockerData || basicData is CommandBarData;
+            // return basicData is DockerData || basicData is CommandBarData;
 
         }
         private void activeGuid()
         {
-           Core.CorelAutomation.GetActiveGuidTool();
+            Core.CorelAutomation.GetActiveGuidTool();
         }
+
 
         private void config()
         {

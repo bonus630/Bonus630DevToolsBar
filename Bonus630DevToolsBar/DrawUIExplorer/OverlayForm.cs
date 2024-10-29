@@ -52,7 +52,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
 
             if (rect.IsZero())
             {
-                automation.Core.SetUIVisible = true;
+                automation.Core.SetUIState = XMLTagWindowStates.Visible;
                 if (restoration != null)
                     restoration.Invoke(restorationData, v);
                 this.Close();

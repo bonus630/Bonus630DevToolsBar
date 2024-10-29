@@ -151,12 +151,25 @@ namespace br.com.Bonus630DevToolsBar.DataSource
         }
         public void RunDrawUIExplorer()
         {
-            //ControlUI.CallXMLForm("");
+#if DEBUG
+            //Antigo
             DrawUIExplorer.Views.XMLTagWindow xMLTagsForm = new DrawUIExplorer.Views.XMLTagWindow(CorelApp, "");
             xMLTagsForm.Closed += (s, e) => { xMLTagsForm = null; };
             WindowInteropHelper helper = new WindowInteropHelper(xMLTagsForm);
             helper.Owner = new IntPtr(CorelApp.AppWindow.Handle);
             xMLTagsForm.Show();
+#else
+            try
+            {
+                string path = Path.Combine(CorelApp.AddonPath,
+                ControlUI.AddonFolderName, "DrawUIExplorer.exe");
+                ProcessStartInfo p = new ProcessStartInfo();
+                p.Arguments = CorelApp.VersionMajor.ToString();
+                p.FileName = path;
+                System.Diagnostics.Process.Start(p);
+            }
+            catch { }
+#endif
         }
 
         public void RunIconCreatorHelper()
@@ -268,7 +281,7 @@ namespace br.com.Bonus630DevToolsBar.DataSource
                 string path = Path.Combine(CorelApp.AddonPath,
                ControlUI.AddonFolderName, "GuidGen.exe");
 
-               System.Diagnostics.Process.Start(path);
+                System.Diagnostics.Process.Start(path);
             }
             catch { }
         }

@@ -360,7 +360,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
                     restoration.Invoke(restorationData, v);
                 return;
             }
-            automation.Core.SetUIVisible = false;
+            automation.Core.SetUIState = XMLTagWindowStates.Hidden;
             automation.Core.DispactchNewMessage(DateTime.Now.ToLongTimeString(), MsgType.Console);
 
 
@@ -407,7 +407,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
                 overlayForm.Show();
                 overlayForm.FormClosed += (s, e) =>
                 {
-                    automation.Core.SetUIVisible = true;
+                    automation.Core.SetUIState = XMLTagWindowStates.Visible;
                     if (restoration != null)
                         restoration.Invoke(restorationData, v);
                 };
@@ -434,7 +434,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
                 printScreenForm.Show();
                 printScreenForm.FormClosed += (s, e) =>
                 {
-                    automation.Core.SetUIVisible = true;
+                    automation.Core.SetUIState = XMLTagWindowStates.Visible;
                     if (restoration != null)
                         restoration.Invoke(restorationData, v);
                 };

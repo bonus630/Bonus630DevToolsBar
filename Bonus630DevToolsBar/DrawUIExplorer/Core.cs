@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Windows;
@@ -20,12 +21,12 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
         public XMLDecoder XmlDecoder { get; protected set; }
         WorkspaceUnzip workspaceUnzip;
         public string WorkerFolder { get; private set; }
+        public int CorelLastVersion { get; set; }
 
-
-        Thread t;
+         Thread saveIconsThread;
 
         public event Action<string> LoadXmlFinish;
-        public event Action<bool> RequestUIHideVisibleChanged;
+        public event Action<XMLTagWindowStates> WindowStateChanged;
         public event Action LoadListsFinish;
         public event Action<bool, string> LoadStarting;
         public event Action<string> LoadFinish;
@@ -36,7 +37,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
         public event Action<string, MsgType> NewMessage;
         //public event PropertyChangedEventHandler PropertyChanged;
         public event Action<IBasicData> CurrentBasicDataChanged;
-        public event Action<bool> InCorelChanged;
+        public event Action<bool,int> InCorelChanged;
         public IBasicData ListPrimaryItens { get; set; }
         public IBasicData CurrentBasicData
         {
@@ -51,12 +52,17 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
         private SearchEngine searchEngine;
         private InputCommands inputCommands;
         private IBasicData currentData;
+
         private Corel.Interop.VGCore.Application app;
 
         public Corel.Interop.VGCore.Application CorelApp
         {
             get { return app; }
-            set { app = value; }
+            set
+            {
+                app = value;
+                
+            }
         }
         public string FilePath { get; private set; }
 
@@ -76,7 +82,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
         public ResourcesExtractor ResourcesExtractor { get; private set; }
         public HighLightItemHelper HighLightItemHelper { get; private set; }
         public List<IBasicData> Route { get { return getRoute(); } }
-        public bool SetUIVisible { set { if (RequestUIHideVisibleChanged != null) RequestUIHideVisibleChanged(value); } }
+        public XMLTagWindowStates SetUIState { set { if (WindowStateChanged != null) WindowStateChanged(value); } }
 
         public IntPtr MainWindowHandler { get; internal set; }
 
@@ -151,6 +157,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
         {
             CorelAutomation = new CorelAutomation(this);
             this.app = corelApp;
+            CorelLastVersion = app.VersionMajor;
             this.HighLightItemHelper = new HighLightItemHelper(this.CorelAutomation);
             corelApp.OnApplicationEvent -= CorelApp_OnApplicationEvent;
             corelApp.OnApplicationEvent += CorelApp_OnApplicationEvent;
@@ -241,7 +248,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
             if (inCorel)
                 startCoreInCorel(this.CorelApp);
             if (InCorelChanged != null)
-                InCorelChanged(inCorel);
+                InCorelChanged(inCorel,this.CorelLastVersion);
         }
         private void ResourcesExtractor_GuidsIsLoaded(Dictionary<UInt16, List<string>> obj)
         {
@@ -332,6 +339,14 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
                     eventName += "\n\t Param[" + i + "] => " + Parameters[i].GetType() + " = " + Parameters[i].ToString() + ";";
                 }
                 DispactchNewMessage(eventName, MsgType.Event);
+                if (eventName.Equals("ExitInstance"))
+                {
+                    InCorel = false;
+                    Marshal.ReleaseComObject(CorelApp);
+                    if (Properties.Settings.Default.ClosesIfHostClose && WindowStateChanged != null)
+                        WindowStateChanged(XMLTagWindowStates.Closing);
+
+                }
             }
             catch (Exception erro)
             {
@@ -633,10 +648,10 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
                     DispactchNewMessage(e.Message, MsgType.Erro);
                 }
             });
-            t = new Thread(new ThreadStart(saveIcons2));
-            t.IsBackground = true;
-            t.Priority = ThreadPriority.Lowest;
-            t.Start();
+            saveIconsThread = new Thread(new ThreadStart(saveIcons2));
+            saveIconsThread.IsBackground = true;
+            saveIconsThread.Priority = ThreadPriority.Lowest;
+            saveIconsThread.Start();
         }
         private bool listIsLoaded = false;
         private bool guidIsLoaded = false;
@@ -699,7 +714,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
         public string TryGetAnyCaption(string itemGuid)
         {
             return TryGetAnyCaption(itemGuid, this.ListPrimaryItens);
-           
+
         }
         public string TryGetAnyCaption(string itemGuid, IBasicData basicData)
         {

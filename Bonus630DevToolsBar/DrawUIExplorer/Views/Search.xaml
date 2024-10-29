@@ -42,7 +42,8 @@
             </Grid.RowDefinitions>
             <GroupBox Grid.Row="0" Header="Guid Value" Margin="0,2,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="400">
                 <StackPanel Orientation="Horizontal">
-                    <TextBox Name="txt_guid" Text="{Binding Guid}" Margin="5,4,0,0" Height="22" VerticalAlignment="Top" HorizontalAlignment="Left" Width="350" >
+                    <TextBox Name="txt_guid" Text="{Binding Guid,UpdateSourceTrigger=PropertyChanged}" Tag="Guid" KeyUp="txt_KeyUp"
+                             Margin="5,4,0,0" Height="22" VerticalAlignment="Top" HorizontalAlignment="Left" Width="350"  >
                         <TextBox.ContextMenu>
                             <ContextMenu>
                                 <MenuItem Header="Copy Guid" Name="menuItemCopyGuid" CommandParameter="{Binding Guid}" Command="{Binding CopyGuid}" >
@@ -110,7 +111,7 @@
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <CheckBox Content="Only" x:Name="cb_uniqueValue" IsChecked="{Binding UniqueValue}" VerticalAlignment="Center" HorizontalAlignment="Left" />
-                        <TextBox x:Name="textBox_attributeValue" Margin="5,0,0,0"  Width="300"  Text="{Binding AttributeValue}"
+                        <TextBox x:Name="textBox_attributeValue" Margin="5,0,0,0"  Width="300"  Text="{Binding AttributeValue,UpdateSourceTrigger=PropertyChanged}" Tag="{Binding AttributeValueTag}"   KeyUp="txt_KeyUp"
                                  Visibility="{Binding ElementName=rb_att_like,Path=IsChecked,Converter={StaticResource BoolVisibilityConverter}}" Height="22" d:IsHidden="True" >
                             <TextBox.ContextMenu>
                                 <ContextMenu>

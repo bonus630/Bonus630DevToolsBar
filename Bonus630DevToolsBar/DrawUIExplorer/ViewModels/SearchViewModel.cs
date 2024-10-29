@@ -16,7 +16,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
         private SearchEngine searchEngine;
        
 
-        private ObservableCollection<SearchAdvancedParamsViewModel> advancedSearchListAction = new ObservableCollection<SearchAdvancedParamsViewModel>();
+        private ObservableCollection<SearchAdvancedParamsViewModel> advancedSearchListAction;
         public ObservableCollection<SearchAdvancedParamsViewModel> AdvancedSearchListAction { get { return advancedSearchListAction; } set { this.advancedSearchListAction = value;OnPropertyChanged();  } }
 
         private ObservableCollection<object> tags = new ObservableCollection<object>();
@@ -80,7 +80,12 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
         }
         public SearchViewModel(Core core): base(core)
         {
-            this.searchEngine = core.SearchEngineGet;
+        
+        }
+        public void StartSeachEngine()
+        {
+            AdvancedSearchListAction = new ObservableCollection<SearchAdvancedParamsViewModel>();
+            this.searchEngine = this.Core.SearchEngineGet;
             searchEngine.GenericSearchResultEvent += SearchEngine_GenericSearchResultEvent;
         }
         private void SearchEngine_GenericSearchResultEvent(List<object> obj)

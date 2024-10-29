@@ -35,5 +35,8 @@
     <Setting Name="EditorArguments" Type="System.String" Scope="User">
       <Value Profile="(Default)">{0} -n{1}</Value>
     </Setting>
+    <Setting Name="ClosesIfHostClose" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
