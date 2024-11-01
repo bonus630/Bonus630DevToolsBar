@@ -7,6 +7,7 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Windows.Input;
 using System.Windows.Interop;
 
 //using System.Windows.Forms;
@@ -151,25 +152,28 @@ namespace br.com.Bonus630DevToolsBar.DataSource
         }
         public void RunDrawUIExplorer()
         {
-#if DEBUG
-            //Antigo
-            DrawUIExplorer.Views.XMLTagWindow xMLTagsForm = new DrawUIExplorer.Views.XMLTagWindow(CorelApp, "");
-            xMLTagsForm.Closed += (s, e) => { xMLTagsForm = null; };
-            WindowInteropHelper helper = new WindowInteropHelper(xMLTagsForm);
-            helper.Owner = new IntPtr(CorelApp.AppWindow.Handle);
-            xMLTagsForm.Show();
-#else
-            try
+            if (Keyboard.IsKeyToggled(Key.LeftCtrl))
             {
-                string path = Path.Combine(CorelApp.AddonPath,
-                ControlUI.AddonFolderName, "DrawUIExplorer.exe");
-                ProcessStartInfo p = new ProcessStartInfo();
-                p.Arguments = CorelApp.VersionMajor.ToString();
-                p.FileName = path;
-                System.Diagnostics.Process.Start(p);
+                try
+                {
+                    string path = Path.Combine(CorelApp.AddonPath,
+                    ControlUI.AddonFolderName, "DrawUIExplorer.exe");
+                    ProcessStartInfo p = new ProcessStartInfo();
+                    p.Arguments = CorelApp.VersionMajor.ToString();
+                    p.FileName = path;
+                    System.Diagnostics.Process.Start(p);
+                }
+                catch { }
             }
-            catch { }
-#endif
+            else
+            {
+                DrawUIExplorer.Views.XMLTagWindow xMLTagsForm = new DrawUIExplorer.Views.XMLTagWindow(CorelApp, "");
+                xMLTagsForm.Closed += (s, e) => { xMLTagsForm = null; };
+                WindowInteropHelper helper = new WindowInteropHelper(xMLTagsForm);
+                helper.Owner = new IntPtr(CorelApp.AppWindow.Handle);
+                xMLTagsForm.Show();
+            }
+
         }
 
         public void RunIconCreatorHelper()
@@ -253,26 +257,31 @@ namespace br.com.Bonus630DevToolsBar.DataSource
         }
         public void RunCommandBarBuilder()
         {
-
-            try
+            if (Keyboard.IsKeyToggled(Key.LeftCtrl))
             {
-                string path = Path.Combine(CorelApp.AddonPath,
-               ControlUI.AddonFolderName, "CDRCommandBarBuilder.exe");
-
-
-                //this is ideal, but not load resources, its is essencial for working
-                //Assembly asm = Assembly.LoadFile(path);
-                // Type cc = asm.GetType("CustomCommandBarCreator.Views.MainWindow");
-                // object o = Activator.CreateInstance(cc, CorelApp);
-                // MethodInfo mi = cc.GetMethod("Show");
-                // mi.Invoke(o, null);
-
-
-                //Let's use this for now
-
-                System.Diagnostics.Process.Start(path);
+                try
+                {
+                    string path = Path.Combine(CorelApp.AddonPath,
+                    ControlUI.AddonFolderName, "CDRCommandBarBuilder.exe");
+                    System.Diagnostics.Process.Start(path);
+                }
+                catch { }
             }
-            catch { }
+            else
+            {
+                try
+                {
+                    string path = Path.Combine(CorelApp.AddonPath,
+                    ControlUI.AddonFolderName, "CDRCommandBarBuilder.exe");
+                    ProcessStartInfo p = new ProcessStartInfo();
+                    p.Arguments = CorelApp.VersionMajor.ToString();
+                    p.FileName = path;
+                    System.Diagnostics.Process.Start(p);
+                }
+                catch { }
+          
+            }
+       
         }
         public void RunGuidGen()
         {
@@ -287,12 +296,13 @@ namespace br.com.Bonus630DevToolsBar.DataSource
         }
         public void LoadIcon()
         {
+            //svg não funciona
             System.Windows.Forms.OpenFileDialog of = new System.Windows.Forms.OpenFileDialog();
 #if X7
             of.Filter = "ico file (*.ico)|*.ico";
             of.Title = "Select a ico file";
 #else
-            of.Filter = "Image files (*.bmp, *.jpg)|*.bmp;*.jpg";
+            of.Filter = "Image files (*.bmp, *.jpg, *.ico,*.png,*.gif)|*.bmp;*.jpg;*.ico;*.png;*.gif";
             of.Title = "Select a image file";
 #endif
             of.Multiselect = false;

@@ -96,6 +96,7 @@
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
             <custom:IconButton Icon="imageNew.png" Width="30" Height="30" x:Name="btn_prepareDocument" ToolTip="Prepare Document" Click="btn_prepareDocument_Click" Margin="4,4,0,4"/>
             <custom:IconButton Icon="imageRestore.png" Width="30" Height="30"  x:Name="btn_openDocumento" ToolTip="Open a Document" Click="btn_openDocumento_Click" Margin="4,4,0,4"/>
+            <custom:IconButton Icon="imageRestore.png" Width="30" Height="30"  x:Name="btn_ImportIcon" ToolTip="Import a Icon" Click="btn_ImportIcon_Click" Margin="4,4,0,4"/>
             <custom:IconButton Icon="imageButton.png" Width="30" Height="30"  x:Name="btn_previewIcon" ToolTip="Load a preview in &quot;Icon test slot&quot;" Click="btn_previewIcon_Click" Margin="4,4,0,4"/>
             <custom:IconButton Icon="imageLoader.png" Width="30" Height="30"  x:Name="btn_exportIcon" ToolTip="Generate Icon" Click="btn_exportIcon_Click" Margin="4,4,0,4"/>
             <Label Name="lba_DocumentName" Content="" VerticalAlignment="Center" Margin="4,4,0,4" ToolTip="Docker is linked to this document"/>

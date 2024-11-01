@@ -76,6 +76,16 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
                 canReattach = value;
                 OnPropertyChanged();
             }
+        }  
+        private bool isNewMethod = false;
+        public bool IsNewMethod
+        {
+            get { return isNewMethod; }
+            set
+            {
+                isNewMethod = value;
+                OnPropertyChanged();
+            }
         }
         private string title;
 
@@ -213,7 +223,8 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
         }
         private bool IsDialogData(IBasicData basicData)
         {
-            if (!incorel)
+            
+            if (!incorel || IsNewMethod)
                 return false;
             return IsTypeOf(basicData, typeof(DialogData));
         }

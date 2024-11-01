@@ -18,6 +18,7 @@ using f = System.Windows.Forms;
 using c = Corel.Interop.VGCore;
 
 
+
 namespace br.com.Bonus630DevToolsBar.GMSDragger
 {
     /// <summary>
@@ -34,6 +35,7 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
 
         public Dragger(object app)
         {
+            
 
             InitializeComponent();
             try

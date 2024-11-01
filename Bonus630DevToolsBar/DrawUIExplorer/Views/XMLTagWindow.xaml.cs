@@ -39,6 +39,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
         SaveLoadConfig saveLoad;
         //public static bool inCorel = true;
         private Corel.Interop.VGCore.Application app;
+        private bool IsNewMethod = false;
 
         //public XMLTagWindow(Corel.Interop.VGCore.Application app, string filePath)
         //{
@@ -49,6 +50,16 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
         //}
         public XMLTagWindow(Corel.Interop.VGCore.Application app, string filePath)
         {
+            InitializeComponent();
+            this.app = app;
+            stylesController = new StylesController(this.Resources, this.app, ChangeTheme);
+            init();
+            this.Loaded += (s, e) => { stylesController.LoadThemeFromPreference(); };
+
+        }
+        public XMLTagWindow(Corel.Interop.VGCore.Application app, string filePath,bool isNewMethod)
+        {
+            this.IsNewMethod = isNewMethod;
             InitializeComponent();
             this.app = app;
             stylesController = new StylesController(this.Resources, this.app, ChangeTheme);
@@ -73,6 +84,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Views
             btn_drawUI.Click += (s, e) => { CallDialogFileSelect(); };
             btn_workSpace.Click += (s, e) => { CallDialogFileSelect(false); };
             dataContext = new XMLTagWindowViewModel(core);
+            dataContext.IsNewMethod = this.IsNewMethod;
             this.DataContext = dataContext;
             corelCmd = new CorelAutomation(core);
             dataContext.CorelCmd = corelCmd;

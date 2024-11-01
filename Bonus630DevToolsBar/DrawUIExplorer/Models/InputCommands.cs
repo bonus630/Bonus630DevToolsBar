@@ -39,6 +39,12 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
             core.CorelAutomation.InvokeDialogItem(strDialogGuid, strItemGuid);
         }
         [InCorelAtt(true)]
+        public int GetHwnd(string strItemGuid, string strItemParentGuid)
+        {
+           return core.CorelAutomation.GetHwnd(strItemParentGuid, strItemGuid);
+
+        }
+        [InCorelAtt(true)]
         public void TryHighLightItem(string strItemGuid, string strItemParentGuid)
         {
             core.HighLightItemHelper.ShowHighLightItem(strItemGuid, strItemParentGuid);

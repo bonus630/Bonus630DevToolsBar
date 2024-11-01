@@ -255,6 +255,28 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
             guidIsLoaded = true;
             TestGetResourceRCDATA(obj);
         }
+        public void GetHwndItemData()
+        {
+            for (int i = 0; i < this.ListPrimaryItens.Childrens.Count; i++)
+            {
+                if(this.ListPrimaryItens.Childrens[i].TagName=="items")
+                {
+                    for (int k = 0; k < this.ListPrimaryItens.Childrens[i].Childrens.Count; k++)
+                    {
+                        try
+                        {
+                            (this.ListPrimaryItens.Childrens[i].Childrens[k] as ItemData).Hwnd = this.CorelAutomation.GetHwnd(this.ListPrimaryItens.Childrens[i].Childrens[k].Guid, this.ListPrimaryItens.Childrens[i].Childrens[k].Guid);
+                            Debug.WriteLine((this.ListPrimaryItens.Childrens[i].Childrens[k] as ItemData).Hwnd);
+                        }
+                        catch 
+                        {
+                            Debug.WriteLine(k);
+                        }
+                    }
+                    return;
+                }
+            }
+        }
         private Dictionary<UInt16, List<string>> guids = new Dictionary<ushort, List<string>>();
         public void SetIcon(IBasicData basicData, bool ignoreError = true)
         {

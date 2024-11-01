@@ -11,8 +11,8 @@ using System.Runtime.Remoting.Messaging;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 
 namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
 {
@@ -132,9 +132,9 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
                 PrepareDoc(this.corelApp.ActiveDocument.FileName);
         }
         string docFilePath = string.Empty;
-        public void Initialize()
+        public void Initialize(bool save = true)
         {
-            if (CreateDocument())
+            if (CreateDocument(save))
             {
                 //if (Doc == null)
                 //    return;
@@ -160,8 +160,9 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
                 PreparePreviewFolder();
                 PrepareFiles(PreviewFolder);
                 updateImgs();
-                Doc.Save();
-                if (!Doc.Dirty)
+                if(save)
+                    Doc.Save();
+                //if (!Doc.Dirty)
                     lba_DocumentName.Content = Doc.Name;
 
                 Doc.QueryClose += Doc_QueryClose;
@@ -191,6 +192,91 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
                 }
             }
             // startThread();
+        }
+        private void ImportIcon()
+        {
+            System.Windows.Forms.OpenFileDialog of = new System.Windows.Forms.OpenFileDialog();
+            of.Multiselect = false;
+            of.Filter = "Icon (*.ico)|*.ico";
+            of.Title = "Select a Icon file";
+            if (of.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                try
+                {
+                    MultiIcon mIcon = new MultiIcon();
+                   // mIcon.Load(of.FileName);
+                    using (Stream iconStream = new FileStream(of.FileName, FileMode.Open, FileAccess.Read, FileShare.Read))
+                    {
+                        mIcon.Load(iconStream);
+                        // mIcon.Count;
+
+                        //IconBitmapDecoder decoder;f
+                        //using (Stream iconStream = new FileStream(of.FileName, FileMode.Open, FileAccess.Read, FileShare.Read))
+                        //{
+                        //     decoder = new IconBitmapDecoder(
+                        //            iconStream,
+                        //            BitmapCreateOptions.PreservePixelFormat,
+                        //            BitmapCacheOption.None);
+                        //}
+                    }
+                    resolutions.Clear();
+                    if (mIcon[0].Count > 0)
+                    {
+                        
+                        for (int i = 0; i < mIcon[0].Count; i++)
+                        {
+                            int width = mIcon[0][i].Icon.Width;
+                            if (PreFixedSizes.Contains(width) && !resolutions.Contains(width))
+                            {
+                                resolutions.Add(width);
+                                continue;
+                            }
+                            int height = mIcon[0][i].Icon.Height;
+                            if (PreFixedSizes.Contains(height) && !resolutions.Contains(height))
+                                resolutions.Add(height);
+
+                        }
+                        //resolutions.Sort();
+                        if (resolutions.Count == 0)
+                        {
+                            if (System.Windows.MessageBox.Show("No standard resolution was found for this icon! it will not be possible to use some tools.",
+                                "Do you want to continue?",
+                                MessageBoxButton.YesNo, MessageBoxImage.Warning).Equals(MessageBoxResult.No))
+                                return;
+                        }
+                        Initialize(false);
+                        if (Doc == null)
+                            return;
+                        updateCks();
+                        for (int i = 0; i < mIcon[0].Count; i++)
+                        {
+                            //var frame = mIcon[i].Icon
+                           
+                                string filePath = string.Format("{0}\\{1}.png", ExportFolder, resolutions[i]);
+                            //BitmapEncoder encoder = new PngBitmapEncoder();
+                            //encoder.Frames.Add(frame);
+                            //using (Stream saveStream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.Write))
+                           // {
+                                System.Drawing.Bitmap bitmap = mIcon[0][i].Icon.ToBitmap();
+                                bitmap.Save(filePath);
+                               //  mIcon[i].Icon.Save(saveStream);
+                                //encoder.Save(saveStream);
+                         //   }
+                            if (File.Exists(filePath))
+                            {
+                                Page p = GetPageBySize(resolutions[i]);
+                                p.ActiveLayer.Import(filePath);
+                            }
+                        }
+                        btn_update_Click(null, null);
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    this.corelApp.MsgShow(ex.Message);
+                }
+            }
         }
         private void PrepareDoc(string filePath)
         {
@@ -237,8 +323,8 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
             {
 
             }
-           
-           
+
+
             return false;
         }
         private void update()
@@ -325,8 +411,7 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
 
                 ck.IsChecked = true;
                 if (!resolutions.Contains(size))
-
-                    resolutions.Add(size);
+                     resolutions.Add(size);
             }
             else
             {
@@ -410,22 +495,25 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
             PreparePreviewFolder();
             PrepareFiles(PreviewFolder);
         }
-        public bool CreateDocument()
+        public bool CreateDocument(bool save = true)
         {
             Doc = corelApp.CreateDocument();
 
-            Doc.Save();
-
-            if (Doc.Dirty || string.IsNullOrEmpty(Doc.FilePath))
+            if (save)
             {
-                corelApp.MsgShow("Process is canceled!");
-                return false;
+                Doc.Save();
+
+                if (Doc.Dirty || string.IsNullOrEmpty(Doc.FilePath))
+                {
+                    corelApp.MsgShow("Process is canceled!");
+                    return false;
+                }
+                docFilePath = GetDocumentFullPath(Doc);
             }
             Doc.BeginCommandGroup();
             //HasDoc = true;
             this.corelApp.Unit = cdrUnit.cdrPixel;
             Doc.Unit = cdrUnit.cdrPixel;
-            docFilePath = GetDocumentFullPath(Doc);
             Doc.Rulers.HUnits = cdrUnit.cdrPixel;
             Doc.Rulers.VUnits = cdrUnit.cdrPixel;
             Doc.Unit = cdrUnit.cdrPixel;
@@ -454,7 +542,8 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
                 sr[C + 1].Fill.UniformColor = Colors[C];
             }
             sr.Delete();
-            Doc.Save();
+            if(save)
+                Doc.Save();
             Doc.EndCommandGroup();
             Doc.ClearUndoList();
 
@@ -1172,6 +1261,10 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
         {
             Initialize();
         }
+        private void btn_ImportIcon_Click(object sender, RoutedEventArgs e)
+        {
+            ImportIcon();
+        }
         private void btn_exportIcon_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -1505,6 +1598,7 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
             GoTo(pageCopiedSize);
             corelApp.EventsEnabled = true;
         }
+
 
         private void StackPanel_DragLeave(object sender, DragEventArgs e)
         {

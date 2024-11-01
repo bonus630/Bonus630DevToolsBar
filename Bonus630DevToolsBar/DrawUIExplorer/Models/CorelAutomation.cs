@@ -18,6 +18,7 @@ using System.Xml;
 
 
 
+
 namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
 {
     public class CorelAutomation
@@ -416,6 +417,8 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
             {
 #if !X7
                 this.CorelApp.FrameWork.ShowDialog(guid);
+#else
+                core.DispactchNewMessage("function not supported by X7 version", MsgType.Erro);
 #endif
             }
             catch (Exception erro)
@@ -432,6 +435,8 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
             {
 #if !X7
                 this.CorelApp.FrameWork.HideDialog(guid);
+#else
+                core.DispactchNewMessage("function not supported by X7 version", MsgType.Erro);
 #endif
             }
             catch (Exception erro)
@@ -455,6 +460,11 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
             }
 
 
+        }
+        public int GetHwnd(string guidParent,string guidItem)
+        {
+            return this.CorelApp.FrameWork.Automation.GetItemInstanceHwnd(guidParent,guidItem);
+            
         }
         public void HideDocker(string guid)
         {

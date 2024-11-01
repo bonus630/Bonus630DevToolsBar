@@ -216,6 +216,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                 return false;
             if (obj is Project)
             {
+               // string.Compare(this.Path, (obj as Project).Path, true);
                 return this.Path.ToLower().Equals((obj as Project).Path.ToLower());
             }
             else
