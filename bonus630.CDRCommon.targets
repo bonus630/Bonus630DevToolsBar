@@ -36,7 +36,7 @@
 		<When Condition="'$(Configuration)' == '2019 Release' or '$(Configuration)' == '2019 Debug'">
 			<PropertyGroup>
 
-				<CurrentCorelPath></CurrentCorelPath>
+				<CurrentCorelPath>D:\Program Files\Corel\CorelDRAW Graphics Suite 2019\Programs64\</CurrentCorelPath>
 				<CurrentCorelAbr>2019</CurrentCorelAbr>
 				<CurrentCorelDebugConst>X11</CurrentCorelDebugConst>
 			</PropertyGroup>

@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
 using System.IO;
-//using br.com.Bonus630DevToolsBar.DrawUIExplorer.Views;
+
 
 namespace VisualTester
 {
@@ -19,20 +19,38 @@ namespace VisualTester
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
+           
             string path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             path = Path.Combine(path, "Bonus630DevToolsBar.dll");
             Assembly asm = Assembly.LoadFile(path);
             Type type = asm.GetType("br.com.Bonus630DevToolsBar.DrawUIExplorer.Views.XMLTagWindow");
-
-            dynamic instance = Activator.CreateInstance(type,new object[] {"" });
-
-            //XMLTagWindow w = new XMLTagWindow("");
-            instance.WindowState = WindowState.Normal;
-            instance.WindowStartupLocation = WindowStartupLocation.Manual;
-            instance.Left = 1080;
-            instance.Width = 840;
-            instance.Show();   
-            instance.ChangeTheme("theme_Black");
-        }
-    }
+            dynamic instance = null;
+            if (e.Args.Length > 0)
+            {
+                Type pia_type = Type.GetTypeFromProgID(string.Format("CorelDRAW.Application.{0}", e.Args[0]));
+                object corelApp = Activator.CreateInstance(pia_type);
+                if(corelApp!=null)
+                {
+                    instance = Activator.CreateInstance(type, new object[] {corelApp, "",true });
+                   
+                }
+            }
+            else
+            {
+                 instance = Activator.CreateInstance(type, new object[] { "" });
+            }
+            if (instance != null)
+            {
+        
+             
+                instance.WindowState = WindowState.Normal;
+                instance.WindowStartupLocation = WindowStartupLocation.Manual;
+                instance.Left = 1080;
+                instance.Width = 840;
+                instance.Show();
+            }
+   
+    
+            }
+   }
 }

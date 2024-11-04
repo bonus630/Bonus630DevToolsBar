@@ -355,10 +355,13 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
                 {
                     using (FileStream fs = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                     {
-                        image.BeginInit();
-                        image.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad;
-                        image.StreamSource = fs;
-                        image.EndInit();
+                        if (fs != null)
+                        {
+                            image.BeginInit();
+                            image.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad;
+                            image.StreamSource = fs;
+                            image.EndInit();
+                        }
                     }
                 }
                 else
@@ -474,6 +477,13 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
                     resolutions.Remove(size);
                     resolutions.Sort();
                     GoTo(resolutions[index]);
+                    try
+                    {
+                        string file = string.Format("{0}\\{1}.png", PreviewFolder, size);
+                        if(File.Exists(file))
+                            File.Delete(file);
+                    }
+                    catch { }
                     //Doc.Pages[resolutions.IndexOf(size) + 1].Delete();
                 }
             }
@@ -928,12 +938,13 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
         }
         private void UpdatePreviewThreadWork(object size)
         {
-            string folder = Path.Combine(Path.GetTempPath(), "bonus630\\IconCreator\\Preview");
+            //string folder = Path.Combine(Path.GetTempPath(), "bonus630\\IconCreator\\Preview");
             string pngFile = string.Empty;
             Debug.WriteLine("UpdatePreviewThreadWork Start - " + size, "Threads");
-            while (pngFile == string.Empty)
+            int safeLimiter = 10;
+            while (pngFile == string.Empty && safeLimiter > -1)
             {
-                pngFile = ExportPng(size.ToString(), folder, (int)size, GetPageBySize((int)size), true);
+                pngFile = ExportPng(size.ToString(), PreviewFolder, (int)size, GetPageBySize((int)size), true);
                 if (pngFile == string.Empty)
                 {
                     if (File.Exists(pngFile))
@@ -941,6 +952,7 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
                         File.Delete(pngFile);
                     }
                 }
+                safeLimiter--;
                 Thread.Sleep(100);
             }
             // updateImgByFileName(size.ToString());
@@ -965,15 +977,34 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
             {
                 updateImgByFileName(ef.Name);
             };
-            Doc.ShapeCreate += (s) => { try { startupdatePreviewThread(Int32.Parse(corelApp.ActivePage.Name)); } catch { } };
-            Doc.ShapeDistort += (s) => { try { startupdatePreviewThread(Int32.Parse(corelApp.ActivePage.Name)); } catch { } };
-            Doc.ShapeMove += (s) => { try { startupdatePreviewThread(Int32.Parse(corelApp.ActivePage.Name)); } catch { } };
-            Doc.ShapeTransform += (s) => { try { startupdatePreviewThread(Int32.Parse(corelApp.ActivePage.Name)); } catch { } };
-            Doc.ShapeChange += (Shape Shape, cdrShapeChangeScope Scope) =>
+            //Doc.ShapeCreate += (s) => { try { startupdatePreviewThread(Int32.Parse(corelApp.ActivePage.Name)); } catch { } };
+            //Doc.ShapeDistort += (s) => { try { startupdatePreviewThread(Int32.Parse(corelApp.ActivePage.Name)); } catch { } };
+            //Doc.ShapeMove += (s) => { try { startupdatePreviewThread(Int32.Parse(corelApp.ActivePage.Name)); } catch { } };
+            //Doc.ShapeTransform += (s) => { try { startupdatePreviewThread(Int32.Parse(corelApp.ActivePage.Name)); } catch { } };
+            //Doc.ShapeChange += (Shape Shape, cdrShapeChangeScope Scope) =>
+            //{
+            //    try
+            //    {
+
+            //        startupdatePreviewThread(Int32.Parse(corelApp.ActivePage.Name));
+
+            //    }
+            //    catch { }
+            //};
+            Doc.ShapeCreate += (s) => { 
+                try {
+                    Debug.WriteLine(s.Type.ToString());
+                    startupdatePreviewThread(Int32.Parse(s.Layer.Page.Name));
+                } catch { } };
+            Doc.ShapeDistort += (s) => { try { startupdatePreviewThread(Int32.Parse(s.Layer.Page.Name)); } catch { } };
+            Doc.ShapeMove += (s) => { try { startupdatePreviewThread(Int32.Parse(s.Layer.Page.Name)); } catch { } };
+            Doc.ShapeTransform += (s) => { try { startupdatePreviewThread(Int32.Parse(s.Layer.Page.Name)); } catch { } };
+            Doc.ShapeChange += (Shape s, cdrShapeChangeScope Scope) =>
             {
                 try
                 {
-                    startupdatePreviewThread(Int32.Parse(corelApp.ActivePage.Name));
+
+                    startupdatePreviewThread(Int32.Parse(s.Layer.Page.Name));
 
                 }
                 catch { }
@@ -1178,6 +1209,7 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
         {
             Layer iconLayer = GetIconLayer(p);
             ShapeRange sr = iconLayer.Shapes.All();
+            Debug.WriteLine(sr.Count);
             //p.Shapes.All();
             //try
             //{

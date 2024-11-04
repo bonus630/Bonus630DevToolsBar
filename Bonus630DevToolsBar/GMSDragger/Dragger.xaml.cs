@@ -33,6 +33,7 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
         public readonly string VBAEditorGuid = "28e16db6-6339-440d-af0d-f58ac27c115d";
 
 
+
         public Dragger(object app)
         {
             

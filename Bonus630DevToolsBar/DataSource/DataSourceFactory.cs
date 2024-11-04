@@ -47,7 +47,7 @@ namespace br.com.Bonus630DevToolsBar.DataSource
             if (DataSourceList.ContainsKey(DataSourceName))
             {
                 Type type = DataSourceList[DataSourceName];
-                ppVal = type.Assembly.CreateInstance(type.FullName, true, System.Reflection.BindingFlags.CreateInstance, null, new object[] { Proxy,corelApp }, null, null);
+                ppVal = type.Assembly.CreateInstance(type.FullName, true, System.Reflection.BindingFlags.CreateInstance, null, new object[] { Proxy, corelApp }, null, null);
 
             }
             return ppVal;

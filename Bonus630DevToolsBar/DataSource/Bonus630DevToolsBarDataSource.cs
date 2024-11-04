@@ -17,7 +17,7 @@ namespace br.com.Bonus630DevToolsBar.DataSource
 {
     [ComVisible(true)]
     [ClassInterface(ClassInterfaceType.AutoDual)]
-    [Guid("e441ec18-dfd3-4c7e-86c2-61c3cf3272cb")]
+    [Guid("0c820c68-e9cc-4ca7-84bb-8f8d3768a214")]
     //[ClassInterface(ClassInterfaceType.None)]
     public class Bonus630DevToolsBarDataSource : BaseDataSource
     {
@@ -101,7 +101,7 @@ namespace br.com.Bonus630DevToolsBar.DataSource
                 cqlContext = value;
                 NotifyPropertyChanged();
             }
-        }
+        }//testado
         private bool shortcutDockerFirstUse = true;
 
         public bool ShortcutDockerFirstUse
@@ -279,9 +279,9 @@ namespace br.com.Bonus630DevToolsBar.DataSource
                     System.Diagnostics.Process.Start(p);
                 }
                 catch { }
-          
+
             }
-       
+
         }
         public void RunGuidGen()
         {

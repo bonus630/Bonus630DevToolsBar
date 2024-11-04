@@ -70,18 +70,32 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
 
         private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
         {
-            if (args.RequestingAssembly != null)
-                return args.RequestingAssembly;
-            Assembly asm = null;
-            string name = args.Name;
-            if (name.Contains(".resources"))
-                name = name.Replace(".resources", "");
-            asm = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(r => string.Equals(r.FullName.Split(',')[0], name.Split(',')[0]));
-            if (args.Name.Contains(".resources"))
-                asm = LoadResourceAssembly(asm);
-            if (asm == null)
-                asm = Assembly.LoadFrom(Name);
-            return asm;
+          //  try
+         //   {
+                if (args.RequestingAssembly != null)
+                    return args.RequestingAssembly;
+                Assembly asm = null;
+                string name = args.Name;
+                if (name.Contains(".resources"))
+                    name = name.Replace(".resources", "");
+                asm = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(r => string.Equals(r.FullName.Split(',')[0], name.Split(',')[0]));
+                if (args.Name.Contains(".resources"))
+                    asm = LoadResourceAssembly(asm);
+                if (asm == null)
+                    asm = Assembly.LoadFrom(Name);
+                return asm;
+            //}
+            //catch(IOException ioe)
+            //{
+            //    Logger.Log(ioe);
+
+            //}
+            //catch(Exception e)
+            //{
+            //    Logger.Log(e);
+
+            //}
+            //return null;
         }
         private Assembly LoadResourceAssembly(Assembly executingAsm)
         {

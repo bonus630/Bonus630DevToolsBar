@@ -15,7 +15,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>br.com.Bonus630DevToolsBar</RootNamespace>
     <AssemblyName>Bonus630DevToolsBar</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>
@@ -318,6 +318,7 @@
       <DependentUpon>IconCreatorHelperUI.xaml</DependentUpon>
     </Compile>
     <Compile Include="IconCreatorHelper\MarkShapeCache.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="PipesServerAndClient.cs" />
     <Compile Include="PrintScreen\Cropper.cs">
       <SubType>Form</SubType>
@@ -674,6 +675,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Resource Include="Images\Export.png" />
+    <Content Include="Images\iconImport.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Images\imageButton.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
