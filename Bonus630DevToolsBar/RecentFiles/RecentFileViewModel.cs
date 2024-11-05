@@ -13,10 +13,10 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
     public class RecentFileViewModel : ViewModelBase
 
     {
-       
+
         public RecentFileViewModel(int id)
         {
-            this.ID = id; 
+            this.ID = id;
         }
 
         private int id;
@@ -35,17 +35,24 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
         }
         private string fileName;
 
-		public string Name
-		{
-			get { return fileName; }
-			set { fileName = value; OnPropertyChanged(); }
-		}
+        public string Name
+        {
+            get { return fileName; }
+            set { fileName = value; OnPropertyChanged(); }
+        }
         private string filePath;
 
         public string FullName
         {
             get { return filePath; }
             set { filePath = value; OnPropertyChanged(); }
+        }
+        private string absName;
+
+        public string AbsName
+        {
+            get { return absName; }
+            private set { absName = value; OnPropertyChanged(); }
         }
 
         private BitmapSource fileThumb;
@@ -98,6 +105,13 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
             get { return isOpened; }
             set { isOpened = value; OnPropertyChanged(); }
         }
-        
+        public void SetAbsName()
+        {
+            if (Properties.Settings.Default.UseIndex)
+                this.AbsName = this.Index.ToString();
+            else
+                this.AbsName = this.Name.Substring(0, 2);
+        }
+
     }
 }

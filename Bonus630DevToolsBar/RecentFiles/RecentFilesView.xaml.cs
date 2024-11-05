@@ -136,6 +136,7 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
         }
         private void Load()
         {
+            SetMenu(Properties.Settings.Default.UseIndex);
             dataContext.Files = recentFileModel.Fill(limit);
 
             CheckFileExits();
@@ -279,6 +280,36 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+        private void SetMenu(bool useIndex)
+        {
+            menu_index.IsChecked = useIndex;
+            menu_name.IsChecked = !useIndex;
+        }
+
+        private void menu_index_Click(object sender, RoutedEventArgs e)
+        {
+            
+            if (menu_index.IsChecked)
+               menu_name.IsChecked = false;
+            if (!menu_index.IsChecked && !menu_name.IsChecked)
+                menu_index.IsChecked = true;
+
+            Properties.Settings.Default.UseIndex = menu_index.IsChecked;
+            Properties.Settings.Default.Save();
+            this.dataContext.ChangeAbsName();
+        }  
+        private void menu_name_Click(object sender, RoutedEventArgs e)
+        {
+            
+            if(menu_name.IsChecked)
+                menu_index.IsChecked = false;
+            if (!menu_index.IsChecked && !menu_name.IsChecked)
+                menu_name.IsChecked = true;
+
+            Properties.Settings.Default.UseIndex = menu_index.IsChecked;
+            Properties.Settings.Default.Save();
+            this.dataContext.ChangeAbsName();
         }
     }
 

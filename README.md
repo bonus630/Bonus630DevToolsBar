@@ -88,7 +88,11 @@ The GMS Dragger also provides a convenient option to unload all the loaded GMS f
 
 To use the GMS Dragger, simply drag and drop your GMS files onto the tool's icon or click to select them. The tool will handle the copying, loading, and removal processes automatically. Refer to the documentation provided in this repository for detailed instructions on installation, usage guidelines, and examples.
 
-5.: CommandBar Builder
+5.: Guid Generator
+
+![Commandbar Builder](Screenshots/GuidGen.png)
+
+6.: CommandBar Builder
 
 The CommandBar Builder is a robust utility crafted to streamline the creation of command bars for CorelDRAW. This tool excels at generating command bars complete with shortcuts for your macros. Leveraging CorelDRAW's addon system, it executes macros without the need for them to be loaded into CorelDRAW, ensuring optimal performance. Additionally, it extends its functionality to create bars for various commands beyond macros.
 
@@ -117,7 +121,7 @@ This tool also allows you to save and load your command bar projects, ensuring t
 
 To use the CommandBar Builder, follow the intuitive interface to design your command bars with ease.
 
-6.: GMS Reloader
+7.: GMS Reloader
 
 
 The GMS Reloader serves as an indispensable popup tool designed to efficiently manage the loading and unloading of macros in your CorelDRAW application from the GMS folder in AppData. This tool is specifically crafted to prevent any overload on your CorelDRAW environment.
@@ -142,7 +146,7 @@ The GMS Reloader's popup interface offers a user-friendly experience, allowing u
 
 To utilize the GMS Reloader, simply access the popup interface and utilize its intuitive controls for loading and unloading macros as needed. Refer to the accompanying documentation for detailed instructions on installation, usage guidelines, and examples, ensuring a smooth integration into your CorelDRAW workflow.
 
-7.: CQLEvaluator
+8.: CQLEvaluator
 
 The CQLEvaluator is a valuable tool that allows you to validate your expressions written in CQL (Corel Query Language). With this tool, you can easily verify the correctness and accuracy of your CQL expressions, ensuring they meet your intended criteria.
 
@@ -158,7 +162,7 @@ The CQLEvaluator simplifies the process of validating CQL expressions, enabling 
 
 To use the CQLEvaluator, simply input your CQL expressions into the tool and initiate the evaluation process. The tool will swiftly analyze the expressions and provide feedback on their validity. Refer to the documentation provided in this repository for detailed instructions on installation, usage guidelines, and examples.
 
-8.: Folders
+9.: Folders
 
 The Folders tool, presented in a convenient popup format, offers a practical solution for organizing and accessing frequently used folders in CorelDRAW. With the ability to pin shortcuts to specific folders and assign custom icons, this tool enhances accessibility to your most-used directories.
 
@@ -180,7 +184,7 @@ The Folders tool simplifies the process of navigating through your file system w
 
 To set up the Folders tool, simply open the popup interface, pin your desired folder shortcuts, and assign custom icons as needed. This tool provides a user-friendly solution for managing and accessing your frequently used folders, contributing to an organized and efficient workflow. Detailed instructions on installation, usage guidelines, and examples can be found in the accompanying documentation.
 
-9.: Icon Toolset Docker
+10.: Icon Toolset Docker
 
 The Icon Toolset is a comprehensive suite of tools designed to facilitate the creation of icons within CorelDRAW. This toolset addresses the limitations of the native CorelDRAW icon creation system, which lacks the ability to store multiple sizes of images. The Icon Toolset not only overcomes this limitation but also includes features to prepare the document with pages of specific sizes for each internal resolution of the icon. Additionally, it provides various commands to assist in image creation, along with a quick-loading button for efficient previewing of icons in the CorelDRAW command bars.
 
@@ -204,7 +208,7 @@ The Icon Toolset provides an all-encompassing solution for icon creation within 
 
 To utilize the Icon Toolset, explore the intuitive interface and take advantage of its various features for creating and previewing icons. Detailed instructions on installation, usage guidelines, and examples can be found in the accompanying documentation, enhancing your icon creation workflow in CorelDRAW.
 
-10.: Print Screen Tool
+11.: Print Screen Tool
 
 The Print Screen Tool provides a convenient way to capture an image of the active drawing window in CorelDRAW. This automated utility saves the screenshots in the same folder as the active document. If the document hasn't been saved yet, a folder selection window is prompted to choose the saving location. Screenshots are automatically named, and the capture time is added to the filename, maintaining a chronological order.
 
@@ -221,6 +225,10 @@ Key Features:
 The Print Screen Tool streamlines the process of capturing images from the active drawing window in CorelDRAW, ensuring organized and convenient automatic saving. When using this tool, screenshots are automatically named and sorted by capture time, providing easy reference and tracking.
 
 To use the Print Screen Tool, simply activate it to capture the desired image. If the document hasn't been saved, you'll be prompted to choose the saving folder. 
+
+11.: Reopen Active Document
+
+
 
 11.: Recent Files Box
 

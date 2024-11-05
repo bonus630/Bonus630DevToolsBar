@@ -10,9 +10,9 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
 {
     public class RecentFilesViewModel : ViewModelBase
     {
-      
 
-    
+
+
 
         // public ICommand OpenFolderCommand { get; set; }
 
@@ -23,37 +23,39 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
             get { return files; }
             set { files = value; OnPropertyChanged(); }
         }
-        private int itemsWidth = 20;
+        private int itemsWidth = 26;
 
         public int ItemsWidth
         {
             get { return itemsWidth * files.Count; }
-            set { itemsWidth = value;OnPropertyChanged(); }
+            set { itemsWidth = value; OnPropertyChanged(); }
         }
 
         public int Count { get { return files.Count; } }
 
-        public RecentFileViewModel this[int i] 
-        { get { return files[i]; }set { Files[i] = value; OnPropertyChanged("Files"); } }
+        public RecentFileViewModel this[int i]
+        { get { return files[i]; } set { Files[i] = value; OnPropertyChanged("Files"); } }
         public RecentFileViewModel this[string fullName]
-        { 
-            get {
+        {
+            get
+            {
                 //estamos com um erro aqui, mas ele vem de outro lugar, estão sendo salvos arquivos duplicados na lista files
                 //return files.SingleOrDefault(r => r.FullName.Equals(fullName, StringComparison.InvariantCultureIgnoreCase));
                 //
                 var v = files.Where(r => r.FullName.Equals(fullName, StringComparison.InvariantCultureIgnoreCase));
-                if (v!=null && v.Count() > 0)
+                if (v != null && v.Count() > 0)
                     return v.First();
                 else
                     return null;
-            }  }
+            }
+        }
 
         /// <summary>
         /// Retorna -1 se falhar
         /// </summary>
         /// <param name="fullName"></param>
         /// <returns>id</returns>
-        public int GetId(string fullName) 
+        public int GetId(string fullName)
         {
             int id = -1;
             RecentFileViewModel rfm = this[fullName];
@@ -68,7 +70,7 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
 
         public void Add(RecentFileViewModel file)
         {
-            this.files.Insert(0,file);
+            this.files.Insert(0, file);
             OnPropertyChanged("Files");
             OnPropertyChanged("IteMsWidth");
         }
@@ -84,6 +86,14 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
             if (file == null)
                 return;
             this.Remove(file);
+        }
+
+        internal void ChangeAbsName()
+        {
+            for (int i = 0; i < Files.Count; i++)
+            {
+                files[i].SetAbsName();
+            }
         }
         //public RecentFilesViewModel()
         //{

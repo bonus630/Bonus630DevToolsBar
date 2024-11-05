@@ -114,27 +114,85 @@
                     </Setter.Value>
                 </Setter>
             </Style>
+
+            <Style TargetType="MenuItem" x:Key="CheckableMenuItemStyle"  BasedOn="{StaticResource {x:Type MenuItem}}">
+                <Setter Property="IsCheckable" Value="True"/>
+                <Setter Property="Background" Value="{DynamicResource Button.Static.Background}" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="MenuItem">
+                            <Grid  Background="{DynamicResource Button.Static.Background}">
+                                <Border x:Name="Part" Padding="0" BorderThickness="1" BorderBrush="{x:Null}" Background="{DynamicResource Button.Static.Background}">
+                                    <Grid Margin="2">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="20" />
+                                            <ColumnDefinition />
+                                        </Grid.ColumnDefinitions>
+                                        <Path x:Name="Part_Check" Grid.Column="0" Data="M1,5 L5,9 L10,1 L11,1 L5,10 L1,5" Stroke="Green" StrokeThickness="2" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                        <ContentPresenter Grid.Column="1" ContentSource="Header" Margin="0" SnapsToDevicePixels="True"/>
+                                    </Grid>
+                                </Border>
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter TargetName="Part_Check" Property="Visibility" Value="Visible" />
+                                </Trigger>
+                                <Trigger Property="IsChecked" Value="False">
+                                    <Setter TargetName="Part_Check" Property="Visibility" Value="Collapsed" />
+                                </Trigger>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="Part" Property="BorderBrush" Value="{DynamicResource Button.MouseOver.Border}" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style TargetType="ToolTip" x:Key="PreviewToolTipStyle">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ToolTip">
+                            <Border BorderThickness="1" CornerRadius="8" Padding="4" Background="{DynamicResource Container.Static.Background}" BorderBrush="{DynamicResource Button.Static.Border}">
+                                <ContentPresenter />
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
         </ResourceDictionary>
     </UserControl.Resources>
     <StackPanel Orientation="Horizontal">
-   
+
         <CheckBox x:Name="ck_autoLoad"  ToolTip="Auto Load Files" 
-                  Click="CheckBox_Click"/>
-    <ItemsControl x:Name="Items"  VerticalAlignment="Stretch"  ItemsSource="{Binding Files}" Height="20" Width="400">
+                  Click="CheckBox_Click">
+            <CheckBox.ContextMenu>
+                <ContextMenu Background="{DynamicResource Button.Static.Background}">
+
+                    <MenuItem Style="{StaticResource CheckableMenuItemStyle}" Header="Use Index" Name="menu_index" Click="menu_index_Click" IsChecked="True"/>
+
+                    <MenuItem Style="{StaticResource CheckableMenuItemStyle}" Header="Use initials of the file name"  Name="menu_name"  Click="menu_name_Click" IsChecked="False"/>
+
+                </ContextMenu>
+            </CheckBox.ContextMenu>
+        </CheckBox>
+        <ItemsControl x:Name="Items"  VerticalAlignment="Stretch" Margin="6,0,0,0"  ItemsSource="{Binding Files}" Height="20" Width="400">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Button  Tag="{Binding FullName}" VerticalAlignment="Stretch"
-                             Width="20" Height="20" MaxHeight="48" MaxWidth="48" 
-                             Click="Button_Click" MouseEnter="Button_MouseEnter" Margin="0,0,2,0">
-                        <Grid Width="18" Height="18">
-                               <Rectangle Fill="Green" Height="2" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" 
-                           Visibility="{Binding AutoLoad,Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                            <Label Content="{Binding Index,FallbackValue=0}" Margin="0,0,0,2" Padding="0" HorizontalAlignment="Center"/>
-                         
+                             Width="26" Height="20" MaxHeight="48" MaxWidth="48" 
+                             Click="Button_Click" MouseEnter="Button_MouseEnter" Margin="0,0,2,0" Padding="0">
+                        <Grid Width="24" Height="18">
+                            <Polyline Points="0,0 6,0 0,6" Fill="Green" Panel.ZIndex="1" Visibility="{Binding AutoLoad,Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                            <Polyline Points="24,18 18,18 24,12" Fill="Red"  Visibility="{Binding IsOpened,Converter={StaticResource BooleanToVisibilityConverter}}" Panel.ZIndex="2"/>
+                            <!--<Rectangle Fill="Green" Height="2" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" 
+                           Visibility="{Binding AutoLoad,Converter={StaticResource BooleanToVisibilityConverter}}"/>-->
+                            <Label Content="{Binding AbsName,FallbackValue=0}" Margin="0,0,0,2" Padding="0" HorizontalAlignment="Center" Panel.ZIndex="-1"/>
+
                         </Grid>
                         <Button.ToolTip>
-
-                            <Border BorderThickness="1">
+                            <ToolTip Style="{StaticResource PreviewToolTipStyle}">
+                            <!--<Border BorderThickness="1" BorderBrush="Red" CornerRadius="6">-->
                                 <StackPanel>
                                     <Image  Width="256" Height="256" Source="{Binding Thumb}" Visibility="{Binding IsOpened,Converter={StaticResource InvertBoolVisibilityConverter}}"/>
                                     <Label Content="File is Opened!" Visibility="{Binding IsOpened,Converter={StaticResource BooleanToVisibilityConverter}}"/>
@@ -144,7 +202,9 @@
                                         <Label Content="{Binding Version,FallbackValue=0}" FontWeight="Bold" />
                                     </StackPanel>
                                 </StackPanel>
-                            </Border>
+                                
+                            <!--</Border>-->
+                            </ToolTip>
                         </Button.ToolTip>
                         <Button.ContextMenu>
                             <ContextMenu >
@@ -184,6 +244,18 @@
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
         </ItemsControl>
+        <!--<Button  Tag="{Binding FullName}" VerticalAlignment="Stretch"
+                             Width="26" Height="20" MaxHeight="48" MaxWidth="48" 
+                             Click="Button_Click" MouseEnter="Button_MouseEnter" Margin="0,0,2,0" Padding="0">
+            <Grid Width="24" Height="18">
+                <Label Content="{Binding Index,FallbackValue=0}" Margin="0,0,0,2" Padding="0" HorizontalAlignment="Center" Panel.ZIndex="-1"/>
+            
+                <Polyline Points="0,0 6,0 0,6" Fill="Green" Panel.ZIndex="1"/>
+                <Polyline Points="24,18 18,18 24,12" Fill="Yellow" Panel.ZIndex="2"/>
 
+            </Grid>
+        </Button>-->
+        <!--<Path x:Name="Part_Check" Grid.Column="0" Data="M1,5 L5,9 L10,1 L11,1 L5,10 L1,5" Stroke="Green" StrokeThickness="2" HorizontalAlignment="Center" VerticalAlignment="Center" />-->
+        <!--<Border BorderThickness="1" BorderBrush="Red" CornerRadius="6" Width="20" Height="10"/>-->
     </StackPanel>
 </UserControl>

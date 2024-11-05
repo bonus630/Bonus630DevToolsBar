@@ -165,5 +165,17 @@ namespace br.com.Bonus630DevToolsBar.Properties {
                 this["ClosesIfHostClose"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool UseIndex {
+            get {
+                return ((bool)(this["UseIndex"]));
+            }
+            set {
+                this["UseIndex"] = value;
+            }
+        }
     }
 }

@@ -80,6 +80,7 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
                             k.Name = dataReader.GetString(4);
                             k.FullName = dataReader.GetString(5);
                             k.OpenedTime = dataReader.GetInt64(6);
+                            k.SetAbsName();
                             datas.Add(k);
                         }
                     }
