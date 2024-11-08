@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -7,8 +8,10 @@ using System.Data.SqlTypes;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -18,7 +21,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void OnPropertyChanged(string propertyName)
+        protected void OnPropertyChanged([CallerMemberName]string propertyName = "")
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
@@ -35,6 +38,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         public BindingCommand<Command> SetCommandToValueCommand { get; set; }
         public BindingCommand<Project> SwitchProjectCommand { get; set; }
         public BindingCommand<Project> LoadProjectCommand { get; set; }
+     
 
         public BindingCommand<int> AddProjectCommand { get; set; }
         public BindingCommand<Project> AddModuleCommand { get; set; }
@@ -54,6 +58,17 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             {
                 myPopupIsOpen = value;
                 OnPropertyChanged("MyPopupIsOpen");
+            }
+        }
+        private bool requestNewModule;
+
+        public bool RequestNewModule
+        {
+            get { return requestNewModule; }
+            set
+            {
+                requestNewModule = value;
+                OnPropertyChanged();
             }
         }
         private bool myPopupExceptionIsOpen;
@@ -134,7 +149,8 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                 assemblyDirectory = value;
                 OnPropertyChanged("AssemblyDirectory");
             }
-        }
+        } 
+   
 
         FileSystemWatcher dllMonitor;
         Thread startUpThread;
@@ -151,6 +167,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             AssemblyDirectory = Properties.Settings.Default.FolderPath;
             this.proxyManager = proxyManager;
             VSDetection();
+            AddModuleCommand = new BindingCommand<Project>(AddModule, CanAddModule);
             ExecuteCommand = new BindingCommand<Command>(RunCommandAsync);
             ExecutePinCommand = new BindingCommand<Command>(RunPinCommandAsync);
             StopCommand = new BindingCommand<Command>(StopCommandAsync);
@@ -313,6 +330,22 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             }
             return canPin;
         }
+        private void AddModule(Project project)
+        {
+            RequestNewModule = true;
+            //FileInfo fi = new FileInfo(project.ProjFilePath);
+            //preciso extrair o modelo do template
+            //Editalo, alterar nome da classe e do arquivo para o que o usuario digitar
+
+            //adicionar no proj file
+            //compilar o projeto
+        }
+        private bool CanAddModule(Project project)
+        {
+            if (project == null)
+                return false;
+            return string.IsNullOrEmpty(project.ProjFilePath);
+        }
         //devenv.exe "caminho\para\a\solucao.sln" /edit "caminho\para\o\arquivo.extensão"
         //devenv.exe "caminho\para\a\solucao.sln" /edit "caminho\para\o\arquivo.extensão":linha
         //devenv.exe "caminho\para\o\arquivo.extensão" /command "Edit.GoTo nomeDoMétodo"
@@ -336,34 +369,37 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         private void VSDetection()
         {
             return;
-
-            Process process = new Process();
-            ProcessStartInfo startInfo = new ProcessStartInfo();
-
-
-            startInfo.FileName = "vswhere.exe";
-            startInfo.RedirectStandardOutput = true;
-            startInfo.UseShellExecute = false;
-            startInfo.CreateNoWindow = true;
-            startInfo.Arguments = "-latest -property installationPath";
-
-            process.StartInfo = startInfo;
-            process.Start();
-
-            string vsInstallationPath = process.StandardOutput.ReadToEnd().Trim();
-
-            process.WaitForExit();
-
-            if (!string.IsNullOrEmpty(vsInstallationPath))
+            Task.Run(() =>
             {
 
-                vsExecutablePath = System.IO.Path.Combine(vsInstallationPath, "Common7\\IDE\\devenv.exe");
-                vsFounded = true;
-            }
-            else
-            {
-                vsFounded = false;
-            }
+                Process process = new Process();
+                ProcessStartInfo startInfo = new ProcessStartInfo();
+
+
+                startInfo.FileName = "vswhere.exe";
+                startInfo.RedirectStandardOutput = true;
+                startInfo.UseShellExecute = false;
+                startInfo.CreateNoWindow = true;
+                startInfo.Arguments = "-latest -property installationPath";
+
+                process.StartInfo = startInfo;
+                process.Start();
+
+                string vsInstallationPath = process.StandardOutput.ReadToEnd().Trim();
+
+                process.WaitForExit();
+
+                if (!string.IsNullOrEmpty(vsInstallationPath))
+                {
+
+                    vsExecutablePath = System.IO.Path.Combine(vsInstallationPath, "Common7\\IDE\\devenv.exe");
+                    vsFounded = true;
+                }
+                else
+                {
+                    vsFounded = false;
+                }
+            });
 
 
         }
@@ -480,13 +516,17 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                 {
                     Clipboard.SetText(Utils.ConcatenateValues(o));
                 }
+                //else if(Utils.IsTypeAny(o, typeof(Corel.Interop.VGCore.Shape),typeof(Corel.Interop.VGCore.Shapes),typeof(Corel.Interop.VGCore.ShapeRange)))
+                //{
+                //    Clipboard.set
+                //}
                 else
                 {
                     Clipboard.SetText(o.ToString());
                 }
             }
         }
-        public bool SelectFolder()
+        public bool SelectAssembliesFolder()
         {
             System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
             fbd.Description = "Select a destination folder for your Command Assemblies (DLL)!";
@@ -510,6 +550,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                 Properties.Settings.Default.Save();
                 if (Directory.Exists(AssemblyDirectory))
                 {
+                   
                     startFolderMonitor(assemblyDirectory);
                     return true;
                 }
@@ -533,7 +574,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                 if (System.Windows.MessageBox.Show("Please define a directory to store your dlls, this is a mandatory step for this tool to work", "Invalid or not defined directory!",
                 MessageBoxButton.YesNo, MessageBoxImage.Warning).Equals(MessageBoxResult.Yes))
                 {
-                    return SelectFolder();
+                    return SelectAssembliesFolder();
                         
                 }
                 return false;
@@ -543,6 +584,36 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                 startFolderMonitor(folder);
             }
             return true;
+
+        }
+        public void SetAssembliesFolder(string folder,ProjectCreator pc)
+        {
+            string csExt = "*.csproj";
+            string vbExt = "*.vbproj";
+
+            List<string> projects = new List<string>();
+
+            if (Directory.Exists(folder + "\\cs"))
+            {
+                string[] csProjs = Directory.GetFiles(folder + "\\cs", csExt, SearchOption.AllDirectories);
+                for (int i = 0; i < csProjs.Length; i++)
+                {
+                    using (var projManager = new  ProjManager(csProjs[i]))
+                        if (projManager.ChangeAssembliesPathInProj(this.AssemblyDirectory))
+                            projects.Add(csProjs[i]);
+                }
+            }
+            if (Directory.Exists(folder + "\\vb"))
+            {
+                string[] vbProjs = Directory.GetFiles(folder + "\\vb", vbExt, SearchOption.AllDirectories);
+                for (int i = 0; i < vbProjs.Length; i++)
+                {
+                    using (var projManager = new ProjManager(vbProjs[i]))
+                        if (projManager.ChangeAssembliesPathInProj(this.AssemblyDirectory))
+                        projects.Add(vbProjs[i]);
+                }
+            }
+            pc.BuildCollection(projects);
 
         }
         private void startFolderMonitor(string dir)

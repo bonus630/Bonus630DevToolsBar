@@ -56,7 +56,7 @@
 
     </UserControl.Resources>
     <DockPanel LastChildFill="true">
-        <Grid Height="26" DockPanel.Dock="Top">
+        <Grid Height="26" DockPanel.Dock="Top" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="26"/>
                 <ColumnDefinition Width="26"/>
@@ -123,31 +123,45 @@
                 </custom:IconButton.ToolTip>
 
             </custom:IconButton>
-            <Popup x:Name="popup_newProject" StaysOpen="True" Placement="Right">
+            <Popup x:Name="popup_newProject" StaysOpen="True" Placement="Right" IsOpen="{Binding RequestNewModule,Mode=OneWay}">
                 <Border Padding="10" BorderThickness="0" Style="{DynamicResource PopupBorder}">
                     <Border Padding="20" BorderThickness="1" BorderBrush="{DynamicResource Container.Text.Static.Foreground}">
-                        <StackPanel>
-                            <Label Content="Create a New Project" FontSize="20"/>
-                            <Label Content="Project Type" Margin="0,10,0,0"/>
-                            <ComboBox Width="260" Height="30" VerticalContentAlignment="Center" Name="cb_projectType">
-                                <ComboBoxItem Content="CSharp" />
-                                <ComboBoxItem Content="Visual Basic" />
-                            </ComboBox>
-                            <Label Content="Project Name"  Margin="0,10,0,0"/>
-                            <TextBox Width="260" Height="30" VerticalContentAlignment="Center" Name="txt_projectName"/>
-                            <Label Content="Location"  Margin="0,10,0,0"/>
-                            <Grid>
-                                <TextBox Width="220" HorizontalAlignment="Left" Height="30" VerticalContentAlignment="Center" Name="txt_projectFolder"/>
-                                <Button Content="..." Height="30" Width="30" Style="{DynamicResource ButtonStyle1}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+                        <Grid>
+                            <StackPanel Visibility="{Binding RequestNewModule,Converter={StaticResource ReverseBoolVisibilityConverter}}">
+                                <Label Content="Create a New Project" FontSize="20"/>
+                                <Label Content="Project Type" Margin="0,10,0,0"/>
+                                <ComboBox Width="260" Height="30" VerticalContentAlignment="Center"  Name="cb_projectType" >
+                                    <ComboBoxItem Content="CSharp" IsSelected="True"/>
+                                    <ComboBoxItem Content="Visual Basic" />
+                                </ComboBox>
+                                <Label Content="Project Name"  Margin="0,10,0,0"/>
+                                <TextBox Width="260" Height="30" VerticalContentAlignment="Center" Name="txt_projectName"/>
+                                <Label Content="Location"  Margin="0,10,0,0"/>
+                                <Grid ToolTip="{Binding ElementName=txt_projectFolder,Path=Text}">
+                                    <!-- vamos fazer assim por enquanto -->
+                                    <Label Content="{Binding ProjFilePath}" Name="lba_projPath"/>
+                                    <TextBox Width="220" HorizontalAlignment="Left" Height="30" VerticalContentAlignment="Center"  Name="txt_projectFolder"  IsEnabled="False"/>
+                                    <Button Content="..." Height="30" Width="30" Style="{DynamicResource ButtonStyle1}" IsEnabled="False" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
                                         HorizontalAlignment="Right" Margin="10,0,0,0" Name="btn_selectProjectFolder" Click="btn_selectProjectFolder_Click"/>
-                            </Grid>
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
-                                <Button Content="Cancel" Style="{DynamicResource ButtonStyle1}"  HorizontalAlignment="Right" Width="60" Height="30" VerticalContentAlignment="Center" Name="btn_cancelProject" Click="btn_cancelProject_Click"/>
+                                </Grid>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+                                    <Button Content="Cancel" Style="{DynamicResource ButtonStyle1}"  HorizontalAlignment="Right" Width="60" Height="30" VerticalContentAlignment="Center" Name="btn_cancelProject" Click="btn_cancelProject_Click"/>
 
-                                <Button Content="Create" Style="{DynamicResource ButtonStyle1}" Margin="10,0,0,0" HorizontalAlignment="Right" Width="60" Height="30" VerticalContentAlignment="Center" Name="btn_createProject" Click="btn_createProject_Click"/>
+                                    <Button Content="Create" Style="{DynamicResource ButtonStyle1}" Margin="10,0,0,0" HorizontalAlignment="Right" Width="60" Height="30" VerticalContentAlignment="Center" Name="btn_createProject" Click="btn_createProject_Click"/>
 
+                                </StackPanel>
                             </StackPanel>
-                        </StackPanel>
+                            <StackPanel Visibility="{Binding RequestNewModule,Converter={StaticResource BoolToVisibilityConverter}}">
+                                <Label Content="Module Name"  Margin="0,10,0,0"/>
+                                <TextBox Width="260" Height="30" VerticalContentAlignment="Center" Name="txt_moduleName" KeyUp="txt_moduleName_KeyUp"/>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+                                    <Button Content="Cancel" Style="{DynamicResource ButtonStyle1}"  HorizontalAlignment="Right" Width="60" Height="30" VerticalContentAlignment="Center"  Click="btn_cancelProject_Click"/>
+
+                                    <Button Content="Create" Style="{DynamicResource ButtonStyle1}" Margin="10,0,0,0" HorizontalAlignment="Right" Width="60" Height="30" VerticalContentAlignment="Center" Name="btn_createModule" Click="btn_createModule_Click"/>
+
+                                </StackPanel>
+                            </StackPanel>
+                        </Grid>
                     </Border>
                 </Border>
             </Popup>
@@ -401,7 +415,6 @@
             </ItemsControl>
 
         </Grid>
-
         <Grid DockPanel.Dock="Top">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -487,6 +500,11 @@
                                               Visibility="{Binding Loaded,Converter={StaticResource ReverseBoolVisibilityConverter}}">
 
                                     </MenuItem>
+                                    <MenuItem Header="New Module" CommandParameter="{Binding}" 
+                                          Command="{Binding Path=PlacementTarget.DataContext.Parent.AddModuleCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}" 
+                                              Visibility="{Binding RelativeSource={RelativeSource Mode=Self},Path=IsEnabled,Converter={StaticResource BoolToVisibilityConverter}}">
+
+                                    </MenuItem>
                                 </ContextMenu>
                             </Grid.ContextMenu>
                             <Label Content="{Binding Path=Name}" Focusable="False" />
@@ -535,6 +553,7 @@
                             <Setter TargetName="treeViewItemRun" Property="b"
                         </DataTrigger>
                     </DataTemplate.Triggers>-->
+                        <!--28-->
                         <StackPanel>
                             <Grid Height="28" x:Name="treeViewItemRun">
                                 <Grid.ColumnDefinitions>

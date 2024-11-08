@@ -100,5 +100,17 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
 
             return string.Empty;
         }
+
+        public static bool IsTypeAny(object obj,params Type[] types)
+        {
+            Type t = obj.GetType();
+            for (int i = 0; i <= types.Length; i++)
+            {
+                if (t.Equals(types[i]))
+                    return true;
+            }
+            return false;
+        }
+
     }
 }

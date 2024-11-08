@@ -326,6 +326,7 @@
     <Compile Include="PrintScreen\Cropper.Designer.cs">
       <DependentUpon>Cropper.cs</DependentUpon>
     </Compile>
+    <Compile Include="XMLManager.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -338,6 +339,8 @@
     </Compile>
     <Compile Include="RecentFiles\RecentFilesViewModel.cs" />
     <Compile Include="RecentFiles\RecentFileViewModel.cs" />
+    <Compile Include="RunCommandDocker\ProjManager.cs" />
+    <Compile Include="RunCommandDocker\TemplateExtractor.cs" />
     <Compile Include="RunCommandDocker\Utils.cs" />
     <Compile Include="SQLiteManager.cs" />
     <Compile Include="RunCommandDocker\BindingCommand.cs" />

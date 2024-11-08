@@ -11,29 +11,29 @@ using System.Windows.Media;
 using System.Windows.Documents;
 using System.IO.Compression;
 using System.Xml;
-using System.Runtime.CompilerServices;
+using System.Windows.Media.TextFormatting;
+using SharpCompress.Compressors.Xz;
+
 
 namespace br.com.Bonus630DevToolsBar.RunCommandDocker
 {
     public partial class DockerUI : UserControl
     {
-    
-
-      
         private corel.Application corelApp;
         //private object corelObj;
         private Styles.StylesController stylesController;
-
+        private readonly string ProjectsFolder;
 
 
         ProxyManager proxyManager;
         ProjectsManager projectsManager;
         ShapeRangeManager shapeRangeManager;
+        ProjectCreator projectCreator = new ProjectCreator();
 
         public DockerUI(object app)
         {
             InitializeComponent();
-
+            ProjectsFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "bonus630\\Projects");
             try
             {
 
@@ -64,26 +64,28 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             projectsManager.Start(proxyManager);
             this.DataContext = projectsManager;
 
+            txt_projectName.TextChanged += (s, ev) => ChangeProjectDirectory();
+            cb_projectType.SelectionChanged += (s, ev) => ChangeProjectDirectory();
         }
 
 
 
         private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
         {
-          //  try
-         //   {
-                if (args.RequestingAssembly != null)
-                    return args.RequestingAssembly;
-                Assembly asm = null;
-                string name = args.Name;
-                if (name.Contains(".resources"))
-                    name = name.Replace(".resources", "");
-                asm = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(r => string.Equals(r.FullName.Split(',')[0], name.Split(',')[0]));
-                if (args.Name.Contains(".resources"))
-                    asm = LoadResourceAssembly(asm);
-                if (asm == null)
-                    asm = Assembly.LoadFrom(Name);
-                return asm;
+            //  try
+            //   {
+            if (args.RequestingAssembly != null)
+                return args.RequestingAssembly;
+            Assembly asm = null;
+            string name = args.Name;
+            if (name.Contains(".resources"))
+                name = name.Replace(".resources", "");
+            asm = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(r => string.Equals(r.FullName.Split(',')[0], name.Split(',')[0]));
+            if (args.Name.Contains(".resources"))
+                asm = LoadResourceAssembly(asm);
+            if (asm == null)
+                asm = Assembly.LoadFrom(Name);
+            return asm;
             //}
             //catch(IOException ioe)
             //{
@@ -133,16 +135,17 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         {
 
             stylesController.LoadThemeFromPreference();
-            pc.DataReceived += Pc_DataReceived;
-            pc.ErroReceived += Pc_ErroReceived;
-            pc.VgCore = corelApp.ProgramPath + "Assemblies\\Corel.Interop.VGCore.dll";
-            pc.AddonFolder = Path.Combine(corelApp.AddonPath, "Bonus630DevToolsBar");
+            projectCreator.DataReceived += Pc_DataReceived;
+            projectCreator.ErroReceived += Pc_ErroReceived;
+            projectCreator.VgCore = corelApp.ProgramPath + "Assemblies\\Corel.Interop.VGCore.dll";
+            projectCreator.AddonFolder = Path.Combine(corelApp.AddonPath, "Bonus630DevToolsBar");
         }
 
         private void Pc_ErroReceived(string obj)
         {
             txt_log.Dispatcher.Invoke(() =>
             {
+                popup_log.IsOpen = true;
                 TextRange tr;
                 txt_log.BeginChange();
 
@@ -177,7 +180,11 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
 
         private void btn_selectFolder_Click(object sender, RoutedEventArgs e)
         {
-            projectsManager.SelectFolder();
+            if (projectsManager.SelectAssembliesFolder())
+            {
+
+                projectsManager.SetAssembliesFolder(ProjectsFolder, projectCreator);
+            }
         }
 
         private void btn_openFolder_Click(object sender, RoutedEventArgs e)
@@ -288,25 +295,24 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         {
             if (string.IsNullOrEmpty(projectsManager.AssemblyDirectory))
             {
-                projectsManager.SelectFolder();
+                projectsManager.SelectAssembliesFolder();
                 return;
             }
             popup_newProject.IsOpen = !popup_newProject.IsOpen;
         }
 
-        ProjectCreator pc = new ProjectCreator();
 
         private void btn_buildProject_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(pc.LastProject))
+            if (string.IsNullOrEmpty(projectCreator.LastProject))
             {
                 btn_setProject_Click(null, null);
             }
-            if (!string.IsNullOrEmpty(pc.LastProject))
+            if (!string.IsNullOrEmpty(projectCreator.LastProject))
             {
-                popup_log.IsOpen = true;
+                //popup_log.IsOpen = true;
                 //pc.MSBuild();
-                pc.DirectBuild();
+                projectCreator.DirectBuild();
             }
 
         }
@@ -318,23 +324,42 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                 && !string.IsNullOrEmpty(txt_projectFolder.Text)
                 && !string.IsNullOrEmpty(txt_projectName.Text))
             {
-                pc.Index = index;
-                pc.SetProjectName(txt_projectName.Text);
-                pc.ProjectFolder = txt_projectFolder.Text;
+                projectCreator.Index = index;
+                projectCreator.SetProjectName(txt_projectName.Text);
+
+                projectCreator.ProjectFolder = CheckProjectFolder(txt_projectFolder.Text);
+
                 if (string.IsNullOrEmpty(this.projectsManager.AssemblyDirectory))
-                    this.projectsManager.SelectFolder();
-                pc.AssembliesFolder = this.projectsManager.AssemblyDirectory;
+                    this.projectsManager.SelectAssembliesFolder();
+                projectCreator.AssembliesFolder = this.projectsManager.AssemblyDirectory;
 
-                pc.ExtractTemplate();
+                projectCreator.ExtractTemplate();
 
 
-                pc.ReplaceFiles();
-                popup_log.IsOpen = true;
-                pc.MSBuild();
+                projectCreator.ReplaceFiles();
+                // popup_log.IsOpen = true;
+                projectCreator.MSBuild();
 
             }
             Reset();
         }
+
+        private string CheckProjectFolder(string projectPath)
+        {
+            int cont = 1;
+            while (Directory.Exists(projectPath) && Directory.GetFiles(projectPath).Length > 0)
+            {
+                if (cont == 1)
+                    projectPath += cont.ToString("0000");
+                else
+                    projectPath = projectPath.Substring(0, projectPath.Length - 4) + cont.ToString("0000");
+                cont++;
+            }
+            if (!Directory.Exists(projectPath))
+                Directory.CreateDirectory(projectPath);
+            return projectPath;
+        }
+
         private void btn_importCGSAddon_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -356,48 +381,54 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                     corelApp.MsgShow("Project not found!");
                     return;
                 }
-                System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
-                fbd.Description = "Select a  folder for your Project!";
-                if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                {
-                    try
-                    {
-                        string testDir = Path.Combine(fbd.SelectedPath, "test.txt");
-                        using (File.Create(testDir)) { }
-                        txt_projectFolder.Text = fbd.SelectedPath;
-                        File.Delete(testDir);
-                    }
-                    catch (IOException ioe)
-                    {
-                        corelApp.MsgShow("Directory access limited, please choose another!");
-                    }
-                }
-                else
-                    return;
+
+                string projectPath = Path.Combine(ProjectsFolder, "cs", Path.GetFileName(ofd.FileName));
+                projectPath = CheckProjectFolder(projectPath);
+                //System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
+                //8
+                //fbd.Description = "Select a  folder for your Project!";
+                //if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                //{
+                //    try
+                //    {
+                //        string testDir = Path.Combine(fbd.SelectedPath, "test.txt");
+                //        using (File.Create(testDir)) { }
+                //        txt_projectFolder.Text = fbd.SelectedPath;
+                //        File.Delete(testDir);
+                //    }
+                //    catch (IOException ioe)
+                //    {
+                //        corelApp.MsgShow("Directory access limited, please choose another!");
+                //    }
+                //}
+                //else
+                //    return;
                 string[] files = Directory.GetFileSystemEntries(tempPath);
                 if (files.Length == 1)
                     files = Directory.GetFileSystemEntries(files[0]);
 
                 string csprojFile = string.Empty;
 
-                XmlDocument xmlDoc = new XmlDocument();
                 foreach (string item in files)
                 {
                     string fileName = Path.GetFileName(item);
-                    string destinoItem = Path.Combine(fbd.SelectedPath, fileName);
+                    string destinoItem = Path.Combine(projectPath, fileName);
 
+                    if (string.IsNullOrEmpty(this.projectsManager.AssemblyDirectory))
+                        this.projectsManager.SelectAssembliesFolder();
+                    projectCreator.AssembliesFolder = this.projectsManager.AssemblyDirectory;
                     if (File.Exists(item))
                     {
 
                         if (Path.GetExtension(item).Equals(".csproj"))
                         {
                             csprojFile = destinoItem;
-                            xmlDoc.Load(item);
+                            projectCreator.PrepareGSAddonProj(item, csprojFile);
                         }
-                        else
-                        {
+                       // else
+                    //    {
                             File.Copy(item, destinoItem, true);
-                        }
+                    //    }
                     }
                     else if (Directory.Exists(item))
                     {
@@ -409,51 +440,12 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                     corelApp.MsgShow("Project not found!");
                     return;
                 }
-                if (string.IsNullOrEmpty(this.projectsManager.AssemblyDirectory))
-                    this.projectsManager.SelectFolder();
-                pc.AssembliesFolder = this.projectsManager.AssemblyDirectory;
 
-                XmlNode rootNode = xmlDoc.DocumentElement;
-         
-                XmlElement targetNode = xmlDoc.CreateElement("Target", rootNode.NamespaceURI);
-                targetNode.SetAttribute("Name", "CopyFiles");
-                targetNode.SetAttribute("AfterTargets", "Build");
-                XmlElement makeDirNode = xmlDoc.CreateElement("MakeDir", rootNode.NamespaceURI);
-                makeDirNode.SetAttribute("Directories", pc.AssembliesFolder);
-                targetNode.AppendChild(makeDirNode);
-                XmlElement execNode = xmlDoc.CreateElement("Exec", rootNode.NamespaceURI);
-                execNode.SetAttribute("Condition", string.Format("Exists('{0}')", pc.AssembliesFolder));
-                execNode.SetAttribute("Command", string.Format("xcopy \"$(TargetDir)$(TargetFileName)\" \"{0}\" /y /d /e /c", pc.AssembliesFolder));
-                targetNode.AppendChild(execNode);
-                xmlDoc.LastChild.AppendChild(targetNode);
-
-                var na = new XmlNamespaceManager(xmlDoc.NameTable);
-                na.AddNamespace("p", "http://schemas.microsoft.com/developer/msbuild/2003");
-                var references = rootNode.SelectNodes("//p:ItemGroup//p:Reference",na);
-
-
-                foreach (XmlNode referenceNode in references)
-                {
-                    var att = referenceNode.Attributes["Include"];
-                    if (att.Value.Contains("Corel.Interop.VGCore"))
-                    {
-                        att.Value = pc.VgCore;
-                        XmlElement el = xmlDoc.CreateElement("Name",rootNode.NamespaceURI);
-                        el.InnerText = "Corel.Interop.VGCore";
-                        referenceNode.AppendChild(el);
-                        break;
-                    }
-                }
-           
-                xmlDoc.Save(csprojFile);
-
-           
-
-                pc.LastProject = csprojFile;
-                Properties.Settings.Default.LastProject = pc.LastProject;
+                projectCreator.LastProject = csprojFile;
+                Properties.Settings.Default.LastProject = projectCreator.LastProject;
                 Properties.Settings.Default.Save();
-                popup_log.IsOpen = true;
-                pc.MSBuild();
+                //popup_log.IsOpen = true;
+                projectCreator.MSBuild();
             }
             catch (Exception ep)
             {
@@ -464,12 +456,18 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         private void Reset()
         {
             popup_newProject.IsOpen = false;
-            cb_projectType.SelectedIndex = -1;
+            cb_projectType.SelectedIndex = 0;
             txt_projectFolder.Text = "";
             txt_projectName.Text = "";
+            txt_moduleName.Text = "";
+            projectsManager.RequestNewModule = false;
         }
         private void btn_selectProjectFolder_Click(object sender, RoutedEventArgs e)
         {
+            if (Directory.Exists(txt_projectFolder.Text))
+                System.Diagnostics.Process.Start(txt_projectFolder.Text);
+            return;
+
             popup_newProject.IsOpen = !popup_newProject.IsOpen;
             System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
             fbd.Description = "Select a  folder for your Project!";
@@ -500,10 +498,11 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             System.Windows.Forms.OpenFileDialog ofd = new System.Windows.Forms.OpenFileDialog();
             ofd.Multiselect = false;
             ofd.Filter = "Proj (*.csproj,*.vbproj)|*.csproj;*.vbproj";
+            ofd.InitialDirectory = ProjectsFolder;
             if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                pc.LastProject = ofd.FileName;
-                Properties.Settings.Default.LastProject = pc.LastProject;
+                projectCreator.LastProject = ofd.FileName;
+                Properties.Settings.Default.LastProject = projectCreator.LastProject;
                 Properties.Settings.Default.Save();
             }
         }
@@ -611,5 +610,61 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
 
         #endregion
 
+
+        private void ChangeProjectDirectory()
+        {
+            if (string.IsNullOrEmpty(txt_projectName.Text))
+                return;
+            string projectLang = "cs";
+            if (cb_projectType.SelectedIndex == 0)
+                projectLang = "cs";
+            else
+                projectLang = "vb";
+            char[] invalids = Path.GetInvalidPathChars();
+            for (int i = 0; i < invalids.Length; i++)
+            {
+                txt_projectName.Text = txt_projectName.Text.Replace(invalids[i], '_');
+            }
+            string path = Path.Combine(ProjectsFolder, projectLang, txt_projectName.Text);
+            txt_projectFolder.Text = path;
+            txt_projectFolder.CaretIndex = path.Length;
+        }
+
+        private void btn_createModule_Click(object sender, RoutedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(txt_moduleName.Text))
+            {
+                FileInfo fi = new FileInfo(lba_projPath.Content.ToString());
+                string templatePath;
+                string ext;
+                if (fi.Extension.Equals(".csproj"))
+                {
+                    templatePath = Path.Combine(corelApp.AddonPath, "RunCommandDocker\\Templates\\MacroClassLibraryCS.zip");
+                    ext = ".cs";
+                }
+                else
+                {
+                    templatePath = Path.Combine(corelApp.AddonPath, "RunCommandDocker\\Templates\\MacroClassLibraryVB.zip");
+                    ext = ".vb";
+                }
+
+                string filePath = Path.Combine(fi.Directory.FullName, txt_moduleName.Text + ext);
+                using (var extractor = new TemplateExtractor(templatePath))
+                {
+                    extractor.ExtractFile(filePath, "Main" + ext);
+                }
+
+
+
+
+                projectsManager.RequestNewModule = false;
+            }
+        }
+
+        private void txt_moduleName_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == System.Windows.Input.Key.Enter)
+                btn_createModule_Click(null, null);
+        }
     }
 }

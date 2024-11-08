@@ -189,7 +189,16 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         public bool Loaded { get { return loaded; }
             set { loaded = value;OnPropertyChanged("Loaded"); }
         }
-
+        string projFilePath = "";
+        public string ProjFilePath
+        {
+            get { return projFilePath; }
+            set
+            {
+                projFilePath = value;
+                OnPropertyChanged("ProjFilePath");
+            }
+        }
         public void SwitchLoaded()
         {
             string path;//string name;
