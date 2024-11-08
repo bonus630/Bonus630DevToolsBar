@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using System.Xml;
 
@@ -12,16 +13,16 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
 {
     public class ProjectCreator
     {
-        private string safeProjectName;
         private string projectName;
         private string loggerVariable;
 
-        private readonly string[] toReplace = { "$safeprojectname$", "$vgcoredll$", "$assembliesFolder$", "$projectname$", "$guid2$", "$ModulePath$" };
+        private readonly string[] toReplace = { "$safeprojectname$", "$vgcoredll$", "$assembliesFolder$", "$projectname$", "$guid2$", "$ModulePath$", "$ClassName$" };
 
         public string VgCore { get; set; }
         public string AssembliesFolder { get; set; }
-
+        private readonly string defaulClassName = "Main";
         //8
+        public string SafeProjectName { get; set; }
         public string ProjectFolder { get; set; }
         public string LastProject { get; set; }
         public string AddonFolder { get; set; }
@@ -53,7 +54,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         }
         public void SetProjectName(string projectName)
         {
-            safeProjectName = RemoveInvalidChars(projectName);
+            SafeProjectName = RemoveInvalidChars(projectName);
             this.projectName = projectName;
         }
         public void ReplaceFiles()
@@ -72,31 +73,46 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             for (int i = 0; i < fileList.Length; i++)
             {
                 string path = Path.Combine(ProjectFolder, fileList[i]);
-                try
-                {
-                    string text = File.ReadAllText(path);
-                    text = text.Replace(toReplace[0], safeProjectName);
-                    text = text.Replace(toReplace[1], VgCore);
-                    text = text.Replace(toReplace[2], AssembliesFolder);
-                    text = text.Replace(toReplace[3], projectName);
-                    text = text.Replace(toReplace[4], Guid.NewGuid().ToString());
-                    text = text.Replace(toReplace[5], path);
-                    File.WriteAllText(path, text);
-                    if (path.Contains("ProjFile"))
-                    {
-                        string npath = path.Replace("ProjFile", safeProjectName);
-                        File.Move(path, npath);
-                    }
-
-
-                }
-                catch (IOException eio)
-                {
-                    System.Windows.Forms.MessageBox.Show(eio.Message);
-                }
-                catch (Exception e) { System.Windows.Forms.MessageBox.Show(e.Message); }
+                ReplaceFile(path);
             }
             LastProject = GetProjFullPath(ProjectFolder);
+        }
+        public void ReplaceFile(string path, string className = "")
+        {
+            try
+            {
+                string text = File.ReadAllText(path);
+                text = text.Replace(toReplace[0], SafeProjectName);
+                text = text.Replace(toReplace[1], VgCore);
+                text = text.Replace(toReplace[2], AssembliesFolder);
+                text = text.Replace(toReplace[3], projectName);
+                text = text.Replace(toReplace[4], Guid.NewGuid().ToString());
+                text = text.Replace(toReplace[5], path);
+                if (Path.GetFileNameWithoutExtension(path).Equals(defaulClassName))
+                {
+                    if (string.IsNullOrEmpty(className))
+                        text = text.Replace(toReplace[6], defaulClassName);
+                }
+                else
+                {
+                    text = text.Replace(toReplace[6], className);
+                    path = path.Replace(defaulClassName, className);
+                }
+
+                File.WriteAllText(path, text);
+                if (path.Contains("ProjFile"))
+                {
+                    string npath = path.Replace("ProjFile", SafeProjectName);
+                    File.Move(path, npath);
+                }
+
+
+            }
+            catch (IOException eio)
+            {
+                System.Windows.Forms.MessageBox.Show(eio.Message);
+            }
+            catch (Exception e) { System.Windows.Forms.MessageBox.Show(e.Message); }
         }
         public string[] GetCSFiles()
         {
@@ -138,7 +154,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             catch { }
             ExtractFiles(tempPath, ProjectFolder);
         }
-  
+
 
         private void ExtractFiles(string zipPath, string destFolder)
         {
@@ -179,22 +195,33 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             //StartMSBuild(string.Format("\"{0}\" /p:Configuration=\"{1}\" /v:d /nologo /noconsolelogger{2}{3}"
             // , LastProject, config, "", loggerVariable));
         }
-   
+
         Microsoft.Build.Evaluation.Project project;
         private string prevProject = string.Empty;
         public void DirectBuild()
         {
             if (!string.IsNullOrEmpty(LastProject))
             {
-
                 try
                 {
-                    if(!LastProject.Equals(prevProject))
+                    var projectCollection = ProjectCollection.GlobalProjectCollection;
+                    string normalizedPath = Path.GetFullPath(LastProject);
+                    // Verifica se o projeto está carregado na coleção
+                    bool isProjectLoaded = false;
+                    foreach (var project in projectCollection.LoadedProjects)
+                    {
+                        if (string.Equals(project.FullPath, normalizedPath, StringComparison.OrdinalIgnoreCase))
+                        {
+                            isProjectLoaded = true;
+                            this.project = project;
+                            break;
+                        }
+                    }
+                    if (!isProjectLoaded)
+                    {
                         project = new Microsoft.Build.Evaluation.Project(LastProject);
-                    prevProject = LastProject;
-           
+                    }
                     BuildRequestData requestData = null;
-                
 
                     ErrorLogger eLog = new ErrorLogger();
                     eLog.Verbosity = LoggerVerbosity.Minimal;
@@ -202,20 +229,22 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                     {
                         OnErroReceived(string.Format("Code:{0} Description:{1} File:{2} Line:{3} Column:{4}", e.Code, e.Message, e.File, e.LineNumber, e.ColumnNumber));
                     };
-                                    
                     BuildParameters buildParameters = new BuildParameters
                     {
-                        Loggers = new[] { eLog }
+                        Loggers = new[] { eLog },
+                        GlobalProperties = new Dictionary<string, string> { { "Configuration", "Release" } }
 
                     };
                     List<string> properties = new List<string>();
                     properties.Add(config);
 
+                    prevProject = LastProject;
+
                     Task.Run(() =>
-                    { 
+                    {
                         requestData = new BuildRequestData(project.CreateProjectInstance(), new string[] { "Build" }, null, BuildRequestDataFlags.ReplaceExistingProjectInstance, properties);
                         BuildManager.DefaultBuildManager.Build(buildParameters, requestData);
-                  
+                        Microsoft.Build.Evaluation.ProjectCollection.GlobalProjectCollection.UnloadAllProjects();
                     });
 
                 }
@@ -223,19 +252,20 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                 {
                     OnErroReceived(string.Format("Buid Erro:{0}", e.Message));
                 }
-                   
-              
+
+
             }
 
         }
         public void BuildCollection(List<string> projectPaths)
         {
+            Microsoft.Build.Evaluation.ProjectCollection.GlobalProjectCollection.UnloadAllProjects();
             var projectCollection = new ProjectCollection();
             ErrorLogger eLog = new ErrorLogger();
             eLog.Verbosity = LoggerVerbosity.Minimal;
             eLog.BuildErrorEvent += (s, e) =>
             {
-                OnErroReceived(string.Format("Code:{0} Description:{1} Project:{2} File:{3} Line:{4} Column:{5}", e.Code, e.Message,e.ProjectFile, e.File, e.LineNumber, e.ColumnNumber));
+                OnErroReceived(string.Format("Code:{0} Description:{1} Project:{2} File:{3} Line:{4} Column:{5}", e.Code, e.Message, e.ProjectFile, e.File, e.LineNumber, e.ColumnNumber));
             };
             //eLog.BuildMessageEvent += (msg) =>
             //{
@@ -250,7 +280,8 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
 
             var buildParameters = new BuildParameters
             {
-                Loggers = new[] { eLog }, MaxNodeCount = 1
+                Loggers = new[] { eLog },
+                MaxNodeCount = 1
             };
 
             var buildManager = BuildManager.DefaultBuildManager;
@@ -267,9 +298,10 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                     submission.WaitHandle.WaitOne();
                     buildManager.EndBuild();
                 }
+                Microsoft.Build.Evaluation.ProjectCollection.GlobalProjectCollection.UnloadAllProjects();
             });
         }
-        private void  CompleteCallback(BuildSubmission submission)
+        private void CompleteCallback(BuildSubmission submission)
         {
             if (submission.BuildResult.OverallResult == BuildResultCode.Success)
             {
@@ -279,7 +311,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             {
                 Console.WriteLine("");
             }
-        }    
+        }
 
         protected string msbuildPath;
         private string config = "Release";
@@ -357,7 +389,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
 
         private void R_OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
-           OnDataReceived(e.Data);
+            OnDataReceived(e.Data);
         }
         protected void OnFinish()
         {
@@ -375,7 +407,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                 ErroReceived(msg);
         }
 
-        public void PrepareGSAddonProj(string tempProj,string destProj)
+        public void PrepareGSAddonProj(string tempProj, string destProj)
         {
             using (var pr = new ProjManager(tempProj))
             {
@@ -384,7 +416,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             }
         }
     }
-
+  
     // Implementação de um Logger personalizado para capturar erros
     class ErrorLogger : ILogger
     {
@@ -418,9 +450,11 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         {
         }
 
-        public LoggerVerbosity Verbosity { 
-            get; 
-            set; }
+        public LoggerVerbosity Verbosity
+        {
+            get;
+            set;
+        }
     }
 
 }

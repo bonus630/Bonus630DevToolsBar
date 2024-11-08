@@ -63,9 +63,11 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             projectsManager.shapeRangeManager = shapeRangeManager;
             projectsManager.Start(proxyManager);
             this.DataContext = projectsManager;
-
+            projectsManager.RequestNewModuleEvent += (path) => { popup_newProject.IsOpen = true; lba_projPath.Content = path;txt_moduleName.Focus(); };
             txt_projectName.TextChanged += (s, ev) => ChangeProjectDirectory();
             cb_projectType.SelectionChanged += (s, ev) => ChangeProjectDirectory();
+
+
         }
 
 
@@ -425,10 +427,15 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                             csprojFile = destinoItem;
                             projectCreator.PrepareGSAddonProj(item, csprojFile);
                         }
-                       // else
-                    //    {
-                            File.Copy(item, destinoItem, true);
-                    //    }
+                        if(item.Contains(".Internal."))
+                        {
+                            string content = File.ReadAllText(item);
+                            content = content.Replace("[CgsAddInModule]",
+                                "[System.AttributeUsage(System.AttributeTargets.Class)]\r\n\tpublic class ModulePath : System.Attribute \r\n\t{\r\n\t\tprivate string _value;\r\n\r\n\t\tpublic ModulePath(string value)\r\n\t\t{\r\n\t\t\t_value = value;\r\n\t\t}\r\n\r\n\t\tpublic string Value\r\n\t\t{\r\n\t\t\tget { return _value; }\r\n\t\t}\r\n\t};\r\n\t[CgsAddInModule]");
+                            File.WriteAllText(item, content);
+                        }
+                        File.Copy(item, destinoItem, true);
+                    
                     }
                     else if (Directory.Exists(item))
                     {
@@ -610,7 +617,6 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
 
         #endregion
 
-
         private void ChangeProjectDirectory()
         {
             if (string.IsNullOrEmpty(txt_projectName.Text))
@@ -632,37 +638,75 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
 
         private void btn_createModule_Click(object sender, RoutedEventArgs e)
         {
-            if (!string.IsNullOrEmpty(txt_moduleName.Text))
+            string fileName = txt_moduleName.Text;
+            string filePath;
+            if (!string.IsNullOrEmpty(fileName))
             {
+
+                popup_newProject.IsOpen = false;
                 FileInfo fi = new FileInfo(lba_projPath.Content.ToString());
                 string templatePath;
                 string ext;
                 if (fi.Extension.Equals(".csproj"))
                 {
-                    templatePath = Path.Combine(corelApp.AddonPath, "RunCommandDocker\\Templates\\MacroClassLibraryCS.zip");
+                    templatePath = Path.Combine(corelApp.AddonPath, "Bonus630DevToolsBar\\RunCommandDocker\\Templates\\MacroClassLibraryCS.zip");
                     ext = ".cs";
+                    if(!Utils.CheckCSClassName(fileName))
+                    {
+                        System.Windows.Forms.MessageBox.Show("Invalid name!","Error",System.Windows.Forms.MessageBoxButtons.OK,System.Windows.Forms.MessageBoxIcon.Error);
+                        return;
+                    }
                 }
                 else
                 {
-                    templatePath = Path.Combine(corelApp.AddonPath, "RunCommandDocker\\Templates\\MacroClassLibraryVB.zip");
+                    templatePath = Path.Combine(corelApp.AddonPath, "Bonus630DevToolsBar\\RunCommandDocker\\Templates\\MacroClassLibraryVB.zip");
                     ext = ".vb";
+                    if (!Utils.CheckVBClassName(fileName))
+                    {
+                        System.Windows.Forms.MessageBox.Show("Invalid name!", "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+                        return;
+                    }
                 }
-
-                string filePath = Path.Combine(fi.Directory.FullName, txt_moduleName.Text + ext);
+                filePath = Path.Combine(fi.Directory.FullName, fileName + ext);
+                if(File.Exists(filePath))
+                {
+                    System.Windows.Forms.MessageBox.Show("File already exists!", "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+                    return;
+                }
+               
+               
                 using (var extractor = new TemplateExtractor(templatePath))
                 {
                     extractor.ExtractFile(filePath, "Main" + ext);
                 }
+                using (var projManager = new ProjManager(fi.FullName))
+                {
+                    projManager.AddCompileItem(fileName + ext);
+                    projectCreator.SafeProjectName = projManager.GetProjNameSpace();
+                }
+                projectCreator.ReplaceFile(filePath, fileName);
 
-
-
-
-                projectsManager.RequestNewModule = false;
+                projectCreator.LastProject = fi.FullName;
+                Properties.Settings.Default.LastProject = projectCreator.LastProject;
+                Properties.Settings.Default.Save();
+                // popup_log.IsOpen = true;
+                //projectCreator.DirectBuild();
+                projectCreator.MSBuild();
+                Reset();
+                
             }
         }
 
         private void txt_moduleName_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
         {
+            Debug.WriteLine(e.Key.ToString());
+            if (e.Key == System.Windows.Input.Key.Enter)
+                btn_createModule_Click(null, null);
+        }
+
+        private void txt_moduleName_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            Debug.WriteLine(e.Key.ToString());
             if (e.Key == System.Windows.Input.Key.Enter)
                 btn_createModule_Click(null, null);
         }

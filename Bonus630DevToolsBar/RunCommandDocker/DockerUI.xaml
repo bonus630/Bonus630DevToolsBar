@@ -123,7 +123,8 @@
                 </custom:IconButton.ToolTip>
 
             </custom:IconButton>
-            <Popup x:Name="popup_newProject" StaysOpen="True" Placement="Right" IsOpen="{Binding RequestNewModule,Mode=OneWay}">
+            <Popup x:Name="popup_newProject" StaysOpen="True" Placement="Right" >
+                <!--IsOpen="{Binding RequestNewModule, Mode=OneWay, NotifyOnSourceUpdated=True}">-->
                 <Border Padding="10" BorderThickness="0" Style="{DynamicResource PopupBorder}">
                     <Border Padding="20" BorderThickness="1" BorderBrush="{DynamicResource Container.Text.Static.Foreground}">
                         <Grid>
@@ -138,8 +139,6 @@
                                 <TextBox Width="260" Height="30" VerticalContentAlignment="Center" Name="txt_projectName"/>
                                 <Label Content="Location"  Margin="0,10,0,0"/>
                                 <Grid ToolTip="{Binding ElementName=txt_projectFolder,Path=Text}">
-                                    <!-- vamos fazer assim por enquanto -->
-                                    <Label Content="{Binding ProjFilePath}" Name="lba_projPath"/>
                                     <TextBox Width="220" HorizontalAlignment="Left" Height="30" VerticalContentAlignment="Center"  Name="txt_projectFolder"  IsEnabled="False"/>
                                     <Button Content="..." Height="30" Width="30" Style="{DynamicResource ButtonStyle1}" IsEnabled="False" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
                                         HorizontalAlignment="Right" Margin="10,0,0,0" Name="btn_selectProjectFolder" Click="btn_selectProjectFolder_Click"/>
@@ -152,8 +151,11 @@
                                 </StackPanel>
                             </StackPanel>
                             <StackPanel Visibility="{Binding RequestNewModule,Converter={StaticResource BoolToVisibilityConverter}}">
+                                    <!-- vamos fazer assim por enquanto -->
+                                <Label Content="Project File Path"  Margin="0,10,0,0"/>
+                                <Label Content="" Name="lba_projPath"  Margin="0,10,0,0"/>
                                 <Label Content="Module Name"  Margin="0,10,0,0"/>
-                                <TextBox Width="260" Height="30" VerticalContentAlignment="Center" Name="txt_moduleName" KeyUp="txt_moduleName_KeyUp"/>
+                                <TextBox  Height="30" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" Margin="10,10,10,0" Name="txt_moduleName" KeyUp="txt_moduleName_KeyUp" PreviewKeyDown="txt_moduleName_PreviewKeyDown"/>
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
                                     <Button Content="Cancel" Style="{DynamicResource ButtonStyle1}"  HorizontalAlignment="Right" Width="60" Height="30" VerticalContentAlignment="Center"  Click="btn_cancelProject_Click"/>
 

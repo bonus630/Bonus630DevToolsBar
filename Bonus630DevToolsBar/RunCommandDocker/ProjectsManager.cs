@@ -1,4 +1,6 @@
-﻿using Microsoft.Win32;
+﻿using br.com.Bonus630DevToolsBar.Folders;
+using Microsoft.Build.Evaluation;
+using Microsoft.Win32;
 using System;
 using System.CodeDom;
 using System.Collections.Generic;
@@ -20,7 +22,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
     public class ProjectsManager : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-
+        public event Action<string> RequestNewModuleEvent;
         protected void OnPropertyChanged([CallerMemberName]string propertyName = "")
         {
             if (PropertyChanged != null)
@@ -333,6 +335,8 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         private void AddModule(Project project)
         {
             RequestNewModule = true;
+            if (RequestNewModuleEvent != null)
+                RequestNewModuleEvent(project.ProjFilePath);
             //FileInfo fi = new FileInfo(project.ProjFilePath);
             //preciso extrair o modelo do template
             //Editalo, alterar nome da classe e do arquivo para o que o usuario digitar
@@ -342,9 +346,9 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         }
         private bool CanAddModule(Project project)
         {
-            if (project == null)
+            if (project == null || RequestNewModule)
                 return false;
-            return string.IsNullOrEmpty(project.ProjFilePath);
+            return !string.IsNullOrEmpty(project.ProjFilePath);
         }
         //devenv.exe "caminho\para\a\solucao.sln" /edit "caminho\para\o\arquivo.extensão"
         //devenv.exe "caminho\para\a\solucao.sln" /edit "caminho\para\o\arquivo.extensão":linha
@@ -588,6 +592,15 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         }
         public void SetAssembliesFolder(string folder,ProjectCreator pc)
         {
+            List<string> projects = GetProjectList(folder);
+            for (int i = 0; i < projects.Count; i++)
+                using (var projManager = new ProjManager(projects[i]))
+                    projManager.ChangeAssembliesPathInProj(this.AssemblyDirectory);
+            pc.BuildCollection(projects);
+
+        }
+        private List<string> GetProjectList(string folder)
+        {
             string csExt = "*.csproj";
             string vbExt = "*.vbproj";
 
@@ -597,24 +610,15 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             {
                 string[] csProjs = Directory.GetFiles(folder + "\\cs", csExt, SearchOption.AllDirectories);
                 for (int i = 0; i < csProjs.Length; i++)
-                {
-                    using (var projManager = new  ProjManager(csProjs[i]))
-                        if (projManager.ChangeAssembliesPathInProj(this.AssemblyDirectory))
                             projects.Add(csProjs[i]);
-                }
             }
             if (Directory.Exists(folder + "\\vb"))
             {
                 string[] vbProjs = Directory.GetFiles(folder + "\\vb", vbExt, SearchOption.AllDirectories);
                 for (int i = 0; i < vbProjs.Length; i++)
-                {
-                    using (var projManager = new ProjManager(vbProjs[i]))
-                        if (projManager.ChangeAssembliesPathInProj(this.AssemblyDirectory))
-                        projects.Add(vbProjs[i]);
-                }
+                            projects.Add(vbProjs[i]);
             }
-            pc.BuildCollection(projects);
-
+            return projects;
         }
         private void startFolderMonitor(string dir)
         {
@@ -694,9 +698,30 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             {
                 proxyManager.UnloadDomain();
             }
-
-
         }
+
+        private void TryMapSource(string folder, Project project)
+        {
+            if (string.IsNullOrEmpty(project.ProjFilePath))
+            {
+                folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "bonus630\\Projects");
+                List<string> projects = GetProjectList(folder);
+                for (int i = 0; i < projects.Count; i++)
+                    using (var projManager = new ProjManager(projects[i]))
+                    {
+                        string file = Path.GetFileNameWithoutExtension(project.Path);
+                        string assName = projManager.GetAssemblyName();
+
+                        if (file.Equals(assName))
+                        {
+                            project.ProjFilePath = projects[i];
+                            return;
+                        }
+                    }
+            }
+        }                
+            
+
         private void CommandSelected(Command command)
         {
             //Ref.:01 
@@ -784,6 +809,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                 //}
                 if(project.Loaded)
                 {
+                    this.TryMapSource("",project);
                     SetModulesCommands(project);
                     LoadPinnedCommands();
                 }

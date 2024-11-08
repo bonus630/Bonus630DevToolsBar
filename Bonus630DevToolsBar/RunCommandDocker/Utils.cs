@@ -1,8 +1,11 @@
-﻿using System;
+﻿using Microsoft.CSharp;
+using Microsoft.VisualBasic;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace br.com.Bonus630DevToolsBar.RunCommandDocker
@@ -111,6 +114,16 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             }
             return false;
         }
+
+        public static bool CheckCSClassName(string name)
+        {
+            return new CSharpCodeProvider().IsValidIdentifier(name);
+        }
+        public static bool CheckVBClassName(string name)
+        {
+            return new CSharpCodeProvider().IsValidIdentifier(name);
+        }
+ 
 
     }
 }

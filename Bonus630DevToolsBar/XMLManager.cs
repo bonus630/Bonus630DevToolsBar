@@ -42,7 +42,24 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             return element;
         }
 
-
+        protected string GetTagValue(string XPath,int index = 0)
+        {
+            XmlNode rootNode = xmlDoc.DocumentElement;
+            var reference = rootNode.SelectNodes(XPath, namespaceManager);
+            if (reference.Count > 0)
+                return reference[index].Value;
+            else
+                return string.Empty;
+        }
+        protected string GetTagText(string XPath, int index = 0)
+        {
+            XmlNode rootNode = xmlDoc.DocumentElement;
+            var reference = rootNode.SelectNodes(XPath, namespaceManager);
+            if (reference.Count > 0)
+                return reference[index].InnerText;
+            else
+                return string.Empty;
+        }
         public void OpenFile(string projFilePath)
         {
             if (!File.Exists(projFilePath))

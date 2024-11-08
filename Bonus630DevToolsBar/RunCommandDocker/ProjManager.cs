@@ -17,7 +17,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         /// Call OpenFile
         /// </summary>
         /// <param name="projFilePath"></param>
-        public ProjManager(string projFilePath):base(projFilePath)
+        public ProjManager(string projFilePath) : base(projFilePath)
         {
             OpenFile(projFilePath);
         }
@@ -44,9 +44,9 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         public void AddCopyFilesCommand(string AssembliesFolder)
         {
             XmlNode rootNode = xmlDoc.DocumentElement;
-            XmlElement targetNode = CreateElement("Target", "", new Dictionary<string, string>() { { "Name", "CopyFiles" }, {"AfterTargets", "Build"} });
-            XmlElement msgNode = CreateElement("Message","",  new Dictionary<string, string> { { "Text", "CopyFiles" } });
-            XmlElement makeDirNode = CreateElement("MakeDir","", new Dictionary<string, string> { { "Directories", AssembliesFolder } });
+            XmlElement targetNode = CreateElement("Target", "", new Dictionary<string, string>() { { "Name", "CopyFiles" }, { "AfterTargets", "Build" } });
+            XmlElement msgNode = CreateElement("Message", "", new Dictionary<string, string> { { "Text", "CopyFiles" } });
+            XmlElement makeDirNode = CreateElement("MakeDir", "", new Dictionary<string, string> { { "Directories", AssembliesFolder } });
             XmlElement execNode = CreateElement("Exec", "", new Dictionary<string, string>() { {"Condition", string.Format("Exists('{0}')", AssembliesFolder)},
                 {"Command", string.Format("xcopy \"$(TargetDir)$(TargetFileName)\" \"{0}\" /y /d /e /c", AssembliesFolder)} });
             targetNode.AppendChild(makeDirNode);
@@ -54,7 +54,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             targetNode.AppendChild(execNode);
             xmlDoc.LastChild.AppendChild(targetNode);
         }
-        public void ChangeReference(string referenceName,string referenceValue)
+        public void ChangeReference(string referenceName, string referenceValue)
         {
             XmlNode rootNode = xmlDoc.DocumentElement;
             var references = rootNode.SelectNodes("//p:ItemGroup//p:Reference", namespaceManager);
@@ -71,17 +71,26 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                 }
             }
         }
-
-        public void AddCompileItem(string itemName)
+        public string GetProjNameSpace()
+        {
+            return this.GetTagText("//p:PropertyGroup//p:RootNamespace");
+        }
+        public string GetAssemblyName()
+        {
+            return this.GetTagText("//p:PropertyGroup//p:AssemblyName");
+        }
+        public bool AddCompileItem(string itemName)
         {
             XmlNode rootNode = xmlDoc.DocumentElement;
             var references = rootNode.SelectNodes("//p:ItemGroup//p:Compile", namespaceManager);
             foreach (XmlNode referenceNode in references)
             {
-                XmlElement item = CreateElement("Compile", "", new Dictionary<string, string>() { { "Include", itemName } });
-                referenceNode.ParentNode.AppendChild(item);
-                return;
+                if (referenceNode.Attributes["Include"].Value.Equals(itemName))
+                    return false;
             }
+            XmlElement item = CreateElement("Compile", "", new Dictionary<string, string>() { { "Include", itemName } });
+            references[0].ParentNode.AppendChild(item);
+            return true;
         }
 
 
