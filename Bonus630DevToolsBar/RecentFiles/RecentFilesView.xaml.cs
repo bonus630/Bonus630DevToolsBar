@@ -23,7 +23,7 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
         private StylesController stylesController;
         RecentFileModel recentFileModel;
         RecentFilesViewModel dataContext;
-        int limit = 10;
+        int limit = 20;
 
         //public int Height
         //{
@@ -33,12 +33,12 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
 
         public RecentFilesView(object app)
         {
+        
             InitializeComponent();
             try
             {
-
                 this.corelApp = app as corel.Application;
-            
+           
                 stylesController = new StylesController(this.Resources, this.corelApp);
                 recentFileModel = new RecentFileModel(this.corelApp.VersionMajor);
                 dataContext = new RecentFilesViewModel();
@@ -138,14 +138,12 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
         {
             SetMenu(Properties.Settings.Default.UseIndex);
             dataContext.Files = recentFileModel.Fill(limit);
-
             CheckFileExits();
             if ((bool)ck_autoLoad.IsChecked)
                 OpenAutoFiles();
             Thread loadThumbThread = new Thread(new ThreadStart(LoadThumbs));
             loadThumbThread.IsBackground = true;
             loadThumbThread.Start();
-
         }
 
         private void LoadThumbs()
@@ -158,19 +156,17 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
         }
         private void LoadThumb(int id)
         {
-
             this.Dispatcher.Invoke(() =>
             {
                 try
                 {
+                    
                     object[] r = recentFileModel.GetThumbAndVersion(dataContext[id].FullName);
                     dataContext[id].Thumb = (BitmapSource)r[0];
                     dataContext[id].Version = (int)r[1];
                 }
                 catch { }
-
             });
-
         }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
@@ -210,7 +206,7 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
             {
                 if (!File.Exists(dataContext[current].FullName))
                 {
-                    recentFileModel.DeleteFile(dataContext[current].ID);
+                    recentFileModel.DeleteFileDataFromDB(dataContext[current].ID);
                     dataContext.Remove(dataContext[current]);
                 }
                 else
@@ -226,27 +222,24 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
         {
             Items.Width = 200;
         }
-
-        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        private void MenuItem_Click_RemoveFileData(object sender, RoutedEventArgs e)
         {
             int ID = (int)(sender as MenuItem).Tag;
-            recentFileModel.DeleteFile(ID);
+            recentFileModel.DeleteFileDataFromDB(ID);
             dataContext.Remove(ID);
         }
-
-        private void MenuItem_Click_1(object sender, RoutedEventArgs e)
+        private void MenuItem_Click_AddToAutoLoad(object sender, RoutedEventArgs e)
         {
             UpdateAutoLoad((int)(sender as MenuItem).Tag, true);
         }
-
-        private void MenuItem_Click_2(object sender, RoutedEventArgs e)
+        private void MenuItem_Click_RemoveFromAutoLoad(object sender, RoutedEventArgs e)
         {
             UpdateAutoLoad((int)(sender as MenuItem).Tag, false);
         }
-        private void UpdateAutoLoad(int id, bool autoLoad)
+        private void UpdateAutoLoad(int index, bool autoLoad)
         {
             //var r = dataContext.GetItem(id);
-            var r = dataContext[id];
+            var r = dataContext[index];
             if (r != null)
             {
                 r.AutoLoad = autoLoad;
@@ -254,7 +247,6 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
                 recentFileModel.UpdateFile(r.ID, r.Index, r.Name, r.FullName, r.OpenTimes, r.OpenedTime, autoLoad);
             }
         }
-
         private void Button_MouseEnter(object sender, MouseEventArgs e)
         {
             RecentFileViewModel r = dataContext[(sender as Button).Tag.ToString()];
@@ -263,13 +255,13 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
 
         }
 
-        private void MenuItem_Click_3(object sender, RoutedEventArgs e)
+        private void MenuItem_Click_CopyPath(object sender, RoutedEventArgs e)
         {
             RecentFileViewModel r = dataContext[(int)(sender as MenuItem).Tag];
             System.Windows.Clipboard.SetText(r.FullName);
         }
 
-        private void MenuItem_Click_4(object sender, RoutedEventArgs e)
+        private void MenuItem_Click_OpenDirectory(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -281,33 +273,61 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
                 MessageBox.Show(ex.Message);
             }
         }
-        private void SetMenu(bool useIndex)
+        private void SetMenu(short useIndex)
         {
-            menu_index.IsChecked = useIndex;
-            menu_name.IsChecked = !useIndex;
+            //index = 0,name = -1,thumb = 1
+            menu_index.IsChecked = false;
+            menu_name.IsChecked = false;
+            menu_thumb.IsChecked = false;
+            if (useIndex == 0)
+                menu_index.IsChecked = true;
+            if(useIndex == -1)
+            menu_name.IsChecked = true;
+            if (useIndex == 1)
+                menu_thumb.IsChecked = true;
         }
 
         private void menu_index_Click(object sender, RoutedEventArgs e)
         {
-            
+            //index = 0,name = -1,thumb = 1
             if (menu_index.IsChecked)
                menu_name.IsChecked = false;
-            if (!menu_index.IsChecked && !menu_name.IsChecked)
+            if (menu_index.IsChecked)
+                menu_thumb.IsChecked = false;
+            if (!menu_index.IsChecked && !menu_name.IsChecked && !menu_thumb.IsChecked)
                 menu_index.IsChecked = true;
 
-            Properties.Settings.Default.UseIndex = menu_index.IsChecked;
+            Properties.Settings.Default.UseIndex = 0;
             Properties.Settings.Default.Save();
             this.dataContext.ChangeAbsName();
+        
         }  
         private void menu_name_Click(object sender, RoutedEventArgs e)
         {
-            
-            if(menu_name.IsChecked)
+            //index = 0,name = -1,thumb = 1
+            if (menu_name.IsChecked)
                 menu_index.IsChecked = false;
-            if (!menu_index.IsChecked && !menu_name.IsChecked)
+            if (menu_name.IsChecked)
+                menu_thumb.IsChecked = false;
+            if (!menu_index.IsChecked && !menu_name.IsChecked && !menu_thumb.IsChecked)
                 menu_name.IsChecked = true;
 
-            Properties.Settings.Default.UseIndex = menu_index.IsChecked;
+            Properties.Settings.Default.UseIndex = -1;
+            Properties.Settings.Default.Save();
+            this.dataContext.ChangeAbsName();
+        }
+
+        private void menu_thumb_Click(object sender, RoutedEventArgs e)
+        {
+            //index = 0,name = -1,thumb = 1
+            if (menu_thumb.IsChecked)
+                menu_name.IsChecked = false;
+            if (menu_thumb.IsChecked)
+                menu_index.IsChecked = false;
+            if (!menu_index.IsChecked && !menu_name.IsChecked && !menu_thumb.IsChecked)
+                menu_thumb.IsChecked = true;
+
+            Properties.Settings.Default.UseIndex = 1;
             Properties.Settings.Default.Save();
             this.dataContext.ChangeAbsName();
         }

@@ -738,6 +738,7 @@
     <Content Include="ProjectHelper.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Resource Include="RecentFiles\config.png" />
     <Content Include="Resources.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -171,7 +171,7 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
             bool corelVersionFinded = false;
             using (FileStream fs = new FileStream(fullName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
-                using (ZipArchive zipFile = new ZipArchive(fs, ZipArchiveMode.Read))
+                using (ZipArchive zipFile = new ZipArchive(fs, ZipArchiveMode.Read,false))
                 {
                     foreach (ZipArchiveEntry entry in zipFile.Entries)
                     {

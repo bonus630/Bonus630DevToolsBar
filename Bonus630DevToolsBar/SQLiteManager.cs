@@ -141,7 +141,8 @@ namespace br.com.Bonus630DevToolsBar
             catch { }
             return -1;
         }
-        public void DeleteFile(int id)
+        
+        public void DeleteFileDataFromDB(int id)
         {
             try
             {

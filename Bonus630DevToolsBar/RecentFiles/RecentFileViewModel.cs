@@ -107,10 +107,13 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
         }
         public void SetAbsName()
         {
-            if (Properties.Settings.Default.UseIndex)
+            //index = 0,name = -1,thumb = 1
+            if (Properties.Settings.Default.UseIndex == 0)
                 this.AbsName = this.Index.ToString();
-            else
+            if (Properties.Settings.Default.UseIndex == -1)
                 this.AbsName = this.Name.Substring(0, 2);
+            if (Properties.Settings.Default.UseIndex == 1)
+                this.AbsName = "";
         }
 
     }

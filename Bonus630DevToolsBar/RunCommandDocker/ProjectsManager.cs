@@ -23,7 +23,8 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
     {
         public event PropertyChangedEventHandler PropertyChanged;
         public event Action<string> RequestNewModuleEvent;
-        protected void OnPropertyChanged([CallerMemberName]string propertyName = "")
+        public event Action<string,string> RequestRemoveModule;
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
@@ -40,10 +41,11 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         public BindingCommand<Command> SetCommandToValueCommand { get; set; }
         public BindingCommand<Project> SwitchProjectCommand { get; set; }
         public BindingCommand<Project> LoadProjectCommand { get; set; }
-     
+
 
         public BindingCommand<int> AddProjectCommand { get; set; }
         public BindingCommand<Project> AddModuleCommand { get; set; }
+        public BindingCommand<Module> RemoveModuleCommand { get; set; }
         public BindingCommand<Module> AddCommandCommand { get; set; }
 
         public BindingCommand<Reflected> CopyValueCommand { get; set; }
@@ -151,8 +153,8 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                 assemblyDirectory = value;
                 OnPropertyChanged("AssemblyDirectory");
             }
-        } 
-   
+        }
+
 
         FileSystemWatcher dllMonitor;
         Thread startUpThread;
@@ -170,6 +172,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             this.proxyManager = proxyManager;
             VSDetection();
             AddModuleCommand = new BindingCommand<Project>(AddModule, CanAddModule);
+            RemoveModuleCommand = new BindingCommand<Module>(RemoveModule, CanRemoveModule);
             ExecuteCommand = new BindingCommand<Command>(RunCommandAsync);
             ExecutePinCommand = new BindingCommand<Command>(RunPinCommandAsync);
             StopCommand = new BindingCommand<Command>(StopCommandAsync);
@@ -178,7 +181,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             OrderModuleCommand = new BindingCommand<Module>(OrderByName);
             OrderDescModuleCommand = new BindingCommand<Module>(OrderByNameDesc);
             OrderOriginalModuleCommand = new BindingCommand<Module>(OrderOriginal);
-            EditCommandCommand = new BindingCommand<Command>(EditMethod, VisualStudioFounded);
+            EditCommandCommand = new BindingCommand<Command>(EditMethod, CanEditCommand);
             SwitchProjectCommand = new BindingCommand<Project>(UnloadProject);
             CopyValueCommand = new BindingCommand<Reflected>(CopyValue);
             CopyReturnsValueCommand = new BindingCommand<object>(CopyReturnsValue);
@@ -201,7 +204,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             catch { }
 
         }
-      
+
 
 
         public void LoadPinnedCommands()
@@ -211,7 +214,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
 
                 //encontrar o comando pelo caminho vai garantir melhor desempenho
                 var commandNames = Properties.Settings.Default.PinnedCommands;
-               // PinnedCommands.Clear();
+                // PinnedCommands.Clear();
 
                 for (int i = 0; i < commandNames.Count; i++)
                 {
@@ -220,14 +223,14 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                     // Command c1 = pinnedCommands.FirstOrDefault(m => m.ToString().Equals(commandNames[i]));
                     if (command != null)
                     {
-                        if(!PinnedCommands.Contains(command))
+                        if (!PinnedCommands.Contains(command))
                             PinnedCommands.Add(command);
                     }
                 }
                 //Properties.Settings.Default.PinnedCommands.Clear();
                 foreach (var item in PinnedCommands)
                 {
-                    if(!Properties.Settings.Default.PinnedCommands.Contains(item.ToString()))
+                    if (!Properties.Settings.Default.PinnedCommands.Contains(item.ToString()))
                         Properties.Settings.Default.PinnedCommands.Add(item.ToString());
                 }
                 Properties.Settings.Default.Save();
@@ -350,29 +353,32 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                 return false;
             return !string.IsNullOrEmpty(project.ProjFilePath);
         }
-        //devenv.exe "caminho\para\a\solucao.sln" /edit "caminho\para\o\arquivo.extensão"
-        //devenv.exe "caminho\para\a\solucao.sln" /edit "caminho\para\o\arquivo.extensão":linha
-        //devenv.exe "caminho\para\o\arquivo.extensão" /command "Edit.GoTo nomeDoMétodo"
-        //devenv.exe "caminho\para\o\arquivo.extensão" /command "Edit.GoToDefinition nomeDoMétodo"
+        private void RemoveModule(Module module)
+        {
+            //Por enquanto vamos fazer assim
+            if (RequestRemoveModule != null)
+                RequestRemoveModule(module.Parent.ProjFilePath,module.Name);
+        
+        }
+        private bool CanRemoveModule(Module module)
+        {
+            if (module == null)
+                return false;
+            return !string.IsNullOrEmpty(module.Parent.ProjFilePath);
+        }
 
         private bool vsFounded = false;
         private string vsExecutablePath;
-        private bool VisualStudioFounded(Command command)
+        private bool CanEditCommand(Command command)
         {
-            bool canEdit = false;
-            if (command != null)
-            {
-                if (CanEditModule(command.Parent))
-                {
-                    canEdit = vsFounded;
-                }
-            }
-            return canEdit;
+            if (command != null && !string.IsNullOrEmpty(command.Parent.Parent.ProjFilePath) && vsFounded)
+                return true;
+            return false;
         }
 
         private void VSDetection()
         {
-            return;
+            
             Task.Run(() =>
             {
 
@@ -410,29 +416,40 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
 
         private void EditMethod(Command command)
         {
+            //devenv.exe "caminho\para\a\solucao.sln" /edit "caminho\para\o\arquivo.extensão"
+            //devenv.exe "caminho\para\a\solucao.sln" /edit "caminho\para\o\arquivo.extensão":linha
+            //devenv.exe "caminho\para\o\arquivo.extensão" /command "Edit.GoTo nomeDoMétodo"
+            //devenv.exe "caminho\para\o\arquivo.extensão" /command "Edit.GoToDefinition nomeDoMétodo"
+            string proj = command.Parent.Parent.ProjFilePath;
             string file = command.Parent.ModulePath;
             string method = command.Name;
-
+            if (string.IsNullOrEmpty(proj) || string.IsNullOrEmpty(file) || string.IsNullOrEmpty(method))
+                return;
             Process process = new Process();
             ProcessStartInfo startInfo = new ProcessStartInfo();
-
 
             // startInfo.FileName = "devenv.exe";
             startInfo.FileName = this.vsExecutablePath;
 
-            startInfo.Arguments = string.Format("\"{0}\" /command \"Edit.GoToDefinition {1}\"", file, method);
+            startInfo.Arguments = string.Format("\"{0}\" /command \"Edit.openfile {1}\"", proj, file);
+            //startInfo.Arguments = string.Format("\"Edit.openfile {1}\"", proj, file, method); 
+             //startInfo.Arguments = string.Format("\"{0}\" /Command Edit.OpenFile \"{1}\" /command Edit.GoTo {2}", proj, file, method);*
+             // startInfo.Arguments = string.Format("\"{0}\" /edit \" {1}:20\"", proj, file, method);*
+             //startInfo.Arguments = string.Format("\"{0}\" /Command Edit.OpenFile \"{1}\" /command Edit.GoToDefinition {2}", proj, file, method);*
+             //startInfo.Arguments = string.Format("\"{0}\"  Edit.OpenFile \"{1}\" /command Edit.GoToDefinition {2}", proj, file, method);*
+             //startInfo.Arguments = string.Format("\"{0}\"  /command Edit.GoToDefinition mais1.{2}", proj, file, method);*
+             //startInfo.Arguments = string.Format("\"{0}\" /Edit \"{1}\" /command Edit.GoToDefinition {2}",proj, file, method);
+             //startInfo.Arguments = string.Format("\"{0}\" /Edit \"{1}\" /command Edit.GoToDefinition {2}",proj, file, method);
 
-            process.StartInfo = startInfo;
+             process.StartInfo = startInfo;
             process.Start();
-
-
-
+            
         }
 
         private void EditModule(Module module)
         {
             //teste apagar
-            // module.Order();
+            //module.Order();
             Process.Start(module.ModulePath);
         }
 
@@ -467,7 +484,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
 
             if (this.SelectedCommand != null && this.SelectedCommand.Items != null)
             {
-                Argument arg =  this.SelectedCommand.Items.FirstOrDefault(r => r.IsSelectedBase);
+                Argument arg = this.SelectedCommand.Items.FirstOrDefault(r => r.IsSelectedBase);
                 if (arg == null && this.selectedCommand.Items.Count > 0)
                     arg = this.selectedCommand.Items[0];
                 return arg;
@@ -554,14 +571,14 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                 Properties.Settings.Default.Save();
                 if (Directory.Exists(AssemblyDirectory))
                 {
-                   
+
                     startFolderMonitor(assemblyDirectory);
                     return true;
                 }
-                    
+
                 else
                     return false;
-                
+
             }
             else
                 return false;
@@ -579,7 +596,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                 MessageBoxButton.YesNo, MessageBoxImage.Warning).Equals(MessageBoxResult.Yes))
                 {
                     return SelectAssembliesFolder();
-                        
+
                 }
                 return false;
             }
@@ -590,7 +607,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             return true;
 
         }
-        public void SetAssembliesFolder(string folder,ProjectCreator pc)
+        public void SetAssembliesFolder(string folder, ProjectCreator pc)
         {
             List<string> projects = GetProjectList(folder);
             for (int i = 0; i < projects.Count; i++)
@@ -610,19 +627,19 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             {
                 string[] csProjs = Directory.GetFiles(folder + "\\cs", csExt, SearchOption.AllDirectories);
                 for (int i = 0; i < csProjs.Length; i++)
-                            projects.Add(csProjs[i]);
+                    projects.Add(csProjs[i]);
             }
             if (Directory.Exists(folder + "\\vb"))
             {
                 string[] vbProjs = Directory.GetFiles(folder + "\\vb", vbExt, SearchOption.AllDirectories);
                 for (int i = 0; i < vbProjs.Length; i++)
-                            projects.Add(vbProjs[i]);
+                    projects.Add(vbProjs[i]);
             }
             return projects;
         }
         private void startFolderMonitor(string dir)
         {
-         
+
             dllMonitor = new FileSystemWatcher(dir);
             dllMonitor.EnableRaisingEvents = true;
             dllMonitor.Changed += Fsw_Changed;
@@ -719,8 +736,8 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                         }
                     }
             }
-        }                
-            
+        }
+
 
         private void CommandSelected(Command command)
         {
@@ -770,17 +787,17 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             }
             this.dispatcher.Invoke(new Action(() =>
             {
-             
+
                 if (System.IO.Path.GetExtension(project.Path).ToLower().Equals(".dll"))
                 {
                     project.Name = project.Name.Replace("Unloaded ", "");
-                   
+
                 }
                 else
                 {
                     project.Loaded = false;
                     project.Name = string.Format("Unloaded {0}", project.Name);
-                    project.Name = project.Name.Replace(".bak",".dll");
+                    project.Name = project.Name.Replace(".bak", ".dll");
                 }
                 if (!Projects.Contains(project))
                     Projects.Add(project);
@@ -807,9 +824,9 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
 
                 //    }
                 //}
-                if(project.Loaded)
+                if (project.Loaded)
                 {
-                    this.TryMapSource("",project);
+                    this.TryMapSource("", project);
                     SetModulesCommands(project);
                     LoadPinnedCommands();
                 }
@@ -848,7 +865,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             if (e.ChangeType.Equals(WatcherChangeTypes.Changed))
                 ChangesProject(e.Name, e.FullPath);
         }
-     
+
         internal void PrepareSearch()
         {
             if (this.CommandSearch == null)

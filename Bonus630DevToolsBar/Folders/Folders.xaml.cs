@@ -218,7 +218,7 @@ namespace br.com.Bonus630DevToolsBar.Folders
      
         private void Remove(Folder folder)
         {
-            folderModel.DeleteFile(folder.Index);
+            folderModel.DeleteFileDataFromDB(folder.Index);
             _Folders.Remove(folder);
 
         }

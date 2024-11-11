@@ -63,11 +63,10 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             projectsManager.shapeRangeManager = shapeRangeManager;
             projectsManager.Start(proxyManager);
             this.DataContext = projectsManager;
-            projectsManager.RequestNewModuleEvent += (path) => { popup_newProject.IsOpen = true; lba_projPath.Content = path;txt_moduleName.Focus(); };
+            projectsManager.RequestNewModuleEvent += (path) => { popup_newProject.IsOpen = true; lba_projPath.Content = path; txt_moduleName.Focus(); };
+            projectsManager.RequestRemoveModule += (proj, module) => { RemoveModule(proj,module); };
             txt_projectName.TextChanged += (s, ev) => ChangeProjectDirectory();
             cb_projectType.SelectionChanged += (s, ev) => ChangeProjectDirectory();
-
-
         }
 
 
@@ -427,7 +426,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                             csprojFile = destinoItem;
                             projectCreator.PrepareGSAddonProj(item, csprojFile);
                         }
-                        if(item.Contains(".Internal."))
+                        if (item.Contains(".Internal."))
                         {
                             string content = File.ReadAllText(item);
                             content = content.Replace("[CgsAddInModule]",
@@ -435,7 +434,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                             File.WriteAllText(item, content);
                         }
                         File.Copy(item, destinoItem, true);
-                    
+
                     }
                     else if (Directory.Exists(item))
                     {
@@ -651,9 +650,9 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                 {
                     templatePath = Path.Combine(corelApp.AddonPath, "Bonus630DevToolsBar\\RunCommandDocker\\Templates\\MacroClassLibraryCS.zip");
                     ext = ".cs";
-                    if(!Utils.CheckCSClassName(fileName))
+                    if (!Utils.CheckCSClassName(fileName))
                     {
-                        System.Windows.Forms.MessageBox.Show("Invalid name!","Error",System.Windows.Forms.MessageBoxButtons.OK,System.Windows.Forms.MessageBoxIcon.Error);
+                        System.Windows.Forms.MessageBox.Show("Invalid name!", "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
                         return;
                     }
                 }
@@ -668,13 +667,13 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                     }
                 }
                 filePath = Path.Combine(fi.Directory.FullName, fileName + ext);
-                if(File.Exists(filePath))
+                if (File.Exists(filePath))
                 {
                     System.Windows.Forms.MessageBox.Show("File already exists!", "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
                     return;
                 }
-               
-               
+
+
                 using (var extractor = new TemplateExtractor(templatePath))
                 {
                     extractor.ExtractFile(filePath, "Main" + ext);
@@ -693,7 +692,26 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                 //projectCreator.DirectBuild();
                 projectCreator.MSBuild();
                 Reset();
-                
+
+            }
+        }
+        private void RemoveModule(string proj, string module)
+        {
+            if (System.Windows.Forms.MessageBox.Show("Do you really want to delete?", "Delete?",
+             System.Windows.Forms.MessageBoxButtons.YesNo, System.Windows.Forms.MessageBoxIcon.Warning) == System.Windows.Forms.DialogResult.Yes)
+            {
+                FileInfo fi = new FileInfo(proj);
+                string ext;
+                if (fi.Extension.Equals(".csproj"))
+                    ext = ".cs";
+                else
+                    ext = ".vb";
+                using (var p = new ProjManager(proj))
+                    if (p.RemoveCompileItem(module+ext))
+                    {
+                        projectCreator.LastProject = proj;
+                        projectCreator.DirectBuild();
+                    }
             }
         }
 

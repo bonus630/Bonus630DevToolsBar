@@ -168,10 +168,10 @@ namespace br.com.Bonus630DevToolsBar.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool UseIndex {
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public short UseIndex {
             get {
-                return ((bool)(this["UseIndex"]));
+                return ((short)(this["UseIndex"]));
             }
             set {
                 this["UseIndex"] = value;

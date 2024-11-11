@@ -36,8 +36,8 @@ namespace br.com.Bonus630DevToolsBar
                 dsf.AddDataSource(DataSourceName, typeof(DataSource.Bonus630DevToolsBarDataSource));
                 dsf.Register();
 
-                // var dsp = corelApp.FrameWork.Application.DataContext.GetDataSource(DataSourceName);
-                // dsp.SetProperty("CorelApp", corelApp);
+                 //var dsp = corelApp.FrameWork.Application.DataContext.GetDataSource(DataSourceName);
+                 //dsp.SetProperty("TesteAltura", 90);
         
             }
             catch (Exception)

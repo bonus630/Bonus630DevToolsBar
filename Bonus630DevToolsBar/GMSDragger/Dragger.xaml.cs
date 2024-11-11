@@ -36,12 +36,12 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
 
         public Dragger(object app)
         {
-            
+                this.corelApp = app as c.Application;
+        
 
             InitializeComponent();
             try
             {
-                this.corelApp = app as c.Application;
                 gmsPath = corelApp.GMSManager.UserGMSPath;
                 this.Loaded += Dragger_Loaded;
                 this.corelApp.OnApplicationEvent += CorelApp_OnApplicationEvent;
@@ -302,6 +302,26 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
             {
                 LoadThemeFromPreference();
             }
+            //if(EventName.Equals("FrameworkManagerToolbarListChanged"))
+            //{
+            //    var bar = corelApp.FrameWork.CommandBars["Bonus630 Dev Tools"];
+
+            //    //foreach (CommandBar i in corelApp.FrameWork.CommandBars)
+            //    //    Debug.WriteLine(i.Name);
+
+            //   Debug.WriteLine(bar.Controls[1].Height.ToString());
+            //    int x, y, w, h;
+
+            //    corelApp.FrameWork.Automation.GetItemScreenRect("48024933-d18b-4e0a-9b59-96a6b99a418e", "7acb54e6-084e-494f-ad31-2718f34ddad2",out x,out y,out w,out h);
+            //    Debug.WriteLine(h);
+            //    var d = corelApp.FrameWork.Application.DataContext.GetDataSource("Bonus630DevToolsBarDS");
+            //    d.SetProperty("TesteAltura",h);
+
+               
+
+            //    this.Height = h;
+            //    this.Width = h;
+            //}
 
         }
         //Keys resources name follow the resource order to add a new value, order to works you need add 5 resources colors and Resources/Colors.xaml

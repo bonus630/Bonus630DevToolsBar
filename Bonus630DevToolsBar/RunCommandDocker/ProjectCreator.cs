@@ -21,7 +21,6 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         public string VgCore { get; set; }
         public string AssembliesFolder { get; set; }
         private readonly string defaulClassName = "Main";
-        //8
         public string SafeProjectName { get; set; }
         public string ProjectFolder { get; set; }
         public string LastProject { get; set; }

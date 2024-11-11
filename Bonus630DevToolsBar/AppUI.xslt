@@ -90,6 +90,8 @@
 					hostedType="Addons\Bonus630DevToolsBar\Bonus630DevToolsBar.dll,br.com.Bonus630DevToolsBar.GMSDragger.Dragger"
 					enable="true"
 					caption="Drag your GMS here!"
+				    height="*Bind(DataSource=Bonus630DevToolsBarDS;Path=TesteAltura)"
+					width="*Bind(DataSource=Bonus630DevToolsBarDS;Path=TesteAltura)"
 			/>
 
 			<!--GMS Dragger Dialog test -->

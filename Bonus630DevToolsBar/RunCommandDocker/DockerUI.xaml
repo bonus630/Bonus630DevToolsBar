@@ -151,7 +151,7 @@
                                 </StackPanel>
                             </StackPanel>
                             <StackPanel Visibility="{Binding RequestNewModule,Converter={StaticResource BoolToVisibilityConverter}}">
-                                    <!-- vamos fazer assim por enquanto -->
+                                <!-- vamos fazer assim por enquanto -->
                                 <Label Content="Project File Path"  Margin="0,10,0,0"/>
                                 <Label Content="" Name="lba_projPath"  Margin="0,10,0,0"/>
                                 <Label Content="Module Name"  Margin="0,10,0,0"/>
@@ -495,17 +495,14 @@
                                     <MenuItem Header="Unload" CommandParameter="{Binding}" 
                                           Command="{Binding Path=PlacementTarget.DataContext.Parent.SwitchProjectCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}"
                                               Visibility="{Binding Loaded,Converter={StaticResource BoolToVisibilityConverter}}">
-
                                     </MenuItem>
                                     <MenuItem Header="Reload" CommandParameter="{Binding}" 
                                           Command="{Binding Path=PlacementTarget.DataContext.Parent.SwitchProjectCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}" 
                                               Visibility="{Binding Loaded,Converter={StaticResource ReverseBoolVisibilityConverter}}">
-
                                     </MenuItem>
                                     <MenuItem Header="New Module" CommandParameter="{Binding}" 
                                           Command="{Binding Path=PlacementTarget.DataContext.Parent.AddModuleCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}" 
                                               Visibility="{Binding RelativeSource={RelativeSource Mode=Self},Path=IsEnabled,Converter={StaticResource BoolToVisibilityConverter}}">
-
                                     </MenuItem>
                                 </ContextMenu>
                             </Grid.ContextMenu>
@@ -520,6 +517,13 @@
                                           Command="{Binding Path=PlacementTarget.DataContext.Parent.Parent.EditModuleCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}" >
                                         <MenuItem.Icon>
                                             <Image Style="{StaticResource EditImage}"/>
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                    <MenuItem Header="Delete" CommandParameter="{Binding}" 
+                                          Command="{Binding Path=PlacementTarget.DataContext.Parent.Parent.RemoveModuleCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}" 
+                                              Visibility="{Binding RelativeSource={RelativeSource Mode=Self},Path=IsEnabled,Converter={StaticResource BoolToVisibilityConverter}}">
+                                        <MenuItem.Icon>
+                                            <Image Style="{StaticResource ClearConsoleButtonImg}"/>
                                         </MenuItem.Icon>
                                     </MenuItem>
                                     <MenuItem Header="Sort Ascending" CommandParameter="{Binding}"

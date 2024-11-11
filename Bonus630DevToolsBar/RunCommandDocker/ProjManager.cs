@@ -92,7 +92,20 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             references[0].ParentNode.AppendChild(item);
             return true;
         }
-
+        public bool RemoveCompileItem(string itemName)
+        {
+            XmlNode rootNode = xmlDoc.DocumentElement;
+            var references = rootNode.SelectNodes("//p:ItemGroup//p:Compile", namespaceManager);
+            foreach (XmlNode referenceNode in references)
+            {
+                if (referenceNode.Attributes["Include"].Value.Equals(itemName))
+                {
+                    referenceNode.ParentNode.RemoveChild(referenceNode);
+                    return true;
+                }
+            }
+            return false;
+        }
 
     }
 }

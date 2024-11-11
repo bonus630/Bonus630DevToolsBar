@@ -19,6 +19,7 @@
             </ResourceDictionary.MergedDictionaries>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
             <converters:InvertBoolVisibilityConverter x:Key="InvertBoolVisibilityConverter" />
+            <converters:EmptyStringToVisibilityConverter x:Key="EmptyStringToVisibilityConverter" />
             <Style TargetType="{x:Type CheckBox}">
                 <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
                 <Setter Property="Background" Value="{DynamicResource Default.Static.Background}"/>
@@ -168,10 +169,9 @@
                   Click="CheckBox_Click">
             <CheckBox.ContextMenu>
                 <ContextMenu Background="{DynamicResource Button.Static.Background}">
-
                     <MenuItem Style="{StaticResource CheckableMenuItemStyle}" Header="Use Index" Name="menu_index" Click="menu_index_Click" IsChecked="True"/>
-
                     <MenuItem Style="{StaticResource CheckableMenuItemStyle}" Header="Use initials of the file name"  Name="menu_name"  Click="menu_name_Click" IsChecked="False"/>
+                    <MenuItem Style="{StaticResource CheckableMenuItemStyle}" Header="Use Micro Thumb"  Name="menu_thumb"  Click="menu_thumb_Click" IsChecked="False"/>
 
                 </ContextMenu>
             </CheckBox.ContextMenu>
@@ -180,15 +180,18 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Button  Tag="{Binding FullName}" VerticalAlignment="Stretch"
-                             Width="26" Height="20" MaxHeight="48" MaxWidth="48" 
-                             Click="Button_Click" MouseEnter="Button_MouseEnter" Margin="0,0,2,0" Padding="0">
-                        <Grid Width="24" Height="18">
+                             Width="{Binding ElementName=PART_content,Path=Width}" Height="20" MaxHeight="48" MaxWidth="48" 
+                             Click="Button_Click" MouseEnter="Button_MouseEnter" Margin="0,0,4,0" Padding="0">
+                        <Grid Name="PART_content" Width="Auto">
+                            <Grid Margin="1">
+                            <!--Width="24" Height="18">-->
                             <Polyline Points="0,0 6,0 0,6" Fill="Green" Panel.ZIndex="1" Visibility="{Binding AutoLoad,Converter={StaticResource BooleanToVisibilityConverter}}"/>
                             <Polyline Points="24,18 18,18 24,12" Fill="Red"  Visibility="{Binding IsOpened,Converter={StaticResource BooleanToVisibilityConverter}}" Panel.ZIndex="2"/>
-                            <!--<Rectangle Fill="Green" Height="2" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" 
-                           Visibility="{Binding AutoLoad,Converter={StaticResource BooleanToVisibilityConverter}}"/>-->
-                            <Label Content="{Binding AbsName,FallbackValue=0}" Margin="0,0,0,2" Padding="0" HorizontalAlignment="Center" Panel.ZIndex="-1"/>
-
+                            <Label Content="{Binding AbsName,FallbackValue=0}"  Padding="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="24"
+                   HorizontalContentAlignment="Center" Background="{DynamicResource Button.Static.Background}" Panel.ZIndex="-1"
+                   Visibility="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Content,Converter={StaticResource EmptyStringToVisibilityConverter}}"/>
+                            <Image Width="18" Height="18"  Panel.ZIndex="-2" Source="{Binding Thumb}"/>
+                            </Grid>
                         </Grid>
                         <Button.ToolTip>
                             <ToolTip Style="{StaticResource PreviewToolTipStyle}">
@@ -208,27 +211,27 @@
                         </Button.ToolTip>
                         <Button.ContextMenu>
                             <ContextMenu >
-                                <MenuItem Header="Remove" Click="MenuItem_Click" Tag="{Binding Index}" >
+                                <MenuItem Header="Remove" Click="MenuItem_Click_RemoveFileData" Tag="{Binding ID}" ToolTip="Remove from list, file is not deleted">
                                     <MenuItem.Icon>
                                         <Image Style="{DynamicResource ClearConsoleButtonImg}" />
                                     </MenuItem.Icon>
                                 </MenuItem>
-                                <MenuItem Header="Add to Auto Load" Click="MenuItem_Click_1" Tag="{Binding Index}"  Visibility="{Binding AutoLoad,Converter={StaticResource InvertBoolVisibilityConverter}}" >
+                                <MenuItem Header="Add to Auto Load" Click="MenuItem_Click_AddToAutoLoad" Tag="{Binding Index}"  Visibility="{Binding AutoLoad,Converter={StaticResource InvertBoolVisibilityConverter}}" >
                                     <MenuItem.Icon>
                                         <Image Style="{DynamicResource AddShapeRangeImage}" />
                                     </MenuItem.Icon>
                                 </MenuItem>
-                                <MenuItem Header="Remove from Auto Load" Click="MenuItem_Click_2" Tag="{Binding Index}" Visibility="{Binding AutoLoad,Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <MenuItem Header="Remove from Auto Load" Click="MenuItem_Click_RemoveFromAutoLoad" Tag="{Binding Index}" Visibility="{Binding AutoLoad,Converter={StaticResource BooleanToVisibilityConverter}}">
                                     <MenuItem.Icon>
                                         <Image Style="{DynamicResource RemoveShapeRangeImage}" />
                                     </MenuItem.Icon>
                                 </MenuItem>
-                                <MenuItem Header="Copy Path" Click="MenuItem_Click_3" Tag="{Binding Index}">
+                                <MenuItem Header="Copy Path" Click="MenuItem_Click_CopyPath" Tag="{Binding Index}">
                                     <MenuItem.Icon>
                                         <Image Style="{DynamicResource CopyBigImg}" />
                                     </MenuItem.Icon>
                                 </MenuItem>
-                                <MenuItem Header="Open Directory" Click="MenuItem_Click_4" Tag="{Binding Index}" >
+                                <MenuItem Header="Open Directory" Click="MenuItem_Click_OpenDirectory" Tag="{Binding Index}" >
                                     <MenuItem.Icon>
                                         <Image Style="{DynamicResource OpenFolderImg}" />
                                     </MenuItem.Icon>
@@ -244,18 +247,6 @@
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
         </ItemsControl>
-        <!--<Button  Tag="{Binding FullName}" VerticalAlignment="Stretch"
-                             Width="26" Height="20" MaxHeight="48" MaxWidth="48" 
-                             Click="Button_Click" MouseEnter="Button_MouseEnter" Margin="0,0,2,0" Padding="0">
-            <Grid Width="24" Height="18">
-                <Label Content="{Binding Index,FallbackValue=0}" Margin="0,0,0,2" Padding="0" HorizontalAlignment="Center" Panel.ZIndex="-1"/>
-            
-                <Polyline Points="0,0 6,0 0,6" Fill="Green" Panel.ZIndex="1"/>
-                <Polyline Points="24,18 18,18 24,12" Fill="Yellow" Panel.ZIndex="2"/>
-
-            </Grid>
-        </Button>-->
-        <!--<Path x:Name="Part_Check" Grid.Column="0" Data="M1,5 L5,9 L10,1 L11,1 L5,10 L1,5" Stroke="Green" StrokeThickness="2" HorizontalAlignment="Center" VerticalAlignment="Center" />-->
-        <!--<Border BorderThickness="1" BorderBrush="Red" CornerRadius="6" Width="20" Height="10"/>-->
+      
     </StackPanel>
 </UserControl>

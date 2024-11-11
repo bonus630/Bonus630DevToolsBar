@@ -18,7 +18,6 @@ namespace br.com.Bonus630DevToolsBar.DataSource
     [ComVisible(true)]
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [Guid("0c820c68-e9cc-4ca7-84bb-8f8d3768a214")]
-    //[ClassInterface(ClassInterfaceType.None)]
     public class Bonus630DevToolsBarDataSource : BaseDataSource
     {
 
@@ -38,6 +37,15 @@ namespace br.com.Bonus630DevToolsBar.DataSource
 
         }
 
+        private int t;
+
+        public int TesteAltura
+        {
+            get { return t; }
+            set { 
+                t = value;
+                NotifyPropertyChanged(); }
+        }
 
 
         // You can change caption/icon dynamically setting a new value here 
