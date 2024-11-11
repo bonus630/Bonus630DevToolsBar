@@ -54,16 +54,16 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
             return null;
         }
         //SELECT * FROM sua_tabela ORDER BY datetime(seu_campo_de_tempo_texto) DESC
-        public ObservableCollection<RecentFileViewModel> Fill(int id = -1)
+        public ObservableCollection<RecentFileViewModel> Fill(int id = -1,int offset = 10)
         {
             //   0  |    1    |    2    |      3     |       4        |        5        |    6
             //id int,index int,count int,autoload int,name Varchar(50),path Varchar(256),time Integer
             ObservableCollection<RecentFileViewModel> datas = new ObservableCollection<RecentFileViewModel>();
             try
             {
-                string condition = " ORDER BY time DESC";
+                string condition = " ORDER BY time DESC Limit 10 offset 10";
                 if (id != -1)
-                    condition = " LIMIT " + id;
+                    condition = string.Format(" LIMIT {0} OFFSET {1} ",offset,id);
                 using (SQLiteCommand command = CreateConnection().CreateCommand())
                 {
                     command.CommandText = string.Format("SELECT * FROM files ORDER BY time DESC{0};", condition);
@@ -114,7 +114,19 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
             }
             catch { }
         }
-
+        public int GetTotalRows()
+        {
+            try
+            {
+                using (SQLiteCommand command = CreateConnection().CreateCommand())
+                {
+                    command.CommandText = "SELECT COUNT(*) FROM files;";
+                    return Convert.ToInt32(command.ExecuteScalar());
+                }
+            }
+            catch { }
+            return -1;
+        }
 
         //public void InsertOrIncrementCount(string name, string path, int index, long time)
         //{

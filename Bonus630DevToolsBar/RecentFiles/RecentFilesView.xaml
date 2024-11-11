@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:br.com.Bonus630DevToolsBar.RecentFiles" 
              xmlns:converters="clr-namespace:br.com.Bonus630DevToolsBar.Converters"
+             xmlns:custom="clr-namespace:br.com.Bonus630DevToolsBar.CustomControls"
              d:DataContext="{d:DesignInstance Type=local:RecentFilesViewModel}"
              mc:Ignorable="d" 
              d:Background="White" VerticalAlignment="Stretch" Background="Transparent" >
@@ -150,23 +151,17 @@
                     </Setter.Value>
                 </Setter>
             </Style>
-            <Style TargetType="ToolTip" x:Key="PreviewToolTipStyle">
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="ToolTip">
-                            <Border BorderThickness="1" CornerRadius="8" Padding="4" Background="{DynamicResource Container.Static.Background}" BorderBrush="{DynamicResource Button.Static.Border}">
-                                <ContentPresenter />
-                            </Border>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
+            <Style TargetType="Popup" x:Key="PreviewPopupStyle">
+                <Setter Property="AllowsTransparency" Value="True" />
+
+
             </Style>
         </ResourceDictionary>
     </UserControl.Resources>
-    <StackPanel Orientation="Horizontal">
+    <DockPanel LastChildFill="True">
 
         <CheckBox x:Name="ck_autoLoad"  ToolTip="Auto Load Files" 
-                  Click="CheckBox_Click">
+                  Click="CheckBox_Click" DockPanel.Dock="Left">
             <CheckBox.ContextMenu>
                 <ContextMenu Background="{DynamicResource Button.Static.Background}">
                     <MenuItem Style="{StaticResource CheckableMenuItemStyle}" Header="Use Index" Name="menu_index" Click="menu_index_Click" IsChecked="True"/>
@@ -176,39 +171,71 @@
                 </ContextMenu>
             </CheckBox.ContextMenu>
         </CheckBox>
-        <ItemsControl x:Name="Items"  VerticalAlignment="Stretch" Margin="6,0,0,0"  ItemsSource="{Binding Files}" Height="20" Width="400">
+        <custom:SVGButton Margin="4,0,0,0" Visibility="{Binding CanDecrease,Converter={StaticResource BooleanToVisibilityConverter}}" 
+                          x:Name="back" Width="20" Height="20" Click="back_Click" DockPanel.Dock="Left" ToolTip="Preview" Padding="2">
+            <custom:SVGButton.Paths>
+                <custom:path d="M16,2 16,5 9,10 16,15 16,18 4,10z"  />
+
+            </custom:SVGButton.Paths>
+        </custom:SVGButton>
+        <custom:SVGButton Margin="0,0,4,0" Visibility="{Binding CanIncrease,Converter={StaticResource BooleanToVisibilityConverter}}"  
+                x:Name="forward" Width="20" Height="20" Click="forward_Click"  DockPanel.Dock="Right" ToolTip="Next" Padding="2">
+            <custom:SVGButton.Paths>
+                <custom:path d="M4 2 4 5 11 10 4 15 4 18 16 10z"  />
+            </custom:SVGButton.Paths>
+        </custom:SVGButton>
+        <Popup x:Name="InfoPopup" Placement="Mouse" StaysOpen="True" AllowsTransparency="True" >
+            <Border BorderThickness="1" CornerRadius="8" Padding="4" Background="{DynamicResource Container.Static.Background}" BorderBrush="{DynamicResource Button.Static.Border}">
+                <StackPanel>
+                    <Image  Width="256" Height="256" Source="{Binding Thumb}" Visibility="{Binding IsOpened,Converter={StaticResource InvertBoolVisibilityConverter}}"/>
+                    <Label Content="File is Opened!" Visibility="{Binding IsOpened,Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                    <StackPanel Orientation="Horizontal">
+                        <Ellipse Fill="Green" Width="6" Height="6" VerticalAlignment="Center" Visibility="{Binding AutoLoad,Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                        <Label Content="{Binding Name,FallbackValue=Nome do arquivo.cdr}" ToolTip="{Binding FullName}" />
+                        <Label Content="{Binding Version,FallbackValue=0}" FontWeight="Bold" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </Popup>
+        <ItemsControl x:Name="Items"  VerticalAlignment="Stretch" Margin="6,0,0,0"  ItemsSource="{Binding Files}" Height="20" Width="320">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Button  Tag="{Binding FullName}" VerticalAlignment="Stretch"
                              Width="{Binding ElementName=PART_content,Path=Width}" Height="20" MaxHeight="48" MaxWidth="48" 
-                             Click="Button_Click" MouseEnter="Button_MouseEnter" Margin="0,0,4,0" Padding="0">
+                             Click="Button_Click" MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave" Margin="0,0,4,0" Padding="0">
                         <Grid Name="PART_content" Width="Auto">
                             <Grid Margin="1">
-                            <!--Width="24" Height="18">-->
-                            <Polyline Points="0,0 6,0 0,6" Fill="Green" Panel.ZIndex="1" Visibility="{Binding AutoLoad,Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                            <Polyline Points="24,18 18,18 24,12" Fill="Red"  Visibility="{Binding IsOpened,Converter={StaticResource BooleanToVisibilityConverter}}" Panel.ZIndex="2"/>
-                            <Label Content="{Binding AbsName,FallbackValue=0}"  Padding="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="24"
+                                <!--Width="24" Height="18">-->
+                                <Polyline Points="0,0 6,0 0,6" Fill="Green" Panel.ZIndex="1" Visibility="{Binding AutoLoad,Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                <Polyline Points="24,18 18,18 24,12" Fill="Red"  Visibility="{Binding IsOpened,Converter={StaticResource BooleanToVisibilityConverter}}" Panel.ZIndex="2"/>
+                                <Label Content="{Binding AbsName,FallbackValue=0}"  Padding="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="24"
                    HorizontalContentAlignment="Center" Background="{DynamicResource Button.Static.Background}" Panel.ZIndex="-1"
                    Visibility="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Content,Converter={StaticResource EmptyStringToVisibilityConverter}}"/>
-                            <Image Width="18" Height="18"  Panel.ZIndex="-2" Source="{Binding Thumb}"/>
+                                <Image Width="18" Height="18"  Panel.ZIndex="-2" Source="{Binding Thumb}"/>
+                                <Label Content="{Binding AbsName,FallbackValue=0}"  Padding="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="24"
+                   HorizontalContentAlignment="Center" Background="{DynamicResource Button.Static.Background}" Panel.ZIndex="-3" />
                             </Grid>
                         </Grid>
-                        <Button.ToolTip>
-                            <ToolTip Style="{StaticResource PreviewToolTipStyle}">
-                            <!--<Border BorderThickness="1" BorderBrush="Red" CornerRadius="6">-->
-                                <StackPanel>
-                                    <Image  Width="256" Height="256" Source="{Binding Thumb}" Visibility="{Binding IsOpened,Converter={StaticResource InvertBoolVisibilityConverter}}"/>
-                                    <Label Content="File is Opened!" Visibility="{Binding IsOpened,Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                                    <StackPanel Orientation="Horizontal">
-                                        <Ellipse Fill="Green" Width="6" Height="6" VerticalAlignment="Center" Visibility="{Binding AutoLoad,Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                                        <Label Content="{Binding Name,FallbackValue=Nome do arquivo.cdr}" ToolTip="{Binding FullName}" />
-                                        <Label Content="{Binding Version,FallbackValue=0}" FontWeight="Bold" />
+                        <!--<Button.ToolTip>
+                                <ToolTip Style="{StaticResource PreviewToolTipStyle}">
+                                    -->
+                        <!--<Border BorderThickness="1" BorderBrush="Red" CornerRadius="6">-->
+                        <!--
+                                    <StackPanel>
+                                        <Image  Width="256" Height="256" Source="{Binding Thumb}" Visibility="{Binding IsOpened,Converter={StaticResource InvertBoolVisibilityConverter}}"/>
+                                        <Label Content="File is Opened!" Visibility="{Binding IsOpened,Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Ellipse Fill="Green" Width="6" Height="6" VerticalAlignment="Center" Visibility="{Binding AutoLoad,Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                            <Label Content="{Binding Name,FallbackValue=Nome do arquivo.cdr}" ToolTip="{Binding FullName}" />
+                                            <Label Content="{Binding Version,FallbackValue=0}" FontWeight="Bold" />
+                                        </StackPanel>
                                     </StackPanel>
-                                </StackPanel>
-                                
-                            <!--</Border>-->
-                            </ToolTip>
-                        </Button.ToolTip>
+
+                                    -->
+                        <!--</Border>-->
+                        <!--
+                                </ToolTip>
+                            </Button.ToolTip>-->
                         <Button.ContextMenu>
                             <ContextMenu >
                                 <MenuItem Header="Remove" Click="MenuItem_Click_RemoveFileData" Tag="{Binding ID}" ToolTip="Remove from list, file is not deleted">
@@ -247,6 +274,5 @@
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
         </ItemsControl>
-      
-    </StackPanel>
+    </DockPanel>
 </UserControl>

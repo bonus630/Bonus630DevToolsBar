@@ -90,8 +90,7 @@
 					hostedType="Addons\Bonus630DevToolsBar\Bonus630DevToolsBar.dll,br.com.Bonus630DevToolsBar.GMSDragger.Dragger"
 					enable="true"
 					caption="Drag your GMS here!"
-				    height="*Bind(DataSource=Bonus630DevToolsBarDS;Path=TesteAltura)"
-					width="*Bind(DataSource=Bonus630DevToolsBarDS;Path=TesteAltura)"
+				 
 			/>
 
 			<!--GMS Dragger Dialog test -->
@@ -291,23 +290,26 @@
 					<item guidRef="d0a371e7-9fad-4e1c-8159-b285d67c0497" />
 					<!--20 Icon test slot loader-->
 					<item guidRef="657042cb-3594-43a1-80bf-c8a27fd43146" />
-
-					<!--21 Theme-->
+					
+					<!--21 Separator-->
+					<item guidRef="266435b4-6e53-460f-9fa7-f45be187d400" />
+					<!--22 Theme-->
 					<item guidRef="c7203f61-2886-4bf1-bdbd-7ed54af38659" />
 
-					<!--22 Separator-->
+					<!--23 Separator-->
 					<item guidRef="266435b4-6e53-460f-9fa7-f45be187d400" />
-					<!--23 PrintScreen-->
+					<!--24 PrintScreen-->
 					<item guidRef="b5c5d8c0-e3d0-44dd-822f-2e61190c870b" />
 
-					<!--24 Separator-->
+					<!--25 Separator-->
 					<item guidRef="266435b4-6e53-460f-9fa7-f45be187d400" />
 
-					<!--25 Reopen Active Document -->
+					<!--26 Reopen Active Document -->
 					<item  guidRef="948fe4ae-3a3f-4052-9194-7354476d3b1a"/>
+					<!--27 Separator-->
+					<item guidRef="266435b4-6e53-460f-9fa7-f45be187d400" />
 
-
-					<!--26 Recent Files -->
+					<!--28 Recent Files -->
 					<item  guidRef="7d15e9c7-2431-4841-a5aa-9eaa5b581230" dock="fill"/>
 					<!--<item  guidRef="118bad9e-cab3-4810-883e-843626f798ae" dock="top"/>-->
 

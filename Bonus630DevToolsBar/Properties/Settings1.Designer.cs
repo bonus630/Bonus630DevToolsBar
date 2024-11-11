@@ -177,5 +177,17 @@ namespace br.com.Bonus630DevToolsBar.Properties {
                 this["UseIndex"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public ushort RecentFilesPosition {
+            get {
+                return ((ushort)(this["RecentFilesPosition"]));
+            }
+            set {
+                this["RecentFilesPosition"] = value;
+            }
+        }
     }
 }

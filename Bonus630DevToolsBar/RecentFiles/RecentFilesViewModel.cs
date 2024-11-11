@@ -30,7 +30,20 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
             get { return itemsWidth * files.Count; }
             set { itemsWidth = value; OnPropertyChanged(); }
         }
+        private bool canDecrease;
 
+        public bool CanDecrease
+        {
+            get { return canDecrease; }
+            set { canDecrease = value;OnPropertyChanged(); }
+        }
+        private bool canIncrease;
+
+        public bool CanIncrease
+        {
+            get { return canIncrease; }
+            set { canIncrease = value; OnPropertyChanged(); }
+        }
         public int Count { get { return files.Count; } }
 
         public RecentFileViewModel this[int i]
