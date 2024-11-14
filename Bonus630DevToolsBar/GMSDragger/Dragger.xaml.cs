@@ -287,7 +287,16 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
         }
         private void MenuItemUserGMS_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start(this.corelApp.GMSManager.UserGMSPath);
+            try
+            {
+                if (Directory.Exists(this.corelApp.GMSManager.UserGMSPath))
+                    System.Diagnostics.Process.Start(this.corelApp.GMSManager.UserGMSPath);
+            }
+            catch(Exception ex)
+            {
+                f.MessageBox.Show(ex.Message);
+            }
+           
         }
 
         private void MenuItemGMS_Click(object sender, RoutedEventArgs e)

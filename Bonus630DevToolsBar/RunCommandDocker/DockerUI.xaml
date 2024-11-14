@@ -169,478 +169,488 @@
             </Popup>
 
         </Grid>
-
-        <Grid DockPanel.Dock="Bottom">
-            <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
-            <GroupBox Grid.Row="0" Header="Shape Range Manager" Margin="0,10">
-                <Grid Height="26">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="26"/>
-                        <ColumnDefinition Width="26"/>
-                        <ColumnDefinition Width="26"/>
-                        <ColumnDefinition Width="26"/>
-                        <ColumnDefinition Width="26"/>
-                        <ColumnDefinition Width="26"/>
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-                    <custom:IconButton Icon="Add.png" Grid.Column="0"    Width="22" Height="22"   x:Name="btn_addSelection" Click="btn_addSelection_Click" >
-                        <custom:IconButton.ToolTip>
-                            <Label Content="Add Selection to ShapeRange Reference"/>
-                        </custom:IconButton.ToolTip>
-                        <!--<Image Style="{DynamicResource AddShapeRangeImage}" />-->
-                    </custom:IconButton>
-                    <custom:IconButton Icon="Remove.png" Grid.Column="1"   Width="22" Height="22"  x:Name="btn_removeSelection"  Click="btn_removeSelection_Click">
-                        <custom:IconButton.ToolTip>
-                            <Label Content="Remove Selection from ShapeRange Reference"/>
-                        </custom:IconButton.ToolTip>
-                        <!--<Image Style="{DynamicResource RemoveShapeRangeImage}" />-->
-                    </custom:IconButton>
-                    <custom:IconButton Icon="CleanData.png" Grid.Column="2"   Width="22" Height="22"  x:Name="btn_clearRange" Click="btn_clearRange_Click">
-                        <custom:IconButton.ToolTip>
-                            <Label Content="Clean ShapeRange Reference"/>
-                        </custom:IconButton.ToolTip>
-                        <!--<Image Style="{DynamicResource CleanDataShapeRangeImage}" />-->
-                    </custom:IconButton>
-                    <custom:IconButton Icon="createSelection.png" Grid.Column="3"   Width="22" Height="22" Command="{Binding Path=CreateSelectionShapeRangeCommand}">
-                        <custom:IconButton.ToolTip>
-                            <Label Content="Create a Selection from this ShapeRange"/>
-                        </custom:IconButton.ToolTip>
-                        <!--<Image Style="{DynamicResource CheckmarkShapeRangeImage}" />-->
-                    </custom:IconButton>
-                    <custom:IconButton Icon="Checkmark.png" Grid.Column="5"   Width="22" Height="22" Command="{Binding Path=SetShapeRangeToValueCommand}">
-                        <custom:IconButton.ToolTip>
-                            <Label Content="Set ShapeRange Reference to selected param"/>
-                        </custom:IconButton.ToolTip>
-                        <!--<Image Style="{DynamicResource CheckmarkShapeRangeImage}" />-->
-                    </custom:IconButton>
-                    <Border Grid.Column="6" BorderBrush="{DynamicResource Footer.Static.Background}" BorderThickness="2" CornerRadius="6">
-                        <Label HorizontalAlignment="Center" VerticalAlignment="Center" Content="{Binding shapeRangeManager.Count}" />
-                    </Border>
-                </Grid>
-            </GroupBox>
-            <Border BorderThickness="1" Grid.Row="1" Visibility="{Binding SelectedCommand,Converter={StaticResource NullToVisibilityConverter}}" >
-                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="0,10">
-                    <Expander  IsExpanded="true" x:Name="expander_Attributes"
-                                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalContentAlignment="Top" HorizontalContentAlignment="Stretch">
-                        <Expander.Header>
-                            <StackPanel HorizontalAlignment="{Binding Path=HorizontalAlignment, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentPresenter}}, Mode=OneWayToSource}" >
-                                <StackPanel Orientation="Horizontal">
-                                    <Button Style="{StaticResource NoBorderButton}" Width="16" Height="16"  HorizontalAlignment="Left"  
-                        CommandParameter="{Binding SelectedCommand}" Command="{Binding Path=ExecuteCommand}">
-                                        <Button.ToolTip>
-                                            <StackPanel Orientation="Horizontal">
-                                                <Label>Run</Label>
-                                                <Label Content="{Binding SelectedCommand.Name}"/>
-                                            </StackPanel>
-                                        </Button.ToolTip>
-                                        <Image Style="{DynamicResource PlayImage}" />
-                                    </Button>
-                                    <custom:IconButton Icon="Stop.png"  Width="16" Height="16"  HorizontalAlignment="Left"  
-                        CommandParameter="{Binding SelectedCommand}" Command="{Binding Path=StopCommand}"
-                                        Visibility="{Binding SelectedCommand.CanStop,Converter={StaticResource BoolToVisibilityConverter}}">
-                                        <custom:IconButton.ToolTip>
-                                            <StackPanel Orientation="Horizontal">
-                                                <Label>Run</Label>
-                                                <Label Content="{Binding SelectedCommand.Name}"/>
-                                            </StackPanel>
-                                        </custom:IconButton.ToolTip>
-                                        <!--<Image Style="{DynamicResource StopImage}" />-->
-                                    </custom:IconButton>
-                                    <Label Content="{Binding SelectedCommand.Name}" />
-                                </StackPanel>
-                                <ProgressBar Height="2" IsIndeterminate="True"  Visibility="{Binding SelectedCommand.CanStop,Converter={StaticResource BoolToVisibilityConverter}}"/>
-
-                            </StackPanel>
-                        </Expander.Header>
-                        <Grid Margin="0" HorizontalAlignment="Stretch">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <Label Grid.Row="0" Grid.Column="0" Content="{Binding SelectedCommand.ElapsedTime}" Visibility="{Binding SelectedCommand.ElapsedTime,Converter={StaticResource EmptyStringToVisibilityConverter}}"/>
-                            <GroupBox Grid.Row="1" Grid.Column="0"  Header="Return" Margin="0,0,0,4" Visibility="{Binding SelectedCommand.ReturnsType,ConverterParameter={x:Type System:Void},Converter={StaticResource TypeToVisibilityConverter}}">
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
-                                    </Grid.RowDefinitions>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="10" />
-                                        <ColumnDefinition Width="20"/>
-                                        <ColumnDefinition />
-                                        <ColumnDefinition Width="*" MinWidth="130"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Label Grid.Row="0" Grid.Column="2" Content="Type:" />
-                                    <Label Grid.Row="0" Grid.Column="3"  Content="{Binding SelectedCommand.ReturnsType.Name}" ToolTip="{Binding SelectedCommand.ReturnsType.FullName}"/>
-                                    <Button   Grid.Row="1" Grid.Column="1" Style="{DynamicResource NoBorderButton}" 
-                                              Width="16" Height="16" VerticalAlignment="Center"
-                                    CommandParameter="{Binding SelectedCommand.Returns}"  
-                                    Visibility="{Binding SelectedCommand.ReflectedProp.IsValueType,Converter={StaticResource ReverseBoolVisibilityConverter}}"
-                                    Command="{Binding Path=CopyReturnsValueCommand}">
-                                        <Button.ToolTip>
-                                            <Label Content="Copy Value" />
-                                        </Button.ToolTip>
-                                        <Image Style="{DynamicResource CopyImage}" />
-                                    </Button>
-                                    <Label Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" Content="Value:" />
-
-                                    <Grid  Grid.Row="1" Grid.Column="3" MinWidth="100" VerticalAlignment="Stretch" Background="Transparent" MouseEnter="Label_MouseEnter" 
-                                           Visibility="{Binding SelectedCommand.Returns,Converter={StaticResource NullToVisibilityConverter}}">
-                                        <Label Content="{Binding SelectedCommand.Returns}" VerticalAlignment="Center"  x:Name="lba_returns" Margin="2"/>
-                                    </Grid>
-
-                                    <popup:MyPopup ToReflect="{Binding SelectedCommand.Returns}" PlacementTarget="{Binding ElementName=lba_returns}" Placement="Right" AllowsTransparency="True"
-                                                       IsOpen="{Binding Path=MyPopupIsOpen}" 
-                                                           PopupCloseEvent="MyPopup_PopupCloseEvent" />
-
-                                </Grid>
-                            </GroupBox>
-                            <GroupBox Grid.Row="2" Grid.Column="0"  Header="Console" Visibility="{Binding SelectedCommand.ConsoleOut,Converter={StaticResource EmptyStringToVisibilityConverter}}" Margin="0,0,0,4">
-                                <Grid Margin="0">
-
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <TextBox Grid.Column="0" Text="{Binding SelectedCommand.ConsoleOut}" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" ></TextBox>
-                                </Grid>
-                            </GroupBox>
-                            <GroupBox Grid.Row="3" Grid.Column="0"  Header="Params" Visibility="{Binding SelectedCommand.Count,Converter={StaticResource IntToVisibilityConverter},FallbackValue=0}" Margin="0,0,0,4">
-                                <Grid>
-                                    <ListView BorderThickness="0" 
-                                        ItemsSource="{Binding SelectedCommand.Items}" 
-                                              SelectionMode="Single" KeyboardNavigation.TabNavigation="Continue" >
-
-                                        <ListView.ItemContainerStyle>
-                                            <Style BasedOn="{StaticResource ListViewItemCustomStyle}" TargetType="{x:Type ListViewItem}">
-                                                <Setter Property="IsSelected" Value="{Binding IsSelectedBase,Mode=TwoWay}" />
-                                                <Setter Property="IsTabStop" Value="False" />
-
-                                            </Style>
-                                        </ListView.ItemContainerStyle>
-                                        <ListView.ItemTemplate>
-                                            <DataTemplate>
-                                                <Grid>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="80" />
-                                                        <ColumnDefinition Width="*"/>
-                                                    </Grid.ColumnDefinitions>
-                                                    <Grid.RowDefinitions>
-                                                        <RowDefinition />
-                                                        <RowDefinition />
-                                                    </Grid.RowDefinitions>
-                                                    <Label Grid.Row="0" Grid.Column="0" Content="{Binding Name}" ToolTip="{Binding Name}"/>
-                                                    <Label Grid.Row="0" Grid.Column="1" Content="{Binding ArgumentType.Name}" ToolTip="{Binding ArgumentType.FullName}"/>
-                                                    <Label Grid.Row="1" Grid.Column="0" Content="Value:" />
-                                                    <!--<TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Value,Converter={StaticResource TypeToStringConverter}}" 
-                                                             VerticalContentAlignment="Center" Width="144"  />-->
-                                                    <custom:ParamControl Grid.Row="1" Grid.Column="1" VerticalContentAlignment="Center" Width="144"  
-                                                                         ParamValue="{Binding Value}" ParamType="{Binding ArgumentType}" ParamOptions="{Binding Options}" >
-                                                        <custom:ParamControl.InputBindings>
-                                                            <KeyBinding Key="Enter" CommandParameter="{Binding Parent}" Command="{Binding Path=Parent.Parent.Parent.Parent.ExecuteCommand}"/>
-                                                        </custom:ParamControl.InputBindings>
-                                                    </custom:ParamControl>
-                                                </Grid>
-                                            </DataTemplate>
-                                        </ListView.ItemTemplate>
-                                    </ListView>
-
-                                </Grid>
-                            </GroupBox>
-                        </Grid>
-                    </Expander>
-
-                </ScrollViewer>
-            </Border>
-            <ItemsControl Grid.Row="2"  HorizontalAlignment="Stretch" Margin="0,10,0,0" ItemsSource="{Binding PinnedCommands}" Background="{DynamicResource Footer.Static.Background}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal">
-                            <StackPanel.ContextMenu>
-                                <ContextMenu>
-                                    <MenuItem Header="Unpin" CommandParameter="{Binding}" 
+        <ItemsControl DockPanel.Dock="Bottom"  HorizontalAlignment="Stretch" Margin="0,4,0,0" ItemsSource="{Binding PinnedCommands}" Background="{DynamicResource Footer.Static.Background}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <StackPanel.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Unpin" CommandParameter="{Binding}" 
                                           Command="{Binding Path=PlacementTarget.DataContext.Parent.Parent.Parent.TogglePinCommand,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ItemsControl}}">
-                                        <MenuItem.Icon>
-                                            <Image Style="{DynamicResource PinImage}"/>
-                                        </MenuItem.Icon>
-                                    </MenuItem>
-                                    <MenuItem >
-                                        <MenuItem.Header>
-                                            <CheckBox IsChecked="{Binding Path=Parent.IsExpanded}" Content="Expand Tree" />
-                                        </MenuItem.Header>
-                                    </MenuItem>
-                                </ContextMenu>
-                            </StackPanel.ContextMenu>
-                            <custom:IconButton Icon="Play.png" Grid.Column="0" Width="16" Height="16"  
+                                    <MenuItem.Icon>
+                                        <Image Style="{DynamicResource PinImage}"/>
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem >
+                                    <MenuItem.Header>
+                                        <CheckBox IsChecked="{Binding Path=Parent.IsExpanded}" Content="Expand Tree" />
+                                    </MenuItem.Header>
+                                </MenuItem>
+                            </ContextMenu>
+                        </StackPanel.ContextMenu>
+                        <custom:IconButton Icon="Play.png" Grid.Column="0" Width="16" Height="16"  
                                 Visibility="{Binding Path=HasParam,  Converter={StaticResource ReverseBoolVisibilityConverter}}"
                         CommandParameter="{Binding}" Command="{Binding Path=DataContext.ExecuteCommand,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ItemsControl}}">
-                                <custom:IconButton.ToolTip>
-                                    <StackPanel Orientation="Horizontal">
-                                        <Label>Run</Label>
-                                        <Label Content="{Binding Name}"/>
-                                    </StackPanel>
-                                </custom:IconButton.ToolTip>
-                                <!--<Image Style="{DynamicResource PlayImage}" />-->
-                            </custom:IconButton>
-                            <!--Visibility="{Binding Path=HasParam,  Converter={StaticResource ReverseBoolVisibilityConverter}}"-->
-                            <custom:IconButton Icon="Checkmark.png" Grid.Column="1"  Width="16" Height="16" 
+                            <custom:IconButton.ToolTip>
+                                <StackPanel Orientation="Horizontal">
+                                    <Label>Run</Label>
+                                    <Label Content="{Binding Name}"/>
+                                </StackPanel>
+                            </custom:IconButton.ToolTip>
+                            <!--<Image Style="{DynamicResource PlayImage}" />-->
+                        </custom:IconButton>
+                        <!--Visibility="{Binding Path=HasParam,  Converter={StaticResource ReverseBoolVisibilityConverter}}"-->
+                        <custom:IconButton Icon="Checkmark.png" Grid.Column="1"  Width="16" Height="16" 
                                 Visibility="{Binding ReturnsType,ConverterParameter={x:Type System:Void},Converter={StaticResource TypeToVisibilityConverter}}"
                                 CommandParameter="{Binding}" 
                                 Command="{Binding Path=DataContext.SetCommandToValueCommand,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ItemsControl}}">
-                                <custom:IconButton.ToolTip>
-                                    <Label Content="Set returns value to selected argument"/>
-                                </custom:IconButton.ToolTip>
+                            <custom:IconButton.ToolTip>
+                                <Label Content="Set returns value to selected argument"/>
+                            </custom:IconButton.ToolTip>
 
-                                <!--<Image Style="{DynamicResource CheckmarkShapeRangeImage}" />-->
+                            <!--<Image Style="{DynamicResource CheckmarkShapeRangeImage}" />-->
 
-                            </custom:IconButton>
+                        </custom:IconButton>
 
-                            <Label Content="{Binding Name}" FontSize="9" FontWeight="Bold" VerticalAlignment="Center" VerticalContentAlignment="Center" Foreground="{DynamicResource Default.Static.Foreground}" />
-                        </StackPanel>
+                        <Label Content="{Binding Name}" FontSize="9" FontWeight="Bold" VerticalAlignment="Center" VerticalContentAlignment="Center" Foreground="{DynamicResource Default.Static.Foreground}" />
+                    </StackPanel>
 
 
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel/>
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-            </ItemsControl>
-
-        </Grid>
-        <Grid DockPanel.Dock="Top">
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
+        <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <!--<Popup IsOpen="True" StaysOpen="True" Placement="Bottom">-->
-            <Grid  Grid.Row="0" Name="gridSearchBox" Visibility="Collapsed">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition Width="40"/>
-                    <ColumnDefinition Width="6"/>
-                    <ColumnDefinition Width="20" />
-                    <ColumnDefinition Width="20" />
-                    <ColumnDefinition Width="20" />
-                    <ColumnDefinition Width="20" />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition />
-                </Grid.RowDefinitions>
-                <custom:IconTextBox Icon="search.png" PlaceHolder="Search..." Grid.Row="0" Grid.Column="0" x:Name="textBoxSearch" TextChanged="textBoxSearch_TextChanged" VerticalAlignment="Center" VerticalContentAlignment="Center" BorderBrush="{x:Null}"/>
-                <Label Grid.Row="0" Grid.Column="1" Content="{Binding CommandSearch.CurrentAndFounds}"  FontWeight="Bold" FontSize="9" VerticalAlignment="Center"/>
-                <Rectangle Grid.Row="0"  Width="1" Height="28" Grid.Column="2" />
-                <Button  Grid.Row="0" Grid.Column="3" Content="▲" Name="buttonPreview" Click="buttonPreview_Click" Width="20" Height="20"  Style="{DynamicResource NoBorderButton}" />
-                <Button  Grid.Row="0" Grid.Column="4" Content="▼" Name="buttonNext" Click="buttonNext_Click"  Width="20" Height="20"  Style="{DynamicResource NoBorderButton}" />
-                <custom:IconCheckBox  Grid.Row="0" Grid.Column="5" Content="C" IsChecked="False" IconChecked="SearchConfigChecked.png" IconUnchecked="SearchConfig.png"  Width="20" Height="20" x:Name="buttonConfig"  />
-                <Button  Grid.Row="0" Grid.Column="6" Content="X" Name="buttonClose" Click="buttonClose_Click"  Width="20" Height="20"  Style="{DynamicResource NoBorderButton}" />
 
-                <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="6" 
-                      Visibility="{Binding ElementName=buttonConfig,Path=IsChecked, Converter={StaticResource BoolToVisibilityConverter}}">
+            <Grid Grid.Row="0">
+                <!--tree view -->
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"  MinHeight="160"/>
+                    <RowDefinition Height="70"/>
+                </Grid.RowDefinitions>
+                <!--<Popup IsOpen="True" StaysOpen="True" Placement="Bottom">-->
+                <Grid  Grid.Row="0" Name="gridSearchBox" Visibility="Collapsed">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
+                        <ColumnDefinition Width="40"/>
+                        <ColumnDefinition Width="6"/>
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="20" />
                         <ColumnDefinition Width="20" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition Height="Auto"/>
+                        <RowDefinition />
+                        <RowDefinition />
                     </Grid.RowDefinitions>
+                    <custom:IconTextBox Icon="search.png" PlaceHolder="Search..." Grid.Row="0" Grid.Column="0" x:Name="textBoxSearch" TextChanged="textBoxSearch_TextChanged" VerticalAlignment="Center" VerticalContentAlignment="Center" BorderBrush="{x:Null}"/>
+                    <Label Grid.Row="0" Grid.Column="1" Content="{Binding CommandSearch.CurrentAndFounds}"  FontWeight="Bold" FontSize="9" VerticalAlignment="Center"/>
+                    <Rectangle Grid.Row="0"  Width="1" Height="28" Grid.Column="2" />
+                    <Button  Grid.Row="0" Grid.Column="3" Content="▲" Name="buttonPreview" Click="buttonPreview_Click" Width="20" Height="20"  Style="{DynamicResource NoBorderButton}" />
+                    <Button  Grid.Row="0" Grid.Column="4" Content="▼" Name="buttonNext" Click="buttonNext_Click"  Width="20" Height="20"  Style="{DynamicResource NoBorderButton}" />
+                    <custom:IconCheckBox  Grid.Row="0" Grid.Column="5" Content="C" IsChecked="False" IconChecked="SearchConfigChecked.png" IconUnchecked="SearchConfig.png"  Width="20" Height="20" x:Name="buttonConfig"  />
+                    <Button  Grid.Row="0" Grid.Column="6" Content="X" Name="buttonClose" Click="buttonClose_Click"  Width="20" Height="20"  Style="{DynamicResource NoBorderButton}" />
 
-                    <Label Grid.Row="0" Grid.Column="0" Content="Match case" VerticalAlignment="Center"/>
-                    <CheckBox Grid.Row="0" Grid.Column="1" x:Name="checkBoxMatchCase" Click="checkBoxMatchCase_Click" VerticalAlignment="Center"/>
-                    <Label Grid.Row="1" Grid.Column="0" Content="Match whole word" VerticalAlignment="Center"/>
-                    <CheckBox Grid.Row="1" Grid.Column="1" x:Name="checkBoxWholeWord" Click="checkBoxWholeWord_Click" VerticalAlignment="Center"/>
-                    <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="0,2,0,2"
+                    <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="6" 
+                      Visibility="{Binding ElementName=buttonConfig,Path=IsChecked, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="20" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Label Grid.Row="0" Grid.Column="0" Content="Match case" VerticalAlignment="Center"/>
+                        <CheckBox Grid.Row="0" Grid.Column="1" x:Name="checkBoxMatchCase" Click="checkBoxMatchCase_Click" VerticalAlignment="Center"/>
+                        <Label Grid.Row="1" Grid.Column="0" Content="Match whole word" VerticalAlignment="Center"/>
+                        <CheckBox Grid.Row="1" Grid.Column="1" x:Name="checkBoxWholeWord" Click="checkBoxWholeWord_Click" VerticalAlignment="Center"/>
+                        <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="0,2,0,2"
                                 Visibility="{Binding ElementName=checkBoxWholeWord,Path=IsChecked,Converter={StaticResource ReverseBoolVisibilityConverter}}">
-                        <RadioButton Content="Start with" Click="RadioButtonCondition_Click" Tag="0" IsChecked="True"/>
-                        <RadioButton Content="Contains" Click="RadioButtonCondition_Click" Tag="1" />
-                        <RadioButton Content="End with" Click="RadioButtonCondition_Click" Tag="2" />
-                    </StackPanel>
+                            <RadioButton Content="Start with" Click="RadioButtonCondition_Click" Tag="0" IsChecked="True"/>
+                            <RadioButton Content="Contains" Click="RadioButtonCondition_Click" Tag="1" />
+                            <RadioButton Content="End with" Click="RadioButtonCondition_Click" Tag="2" />
+                        </StackPanel>
+
+                    </Grid>
+
 
                 </Grid>
-
-
-            </Grid>
-            <!--</Popup>-->
-            <TreeView Grid.Row="1"  ItemsSource="{Binding Projects}" Name="treeViewCommands" TreeViewItem.Selected="TreeView_Selected" 
+                <!--</Popup>-->
+                <TreeView Grid.Row="1"  ItemsSource="{Binding Projects}" Name="treeViewCommands" TreeViewItem.Selected="TreeView_Selected" 
                       IsTextSearchCaseSensitive="False" IsTextSearchEnabled="True" TextSearch.TextPath="Name" KeyDown="treeViewCommands_KeyDown" KeyUp="treeViewCommands_KeyUp">
-                <!--Reciclar ou focar o item?-->
-                <!--VirtualizingStackPanel.IsVirtualizing="True" VirtualizingStackPanel.VirtualizationMode="Recycling"-->
+                    <!--Reciclar ou focar o item?-->
+                    <!--VirtualizingStackPanel.IsVirtualizing="True" VirtualizingStackPanel.VirtualizationMode="Recycling"-->
 
-                <!-- //Ref.:01 
+                    <!-- //Ref.:01 
             // Compare to another Ref.:01
              TreeViewItem.Selected="TreeView_Selected">-->
 
-                <TreeView.Resources>
-                    <Style BasedOn="{StaticResource TreeViewItemCustomStyle}" TargetType="{x:Type TreeViewItem}">
-                        <Setter Property="TreeViewItem.IsExpanded" Value="{Binding IsExpanded,Mode=TwoWay}"/>
-                        <Setter Property="custom:BringSelectedItemIntoViewBehavior.IsBringSelectedIntoView" Value="True" />
-                        <Setter Property="TreeViewItem.IsSelected" Value="{Binding IsSelectedBase,Mode=TwoWay}"/>
-                    </Style>
-                    <HierarchicalDataTemplate  ItemsSource="{Binding Path=Items}" DataType="{x:Type local:Project}">
-                        <Grid>
-                            <Grid.ContextMenu>
-                                <ContextMenu>
-                                    <MenuItem Header="Unload" CommandParameter="{Binding}" 
+                    <TreeView.Resources>
+                        <Style BasedOn="{StaticResource TreeViewItemCustomStyle}" TargetType="{x:Type TreeViewItem}">
+                            <Setter Property="TreeViewItem.IsExpanded" Value="{Binding IsExpanded,Mode=TwoWay}"/>
+                            <Setter Property="custom:BringSelectedItemIntoViewBehavior.IsBringSelectedIntoView" Value="True" />
+                            <Setter Property="TreeViewItem.IsSelected" Value="{Binding IsSelectedBase,Mode=TwoWay}"/>
+                        </Style>
+                        <HierarchicalDataTemplate  ItemsSource="{Binding Path=Items}" DataType="{x:Type local:Project}">
+                            <Grid>
+                                <Grid.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Header="Unload" CommandParameter="{Binding}" 
                                           Command="{Binding Path=PlacementTarget.DataContext.Parent.SwitchProjectCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}"
                                               Visibility="{Binding Loaded,Converter={StaticResource BoolToVisibilityConverter}}">
-                                    </MenuItem>
-                                    <MenuItem Header="Reload" CommandParameter="{Binding}" 
+                                        </MenuItem>
+                                        <MenuItem Header="Reload" CommandParameter="{Binding}" 
                                           Command="{Binding Path=PlacementTarget.DataContext.Parent.SwitchProjectCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}" 
                                               Visibility="{Binding Loaded,Converter={StaticResource ReverseBoolVisibilityConverter}}">
-                                    </MenuItem>
-                                    <MenuItem Header="New Module" CommandParameter="{Binding}" 
+                                        </MenuItem>
+                                        <MenuItem Header="New Module" CommandParameter="{Binding}" 
                                           Command="{Binding Path=PlacementTarget.DataContext.Parent.AddModuleCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}" 
                                               Visibility="{Binding RelativeSource={RelativeSource Mode=Self},Path=IsEnabled,Converter={StaticResource BoolToVisibilityConverter}}">
-                                    </MenuItem>
-                                </ContextMenu>
-                            </Grid.ContextMenu>
-                            <Label Content="{Binding Path=Name}" Focusable="False" />
-                        </Grid>
-                    </HierarchicalDataTemplate>
-                    <HierarchicalDataTemplate  ItemsSource="{Binding Path=Items}" DataType="{x:Type local:Module}" >
-                        <Grid>
-                            <Grid.ContextMenu>
-                                <ContextMenu>
-                                    <MenuItem Header="Edit" CommandParameter="{Binding}"
-                                          Command="{Binding Path=PlacementTarget.DataContext.Parent.Parent.EditModuleCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}" >
-                                        <MenuItem.Icon>
-                                            <Image Style="{StaticResource EditImage}"/>
-                                        </MenuItem.Icon>
-                                    </MenuItem>
-                                    <MenuItem Header="Delete" CommandParameter="{Binding}" 
-                                          Command="{Binding Path=PlacementTarget.DataContext.Parent.Parent.RemoveModuleCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}" 
-                                              Visibility="{Binding RelativeSource={RelativeSource Mode=Self},Path=IsEnabled,Converter={StaticResource BoolToVisibilityConverter}}">
-                                        <MenuItem.Icon>
-                                            <Image Style="{StaticResource ClearConsoleButtonImg}"/>
-                                        </MenuItem.Icon>
-                                    </MenuItem>
-                                    <MenuItem Header="Sort Ascending" CommandParameter="{Binding}"
-                                          Command="{Binding Path=PlacementTarget.DataContext.Parent.Parent.OrderModuleCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}"
-                                          Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
-                                        <MenuItem.Icon>
-                                            <Image Style="{StaticResource SortAscendingImg}"/>
-                                        </MenuItem.Icon>
-                                    </MenuItem>
-                                    <MenuItem Header="Sort Descending" CommandParameter="{Binding}"
-                                          Command="{Binding Path=PlacementTarget.DataContext.Parent.Parent.OrderDescModuleCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}"
-                                          Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
-                                        <MenuItem.Icon>
-                                            <Image Style="{StaticResource SortDescendingImg}"/>
-                                        </MenuItem.Icon>
-                                    </MenuItem>
-                                    <MenuItem Header="Clear Sort" CommandParameter="{Binding}"
-                                          Command="{Binding Path=PlacementTarget.DataContext.Parent.Parent.OrderOriginalModuleCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}"
-                                          Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
-                                        <MenuItem.Icon>
-                                            <Image Style="{StaticResource ClearSortImg}"/>
-                                        </MenuItem.Icon>
-                                    </MenuItem>
-
-                                </ContextMenu>
-                            </Grid.ContextMenu>
-                            <Label Content="{Binding Path=Name}" Focusable="False"/>
-                        </Grid>
-                    </HierarchicalDataTemplate>
-                    <DataTemplate DataType="{x:Type local:Command}">
-                        <!--<DataTemplate.Triggers >
-                        <DataTrigger Binding="{Binding IsSelected}" Value="True">
-                            <Setter TargetName="treeViewItemRun" Property="b"
-                        </DataTrigger>
-                    </DataTemplate.Triggers>-->
-                        <!--28-->
-                        <StackPanel>
-                            <Grid Height="28" x:Name="treeViewItemRun">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="20"/>
-                                    <ColumnDefinition Width="20"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
+                                        </MenuItem>
+                                    </ContextMenu>
+                                </Grid.ContextMenu>
+                                <Label Content="{Binding Path=Name}" Focusable="False" />
+                            </Grid>
+                        </HierarchicalDataTemplate>
+                        <HierarchicalDataTemplate  ItemsSource="{Binding Path=Items}" DataType="{x:Type local:Module}" >
+                            <Grid>
                                 <Grid.ContextMenu>
                                     <ContextMenu>
                                         <MenuItem Header="Edit" CommandParameter="{Binding}"
-                                          Command="{Binding Path=PlacementTarget.DataContext.Parent.Parent.Parent.EditCommandCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}"
-                                          Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+                                          Command="{Binding Path=PlacementTarget.DataContext.Parent.Parent.EditModuleCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}" >
                                             <MenuItem.Icon>
                                                 <Image Style="{StaticResource EditImage}"/>
                                             </MenuItem.Icon>
                                         </MenuItem>
-                                        <MenuItem Header="Pin" CommandParameter="{Binding}"
-                                          Command="{Binding Path=PlacementTarget.DataContext.Parent.Parent.Parent.TogglePinCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}"
-                                         Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+                                        <MenuItem Header="Delete" CommandParameter="{Binding}" 
+                                          Command="{Binding Path=PlacementTarget.DataContext.Parent.Parent.RemoveModuleCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}" 
+                                              Visibility="{Binding RelativeSource={RelativeSource Mode=Self},Path=IsEnabled,Converter={StaticResource BoolToVisibilityConverter}}">
                                             <MenuItem.Icon>
-                                                <Image Style="{StaticResource PinImage}"/>
+                                                <Image Style="{StaticResource ClearConsoleButtonImg}"/>
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                        <MenuItem Header="Sort Ascending" CommandParameter="{Binding}"
+                                          Command="{Binding Path=PlacementTarget.DataContext.Parent.Parent.OrderModuleCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}"
+                                          Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+                                            <MenuItem.Icon>
+                                                <Image Style="{StaticResource SortAscendingImg}"/>
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                        <MenuItem Header="Sort Descending" CommandParameter="{Binding}"
+                                          Command="{Binding Path=PlacementTarget.DataContext.Parent.Parent.OrderDescModuleCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}"
+                                          Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+                                            <MenuItem.Icon>
+                                                <Image Style="{StaticResource SortDescendingImg}"/>
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                        <MenuItem Header="Clear Sort" CommandParameter="{Binding}"
+                                          Command="{Binding Path=PlacementTarget.DataContext.Parent.Parent.OrderOriginalModuleCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}"
+                                          Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+                                            <MenuItem.Icon>
+                                                <Image Style="{StaticResource ClearSortImg}"/>
                                             </MenuItem.Icon>
                                         </MenuItem>
 
                                     </ContextMenu>
                                 </Grid.ContextMenu>
-                                <custom:IconButton Icon="Play.png" Grid.Column="0"  Width="16" Height="16" IsTabStop="False"  
+                                <Label Content="{Binding Path=Name}" Focusable="False"/>
+                            </Grid>
+                        </HierarchicalDataTemplate>
+                        <DataTemplate DataType="{x:Type local:Command}">
+                            <!--<DataTemplate.Triggers >
+                        <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                            <Setter TargetName="treeViewItemRun" Property="b"
+                        </DataTrigger>
+                    </DataTemplate.Triggers>-->
+                            <!--28-->
+                            <StackPanel>
+                                <Grid Height="28" x:Name="treeViewItemRun">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="20"/>
+                                        <ColumnDefinition Width="20"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Header="Edit" CommandParameter="{Binding}"
+                                          Command="{Binding Path=PlacementTarget.DataContext.Parent.Parent.Parent.EditCommandCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}"
+                                          Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+                                                <MenuItem.Icon>
+                                                    <Image Style="{StaticResource EditImage}"/>
+                                                </MenuItem.Icon>
+                                            </MenuItem>
+                                            <MenuItem Header="Pin" CommandParameter="{Binding}"
+                                          Command="{Binding Path=PlacementTarget.DataContext.Parent.Parent.Parent.TogglePinCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}"
+                                         Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+                                                <MenuItem.Icon>
+                                                    <Image Style="{StaticResource PinImage}"/>
+                                                </MenuItem.Icon>
+                                            </MenuItem>
+
+                                        </ContextMenu>
+                                    </Grid.ContextMenu>
+                                    <custom:IconButton Icon="Play.png" Grid.Column="0"  Width="16" Height="16" IsTabStop="False"  
                                 Visibility="{Binding Path=HasParam,  Converter={StaticResource ReverseBoolVisibilityConverter}}"
                         CommandParameter="{Binding}" Command="{Binding Path=DataContext.ExecuteCommand,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=TreeView}}"
                                     KeyboardNavigation.DirectionalNavigation="None" KeyboardNavigation.TabNavigation="Continue">
-                                    <Button.ToolTip>
-                                        <StackPanel Orientation="Horizontal">
-                                            <Label>Run</Label>
-                                            <Label Content="{Binding Name}"/>
-                                        </StackPanel>
-                                    </Button.ToolTip>
-                                    <!--<Image Style="{DynamicResource PlayImage}" />-->
-                                </custom:IconButton>
-                                <!--Visibility="{Binding Path=HasParam,  Converter={StaticResource ReverseBoolVisibilityConverter}}"-->
+                                        <Button.ToolTip>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Label>Run</Label>
+                                                <Label Content="{Binding Name}"/>
+                                            </StackPanel>
+                                        </Button.ToolTip>
+                                        <!--<Image Style="{DynamicResource PlayImage}" />-->
+                                    </custom:IconButton>
+                                    <!--Visibility="{Binding Path=HasParam,  Converter={StaticResource ReverseBoolVisibilityConverter}}"-->
 
-                                <custom:IconButton Icon="Checkmark.png" Grid.Column="1"  Width="16" Height="16" IsTabStop="False"
+                                    <custom:IconButton Icon="Checkmark.png" Grid.Column="1"  Width="16" Height="16" IsTabStop="False"
                                 Visibility="{Binding ReturnsType,ConverterParameter={x:Type System:Void},Converter={StaticResource TypeToVisibilityConverter}}"
                                 CommandParameter="{Binding}" 
                                 Command="{Binding Path=DataContext.SetCommandToValueCommand,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=TreeView}}"
                                     KeyboardNavigation.DirectionalNavigation="None">
-                                    <Button.ToolTip>
-                                        <Label Content="Set returns value to selected argument"/>
-                                    </Button.ToolTip>
+                                        <Button.ToolTip>
+                                            <Label Content="Set returns value to selected argument"/>
+                                        </Button.ToolTip>
 
-                                    <!--<Image Style="{DynamicResource CheckmarkShapeRangeImage}" />-->
+                                        <!--<Image Style="{DynamicResource CheckmarkShapeRangeImage}" />-->
 
-                                </custom:IconButton>
-                                <Grid  Grid.Column="1"  Background="{Binding RelativeSource={RelativeSource AncestorType=Border,Mode=FindAncestor},Path=Background}" Width="16" Height="16" 
+                                    </custom:IconButton>
+                                    <Grid  Grid.Column="1"  Background="{Binding RelativeSource={RelativeSource AncestorType=Border,Mode=FindAncestor},Path=Background}" Width="16" Height="16" 
                                    Visibility="{Binding LastRunFails,Converter={StaticResource BoolToVisibilityConverter}}">
-                                    <Image Style="{StaticResource FailsImage}" Name="img_fails" MouseEnter="img_fails_MouseOver">
-                                        <Image.ToolTip>
-                                            <StackPanel>
-                                                <Label Content="Fails, try check your code!" FontWeight="Bold"/>
-                                                <Label Content="{Binding LastException.InnerExceptions[0].Message}" />
-                                                <TextBox Margin="10" Text="{Binding LastException.InnerExceptions[0].StackTrace, Mode=OneWay}" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"  />
-                                            </StackPanel>
-                                        </Image.ToolTip>
+                                        <Image Style="{StaticResource FailsImage}" Name="img_fails" MouseEnter="img_fails_MouseOver">
+                                            <Image.ToolTip>
+                                                <StackPanel>
+                                                    <Label Content="Fails, try check your code!" FontWeight="Bold"/>
+                                                    <Label Content="{Binding LastException.InnerExceptions[0].Message}" />
+                                                    <TextBox Margin="10" Text="{Binding LastException.InnerExceptions[0].StackTrace, Mode=OneWay}" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"  />
+                                                </StackPanel>
+                                            </Image.ToolTip>
 
 
-                                    </Image>
-                                    <!--<popup:MyPopup ToReflect="{Binding LastException}" PlacementTarget="{Binding ElementName=img_fails}" Placement="Right" AllowsTransparency="True"
+                                        </Image>
+                                        <!--<popup:MyPopup ToReflect="{Binding LastException}" PlacementTarget="{Binding ElementName=img_fails}" Placement="Right" AllowsTransparency="True"
                                                        IsOpen="{Binding Path=DataContext.Parent.Parent.Parent.MyPopupExceptionIsOpen}" 
                                                            PopupCloseEvent="MyPopup_PopupCloseExceptionEvent" />-->
+                                    </Grid>
+                                    <Label Grid.Column="2" VerticalAlignment="Center" Content="{Binding Name}" />
+
                                 </Grid>
-                                <Label Grid.Column="2" VerticalAlignment="Center" Content="{Binding Name}" />
+                                <ProgressBar Height="2" IsIndeterminate="True"  Visibility="{Binding CanStop,Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                <StackPanel.ToolTip>
+                                    <Label Content="{Binding Name}" />
+                                </StackPanel.ToolTip>
+                            </StackPanel>
 
+                        </DataTemplate>
+                    </TreeView.Resources>
+                </TreeView>
+                <GroupBox Grid.Row="2" Header="Shape Range Manager" Margin="0,4,0,4">
+                    <Grid Height="26">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="26"/>
+                            <ColumnDefinition Width="26"/>
+                            <ColumnDefinition Width="26"/>
+                            <ColumnDefinition Width="26"/>
+                            <ColumnDefinition Width="26"/>
+                            <ColumnDefinition Width="26"/>
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <custom:IconButton Icon="Add.png" Grid.Column="0"    Width="22" Height="22"   x:Name="btn_addSelection" Click="btn_addSelection_Click" >
+                            <custom:IconButton.ToolTip>
+                                <Label Content="Add Selection to ShapeRange Reference"/>
+                            </custom:IconButton.ToolTip>
+                            <!--<Image Style="{DynamicResource AddShapeRangeImage}" />-->
+                        </custom:IconButton>
+                        <custom:IconButton Icon="Remove.png" Grid.Column="1"   Width="22" Height="22"  x:Name="btn_removeSelection"  Click="btn_removeSelection_Click">
+                            <custom:IconButton.ToolTip>
+                                <Label Content="Remove Selection from ShapeRange Reference"/>
+                            </custom:IconButton.ToolTip>
+                            <!--<Image Style="{DynamicResource RemoveShapeRangeImage}" />-->
+                        </custom:IconButton>
+                        <custom:IconButton Icon="CleanData.png" Grid.Column="2"   Width="22" Height="22"  x:Name="btn_clearRange" Click="btn_clearRange_Click">
+                            <custom:IconButton.ToolTip>
+                                <Label Content="Clean ShapeRange Reference"/>
+                            </custom:IconButton.ToolTip>
+                            <!--<Image Style="{DynamicResource CleanDataShapeRangeImage}" />-->
+                        </custom:IconButton>
+                        <custom:IconButton Icon="createSelection.png" Grid.Column="3"   Width="22" Height="22" Command="{Binding Path=CreateSelectionShapeRangeCommand}">
+                            <custom:IconButton.ToolTip>
+                                <Label Content="Create a Selection from this ShapeRange"/>
+                            </custom:IconButton.ToolTip>
+                            <!--<Image Style="{DynamicResource CheckmarkShapeRangeImage}" />-->
+                        </custom:IconButton>
+                        <custom:IconButton Icon="Checkmark.png" Grid.Column="5"   Width="22" Height="22" Command="{Binding Path=SetShapeRangeToValueCommand}">
+                            <custom:IconButton.ToolTip>
+                                <Label Content="Set ShapeRange Reference to selected param"/>
+                            </custom:IconButton.ToolTip>
+                            <!--<Image Style="{DynamicResource CheckmarkShapeRangeImage}" />-->
+                        </custom:IconButton>
+                        <Border Grid.Column="6" BorderBrush="{DynamicResource Footer.Static.Background}" BorderThickness="2" CornerRadius="6">
+                            <Label HorizontalAlignment="Center" VerticalAlignment="Center" Content="{Binding shapeRangeManager.Count}" />
+                        </Border>
+                    </Grid>
+                </GroupBox>
+            </Grid>
+            <GridSplitter Grid.Row="0" HorizontalAlignment="Stretch" Height="4" VerticalAlignment="Bottom" ResizeDirection="Rows" Background="Transparent" Panel.ZIndex="1" Margin="2,0,2,8" />
+            <Grid Grid.Row="1"><!--detalhe -->
+             
+                
+                <Border BorderThickness="1" Grid.Row="1" Visibility="{Binding SelectedCommand,Converter={StaticResource NullToVisibilityConverter}}" >
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="0,4,0,4">
+                        <Expander  IsExpanded="true" x:Name="expander_Attributes"
+                                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalContentAlignment="Top" HorizontalContentAlignment="Stretch">
+                            <Expander.Header>
+                                <StackPanel HorizontalAlignment="{Binding Path=HorizontalAlignment, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentPresenter}}, Mode=OneWayToSource}" >
+                                    <StackPanel Orientation="Horizontal">
+                                        <Button Style="{StaticResource NoBorderButton}" Width="16" Height="16"  HorizontalAlignment="Left"  
+                        CommandParameter="{Binding SelectedCommand}" Command="{Binding Path=ExecuteCommand}">
+                                            <Button.ToolTip>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Label>Run</Label>
+                                                    <Label Content="{Binding SelectedCommand.Name}"/>
+                                                </StackPanel>
+                                            </Button.ToolTip>
+                                            <Image Style="{DynamicResource PlayImage}" />
+                                        </Button>
+                                        <custom:IconButton Icon="Stop.png"  Width="16" Height="16"  HorizontalAlignment="Left"  
+                        CommandParameter="{Binding SelectedCommand}" Command="{Binding Path=StopCommand}"
+                                        Visibility="{Binding SelectedCommand.CanStop,Converter={StaticResource BoolToVisibilityConverter}}">
+                                            <custom:IconButton.ToolTip>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Label>Run</Label>
+                                                    <Label Content="{Binding SelectedCommand.Name}"/>
+                                                </StackPanel>
+                                            </custom:IconButton.ToolTip>
+                                            <!--<Image Style="{DynamicResource StopImage}" />-->
+                                        </custom:IconButton>
+                                        <Label Content="{Binding SelectedCommand.Name}" />
+                                    </StackPanel>
+                                    <ProgressBar Height="2" IsIndeterminate="True"  Visibility="{Binding SelectedCommand.CanStop,Converter={StaticResource BoolToVisibilityConverter}}"/>
+
+                                </StackPanel>
+                            </Expander.Header>
+                            <Grid Margin="0" HorizontalAlignment="Stretch">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Row="0" Grid.Column="0" Content="{Binding SelectedCommand.ElapsedTime}" Visibility="{Binding SelectedCommand.ElapsedTime,Converter={StaticResource EmptyStringToVisibilityConverter}}"/>
+                                <GroupBox Grid.Row="1" Grid.Column="0"  Header="Return" Margin="0,0,0,4" Visibility="{Binding SelectedCommand.ReturnsType,ConverterParameter={x:Type System:Void},Converter={StaticResource TypeToVisibilityConverter}}">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="10" />
+                                            <ColumnDefinition Width="20"/>
+                                            <ColumnDefinition />
+                                            <ColumnDefinition Width="*" MinWidth="130"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Label Grid.Row="0" Grid.Column="2" Content="Type:" />
+                                        <Label Grid.Row="0" Grid.Column="3"  Content="{Binding SelectedCommand.ReturnsType.Name}" ToolTip="{Binding SelectedCommand.ReturnsType.FullName}"/>
+                                        <Button   Grid.Row="1" Grid.Column="1" Style="{DynamicResource NoBorderButton}" 
+                                              Width="16" Height="16" VerticalAlignment="Center"
+                                    CommandParameter="{Binding SelectedCommand.Returns}"  
+                                    Visibility="{Binding SelectedCommand.ReflectedProp.IsValueType,Converter={StaticResource ReverseBoolVisibilityConverter}}"
+                                    Command="{Binding Path=CopyReturnsValueCommand}">
+                                            <Button.ToolTip>
+                                                <Label Content="Copy Value" />
+                                            </Button.ToolTip>
+                                            <Image Style="{DynamicResource CopyImage}" />
+                                        </Button>
+                                        <Label Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" Content="Value:" />
+
+                                        <Grid  Grid.Row="1" Grid.Column="3" MinWidth="100" VerticalAlignment="Stretch" Background="Transparent" MouseEnter="Label_MouseEnter"
+                                           Visibility="{Binding SelectedCommand.Returns,Converter={StaticResource NullToVisibilityConverter}}">
+                                            <Button Content="{Binding SelectedCommand.Returns}" VerticalAlignment="Center"  x:Name="lba_returns" Margin="2" Background="{x:Null}" 
+                                                    BorderThickness="0" Click="lba_returns_Click"/>
+                                        </Grid>
+
+                                        <popup:MyPopup ToReflect="{Binding SelectedCommand.Returns}" PlacementTarget="{Binding ElementName=lba_returns}" Placement="Right" AllowsTransparency="True"
+                                                       IsOpen="{Binding Path=MyPopupIsOpen}" 
+                                                           PopupCloseEvent="MyPopup_PopupCloseEvent" />
+
+                                    </Grid>
+                                </GroupBox>
+                                <GroupBox Grid.Row="2" Grid.Column="0"  Header="Console" Visibility="{Binding SelectedCommand.ConsoleOut,Converter={StaticResource EmptyStringToVisibilityConverter}}" Margin="0,0,0,4">
+                                    <Grid Margin="0">
+
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox Grid.Column="0" Text="{Binding SelectedCommand.ConsoleOut}" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" ></TextBox>
+                                    </Grid>
+                                </GroupBox>
+                                <GroupBox Grid.Row="3" Grid.Column="0"  Header="Params" Visibility="{Binding SelectedCommand.Count,Converter={StaticResource IntToVisibilityConverter},FallbackValue=0}" Margin="0,0,0,4">
+                                    <Grid>
+                                        <ListView BorderThickness="0" 
+                                        ItemsSource="{Binding SelectedCommand.Items}" 
+                                              SelectionMode="Single" KeyboardNavigation.TabNavigation="Continue" >
+
+                                            <ListView.ItemContainerStyle>
+                                                <Style BasedOn="{StaticResource ListViewItemCustomStyle}" TargetType="{x:Type ListViewItem}">
+                                                    <Setter Property="IsSelected" Value="{Binding IsSelectedBase,Mode=TwoWay}" />
+                                                    <Setter Property="IsTabStop" Value="False" />
+
+                                                </Style>
+                                            </ListView.ItemContainerStyle>
+                                            <ListView.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="80" />
+                                                            <ColumnDefinition Width="*"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition />
+                                                            <RowDefinition />
+                                                        </Grid.RowDefinitions>
+                                                        <Label Grid.Row="0" Grid.Column="0" Content="{Binding Name}" ToolTip="{Binding Name}"/>
+                                                        <Label Grid.Row="0" Grid.Column="1" Content="{Binding ArgumentType.Name}" ToolTip="{Binding ArgumentType.FullName}"/>
+                                                        <Label Grid.Row="1" Grid.Column="0" Content="Value:" />
+                                                        <!--<TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Value,Converter={StaticResource TypeToStringConverter}}" 
+                                                             VerticalContentAlignment="Center" Width="144"  />-->
+                                                        <custom:ParamControl Grid.Row="1" Grid.Column="1" VerticalContentAlignment="Center" Width="144"  
+                                                                         ParamValue="{Binding Value}" ParamType="{Binding ArgumentType}" ParamOptions="{Binding Options}" >
+                                                            <custom:ParamControl.InputBindings>
+                                                                <KeyBinding Key="Enter" CommandParameter="{Binding Parent}" Command="{Binding Path=Parent.Parent.Parent.Parent.ExecuteCommand}"/>
+                                                            </custom:ParamControl.InputBindings>
+                                                        </custom:ParamControl>
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </ListView.ItemTemplate>
+                                        </ListView>
+
+                                    </Grid>
+                                </GroupBox>
                             </Grid>
-                            <ProgressBar Height="2" IsIndeterminate="True"  Visibility="{Binding CanStop,Converter={StaticResource BoolToVisibilityConverter}}"/>
-                            <StackPanel.ToolTip>
-                                <Label Content="{Binding Name}" />
-                            </StackPanel.ToolTip>
-                        </StackPanel>
+                        </Expander>
 
-                    </DataTemplate>
-                </TreeView.Resources>
-            </TreeView>
+                    </ScrollViewer>
+                </Border>
+
+
+            </Grid>
+            
         </Grid>
+
     </DockPanel>
 </UserControl>

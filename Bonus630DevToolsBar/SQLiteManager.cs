@@ -2,11 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Documents;
+
 
 namespace br.com.Bonus630DevToolsBar
 {

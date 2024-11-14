@@ -173,7 +173,7 @@ d="m11.633 12.191 0.45 -0.447c2.081 0.069 2.114 -0.005 2.206 -0.219l0.572 -1.392
             <StatusBarItem Grid.Column="3"/>
         </StatusBar>
         <DockPanel Margin="2,0,2,0" DockPanel.Dock="Left" x:Name="dockPanel_treeViews" Visibility="Visible">
-            <Grid DockPanel.Dock="Left" Width="Auto"  >
+            <Grid DockPanel.Dock="Left" Width="Auto"  ><!--main tree -->
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="3*" />
@@ -217,7 +217,7 @@ d="m11.633 12.191 0.45 -0.447c2.081 0.069 2.114 -0.005 2.206 -0.219l0.572 -1.392
                 </TreeView>
 
             </Grid>
-            <Grid DockPanel.Dock="Left" Width="Auto"  Margin="1,0,0,0" Name="gridRef" Visibility="Collapsed">
+            <Grid DockPanel.Dock="Left" Width="Auto"  Margin="1,0,0,0" Name="gridRef" Visibility="Collapsed"><!--ref tree search tree-->
                 <Grid.RowDefinitions>
                     <RowDefinition Height="14" />
                     <RowDefinition Height="16"/>
@@ -355,7 +355,7 @@ d="m11.633 12.191 0.45 -0.447c2.081 0.069 2.114 -0.005 2.206 -0.219l0.572 -1.392
             </TabControl>
         </Grid>
 
-        <ScrollViewer DockPanel.Dock="Top" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="0,2,2,0" Background="#FFE3FDD4" Padding="0">
+        <ScrollViewer DockPanel.Dock="Top" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="0,2,2,0" Background="#FFE3FDD4" Padding="0"><!-- Tabs, details,search,xsl-->
             <StackPanel>
                 <Border Style="{DynamicResource BorderTitleStyle}">
                     <Label x:Name="lba_tagName" FontSize="14" FontWeight="Bold" Content="{Binding CurrentBasicData.TagName}">

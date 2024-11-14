@@ -54,16 +54,16 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
             return null;
         }
         //SELECT * FROM sua_tabela ORDER BY datetime(seu_campo_de_tempo_texto) DESC
-        public ObservableCollection<RecentFileViewModel> Fill(int id = -1,int offset = 10)
+        public ObservableCollection<RecentFileViewModel> Fill(int limit = 10,int offset = 0)
         {
             //   0  |    1    |    2    |      3     |       4        |        5        |    6
             //id int,index int,count int,autoload int,name Varchar(50),path Varchar(256),time Integer
             ObservableCollection<RecentFileViewModel> datas = new ObservableCollection<RecentFileViewModel>();
             try
             {
-                string condition = " ORDER BY time DESC Limit 10 offset 10";
-                if (id != -1)
-                    condition = string.Format(" LIMIT {0} OFFSET {1} ",offset,id);
+                //string condition = " ORDER BY time DESC Limit 10 offset 10";
+                //if (id != -1)
+                string condition = string.Format(" LIMIT {0} OFFSET {1} ",limit,offset);
                 using (SQLiteCommand command = CreateConnection().CreateCommand())
                 {
                     command.CommandText = string.Format("SELECT * FROM files ORDER BY time DESC{0};", condition);

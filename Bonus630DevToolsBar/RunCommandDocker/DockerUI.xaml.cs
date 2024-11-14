@@ -13,6 +13,7 @@ using System.IO.Compression;
 using System.Xml;
 using System.Windows.Media.TextFormatting;
 using SharpCompress.Compressors.Xz;
+using System.Collections.Generic;
 
 
 namespace br.com.Bonus630DevToolsBar.RunCommandDocker
@@ -64,7 +65,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             projectsManager.Start(proxyManager);
             this.DataContext = projectsManager;
             projectsManager.RequestNewModuleEvent += (path) => { popup_newProject.IsOpen = true; lba_projPath.Content = path; txt_moduleName.Focus(); };
-            projectsManager.RequestRemoveModule += (proj, module) => { RemoveModule(proj,module); };
+            projectsManager.RequestRemoveModule += (proj, module) => { RemoveModule(proj, module); };
             txt_projectName.TextChanged += (s, ev) => ChangeProjectDirectory();
             cb_projectType.SelectionChanged += (s, ev) => ChangeProjectDirectory();
         }
@@ -84,21 +85,17 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             asm = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(r => string.Equals(r.FullName.Split(',')[0], name.Split(',')[0]));
             if (args.Name.Contains(".resources"))
                 asm = LoadResourceAssembly(asm);
+            if(asm==null && args.Name.Contains("System.Runtime.CompilerServices.Unsafe"))
+                asm = LoadAssemblyInBarFolder(name);
             if (asm == null)
-                asm = Assembly.LoadFrom(Name);
+                 asm = Assembly.LoadFrom(Name);
+             
+            //if (asm == null)
+            //    asm = LoadAssemblyInBarFolder(name);   
+            //if (asm == null)
+            //    asm = LoadFileFromAssembliesInAddons(name);
             return asm;
-            //}
-            //catch(IOException ioe)
-            //{
-            //    Logger.Log(ioe);
-
-            //}
-            //catch(Exception e)
-            //{
-            //    Logger.Log(e);
-
-            //}
-            //return null;
+        
         }
         private Assembly LoadResourceAssembly(Assembly executingAsm)
         {
@@ -126,6 +123,64 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                 }
             }
             return executingAsm;
+        }
+        private Assembly LoadAssemblyInBarFolder(string name)
+        {
+            string basePath = System.IO.Path.Combine(this.corelApp.AddonPath, "Bonus630DevToolsBar");
+            string[] files = Directory.GetFiles(basePath);
+            name = name.Split(',')[0];
+            for (int i = 0; i < files.Length; i++)
+            {
+                if (files[i].Contains(name))
+                {
+                    return Assembly.LoadFile(files[i]);
+                }
+            }
+
+            return null;
+
+        }
+        private Assembly LoadFileFromAssembliesInAddons(string name)
+        {
+            string basePath = this.corelApp.AddonPath;
+            string[] extensions = { "*.dll", "*.DLL", "*.exe", "*.EXE" };
+
+            List<string> assemblyFiles = new List<string>();
+
+            try
+            {
+                foreach (string extension in extensions)
+                {
+                    assemblyFiles.AddRange(Directory.EnumerateFiles(basePath, extension, SearchOption.AllDirectories));
+                }
+
+                // Exibe os arquivos encontrados
+                Console.WriteLine("Arquivos encontrados:");
+                foreach (string file in assemblyFiles)
+                {
+                    try
+                    {
+                        var tempDomain = AppDomain.CreateDomain("d123");
+                        tempDomain.Load(AssemblyName.GetAssemblyName(file));
+                        Assembly asm = tempDomain.GetAssemblies().FirstOrDefault(r => string.Equals(r.FullName.Split(',')[0], name.Split(',')[0]));
+                        if (asm != null)
+                        {
+                            AppDomain.Unload(tempDomain);
+                            asm = Assembly.LoadFrom(file);
+                            return asm;
+                        }
+                        AppDomain.Unload(tempDomain);
+
+                    }
+                    catch { }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erro ao listar arquivos: {ex.Message}");
+            }
+            return null;
+
         }
         private void LoadDomain_AssemblyLoad(object sender, AssemblyLoadEventArgs args)
         {
@@ -212,7 +267,10 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         {
             projectsManager.MyPopupIsOpen = true;
         }
-
+        private void lba_returns_Click(object sender, RoutedEventArgs e)
+        {
+            projectsManager.MyPopupIsOpen = !projectsManager.MyPopupIsOpen;
+        }
         private void MyPopup_PopupCloseEvent()
         {
             projectsManager.MyPopupIsOpen = false;
@@ -707,7 +765,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                 else
                     ext = ".vb";
                 using (var p = new ProjManager(proj))
-                    if (p.RemoveCompileItem(module+ext))
+                    if (p.RemoveCompileItem(module + ext))
                     {
                         projectCreator.LastProject = proj;
                         projectCreator.DirectBuild();
@@ -728,5 +786,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             if (e.Key == System.Windows.Input.Key.Enter)
                 btn_createModule_Click(null, null);
         }
+
+
     }
 }

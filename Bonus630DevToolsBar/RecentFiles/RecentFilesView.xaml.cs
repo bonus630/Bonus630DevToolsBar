@@ -27,7 +27,8 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
         int limit = 60;
         private ushort CurrentPage = 0;
         private int TotalRows = 0;
-        private DispatcherTimer popupTimer;
+        private ushort MaxPerPage = 10;
+        //private DispatcherTimer AjustMaxPerPageTimer;
         //public int Height
         //{
         //    get;
@@ -57,6 +58,11 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
             {
                 MessageBox.Show("VGCore Erro");
             }
+            //AjustMaxPerPageTimer = new DispatcherTimer
+            //{
+            //    Interval = TimeSpan.FromMilliseconds(400)
+            //};
+            //AjustMaxPerPageTimer.Tick += AjustMaxPerPageTimer_Tick;
             this.Loaded += RecentFilesView_Loaded;
             this.Unloaded += RecentFilesView_Unloaded;
         }
@@ -96,7 +102,7 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
             CurrentPage = Properties.Settings.Default.RecentFilesPosition;
             TotalRows = recentFileModel.GetTotalRows();
             Load();
-            
+       
 
         }
 
@@ -141,18 +147,14 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
         {
             SetPageButtonsVisibility();
             SetMenu(Properties.Settings.Default.UseIndex);
-            dataContext.Files = recentFileModel.Fill(CurrentPage);
+            dataContext.Files = recentFileModel.Fill(MaxPerPage, CurrentPage * MaxPerPage);
             CheckFileExits();
             if ((bool)ck_autoLoad.IsChecked)
                 OpenAutoFiles();
             Thread loadThumbThread = new Thread(new ThreadStart(LoadThumbs));
             loadThumbThread.IsBackground = true;
             loadThumbThread.Start();
-            popupTimer = new DispatcherTimer
-            {
-                Interval = TimeSpan.FromMilliseconds(100)
-            };
-            popupTimer.Tick += PopupTimer_Tick;
+    
         }
 
         private void LoadThumbs()
@@ -275,13 +277,11 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
                 Debug.WriteLine("a");
             }
         }
-        private void PopupTimer_Tick(object sender, EventArgs e)
-        {
-            // Define o DataContext e exibe o Popup ao disparar o temporizador
-            // InfoPopup.DataContext = popupDataContext;
-            InfoPopup.IsOpen = true;
-            popupTimer.Stop(); // Para o temporizador após abrir o Popup
-        }
+        //private void AjustMaxPerPageTimer_Tick(object sender, EventArgs e)
+        //{
+         
+        //    AjustMaxPerPageTimer.Stop(); 
+        //}
         private void MenuItem_Click_CopyPath(object sender, RoutedEventArgs e)
         {
             RecentFileViewModel r = dataContext[(int)(sender as MenuItem).Tag];
@@ -374,25 +374,49 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
         {
             if (CurrentPage > 0 && !increase)
             {
-                CurrentPage -= 10;
+                CurrentPage -= 1;
             }
-            if(CurrentPage < TotalRows -10 && increase)
+            if(CurrentPage * MaxPerPage < TotalRows && increase)
             {
-                CurrentPage += 10;
+                CurrentPage += 1;
             }
-            
+            SetPage(CurrentPage);
+            Load();
+           
+        }
+        private void SetPage(ushort page)
+        {
+            CurrentPage = page;
             Properties.Settings.Default.RecentFilesPosition = CurrentPage;
             Properties.Settings.Default.Save();
-            Load();
+            
         }
         private void SetPageButtonsVisibility()
         {
             dataContext.CanDecrease = CurrentPage > 0;
-            dataContext.CanIncrease = CurrentPage < TotalRows - 10;
+            dataContext.CanIncrease = CurrentPage * MaxPerPage < TotalRows && MaxPerPage < TotalRows;
               
         }
 
-       
+        private void DockPanel_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            ushort itens = (ushort)((e.NewSize.Width - 78) / 28);
+            if (itens != 0 && itens != MaxPerPage )
+            {
+                if (itens > (CurrentPage + 1) * MaxPerPage)
+                    SetPage(CurrentPage--);
+                else
+                    SetPage(CurrentPage++);
+                MaxPerPage = itens;
+                Load();
+            }
+            if(itens > TotalRows)
+            {
+                MaxPerPage = (ushort)TotalRows;
+                SetPage(0);
+                Load();
+            }
+        }
     }
 
 }

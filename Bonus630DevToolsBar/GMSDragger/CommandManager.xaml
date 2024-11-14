@@ -30,10 +30,11 @@
         <StackPanel DockPanel.Dock="Bottom"  Orientation="Horizontal" Margin="10" >
             <Button Content="Put to bar" Click="Button_Click" Height="40" Width="140" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" 
                     ToolTip="Adds the selected commands and icons to the selected toolbar." />
-
             <Button Content="Just copy" Name="btn_copy" Click="btn_copy_Click" Height="40" Width="80" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" 
                     Margin="10,0,0,0" ToolTip="Only copies the gms associated with the selected commands."/>
             <Button Content="Cancel" x:Name="btn_cancel" Click="btn_cancel_Click" Height="40" Width="80" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" 
+                    Margin="10,0,0,0"/>
+            <Button Content="Load More Icons" x:Name="btn_loadMoreIcons" Click="btn_loadMoreIcons_Click" Height="40" Width="100" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" 
                     Margin="10,0,0,0"/>
         </StackPanel>
         <GroupBox DockPanel.Dock="Bottom" Header="Choose a  CommandBar.:" Margin="10,0,10,0">

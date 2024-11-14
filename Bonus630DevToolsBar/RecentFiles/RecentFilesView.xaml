@@ -158,7 +158,7 @@
             </Style>
         </ResourceDictionary>
     </UserControl.Resources>
-    <DockPanel LastChildFill="True">
+    <DockPanel x:Name="dockPanel_content" LastChildFill="True" SizeChanged="DockPanel_SizeChanged">
 
         <CheckBox x:Name="ck_autoLoad"  ToolTip="Auto Load Files" 
                   Click="CheckBox_Click" DockPanel.Dock="Left">
@@ -187,6 +187,7 @@
         <Popup x:Name="InfoPopup" Placement="Mouse" StaysOpen="True" AllowsTransparency="True" >
             <Border BorderThickness="1" CornerRadius="8" Padding="4" Background="{DynamicResource Container.Static.Background}" BorderBrush="{DynamicResource Button.Static.Border}">
                 <StackPanel>
+                     <Label Grid.Column="0" Content="{Binding FullName}" ToolTip="{Binding FullName}"/>
                     <Image  Width="256" Height="256" Source="{Binding Thumb}" Visibility="{Binding IsOpened,Converter={StaticResource InvertBoolVisibilityConverter}}"/>
                     <Label Content="File is Opened!" Visibility="{Binding IsOpened,Converter={StaticResource BooleanToVisibilityConverter}}"/>
                     <StackPanel Orientation="Horizontal">
@@ -197,7 +198,7 @@
                 </StackPanel>
             </Border>
         </Popup>
-        <ItemsControl x:Name="Items"  VerticalAlignment="Stretch" Margin="6,0,0,0"  ItemsSource="{Binding Files}" Height="20" Width="320">
+        <ItemsControl x:Name="Items"  VerticalAlignment="Stretch" Margin="6,0,0,0"  ItemsSource="{Binding Files}" Height="20" Width="960">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Button  Tag="{Binding FullName}" VerticalAlignment="Stretch"
@@ -211,8 +212,8 @@
                                 <Label Content="{Binding AbsName,FallbackValue=0}"  Padding="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="24"
                    HorizontalContentAlignment="Center" Background="{DynamicResource Button.Static.Background}" Panel.ZIndex="-1"
                    Visibility="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Content,Converter={StaticResource EmptyStringToVisibilityConverter}}"/>
-                                <Image Width="18" Height="18"  Panel.ZIndex="-2" Source="{Binding Thumb}"/>
-                                <Label Content="{Binding AbsName,FallbackValue=0}"  Padding="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="24"
+                                <Image Width="20" Height="20"  Panel.ZIndex="-2" Source="{Binding Thumb}"/>
+                                <Label Content="{Binding AbsName,FallbackValue=0}"  Padding="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="18"
                    HorizontalContentAlignment="Center" Background="{DynamicResource Button.Static.Background}" Panel.ZIndex="-3" />
                             </Grid>
                         </Grid>

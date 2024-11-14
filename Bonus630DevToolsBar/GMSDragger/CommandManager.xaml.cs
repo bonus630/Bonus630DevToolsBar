@@ -24,7 +24,7 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
         public StylesController stylesController;
         string theme = string.Empty;
         public Status GetStatus { get; protected set; }
-        public new Status  DialogResult{get;set;}
+        public new Status DialogResult { get; set; }
         public CommandManager(MacrosManager macrosManager, string theme)
         {
             InitializeComponent();
@@ -61,6 +61,33 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
         {
             base.ShowDialog();
             return this.DialogResult;
+        }
+
+        private void btn_loadMoreIcons_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+
+
+            string filter = "";
+            string title = "";
+            bool multiselect = true;
+            string startFolder = "";
+
+            filter = "Images or Icon|*.ico; *.bmp;*.jpg;*.jpeg;*.png;*.gif;*.tif;*.tiff";
+            title = "Select Icons or Images!";
+
+
+
+            ofd.Filter = filter;
+            ofd.Title = title;
+            ofd.Multiselect = multiselect;
+            ofd.InitialDirectory = startFolder;
+            if (ofd.ShowDialog().Equals(System.Windows.Forms.DialogResult.OK))
+            {
+                for(int i=0;i<ofd.FileNames.Length;i++)
+                    (this.DataContext as MacrosManager).Icos.Add(ofd.FileNames[i]);
+            }
+
         }
     }
     public enum Status
