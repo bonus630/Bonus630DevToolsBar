@@ -124,23 +124,23 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.Models
 
                 //// MessageBox.Show(hRes.ToString()); // <- 0 here.
 
-                uint size = SizeofResource(hModule, hRes);
-                IntPtr pt = LoadResource(hModule, hRes);
+                //uint size = SizeofResource(hModule, hRes);
+                //IntPtr pt = LoadResource(hModule, hRes);
 
-                Bitmap bmp;
-                // int sizef = sizeof(char);
-                byte[] bPtr = new byte[size];
-                Marshal.Copy(pt, bPtr, 0, (int)size);
-                //Use este para salvar os icones
-                using (MemoryStream m = new MemoryStream(bPtr))
-                {
-                    Console.WriteLine(lpszName);
-                    bmp = (Bitmap)Bitmap.FromStream(m);
-                    string name = GET_RESOURCE_NAME(lpszName);
-                    bmp.Save(string.Format("{0}\\{1}.png", destFolder, iconCount));
-                    iconCount++;
-                    return true;
-                }
+                //Bitmap bmp;
+                //// int sizef = sizeof(char);
+                //byte[] bPtr = new byte[size];
+                //Marshal.Copy(pt, bPtr, 0, (int)size);
+                ////Use este para salvar os icones
+                //using (MemoryStream m = new MemoryStream(bPtr))
+                //{
+                //    Console.WriteLine(lpszName);
+                //    bmp = (Bitmap)Bitmap.FromStream(m);
+                //    string name = GET_RESOURCE_NAME(lpszName);
+                //    bmp.Save(string.Format("{0}\\{1}.png", destFolder, iconCount));
+                //    iconCount++;
+                //    return true;
+                //}
                 
             }
             catch

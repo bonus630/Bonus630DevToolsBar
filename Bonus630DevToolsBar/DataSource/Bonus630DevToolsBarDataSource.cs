@@ -356,7 +356,7 @@ namespace br.com.Bonus630DevToolsBar.DataSource
         {
             try
             {
-                if (CorelApp.ActiveDocument.Dirty)
+                if (CorelApp.ActiveDocument.Dirty && !string.IsNullOrEmpty(CorelApp.ActiveDocument.FullFileName))
                 {
                     double x = 0, y = 0, w = 0, h = 0;
                     int activePage = 1;

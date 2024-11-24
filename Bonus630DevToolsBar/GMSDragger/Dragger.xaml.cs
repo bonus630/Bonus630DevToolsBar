@@ -14,8 +14,9 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
-using f = System.Windows.Forms;
 using c = Corel.Interop.VGCore;
+
+using System.Runtime.InteropServices;
 
 
 
@@ -45,6 +46,8 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
                 gmsPath = corelApp.GMSManager.UserGMSPath;
                 this.Loaded += Dragger_Loaded;
                 this.corelApp.OnApplicationEvent += CorelApp_OnApplicationEvent;
+                this.corelApp.QueryQuit += CorelApp_QueryQuit;
+               
                 //this.SizeChanged += (s, e) => { 
                 //    if(e.NewSize.Height > 256)
                 //    {
@@ -54,11 +57,30 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
 
                 //    Console.WriteLine(e.NewSize.ToString());
                 //};
+
+
+                this.Unloaded += (a,b) =>
+                {
+                    Debug.WriteLine("unload");
+                    System.Windows.Forms.MessageBox.Show("Unloaded");
+                };
+                
+
             }
             catch
             {
                 global::System.Windows.MessageBox.Show("VGCore Erro");
             }
+        }
+
+  
+
+        private void CorelApp_QueryQuit(ref bool Cancel)
+        {
+        
+
+            if (mm != null)
+                mm.RunWorkspaceModifier();
         }
 
         private void Dragger_Loaded(object sender, RoutedEventArgs e)
@@ -249,38 +271,24 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
             }
             return false;
         }
-
+        private MacrosManager mm;
         private void InstallThis(string[] files)
         {
-            MacrosManager mm = new MacrosManager(this.corelApp, files, currentTheme);
+            if(mm==null)
+                mm = new MacrosManager();
+            mm.InstallBar(this.corelApp, files, currentTheme);
         }
-
+        string lastFileFolder = "";
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            //f.MessageBox.Show("Começou o teste");
-            //try
-            //{
-            //    corelApp.AddPluginCommand("Olha so isso");
-            //    // corelApp.AdviseEvents()
-                
-
-            //}
-            //catch(Exception ex)
-            //{
-            //    f.MessageBox.Show("Exception "+ex.Message);
-            //}
-
-
-
-            //return;
-            /////fim teste
-
             OpenFileDialog of = new OpenFileDialog();
             of.Filter = "Any File (*.*)|*.*";
             of.Title = "Select any file(s)";
             of.Multiselect = true;
+            of.InitialDirectory = lastFileFolder;
             if ((bool)of.ShowDialog())
             {
+                lastFileFolder = Path.GetDirectoryName(of.FileNames[0]);
                 InstallThis(of.FileNames);
                 //processFiles(of.FileNames);
             }
@@ -294,7 +302,7 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
             }
             catch(Exception ex)
             {
-                f.MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
             }
            
         }
@@ -311,26 +319,7 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
             {
                 LoadThemeFromPreference();
             }
-            //if(EventName.Equals("FrameworkManagerToolbarListChanged"))
-            //{
-            //    var bar = corelApp.FrameWork.CommandBars["Bonus630 Dev Tools"];
-
-            //    //foreach (CommandBar i in corelApp.FrameWork.CommandBars)
-            //    //    Debug.WriteLine(i.Name);
-
-            //   Debug.WriteLine(bar.Controls[1].Height.ToString());
-            //    int x, y, w, h;
-
-            //    corelApp.FrameWork.Automation.GetItemScreenRect("48024933-d18b-4e0a-9b59-96a6b99a418e", "7acb54e6-084e-494f-ad31-2718f34ddad2",out x,out y,out w,out h);
-            //    Debug.WriteLine(h);
-            //    var d = corelApp.FrameWork.Application.DataContext.GetDataSource("Bonus630DevToolsBarDS");
-            //    d.SetProperty("TesteAltura",h);
-
-             //7acb54e6-084e-494f-ad31-2718f34ddad2 48024933-d18b-4e0a-9b59-96a6b99a418e 
-
-            //    this.Height = h;
-            //    this.Width = h;
-            //}
+          
 
         }
         //Keys resources name follow the resource order to add a new value, order to works you need add 5 resources colors and Resources/Colors.xaml

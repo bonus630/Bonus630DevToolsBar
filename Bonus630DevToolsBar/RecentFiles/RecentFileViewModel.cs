@@ -98,7 +98,7 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
             get { return autoLoad; }
             set { autoLoad = value; OnPropertyChanged(); }
         }
-        private bool isOpened;
+        private bool isOpened = false;
 
         public bool IsOpened
         {

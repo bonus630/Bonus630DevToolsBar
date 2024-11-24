@@ -33,13 +33,14 @@ namespace br.com.Bonus630DevToolsBar.CQLRunner
             return -1;
         }
 
-        public void Fill(System.Windows.Forms.AutoCompleteStringCollection datas,string search, int id = 10)
+        public string[] Fill(string search, int id = 10)
         {
             try
             {
+                var temp = new List<string>();
                 string condition = string.Format(" ORDER BY {0} ASC", primaryKey);
                 if (id != -1)
-                    condition = string.Format(" WHERE cql like \"{0}\"%  LIMIT {1};",search,id);
+                    condition = string.Format(" WHERE cql like \'{0}%\'  LIMIT {1};",search.Replace("%", "\\%").Replace("_", "\\_"), id);
                 using (SQLiteCommand command = CreateConnection().CreateCommand())
                 {
                     command.CommandText = string.Format("SELECT * FROM {0}{1};", table, condition);
@@ -49,17 +50,15 @@ namespace br.com.Bonus630DevToolsBar.CQLRunner
                         while (dataReader.Read())
                         {
                       
-                            datas.Add(dataReader.GetString(1));
+                            temp.Add(dataReader.GetString(1));
 
                         }
                     }
                 }
-
+               return temp.ToArray();
             }
             catch { }
-
+            return null;
         }
-
-       
     }
 }

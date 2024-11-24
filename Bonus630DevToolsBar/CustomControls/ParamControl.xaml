@@ -24,27 +24,28 @@
         <Image Grid.Column="0" Style="{DynamicResource AddDelegateImg}" Width="20" Height="20" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="This parameter will use the function return as value"
                Visibility="{Binding  RelativeSource={RelativeSource AncestorType=UserControl},Path=IsFunc,Converter={StaticResource BoolVisibilityConverter}}" />
         
-        <TextBox Grid.Column="1"  x:Name="txt_paramValue" Height="28" Text="{Binding  RelativeSource={RelativeSource AncestorType=UserControl},Path=ParamValue, Converter={StaticResource TypeToStringConverter}}"
-                 VerticalContentAlignment="Center"
+        <TextBox Grid.Column="1"  x:Name="txt_paramValue" Height="28" VerticalContentAlignment="Center"
+                 Text="{Binding  RelativeSource={RelativeSource AncestorType=UserControl},Path=ParamValue, Converter={StaticResource TypeToStringConverter},UpdateSourceTrigger=PropertyChanged}"
                  Visibility="{Binding  RelativeSource={RelativeSource AncestorType=UserControl},Path=IsVariant,Converter={StaticResource BoolVisibilityConverter}}" />
 
         <local:NumericTextBox Grid.Column="1"  x:Name="numeric_paramValue" NumericType="_Int" VerticalContentAlignment="Center"  
-                              Text="{Binding  RelativeSource={RelativeSource AncestorType=UserControl},Path=ParamValue, Converter={StaticResource TypeToStringConverter}}"
+                              Text="{Binding  RelativeSource={RelativeSource AncestorType=UserControl},Path=ParamValue, Converter={StaticResource TypeToStringConverter},UpdateSourceTrigger=PropertyChanged}"
                               Visibility="{Binding  RelativeSource={RelativeSource AncestorType=UserControl},Path=IsInteger,Converter={StaticResource BoolVisibilityConverter}}"/>
 
         <local:NumericTextBox Grid.Column="1" x:Name="decimal_paramValue" DecimalPlaces="9" NumericType="_Double" VerticalContentAlignment="Center" 
-                              Text="{Binding  RelativeSource={RelativeSource AncestorType=UserControl},Path=ParamValue, Converter={StaticResource TypeToStringConverter}}"
+                              Text="{Binding  RelativeSource={RelativeSource AncestorType=UserControl},Path=ParamValue, Converter={StaticResource TypeToStringConverter},UpdateSourceTrigger=PropertyChanged}"
                               Visibility="{Binding  RelativeSource={RelativeSource AncestorType=UserControl},Path=IsDecimal,Converter={StaticResource BoolVisibilityConverter}}"/>
         <!--Text="{Binding RelativeSource={RelativeSource AncestorType=local:ParamControl},Path=ParamValue,Converter={StaticResource TypeToStringConverter}}"--> 
                  <!--Visibility="{Binding RelativeSource={RelativeSource AncestorType=local:ParamControl},Path=ParamType,Converter={StaticResource TypeToVisibilityConverter}, ConverterParameter={x:Type System:String}}" />-->
         <ComboBox Grid.Column="1" ItemsSource="{Binding  RelativeSource={RelativeSource AncestorType=UserControl},Path=ParamOptions}"
-                                  SelectedItem="{Binding  RelativeSource={RelativeSource AncestorType=UserControl},Path=ParamValue, Converter={StaticResource TypeToStringConverter}}"
+                                  SelectedItem="{Binding  RelativeSource={RelativeSource AncestorType=UserControl},Path=ParamValue, Converter={StaticResource TypeToStringConverter},UpdateSourceTrigger=PropertyChanged}"
                  VerticalContentAlignment="Center"  
                               Visibility="{Binding  RelativeSource={RelativeSource AncestorType=UserControl},Path=IsEnum,Converter={StaticResource BoolVisibilityConverter}}"/>
-        <CheckBox Grid.Column="1"  x:Name="cb_paramValue"  IsChecked="{Binding  RelativeSource={RelativeSource AncestorType=UserControl},Path=ParamValue, Converter={StaticResource TypeToBoolConverter}}"
+        <CheckBox Grid.Column="1"  x:Name="cb_paramValue"  IsChecked="{Binding  RelativeSource={RelativeSource AncestorType=UserControl},Path=ParamValue, Converter={StaticResource TypeToBoolConverter},UpdateSourceTrigger=PropertyChanged}"
                  VerticalContentAlignment="Center" HorizontalAlignment="Left"  
                   Visibility="{Binding  RelativeSource={RelativeSource AncestorType=UserControl},Path=IsBoolean,Converter={StaticResource BoolVisibilityConverter}}"/>
         <!--IsChecked="{Binding RelativeSource={RelativeSource AncestorType=local:ParamControl},Path=ParamValue,Converter={StaticResource TypeConverter}, ConverterParameter={x:Type System:Boolean}}"--> 
                   <!--Visibility="{Binding RelativeSource={RelativeSource AncestorType=local:ParamControl},Path=ParamType,Converter={StaticResource TypeToVisibilityConverter}, ConverterParameter={x:Type System:Boolean}}" />-->
+        
     </Grid>
 </UserControl>

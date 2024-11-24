@@ -67,11 +67,7 @@
                     </Setter.Value>
                 </Setter>
             </Style>
-
         </ResourceDictionary>
     </Button.Resources>
-
-
-
 </Button>
 

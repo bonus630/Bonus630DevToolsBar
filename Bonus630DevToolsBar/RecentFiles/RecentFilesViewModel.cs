@@ -76,6 +76,15 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
                 id = rfm.ID;
             return id;
         }
+        public int GetIndex(string fullName)
+        {
+            for (int i = 0; i < this.Count; i++)
+            {
+                if (this[i].FullName == fullName)
+                    return i;
+            }
+            return -1;
+        }
         public RecentFileViewModel GetItem(int id)
         {
             return files.SingleOrDefault(r => r.ID == id);

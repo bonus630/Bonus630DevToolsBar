@@ -10,6 +10,10 @@
              xmlns:converters="clr-namespace:br.com.Bonus630DevToolsBar.Converters"
              mc:Ignorable="d" 
              MinWidth="225" Loaded="UserControl_Loaded">
+    <UserControl.InputBindings>
+        <KeyBinding Key="Z" Modifiers="Ctrl" Command="{Binding UndoCommand,RelativeSource={RelativeSource AncestorType=UserControl}}" />
+        <KeyBinding Key="F" Modifiers="Ctrl" Command="{Binding SearchCommand,RelativeSource={RelativeSource AncestorType=UserControl}}" />
+    </UserControl.InputBindings>
     <UserControl.Resources>
         <ResourceDictionary>
             <Style x:Key="FocusVisual">
@@ -252,7 +256,7 @@
                         <RowDefinition />
                         <RowDefinition />
                     </Grid.RowDefinitions>
-                    <custom:IconTextBox Icon="search.png" PlaceHolder="Search..." Grid.Row="0" Grid.Column="0" x:Name="textBoxSearch" TextChanged="textBoxSearch_TextChanged" VerticalAlignment="Center" VerticalContentAlignment="Center" BorderBrush="{x:Null}"/>
+                    <custom:IconTextBox Icon="search.png" PlaceHolder="Search..." Grid.Row="0" Grid.Column="0" x:Name="textBoxSearch" TextChanged="textBoxSearch_TextChanged" PreviewKeyDown="textBoxSearch_PreviewKeyUp" VerticalAlignment="Center" VerticalContentAlignment="Center" BorderBrush="{x:Null}"/>
                     <Label Grid.Row="0" Grid.Column="1" Content="{Binding CommandSearch.CurrentAndFounds}"  FontWeight="Bold" FontSize="9" VerticalAlignment="Center"/>
                     <Rectangle Grid.Row="0"  Width="1" Height="28" Grid.Column="2" />
                     <Button  Grid.Row="0" Grid.Column="3" Content="▲" Name="buttonPreview" Click="buttonPreview_Click" Width="20" Height="20"  Style="{DynamicResource NoBorderButton}" />
@@ -504,9 +508,8 @@
                 </GroupBox>
             </Grid>
             <GridSplitter Grid.Row="0" HorizontalAlignment="Stretch" Height="4" VerticalAlignment="Bottom" ResizeDirection="Rows" Background="Transparent" Panel.ZIndex="1" Margin="2,0,2,8" />
-            <Grid Grid.Row="1"><!--detalhe -->
-             
-                
+            <Grid Grid.Row="1">
+                <!--detalhe -->
                 <Border BorderThickness="1" Grid.Row="1" Visibility="{Binding SelectedCommand,Converter={StaticResource NullToVisibilityConverter}}" >
                     <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="0,4,0,4">
                         <Expander  IsExpanded="true" x:Name="expander_Attributes"
@@ -515,7 +518,7 @@
                                 <StackPanel HorizontalAlignment="{Binding Path=HorizontalAlignment, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentPresenter}}, Mode=OneWayToSource}" >
                                     <StackPanel Orientation="Horizontal">
                                         <Button Style="{StaticResource NoBorderButton}" Width="16" Height="16"  HorizontalAlignment="Left"  
-                        CommandParameter="{Binding SelectedCommand}" Command="{Binding Path=ExecuteCommand}">
+                                               CommandParameter="{Binding SelectedCommand}" Command="{Binding Path=ExecuteCommand}">
                                             <Button.ToolTip>
                                                 <StackPanel Orientation="Horizontal">
                                                     <Label>Run</Label>
@@ -525,7 +528,7 @@
                                             <Image Style="{DynamicResource PlayImage}" />
                                         </Button>
                                         <custom:IconButton Icon="Stop.png"  Width="16" Height="16"  HorizontalAlignment="Left"  
-                        CommandParameter="{Binding SelectedCommand}" Command="{Binding Path=StopCommand}"
+                                                         CommandParameter="{Binding SelectedCommand}" Command="{Binding Path=StopCommand}"
                                         Visibility="{Binding SelectedCommand.CanStop,Converter={StaticResource BoolToVisibilityConverter}}">
                                             <custom:IconButton.ToolTip>
                                                 <StackPanel Orientation="Horizontal">
@@ -576,7 +579,7 @@
                                             </Button.ToolTip>
                                             <Image Style="{DynamicResource CopyImage}" />
                                         </Button>
-                                        <Label Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" Content="Value:" />
+                                        <Label Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" Content="Value:"/>
 
                                         <Grid  Grid.Row="1" Grid.Column="3" MinWidth="100" VerticalAlignment="Stretch" Background="Transparent" MouseEnter="Label_MouseEnter"
                                            Visibility="{Binding SelectedCommand.Returns,Converter={StaticResource NullToVisibilityConverter}}">
@@ -604,12 +607,10 @@
                                         <ListView BorderThickness="0" 
                                         ItemsSource="{Binding SelectedCommand.Items}" 
                                               SelectionMode="Single" KeyboardNavigation.TabNavigation="Continue" >
-
                                             <ListView.ItemContainerStyle>
                                                 <Style BasedOn="{StaticResource ListViewItemCustomStyle}" TargetType="{x:Type ListViewItem}">
                                                     <Setter Property="IsSelected" Value="{Binding IsSelectedBase,Mode=TwoWay}" />
                                                     <Setter Property="IsTabStop" Value="False" />
-
                                                 </Style>
                                             </ListView.ItemContainerStyle>
                                             <ListView.ItemTemplate>
@@ -626,6 +627,9 @@
                                                         <Label Grid.Row="0" Grid.Column="0" Content="{Binding Name}" ToolTip="{Binding Name}"/>
                                                         <Label Grid.Row="0" Grid.Column="1" Content="{Binding ArgumentType.Name}" ToolTip="{Binding ArgumentType.FullName}"/>
                                                         <Label Grid.Row="1" Grid.Column="0" Content="Value:" />
+                                                        <!--<Image Grid.Row="1" Width="20" Height="20" ToolTip="Incompatible Type" 
+                                                               Style="{StaticResource OverlayWarningImg}" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                                               Visibility="{Binding IncompatibleArgumentType,Converter={StaticResource BoolToVisibilityConverter}}"/>-->
                                                         <!--<TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Value,Converter={StaticResource TypeToStringConverter}}" 
                                                              VerticalContentAlignment="Center" Width="144"  />-->
                                                         <custom:ParamControl Grid.Row="1" Grid.Column="1" VerticalContentAlignment="Center" Width="144"  
@@ -649,7 +653,7 @@
 
 
             </Grid>
-            
+
         </Grid>
 
     </DockPanel>

@@ -681,7 +681,25 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                 _value = value;
                 OnPropertyChanged("Value");
             }
-        }  
+        }   
+        //private bool incompatibleArgumentType;
+        //public bool IncompatibleArgumentType
+        //{
+        //    get { return incompatibleArgumentType; }
+        //    set
+        //    {
+        //        if (!value)
+        //        {
+        //            incompatibleArgumentType = value;
+        //            OnPropertyChanged("CompatibleArgumentType");
+        //        }
+        //    }
+        //}  
+        //public void SetIncompatibleArgumentType()
+        //{
+        //    IncompatibleArgumentType = true;
+        //    OnPropertyChanged("IncompatibleArgumentType");
+        //}
         private ObservableCollection<object> options;
         public ObservableCollection<object> Options
         {

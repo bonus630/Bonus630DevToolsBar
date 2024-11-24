@@ -28,8 +28,8 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
         private StylesController stylesController;
 
         private FileSystemWatcher fileSystemWatcher;
-        private double pageSize = 256;
-        private double pageCenterX, pageCenterY;
+        //private double pageSize = 256;
+        //private double pageCenterX, pageCenterY;
 
         readonly Color colorWhite;
         readonly Color colorBlack;

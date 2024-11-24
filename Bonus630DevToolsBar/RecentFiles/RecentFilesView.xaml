@@ -184,31 +184,49 @@
                 <custom:path d="M4 2 4 5 11 10 4 15 4 18 16 10z"  />
             </custom:SVGButton.Paths>
         </custom:SVGButton>
-        <Popup x:Name="InfoPopup" Placement="Mouse" StaysOpen="True" AllowsTransparency="True" >
-            <Border BorderThickness="1" CornerRadius="8" Padding="4" Background="{DynamicResource Container.Static.Background}" BorderBrush="{DynamicResource Button.Static.Border}">
-                <StackPanel>
-                     <Label Grid.Column="0" Content="{Binding FullName}" ToolTip="{Binding FullName}"/>
-                    <Image  Width="256" Height="256" Source="{Binding Thumb}" Visibility="{Binding IsOpened,Converter={StaticResource InvertBoolVisibilityConverter}}"/>
-                    <Label Content="File is Opened!" Visibility="{Binding IsOpened,Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                    <StackPanel Orientation="Horizontal">
-                        <Ellipse Fill="Green" Width="6" Height="6" VerticalAlignment="Center" Visibility="{Binding AutoLoad,Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                        <Label Content="{Binding Name,FallbackValue=Nome do arquivo.cdr}" ToolTip="{Binding FullName}" />
-                        <Label Content="{Binding Version,FallbackValue=0}" FontWeight="Bold" />
-                    </StackPanel>
-                </StackPanel>
+        <Popup x:Name="InfoPopup" Placement="Mouse" StaysOpen="True" AllowsTransparency="True" Width="256" >
+            <Border BorderThickness="1" CornerRadius="8" Padding="0" Background="{DynamicResource Container.Static.Background}" 
+                    BorderBrush="{DynamicResource Button.Static.Border}" SnapsToDevicePixels="true">
+                <Grid Background="Transparent">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="256" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Image Grid.Row="0"  Width="256" Height="256" Source="{Binding Thumb}" Visibility="{Binding IsOpened,Converter={StaticResource InvertBoolVisibilityConverter}}">
+                        <Image.Clip>
+                            <CombinedGeometry>
+                                <CombinedGeometry.Geometry1>
+                                    <RectangleGeometry RadiusX="8" RadiusY="8" Rect="0,0,256,240" />
+                                </CombinedGeometry.Geometry1>
+                                <CombinedGeometry.Geometry2>
+                                    <RectangleGeometry Rect="0,230,256,16" />
+                                </CombinedGeometry.Geometry2>
+                            </CombinedGeometry>
+                        </Image.Clip>
+                    </Image>
+                    <StackPanel Grid.Row="1" Margin="2,4,2,4" Background="Transparent">
+                            <Label Grid.Column="0" Content="{Binding FullName}" ToolTip="{Binding FullName}" FontSize="9"/>
+                            <Label Content="File is Opened!" Visibility="{Binding IsOpened,Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                            <StackPanel Orientation="Horizontal">
+                                <Ellipse Fill="Green" Width="6" Height="6" VerticalAlignment="Center" Visibility="{Binding AutoLoad,Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                <Label Content="{Binding Name,FallbackValue=Nome do arquivo.cdr}" ToolTip="{Binding FullName}" FontWeight="Bold" />
+                                <Label Content="{Binding Version,FallbackValue=0}" FontWeight="Bold" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
             </Border>
         </Popup>
         <ItemsControl x:Name="Items"  VerticalAlignment="Stretch" Margin="6,0,0,0"  ItemsSource="{Binding Files}" Height="20" Width="960">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Button  Tag="{Binding FullName}" VerticalAlignment="Stretch"
+                    <Button  Tag="{Binding FullName}" VerticalAlignment="Stretch" ToolTip="{Binding FullName}"
                              Width="{Binding ElementName=PART_content,Path=Width}" Height="20" MaxHeight="48" MaxWidth="48" 
                              Click="Button_Click" MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave" Margin="0,0,4,0" Padding="0">
                         <Grid Name="PART_content" Width="Auto">
                             <Grid Margin="1">
                                 <!--Width="24" Height="18">-->
                                 <Polyline Points="0,0 6,0 0,6" Fill="Green" Panel.ZIndex="1" Visibility="{Binding AutoLoad,Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                                <Polyline Points="24,18 18,18 24,12" Fill="Red"  Visibility="{Binding IsOpened,Converter={StaticResource BooleanToVisibilityConverter}}" Panel.ZIndex="2"/>
+                                <Polyline Points="24,18 18,18 24,12" Fill="Red"  Visibility="{Binding IsOpened,Converter={StaticResource BooleanToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}" Panel.ZIndex="2"/>
                                 <Label Content="{Binding AbsName,FallbackValue=0}"  Padding="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="24"
                    HorizontalContentAlignment="Center" Background="{DynamicResource Button.Static.Background}" Panel.ZIndex="-1"
                    Visibility="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Content,Converter={StaticResource EmptyStringToVisibilityConverter}}"/>
@@ -244,22 +262,22 @@
                                         <Image Style="{DynamicResource ClearConsoleButtonImg}" />
                                     </MenuItem.Icon>
                                 </MenuItem>
-                                <MenuItem Header="Add to Auto Load" Click="MenuItem_Click_AddToAutoLoad" Tag="{Binding Index}"  Visibility="{Binding AutoLoad,Converter={StaticResource InvertBoolVisibilityConverter}}" >
+                                <MenuItem Header="Add to Auto Load" Click="MenuItem_Click_AddToAutoLoad" Tag="{Binding ID}"  Visibility="{Binding AutoLoad,Converter={StaticResource InvertBoolVisibilityConverter}}" >
                                     <MenuItem.Icon>
                                         <Image Style="{DynamicResource AddShapeRangeImage}" />
                                     </MenuItem.Icon>
                                 </MenuItem>
-                                <MenuItem Header="Remove from Auto Load" Click="MenuItem_Click_RemoveFromAutoLoad" Tag="{Binding Index}" Visibility="{Binding AutoLoad,Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <MenuItem Header="Remove from Auto Load" Click="MenuItem_Click_RemoveFromAutoLoad" Tag="{Binding ID}" Visibility="{Binding AutoLoad,Converter={StaticResource BooleanToVisibilityConverter}}">
                                     <MenuItem.Icon>
                                         <Image Style="{DynamicResource RemoveShapeRangeImage}" />
                                     </MenuItem.Icon>
                                 </MenuItem>
-                                <MenuItem Header="Copy Path" Click="MenuItem_Click_CopyPath" Tag="{Binding Index}">
+                                <MenuItem Header="Copy Path" Click="MenuItem_Click_CopyPath" Tag="{Binding ID}">
                                     <MenuItem.Icon>
                                         <Image Style="{DynamicResource CopyBigImg}" />
                                     </MenuItem.Icon>
                                 </MenuItem>
-                                <MenuItem Header="Open Directory" Click="MenuItem_Click_OpenDirectory" Tag="{Binding Index}" >
+                                <MenuItem Header="Open Directory" Click="MenuItem_Click_OpenDirectory" Tag="{Binding ID}" >
                                     <MenuItem.Icon>
                                         <Image Style="{DynamicResource OpenFolderImg}" />
                                     </MenuItem.Icon>

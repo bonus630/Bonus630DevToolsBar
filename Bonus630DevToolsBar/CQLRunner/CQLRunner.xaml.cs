@@ -62,10 +62,19 @@ namespace br.com.Bonus630DevToolsBar.CQLRunner
 
         private void Txt_cql_TextChanged(object sender, EventArgs e)
         {
-            if (txt_cql.Text.Length > 3)
-            {
-                model.Fill(CQLSucessedList, txt_cql.Text,10);
-            }
+            //if (txt_cql.Text.Length > 3)
+            //{
+            //    Task.Run(() =>
+            //    {
+            //        string[] data = model.Fill(txt_cql.Text, 10);
+            //        this.Dispatcher.Invoke(new Action(() =>
+            //        {
+            //            // CQLSucessedList.Clear();
+            //            CQLSucessedList.AddRange(data);
+
+            //        }));
+            //    });
+            //}
         }
 
         private void CQLRunner_Unloaded(object sender, RoutedEventArgs e)
@@ -76,6 +85,15 @@ namespace br.com.Bonus630DevToolsBar.CQLRunner
 
         private void CQLRunner_Loaded(object sender, RoutedEventArgs e)
         {
+            Task.Run(() =>
+            {
+                string[] data = model.Fill(txt_cql.Text, 10);
+                this.Dispatcher.Invoke(new Action(() =>
+                {
+                    CQLSucessedList.AddRange(data);
+
+                }));
+            });
             txt_cql.Focus();
             stylesController.LoadThemeFromPreference();
             dsp = corelApp.FrameWork.Application.DataContext.GetDataSource(ControlUI.DataSourceName);
@@ -103,6 +121,7 @@ namespace br.com.Bonus630DevToolsBar.CQLRunner
                     rb_shape.IsChecked = true;
                     break;
             }
+       
         }
 
         private void Txt_cql_KeyUp1(object sender, System.Windows.Forms.KeyEventArgs e)

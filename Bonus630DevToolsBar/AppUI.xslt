@@ -27,15 +27,13 @@
 					  hostedType="Addons\Bonus630DevToolsBar\Bonus630DevToolsBar.dll,br.com.Bonus630DevToolsBar.ControlUI"
 					  enable="true"
 					  caption="Bonus630DevToolBar"
-					  nonLocalizableName="Bonus630DevToolBar"
-					  
-			/>
+					  nonLocalizableName="Bonus630DevToolBar"	/>
 
 			<!-- Run Command Docker Button onInvoke="*Bind(DataSource=Bonus630DevToolsBarDS;Path=RunCommandDocker)"-->
 			<itemData guid="7acb54e6-084e-494f-ad31-2718f34ddad2"
 					 check="*Docker('5087687d-337d-4d0e-acaf-c0b1df967757')"
 					  icon="guid://7acb54e6-084e-494f-ad31-2718f34ddad2"
-					  type="checkButton"  enable="true"/>
+					  type="checkButton"  enable="true" />
 
 			<!-- IconCreatorHelper button -->
 			<!--<itemData guid="d0a371e7-9fad-4e1c-8159-b285d67c0497"
@@ -74,24 +72,20 @@
 					type="wpfhost"
 					hostedType="Addons\Bonus630DevToolsBar\Bonus630DevToolsBar.dll,br.com.Bonus630DevToolsBar.RunCommandDocker.DockerUI"
 					
-					enable="true"
-				  />
+					enable="true"	  />
 
 			<!--Shortcuts docker-->
 			<itemData guid="c934c5dc-882b-476a-a634-b1d9ab7c81f1"
 					type="wpfhost"
 					hostedType="Addons\Bonus630DevToolsBar\Bonus630DevToolsBar.dll,br.com.Bonus630DevToolsBar.ControlsShorcutsCDRAddon.DockerUI"
-					enable="true"
-			  />
+					enable="true"		  />
 
 			<!--GMS Dragger let change guid to test dialog original guid:3b3f72b8-0129-4316-b8a3-40e4758ba9bc-->
 			<itemData guid="3b3f72b8-0129-4316-b8a3-40e4758ba9bc"
 					type="wpfhost"
 					hostedType="Addons\Bonus630DevToolsBar\Bonus630DevToolsBar.dll,br.com.Bonus630DevToolsBar.GMSDragger.Dragger"
 					enable="true"
-					caption="Drag your GMS here!"
-				 
-			/>
+					caption="Drag your GMS here!"		/>
 
 			<!--GMS Dragger Dialog test -->
 			<!--
@@ -221,9 +215,7 @@
 			<itemData guid="7d15e9c7-2431-4841-a5aa-9eaa5b581230"
 					type="wpfhost"
 					hostedType="Addons\Bonus630DevToolsBar\Bonus630DevToolsBar.dll,br.com.Bonus630DevToolsBar.RecentFiles.RecentFilesView"
-					enable="true"
-			
-					  />
+					enable="true"  />
 
 			<!--Height ="*Bind(DataSource=Bonus630DevToolsBarDS;Path=ItemWidth;BindType=TwoWay)"-->
 
@@ -290,7 +282,7 @@
 					<item guidRef="d0a371e7-9fad-4e1c-8159-b285d67c0497" />
 					<!--20 Icon test slot loader-->
 					<item guidRef="657042cb-3594-43a1-80bf-c8a27fd43146" />
-					
+
 					<!--21 Separator-->
 					<item guidRef="266435b4-6e53-460f-9fa7-f45be187d400" />
 					<!--22 Theme-->
@@ -403,7 +395,7 @@
 
 	<!--<xsl:template match="/uiConfig/containers/container[@guid='bee85f91-3ad9-dc8d-48b5-d2a87c8b2109']/container[@guid='Framework_MainFrame-layout']/dockHost/dockHost/dockHost/dockHost/viewHost[@]">-->
 	<!--<xsl:template match="/uiConfig/containers/container[@guid='bee85f91-3ad9-dc8d-48b5-d2a87c8b2109']/container[@guid='Framework_MainFrame-layout']/dockHost/dockHost/dockHost/dockHost/viewHost[@guid='344da698-5b33-46ff-bfdf-4d8bc2906450']">-->
-	<!--<xsl:template match="/dockHost[@guid='930211f2-174f-2783-47c8-ac28b179bac7']">
+	<xsl:template match="/dockHost[@guid='930211f2-174f-2783-47c8-ac28b179bac7']">
 		<xsl:copy-of select="."/>
 		<viewHost guid="60b73b65-2952-43b3-95b4-bcfd77a767e1" category="view+docker" selectedView="488c069a-7535-4af9-9c88-eda17c4808f7" dock="bottom">
 
@@ -411,7 +403,7 @@
 		</viewHost>
 
 
-	</xsl:template>-->
+	</xsl:template>
 
 	<xsl:template match="/uiConfig/customizationList/container">
 		<xsl:copy>

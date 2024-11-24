@@ -14,6 +14,9 @@ using c = Corel.Interop.VGCore;
 using Corel.Interop.VGCore;
 using System.Runtime.CompilerServices;
 using System.Xml.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Security.Cryptography;
+using System.Drawing.IconLib;
 //using System.Security.Cryptography;
 
 
@@ -76,8 +79,17 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
             set { selectedCommandBar = value; OnPropertyChanged(); }
 
         }
-
-        public MacrosManager(c.Application corelApp, string[] files, string theme)
+        private bool CheckShortcuts()
+        {
+            for (int i = 0; i < commands.Count; i++)
+            {
+                if (commands[i].UseShortcut)
+                    return true;
+            }
+            return false;
+        }
+        private List<string> workspaceModifyDatas = new List<string>();
+        public void InstallBar(c.Application corelApp, string[] files, string theme)
         {
             try
             {
@@ -106,9 +118,21 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
 
             if (!string.IsNullOrEmpty(NewCommandBar) && !commandBars.Contains(newCommandBar) && install.Equals(Status.CreateCommandBar))
                 this.corelApp.FrameWork.CommandBars.Add(newCommandBar);
-            List<string> controlsID =  new List<string>();;
+            // List<string> controlsID = new List<string>(); ;
             if (!install.Equals(Status.Cancel))
-            { 
+            {
+                DataSourceProxy dsp = null;
+                XDocument xdoc = null;
+                if (install.Equals(Status.CreateCommandBar) && CheckShortcuts())
+                {
+
+                    dsp = corelApp.FrameWork.Application.DataContext.GetDataSource("MacroMgrDockerDS");
+                    string xmlString = (string)dsp.GetProperty("MacroItemList");
+                    if (string.IsNullOrEmpty(xmlString))
+                        return;
+
+                    xdoc = XDocument.Parse(xmlString);
+                }
                 for (int i = 0; i < this.Commands.Count; i++)
                 {
                     if (this.commands[i].Add)
@@ -126,68 +150,171 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
                         if (install.Equals(Status.CreateCommandBar))
                         {
 
-                            var dsp = corelApp.FrameWork.Application.DataContext.GetDataSource("MacroMgrDockerDS");
-                            string xmlString = (string)dsp.GetProperty("MacroItemList");
-                            if (string.IsNullOrEmpty(xmlString))
-                                return;
-
-                            XDocument xdoc = XDocument.Parse(xmlString);
-
-                            string[] paths = this.commands[i].Command.Split(new char[] { '.' }, options: StringSplitOptions.RemoveEmptyEntries);
-
-                            XElement resultElement = FindElementByPath(xdoc.Root, "VBA", paths);
-
-                            if (resultElement != null)
+                            if (this.commands[i].UseShortcut)
                             {
-                                dsp.SetProperty("CurrentMacroItem", resultElement.ToString());
-                                dsp.InvokeMethod("OnAssignHotkey");
+                                string[] paths = this.commands[i].Command.Split(new char[] { '.' }, options: StringSplitOptions.RemoveEmptyEntries);
 
+                                XElement resultElement = FindElementByPath(xdoc.Root, "VBA", paths);
 
+                                if (resultElement != null)
+                                {
+                                    dsp.SetProperty("CurrentMacroItem", resultElement.ToString());
+                                    dsp.InvokeMethod("OnAssignHotkey");
+                                }
                             }
-                            c = corelApp.FrameWork.CommandBars[newCommandBar].Controls.AddCustomButton("2cc24a3e-fe24-4708-9a74-9c75406eebcd", this.commands[i].Command);
-                            controlsID.Add(c.ID);
+                            var commandBar = corelApp.FrameWork.CommandBars[newCommandBar];
+                            c = commandBar.Controls.AddCustomButton("2cc24a3e-fe24-4708-9a74-9c75406eebcd", this.commands[i].Command);
+                            this.Commands[i].Guid = c.ID;
+                            // controlsID.Add(c.ID);
                         }
                     }
                 }
-               
             }
             if (install.Equals(Status.CreateCommandBar))
             {
                 this.corelApp.FrameWork.CommandBars[newCommandBar].Visible = true;
-
-                SetIcons(controlsID);
-              
-                
+                SetIcons();
+                PrepareModifyWorkspace();
             }
         }
-        private void SetIcons(List<string> controlsID)
+        private void SetIcons()
         {
-
             for (int i = 0; i < this.Commands.Count; i++)
             {
 
                 if (!string.IsNullOrEmpty(this.Commands[i].Ico) && this.commands[i].Add)
                 {
-                    string name = Path.GetFileName(this.commands[i].Ico);
-                    string dest = string.Format("{0}{1}", this.corelApp.GMSManager.UserGMSPath, name);
-                    try
+                    c.Controls controls = corelApp.FrameWork.CommandBars[newCommandBar].Controls;
+                    for (int k = 1; k <= controls.Count; k++)
                     {
-                        if(!File.Exists(dest))
-                            File.Copy(this.Commands[i].Ico, dest);
-                        c.Controls controls =  corelApp.FrameWork.CommandBars[newCommandBar].Controls;
-                        for (int k = 1; k <= controls.Count; k++)
+                        if (controls[k].ID == this.Commands[i].Guid)
                         {
-                            if (controls[k].ID == controlsID[i])
+                            string path = CopyIcon(this.Commands[i].Ico, this.Commands[i].Guid);
+                            if (!string.IsNullOrEmpty(path))
                             {
-                                controls[k].SetIcon2(dest);
-                                break;
+                                controls[k].SetIcon2(path);
                             }
-
+                            break;
                         }
-                        
                     }
-                    catch { }
                 }
+            }
+        }
+        private string CopyIcon(string sourceFilePath, string guid)
+        {
+            FileInfo fi = new FileInfo(sourceFilePath);
+            string name = Path.GetFileName(sourceFilePath);
+            string dest = string.Format("{0}{1}.ico", this.corelApp.GMSManager.UserGMSPath, guid);
+            if (!fi.Extension.Equals(".ico"))
+            {
+                sourceFilePath = this.ContertToIcon(sourceFilePath);
+            }
+            try
+            {
+                if (!File.Exists(dest))
+                {
+                    File.Copy(sourceFilePath, dest);
+                    return dest;
+                }
+            }
+            catch { }
+            return null;
+        }
+        private string ContertToIcon(string imagePath)
+        {
+            string iconPath = Path.GetTempFileName();
+            iconPath = iconPath.Replace(".tmp", ".ico");
+            MultiIcon mIcon = new MultiIcon();
+            SingleIcon sIcon = mIcon.Add(Path.GetFileName(imagePath));
+            System.Drawing.Image original = System.Drawing.Bitmap.FromFile(imagePath);
+            int size = 16;
+            if (original.Width > original.Height)
+                size = RoundDownToNearest(original.Width);
+            else
+                size = RoundDownToNearest(original.Height);
+            System.Drawing.Bitmap bitmap16 = new System.Drawing.Bitmap(original, size, size);
+
+            sIcon.Add(bitmap16);
+            if (size == 256)
+                sIcon[0].IconImageFormat = IconImageFormat.PNG;
+            mIcon.SelectedIndex = 0;
+            mIcon.Save(iconPath, MultiIconFormat.ICO);
+            //using (Bitmap bitmap = new Bitmap(imagePath))
+            //{
+            //    Icon icon = Icon.FromHandle(bitmap.GetHicon());
+            //    using (System.IO.FileStream stream = new System.IO.FileStream(iconPath, System.IO.FileMode.Create,FileAccess.Write,FileShare.Write))
+            //    {
+            //        icon.Save(stream);
+            //    }
+            //}
+            return iconPath;
+        }
+        int RoundDownToNearest(int number)
+        {
+            int[] values = { 16, 32, 48, 64, 128, 256 };
+
+            int closest = values[0];
+            foreach (int val in values)
+            {
+                if (val <= number)
+                {
+                    closest = val;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            return closest;
+        }
+
+    
+        private void PrepareModifyWorkspace()
+        {
+            for (int i = 0; i < this.Commands.Count; i++)
+            {
+                if (!string.IsNullOrEmpty(this.Commands[i].Ico) && this.commands[i].Add)
+                    workspaceModifyDatas.Add(this.Commands[i].Guid);
+            }
+        }
+        private string StartModifyWorkspace()
+        {
+            WorkspaceObjectTranporter w = new WorkspaceObjectTranporter();
+            w.WorkspacePath = this.corelApp.UserWorkspacePath;
+            w.WorkspaceName = this.corelApp.ActiveWorkspace.Name;
+            w.IconFolder = this.corelApp.GMSManager.UserGMSPath;
+            w.Items.AddRange(workspaceModifyDatas);
+            string path = Path.GetTempFileName();
+            SetData(w, path);
+            if (File.Exists(path))
+                return path;
+            return "";
+            //SetData(w, @"C:\Users\bonus\OneDrive\Ambiente de Trabalho\i.it");
+        }
+        private void SetData(WorkspaceObjectTranporter data, string path)
+        {
+            BinaryFormatter formatter = new BinaryFormatter();
+            using (FileStream s = new FileStream(path, FileMode.Create))
+            {
+                formatter.Serialize(s, data);
+                s.Flush();
+            }
+
+        }
+        public void RunWorkspaceModifier()
+        {
+            if (workspaceModifyDatas.Count > 0)
+            {
+                string path = StartModifyWorkspace();
+                if (string.IsNullOrEmpty(path))
+                    return;
+                ProcessStartInfo process = new ProcessStartInfo();
+                //"C:\Program Files\Corel\CorelDRAW Graphics Suite X8\Programs64\Addons\Bonus630DevToolsBar\WorkspaceUpdater.exe"
+                process.FileName = string.Format("{0}{1}\\WorkspaceUpdater.exe", this.corelApp.AddonPath, "Bonus630DevToolsBar");
+                process.Arguments = path;
+                Process p = new Process();
+                p.StartInfo = process;
+                p.Start();
             }
         }
 
@@ -341,76 +468,96 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
             }
         }
         enum PTYPE
-        {
-            FOLDER,
-            ZIP,
-            RAR,
-            GMS,
-            ICO,
-            OTHERS
-        }
-
-    }
-
-    public class MacroCommand : MMBase
     {
-        public string FilePath
-        {
-            get;
-            set;
-        }
-        private string ico;
-        public string Ico
-        {
-            get { return ico; }
-            set
-            {
-                ico = value;
-                OnPropertyChanged();
-            }
-        }
-
-
-        private string command;
-
-        public string Command
-        {
-            get { return command; }
-            set { command = value; OnPropertyChanged(); }
-
-        }
-        private bool add;
-
-
-        public bool Add
-        {
-            get { return add; }
-            set
-            {
-                add = value;
-                OnPropertyChanged();
-            }
-        }
-        //private bool selected;
-
-        //public bool Selected
-        //{
-        //    get { return selected; }
-        //    set { selected = value;
-        //        OnPropertyChanged();
-        //    }
-        //}
-
-
-        public MacroCommand()
-        {
-            
-        }
-        public MacroCommand(string command)
-        {
-            Command = command;
-        }
-     
+        FOLDER,
+        ZIP,
+        RAR,
+        GMS,
+        ICO,
+        OTHERS
     }
+
+}
+
+public class MacroCommand : MMBase
+{
+    public string FilePath
+    {
+        get;
+        set;
+    }
+    private string ico;
+    public string Ico
+    {
+        get { return ico; }
+        set
+        {
+            ico = value;
+            OnPropertyChanged();
+        }
+    }
+
+
+    private string command;
+
+    public string Command
+    {
+        get { return command; }
+        set { command = value; OnPropertyChanged(); }
+
+    }
+    private string guid;
+
+    public string Guid
+    {
+        get { return guid; }
+        set { guid = value; OnPropertyChanged(); }
+
+    }
+    private bool add = true;
+
+
+    public bool Add
+    {
+        get { return add; }
+        set
+        {
+            add = value;
+            OnPropertyChanged();
+        }
+    }
+    private bool useShortcut;
+
+
+    public bool UseShortcut
+    {
+        get { return useShortcut; }
+        set
+        {
+            useShortcut = value;
+            OnPropertyChanged();
+        }
+    }
+    //private bool selected;
+
+    //public bool Selected
+    //{
+    //    get { return selected; }
+    //    set { selected = value;
+    //        OnPropertyChanged();
+    //    }
+    //}
+
+
+    public MacroCommand()
+    {
+
+    }
+    public MacroCommand(string command)
+    {
+        Command = command;
+    }
+
+}
 
 }

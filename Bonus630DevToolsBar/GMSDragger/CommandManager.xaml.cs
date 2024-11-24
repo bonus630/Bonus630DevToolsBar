@@ -62,7 +62,7 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
             base.ShowDialog();
             return this.DialogResult;
         }
-
+         string startFolder = "";
         private void btn_loadMoreIcons_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
@@ -71,7 +71,7 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
             string filter = "";
             string title = "";
             bool multiselect = true;
-            string startFolder = "";
+           
 
             filter = "Images or Icon|*.ico; *.bmp;*.jpg;*.jpeg;*.png;*.gif;*.tif;*.tiff";
             title = "Select Icons or Images!";
@@ -84,6 +84,7 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
             ofd.InitialDirectory = startFolder;
             if (ofd.ShowDialog().Equals(System.Windows.Forms.DialogResult.OK))
             {
+                startFolder = System.IO.Path.GetDirectoryName(ofd.FileNames[0]);
                 for(int i=0;i<ofd.FileNames.Length;i++)
                     (this.DataContext as MacrosManager).Icos.Add(ofd.FileNames[i]);
             }

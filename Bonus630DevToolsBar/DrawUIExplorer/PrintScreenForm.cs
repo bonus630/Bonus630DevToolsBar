@@ -14,7 +14,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
 {
     public partial class PrintScreenForm : Form
     {
-        Thread t;
+        //Thread t;
         bool close = false;
         public PrintScreenForm(System.Windows.Rect rect)
         {

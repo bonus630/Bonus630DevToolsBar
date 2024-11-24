@@ -30,7 +30,8 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         ProjectsManager projectsManager;
         ShapeRangeManager shapeRangeManager;
         ProjectCreator projectCreator = new ProjectCreator();
-
+        public SimpleCommand UndoCommand { get; set; }
+        public SimpleCommand SearchCommand { get; set; }
         public DockerUI(object app)
         {
             InitializeComponent();
@@ -40,6 +41,8 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
 
                 proxyManager = new ProxyManager(app, System.IO.Path.Combine((app as corel.Application).AddonPath, "Bonus630DevToolsBar"));
                 this.corelApp = app as corel.Application;
+                UndoCommand = new SimpleCommand(() => { if (this.corelApp.ActiveDocument != null) this.corelApp.ActiveDocument.Undo(); }); 
+                SearchCommand = new SimpleCommand(OpenSearch); 
                 stylesController = new Styles.StylesController(this.Resources, this.corelApp);
             }
             catch
@@ -177,7 +180,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Erro ao listar arquivos: {ex.Message}");
+                
             }
             return null;
 
@@ -613,7 +616,18 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         {
             projectsManager.CommandSearch.Search(textBoxSearch.Text);
         }
+        private void textBoxSearch_PreviewKeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == System.Windows.Input.Key.Escape)
+                 buttonClose_Click(null, null);
+            if(e.Key == System.Windows.Input.Key.Down)
+                projectsManager.CommandSearch.Navegate(1);
+            if(e.Key == System.Windows.Input.Key.Up)
+                projectsManager.CommandSearch.Navegate(-1);
+           
 
+
+        }
         private void buttonPreview_Click(object sender, RoutedEventArgs e)
         {
             projectsManager.CommandSearch.Navegate(-1);
@@ -656,8 +670,8 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         {
             if (e.Key == System.Windows.Input.Key.LeftCtrl)
                 control = false;
-            if (control && e.Key == System.Windows.Input.Key.F)
-                OpenSearch();
+            //if (control && e.Key == System.Windows.Input.Key.F)
+            //    OpenSearch();
         }
 
         private void checkBoxWholeWord_Click(object sender, RoutedEventArgs e)
@@ -787,6 +801,6 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                 btn_createModule_Click(null, null);
         }
 
-
+       
     }
 }

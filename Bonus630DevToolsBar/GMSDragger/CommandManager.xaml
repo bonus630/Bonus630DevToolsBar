@@ -52,6 +52,7 @@
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" SharedSizeGroup="Column1" />
                                         <ColumnDefinition Width="Auto" SharedSizeGroup="Column2" />
+                                        <ColumnDefinition Width="Auto" SharedSizeGroup="Column2" />
                                     </Grid.ColumnDefinitions>
                                     <CheckBox Grid.Column="0" IsChecked="{Binding Add}" Content="{Binding Command}" VerticalAlignment="Center" ToolTip="Check to add command"/>
 
@@ -59,13 +60,30 @@
                                               ToolTip="Choose the icon for this command">
                                         <ComboBox.ItemTemplate>
                                             <DataTemplate>
-                                                <Image Width="32" Height="32" Source="{Binding Converter={StaticResource PathToImageConverter}}" />
+                                                <Image Width="32" Height="32" Source="{Binding Converter={StaticResource PathToImageConverter}}" ToolTip="{Binding}"/>
                                             </DataTemplate>
                                         </ComboBox.ItemTemplate>
                                         <ComboBox.SelectedItem>
                                             <Binding Path="Ico" Mode="TwoWay" />
                                         </ComboBox.SelectedItem>
+                                        <ComboBox.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <UniformGrid Columns="5" />
+                                            </ItemsPanelTemplate>
+                                        </ComboBox.ItemsPanel>
+                                        <ComboBox.ItemContainerStyle>
+                                            <Style TargetType="ComboBoxItem">
+                                                <Setter Property="BorderThickness" Value="1" />
+                                                <Setter Property="BorderBrush" Value="{DynamicResource Button.Static.Border}" />
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter Property="BorderBrush" Value="{DynamicResource Button.MouseOver.Border}" />
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ComboBox.ItemContainerStyle>
                                     </ComboBox>
+                                    <CheckBox Grid.Column="2" IsChecked="{Binding UseShortcut}" Content="Add Shortcut" VerticalAlignment="Center" ToolTip="Mark to open shortcut dialog"/>
                                 </Grid>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
@@ -74,5 +92,6 @@
                 </Grid>
             </ScrollViewer>
         </GroupBox>
+    
     </DockPanel>
 </Window>

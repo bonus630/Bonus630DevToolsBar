@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:br.com.Bonus630DevToolsBar.CQLRunner"
              xmlns:forms="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
-             mc:Ignorable="d" Width="440" Height="160">
+             mc:Ignorable="d" Width="440" Height="460" Background="{DynamicResource Default.Static.Background}">
     <UserControl.Resources>
 
         <ResourceDictionary>
@@ -29,7 +29,7 @@
     </Button.ToolTip>-->
     <!--<Popup x:Name="popup_button" IsOpen="False" StaysOpen="True" Placement="Left" >-->
     <Border BorderThickness="1">
-        <Grid >
+        <Grid Height="160" VerticalAlignment="Top">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="10"/>
                 <ColumnDefinition />
@@ -44,9 +44,9 @@
                 <RowDefinition />
                 <RowDefinition />
             </Grid.RowDefinitions>
-            <Label Grid.Row="0" Grid.Column="1" Content="Type your cql, and press &quot;Enter&quot; Key!" />
+            <Label Grid.Row="0" Grid.Column="1" Content="Type your cql, and press &quot;Enter&quot; Key!" FontWeight="Bold"/>
             <WindowsFormsHost Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" VerticalAlignment="Stretch">
-                <forms:TextBox x:Name="txt_cql" AutoCompleteMode="SuggestAppend"  ></forms:TextBox>
+                <forms:TextBox x:Name="txt_cql" AutoCompleteMode="SuggestAppend"></forms:TextBox>
             </WindowsFormsHost>
 
             <GroupBox Grid.Row="2" Grid.Column="1" Header="Context">

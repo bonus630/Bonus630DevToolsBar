@@ -98,7 +98,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             {
                 throw ex;
             }
-            return null;
+            //return null;
         }
 
         public string GetNamespace()

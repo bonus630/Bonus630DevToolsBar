@@ -13,7 +13,6 @@ namespace br.com.Bonus630DevToolsBar.CustomControls
     /// </summary>
     public partial class ParamControl : UserControl, INotifyPropertyChanged
     {
-        //Temos um bug, ao teclar enter para executar a ação o valor nao foi atualizado ainda, será que foi corrigido!!!
         public static readonly DependencyProperty ParamValueProperty = DependencyProperty.Register("ParamValue", typeof(object), typeof(ParamControl), new FrameworkPropertyMetadata(default(object), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnParamValueChanged));
         public object ParamValue
         {
@@ -117,7 +116,6 @@ namespace br.com.Bonus630DevToolsBar.CustomControls
                 this.ParamValue = null;
                 ChangeParam();
                 IsFunc = false;
-
             }
         }
 
@@ -128,6 +126,7 @@ namespace br.com.Bonus630DevToolsBar.CustomControls
             IsBoolean = false;
             IsDecimal = false;
             IsEnum = false;
+            IsFunc = false;
             if (this.ParamValue is FuncToParam && !isFuncParam)
             {
                 IsVariant = true;

@@ -677,7 +677,7 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer
         }
         private bool listIsLoaded = false;
         private bool guidIsLoaded = false;
-        private int c = 1;
+        //private int c = 1;
 
         public void DispactchNewMessage(string message, MsgType msgType)
         {

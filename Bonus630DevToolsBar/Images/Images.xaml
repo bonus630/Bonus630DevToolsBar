@@ -184,6 +184,10 @@
     <Style x:Key="ExportImg" TargetType="Image">
         <Setter Property="Source" Value="{Binding Source={StaticResource Export},Converter={StaticResource ResourceToMediaImageConverter}}"/>
     </Style>
+    <System:String x:Key="OverlayWarning">OverlayWarning.png</System:String>
+    <Style x:Key="OverlayWarningImg" TargetType="Image">
+        <Setter Property="Source" Value="{Binding Source={StaticResource OverlayWarning},Converter={StaticResource ResourceToMediaImageConverter}}"/>
+    </Style>
     <!--<System:String x:Key="CreateSelection">createSelection.png</System:String>
     <Style x:Key="CreateSelectionImg" TargetType="Image">
         <Setter Property="Source" Value="{Binding Source={StaticResource CreateSelection},Converter={StaticResource ResourceToMediaImageConverter}}"/>

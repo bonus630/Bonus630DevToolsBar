@@ -17,9 +17,6 @@
     <AssemblyName>Bonus630DevToolsBar</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>
@@ -326,6 +323,7 @@
     <Compile Include="PrintScreen\Cropper.Designer.cs">
       <DependentUpon>Cropper.cs</DependentUpon>
     </Compile>
+    <Compile Include="WorkspaceObjectTranporter.cs" />
     <Compile Include="XMLManager.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -650,6 +648,7 @@
     <Content Include="DrawUIExplorer.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Resource Include="GMSDragger\BANNERQUAD.jpg" />
     <Content Include="GuidGen.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -677,6 +676,12 @@
     <Content Include="Images\EditTag.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Images\OverlayWarning.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="WorkspaceUpdater.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Resource Include="Images\Export.png" />
     <Content Include="Images\iconImport.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -694,6 +699,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\Invert.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\linked.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\OpenFolder.png">
@@ -724,6 +732,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\Uncheckmark.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\unlinked.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\VbeReload.png">

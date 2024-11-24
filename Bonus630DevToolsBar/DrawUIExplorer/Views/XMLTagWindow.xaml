@@ -79,7 +79,43 @@
             </StatusBarItem>
             <StatusBarItem Grid.Column="2" Padding="3,0">
                 <StackPanel Orientation="Horizontal" Background="{DynamicResource Footer.Static.Background}">
+                    <custom:SVGButton Visibility="{Binding InCorel,Converter={StaticResource BoolVisibilityConverter}}" x:Name="btn_corelLinked"  HorizontalAlignment="Left" Margin="7,0,2,0" Width="20" 
+                                       Command="{Binding DettachCommand}" Height="20" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" Padding="0" BorderBrush="{x:Null}" VerticalAlignment="Top" >
+                        <custom:SVGButton.ToolTip>
+                            <StackPanel Orientation="Vertical">
+                                <Label Content="CorelDraw Connected" VerticalAlignment="Center"  Padding="0" HorizontalAlignment="Right" VerticalContentAlignment="Center" Margin="4,0,0,0" />
+                                <Label Content="Click to disconnect" VerticalAlignment="Center"  Padding="0" HorizontalAlignment="Right" VerticalContentAlignment="Center" Margin="4,0,0,0" />
+                            </StackPanel>
+                        </custom:SVGButton.ToolTip>
+                        <custom:SVGButton.Paths>
+                            <custom:path d="M11.32 5l-6.17 0 0 -2 6.17 0 0 0 0 2zm3.41 1.77l-1.52 0 0 0 0 -0.13 -0.01 -0.12 -0.01 -0.12 -0.01 -0.1 -0.01 -0.1 -0.02 -0.1 -0.02 -0.08 -0.03 -0.08 -0.02 -0.06 -0.03 -0.07 -0.03 -0.07 -0.03 -0.06 -0.03 -0.05 -0.04 -0.05 -0.04 -0.05 -0.04 -0.05 -0.05 -0.05 -0.06 -0.05 -0.05 -0.04 -0.07 -0.05 -0.07 -0.04 -0.08 -0.04 -0.08 -0.04 -0.09 -0.03 -0.1 -0.03 -0.1 -0.03 -0.11 -0.02 -0.12 -0.02 -0.13 -0.02 -0.13 -0.01 -0.13 -0.01 -0.15 0 0 -2 0.19 0 0.18 0.01 0.17 0.02 0.17 0.02 0.16 0.03 0.17 0.03 0.16 0.05 0.16 0.05 0.15 0.06 0.15 0.06 0.14 0.08 0.14 0.08 0.14 0.09 0.13 0.1 0.13 0.11 0.12 0.12 0.12 0.13 0.11 0.14 0.1 0.14 0.09 0.16 0.09 0.17 0.08 0.16 0.07 0.18 0.07 0.18 0.05 0.19 0.05 0.19 0.04 0.2 0.03 0.19 0.02 0.21 0.02 0.2 0.01 0.21 0 0.21 0 0zm-1.52 1.85l0 -1.85 1.52 0 0 1.85 0 0 -1.52 0zm-1.89 3.76l0 -2 0 0 0.15 0 0.13 0 0.13 -0.02 0.13 -0.01 0.12 -0.02 0.11 -0.03 0.1 -0.02 0.1 -0.03 0.09 -0.04 0.08 -0.04 0.08 -0.04 0.07 -0.04 0.07 -0.04 0.05 -0.05 0.06 -0.04 0.05 -0.05 0.04 -0.05 0.04 -0.05 0.04 -0.06 0.03 -0.05 0.03 -0.06 0.03 -0.06 0.03 -0.07 0.02 -0.07 0.03 -0.08 0.02 -0.08 0.02 -0.09 0.01 -0.1 0.01 -0.11 0.01 -0.11 0.01 -0.13 0 -0.12 1.52 0 0 0.21 -0.01 0.21 -0.02 0.2 -0.02 0.2 -0.03 0.2 -0.04 0.19 -0.05 0.19 -0.05 0.19 -0.07 0.19 -0.07 0.17 -0.08 0.17 -0.09 0.17 -0.09 0.15 -0.1 0.15 -0.11 0.14 -0.12 0.13 -0.12 0.11 -0.13 0.11 -0.13 0.11 -0.14 0.09 -0.14 0.08 -0.14 0.07 -0.15 0.07 -0.15 0.06 -0.16 0.05 -0.16 0.04 -0.17 0.04 -0.16 0.02 -0.17 0.03 -0.17 0.01 -0.18 0.01 -0.19 0 0 0zm-6.17 -2l6.17 0 0 2 -6.17 0 0 0 0 -2zm-3.41 -1.76l1.52 0 0 0 0 0.12 0.01 0.13 0.01 0.11 0.01 0.11 0.01 0.1 0.02 0.09 0.02 0.08 0.03 0.08 0.02 0.07 0.03 0.07 0.03 0.06 0.03 0.06 0.03 0.05 0.04 0.06 0.04 0.05 0.04 0.05 0.05 0.05 0.06 0.04 0.06 0.05 0.06 0.04 0.07 0.04 0.08 0.04 0.08 0.04 0.09 0.04 0.1 0.03 0.11 0.02 0.1 0.03 0.12 0.02 0.13 0.01 0.13 0.02 0.13 0 0.15 0 0 2 -0.18 0 -0.18 -0.01 -0.18 -0.01 -0.17 -0.03 -0.16 -0.02 -0.17 -0.04 -0.16 -0.04 -0.15 -0.05 -0.16 -0.06 -0.15 -0.07 -0.14 -0.07 -0.14 -0.08 -0.14 -0.1 -0.13 -0.09 -0.13 -0.11 -0.12 -0.12 -0.12 -0.13 -0.11 -0.15 -0.1 -0.14 -0.09 -0.15 -0.09 -0.17 -0.08 -0.17 -0.07 -0.17 -0.06 -0.19 -0.06 -0.19 -0.05 -0.19 -0.03 -0.19 -0.04 -0.2 -0.02 -0.2 -0.02 -0.2 -0.01 -0.21 0 -0.21 0 0zm1.52 -1.85l0 1.85 -1.52 0 0 -1.85 0 0 1.52 0zm1.89 -3.77l0 2 0 0 -0.15 0 -0.13 0.01 -0.13 0.01 -0.13 0.02 -0.12 0.02 -0.1 0.02 -0.11 0.03 -0.1 0.03 -0.09 0.03 -0.08 0.04 -0.08 0.04 -0.07 0.04 -0.06 0.05 -0.06 0.04 -0.06 0.05 -0.05 0.05 -0.04 0.04 -0.04 0.05 -0.04 0.06 -0.03 0.05 -0.03 0.06 -0.03 0.07 -0.03 0.07 -0.02 0.06 -0.03 0.08 -0.02 0.08 -0.02 0.1 -0.01 0.1 -0.01 0.1 -0.01 0.12 -0.01 0.12 0 0.13 -1.52 0 0 -0.21 0.01 -0.21 0.02 -0.2 0.02 -0.21 0.04 -0.19 0.03 -0.2 0.05 -0.19 0.06 -0.19 0.06 -0.18 0.07 -0.18 0.08 -0.16 0.09 -0.17 0.09 -0.16 0.1 -0.14 0.11 -0.14 0.12 -0.13 0.12 -0.12 0.13 -0.11 0.13 -0.1 0.14 -0.09 0.14 -0.08 0.14 -0.08 0.15 -0.06 0.16 -0.06 0.15 -0.05 0.16 -0.05 0.17 -0.03 0.16 -0.03 0.17 -0.02 0.18 -0.02 0.18 -0.01 0.18 0 0 0z"/>
+                            <custom:path d="M14.85 9.62l-6.17 0 0 -2 6.17 0 0 0 0 2zm3.41 1.76l-1.52 0 0 0 0 -0.12 -0.01 -0.13 -0.01 -0.11 -0.01 -0.11 -0.01 -0.1 -0.02 -0.09 -0.02 -0.08 -0.03 -0.08 -0.02 -0.07 -0.03 -0.07 -0.03 -0.06 -0.03 -0.06 -0.03 -0.05 -0.04 -0.06 -0.04 -0.05 -0.05 -0.05 -0.04 -0.05 -0.06 -0.04 -0.05 -0.05 -0.07 -0.04 -0.07 -0.04 -0.08 -0.04 -0.08 -0.04 -0.1 -0.03 -0.09 -0.04 -0.11 -0.02 -0.1 -0.03 -0.12 -0.02 -0.13 -0.01 -0.13 -0.02 -0.13 0 -0.15 0 0 -2 0.18 0 0.18 0.01 0.18 0.01 0.17 0.03 0.16 0.02 0.17 0.04 0.16 0.04 0.16 0.05 0.15 0.06 0.14 0.06 0.15 0.08 0.14 0.08 0.14 0.09 0.13 0.11 0.13 0.1 0.12 0.13 0.12 0.13 0.11 0.13 0.1 0.15 0.09 0.16 0.09 0.16 0.08 0.16 0.07 0.18 0.06 0.19 0.06 0.19 0.05 0.19 0.03 0.19 0.04 0.2 0.02 0.2 0.02 0.2 0.01 0.21 0 0.21 0 0zm-1.52 1.85l0 -1.85 1.52 0 0 1.85 0 0 -1.52 0zm-1.89 3.77l0 -2 0 0 0.15 0 0.13 -0.01 0.13 -0.01 0.13 -0.02 0.12 -0.02 0.1 -0.02 0.11 -0.03 0.1 -0.03 0.08 -0.03 0.09 -0.04 0.08 -0.04 0.07 -0.04 0.07 -0.05 0.05 -0.04 0.06 -0.05 0.05 -0.05 0.04 -0.04 0.04 -0.06 0.04 -0.05 0.03 -0.05 0.03 -0.06 0.03 -0.07 0.03 -0.06 0.02 -0.07 0.03 -0.08 0.02 -0.08 0.02 -0.1 0.01 -0.1 0.01 -0.1 0.01 -0.12 0.01 -0.12 0 -0.13 1.52 0 0 0.21 -0.01 0.21 -0.02 0.2 -0.02 0.21 -0.04 0.2 -0.03 0.19 -0.05 0.19 -0.06 0.19 -0.06 0.18 -0.07 0.18 -0.08 0.17 -0.09 0.16 -0.09 0.16 -0.1 0.14 -0.11 0.14 -0.12 0.13 -0.12 0.12 -0.13 0.11 -0.13 0.1 -0.14 0.09 -0.14 0.09 -0.14 0.07 -0.15 0.07 -0.16 0.05 -0.15 0.05 -0.16 0.05 -0.17 0.03 -0.16 0.03 -0.17 0.02 -0.18 0.02 -0.18 0.01 -0.18 0 0 0zm-6.17 -2l6.17 0 0 2 -6.17 0 0 0 0 -2zm-3.41 -1.77l1.52 0 0 0 0 0.13 0.01 0.12 0.01 0.12 0.01 0.1 0.01 0.1 0.02 0.1 0.02 0.08 0.03 0.08 0.02 0.07 0.03 0.06 0.03 0.07 0.03 0.06 0.03 0.05 0.04 0.06 0.04 0.05 0.04 0.04 0.05 0.05 0.05 0.05 0.07 0.05 0.06 0.04 0.07 0.04 0.08 0.04 0.08 0.04 0.09 0.03 0.1 0.03 0.1 0.03 0.11 0.02 0.12 0.02 0.13 0.02 0.13 0.01 0.13 0.01 0.15 0 0 2 -0.19 0 -0.18 -0.01 -0.17 -0.02 -0.17 -0.02 -0.17 -0.03 -0.16 -0.03 -0.16 -0.05 -0.16 -0.05 -0.15 -0.05 -0.15 -0.07 -0.14 -0.07 -0.14 -0.09 -0.14 -0.09 -0.13 -0.1 -0.13 -0.11 -0.12 -0.12 -0.12 -0.13 -0.11 -0.14 -0.1 -0.14 -0.09 -0.16 -0.09 -0.16 -0.08 -0.17 -0.07 -0.18 -0.07 -0.18 -0.05 -0.19 -0.05 -0.19 -0.04 -0.19 -0.03 -0.2 -0.02 -0.21 -0.02 -0.2 -0.01 -0.21 0 -0.21 0 0zm1.52 -1.85l0 1.85 -1.52 0 0 -1.85 0 0 1.52 0zm1.89 -3.76l0 2 0 0 -0.15 0 -0.13 0 -0.13 0.02 -0.13 0.01 -0.12 0.02 -0.11 0.03 -0.1 0.02 -0.1 0.04 -0.09 0.03 -0.08 0.04 -0.08 0.04 -0.07 0.04 -0.06 0.04 -0.07 0.05 -0.05 0.04 -0.05 0.05 -0.04 0.05 -0.04 0.05 -0.04 0.06 -0.03 0.05 -0.03 0.06 -0.03 0.06 -0.03 0.07 -0.02 0.07 -0.03 0.08 -0.02 0.08 -0.02 0.09 -0.01 0.1 -0.01 0.11 -0.01 0.11 -0.01 0.13 0 0.12 -1.52 0 0 -0.21 0.01 -0.21 0.02 -0.2 0.02 -0.2 0.03 -0.2 0.04 -0.19 0.05 -0.19 0.05 -0.19 0.07 -0.19 0.07 -0.18 0.08 -0.16 0.09 -0.16 0.09 -0.16 0.1 -0.14 0.11 -0.14 0.12 -0.13 0.12 -0.13 0.13 -0.11 0.13 -0.09 0.14 -0.1 0.14 -0.08 0.14 -0.08 0.15 -0.06 0.15 -0.06 0.16 -0.05 0.16 -0.04 0.16 -0.04 0.17 -0.02 0.17 -0.03 0.17 -0.01 0.18 -0.01 0.19 0 0 0z"/>
 
+                        </custom:SVGButton.Paths>
+                    </custom:SVGButton>
+                    <custom:SVGButton Visibility="{Binding InCorel,Converter={StaticResource InvertBoolVisibilityConverter}}" x:Name="btn_corelUninked"  HorizontalAlignment="Left" Margin="7,0,2,0" Width="20" 
+                                       Command="{Binding AttachCommand}" Height="20" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" Padding="1,0" BorderBrush="{x:Null}" VerticalAlignment="Top" >
+                        <custom:SVGButton.ToolTip>
+                            <StackPanel Orientation="Vertical">
+                                <Label Content="CorelDraw Disconnected" VerticalAlignment="Center" Padding="0" HorizontalAlignment="Right" VerticalContentAlignment="Center" Margin="4,0,0,0" />
+                                <Label Content="Click to Connect" VerticalAlignment="Center" Padding="0" HorizontalAlignment="Right" VerticalContentAlignment="Center" Margin="4,0,0,0" />
+                            </StackPanel>
+                        </custom:SVGButton.ToolTip>
+                        <custom:SVGButton.Paths>
+                            <custom:path  d="M5.15 10.38l4.02 0 0 2 -4.02 0 0 0 0 -2zm-3.41 -1.76l1.52 0 0 0 0 0.12 0.01 0.13 0.01 0.11 0.01 0.11 0.01 0.1 0.02 0.09 0.02 0.08 0.03 0.08 0.02 0.07 0.03 0.07 0.03 0.06 0.03 0.06 0.03 0.06 0.04 0.05 0.04 0.05 0.04 0.05 0.05 0.05 0.06 0.05 0.06 0.04 0.06 0.04 0.07 0.04 0.08 0.04 0.08 0.04 0.09 0.04 0.1 0.03 0.11 0.02 0.1 0.03 0.12 0.02 0.13 0.01 0.13 0.02 0.13 0 0.15 0 0 2 -0.18 0 -0.18 -0.01 -0.18 -0.01 -0.17 -0.03 -0.16 -0.02 -0.17 -0.04 -0.16 -0.04 -0.15 -0.05 -0.16 -0.06 -0.15 -0.07 -0.14 -0.07 -0.14 -0.08 -0.14 -0.09 -0.13 -0.11 -0.13 -0.1 -0.12 -0.12 -0.12 -0.13 -0.11 -0.14 -0.1 -0.15 -0.09 -0.15 -0.09 -0.17 -0.08 -0.16 -0.07 -0.18 -0.06 -0.19 -0.06 -0.18 -0.05 -0.2 -0.03 -0.19 -0.04 -0.2 -0.02 -0.2 -0.02 -0.2 -0.01 -0.21 0 -0.21 0 0zm1.52 -1.85l0 1.85 -1.52 0 0 -1.85 0 0 1.52 0zm1.89 -3.77l0 2 0 0 -0.15 0 -0.13 0.01 -0.13 0.01 -0.13 0.02 -0.11 0.02 -0.11 0.02 -0.11 0.03 -0.09 0.03 -0.1 0.04 -0.08 0.03 -0.08 0.04 -0.07 0.04 -0.06 0.04 -0.06 0.05 -0.06 0.05 -0.05 0.05 -0.04 0.04 -0.04 0.05 -0.04 0.06 -0.03 0.06 -0.03 0.05 -0.03 0.07 -0.03 0.06 -0.02 0.08 -0.03 0.07 -0.02 0.09 -0.02 0.09 -0.01 0.1 -0.01 0.1 -0.01 0.12 -0.01 0.12 0 0.13 -1.52 0 0 -0.21 0.01 -0.21 0.02 -0.2 0.02 -0.21 0.04 -0.2 0.03 -0.19 0.05 -0.19 0.06 -0.19 0.06 -0.18 0.07 -0.18 0.08 -0.17 0.09 -0.16 0.09 -0.16 0.1 -0.14 0.11 -0.14 0.12 -0.13 0.12 -0.12 0.13 -0.11 0.13 -0.1 0.14 -0.09 0.14 -0.09 0.14 -0.07 0.15 -0.07 0.15 -0.05 0.16 -0.05 0.16 -0.05 0.16 -0.03 0.17 -0.03 0.17 -0.02 0.18 -0.02 0.18 -0.01 0.18 0 0 0zm5.11 2l-5.11 0 0 -2 5.11 0 0 2z"/>
+                            <custom:path d="M14.79 9.58l-4.02 0 0 -2 4.02 0 0 0 0 2zm3.41 1.77l-1.52 0 0 0 0 -0.13 -0.01 -0.12 -0.01 -0.12 -0.01 -0.11 -0.02 -0.09 -0.02 -0.1 -0.02 -0.08 -0.02 -0.08 -0.02 -0.07 -0.03 -0.06 -0.03 -0.07 -0.03 -0.06 -0.04 -0.05 -0.03 -0.06 -0.04 -0.05 -0.05 -0.05 -0.05 -0.04 -0.05 -0.05 -0.06 -0.05 -0.06 -0.04 -0.07 -0.04 -0.08 -0.04 -0.09 -0.04 -0.09 -0.03 -0.09 -0.03 -0.11 -0.03 -0.11 -0.02 -0.11 -0.03 -0.13 -0.01 -0.13 -0.01 -0.14 -0.01 -0.14 0 0 -2 0.18 0 0.18 0.01 0.18 0.02 0.16 0.02 0.17 0.03 0.17 0.03 0.16 0.04 0.15 0.05 0.16 0.06 0.15 0.07 0.14 0.07 0.14 0.08 0.14 0.1 0.13 0.1 0.13 0.11 0.12 0.12 0.12 0.13 0.1 0.14 0.11 0.14 0.09 0.16 0.09 0.16 0.08 0.17 0.07 0.18 0.06 0.18 0.06 0.19 0.04 0.19 0.04 0.19 0.03 0.2 0.03 0.2 0.01 0.2 0.01 0.21 0.01 0.22 0 0zm-1.52 1.84l0 -1.84 1.52 0 0 1.84 0 0 -1.52 0zm-1.89 3.77l0 -2 0 0 0.14 0 0.14 -0.01 0.13 -0.01 0.13 -0.01 0.11 -0.02 0.11 -0.03 0.11 -0.03 0.09 -0.03 0.1 -0.03 0.08 -0.04 0.07 -0.04 0.08 -0.04 0.06 -0.04 0.06 -0.05 0.05 -0.04 0.05 -0.05 0.05 -0.05 0.04 -0.05 0.03 -0.06 0.04 -0.05 0.03 -0.06 0.03 -0.07 0.03 -0.06 0.02 -0.07 0.02 -0.08 0.02 -0.08 0.02 -0.1 0.02 -0.1 0.01 -0.1 0.01 -0.12 0.01 -0.12 0 -0.13 1.52 0 -0.01 0.21 -0.01 0.21 -0.01 0.2 -0.03 0.21 -0.03 0.2 -0.04 0.19 -0.04 0.19 -0.06 0.19 -0.06 0.18 -0.07 0.18 -0.08 0.17 -0.09 0.16 -0.09 0.16 -0.11 0.14 -0.1 0.14 -0.12 0.13 -0.12 0.12 -0.13 0.11 -0.13 0.1 -0.14 0.09 -0.14 0.09 -0.15 0.07 -0.15 0.07 -0.15 0.05 -0.15 0.06 -0.16 0.04 -0.17 0.03 -0.17 0.03 -0.16 0.02 -0.18 0.02 -0.18 0.01 -0.18 0 0 0zm-5.11 -2l5.11 0 0 2 -5.11 0 0 -2z"/>
+                        </custom:SVGButton.Paths>
+                    </custom:SVGButton>
+                    <!--<custom:IconCheckBox IsChecked="{Binding InCorel}" IconChecked="linked.png" IconUnchecked="unlinked.png" Content="c"  Background="Transparent">
+                        <custom:IconCheckBox.ToolTip>
+                            <ToolTip>
+                                <StackPanel>
+                                    <Label Content="CorelDraw Connected!" Visibility="{Binding InCorel,Converter={StaticResource BoolVisibilityConverter}}"/>
+                                    <Label Content="CorelDraw Disconnected!" Visibility="{Binding InCorel,Converter={StaticResource InvertBoolVisibilityConverter}}"/>
+                                </StackPanel>
+                            </ToolTip>
+                        </custom:IconCheckBox.ToolTip>
+                    </custom:IconCheckBox>-->
                     <custom:SVGButton Visibility="{Binding InCorel,Converter={StaticResource BoolVisibilityConverter}}" x:Name="btn_tryHighLightThis"  HorizontalAlignment="Left" Margin="7,0,2,0" Width="20" 
                                        Command="{Binding HighLightCommand}" Height="20" HorizontalContentAlignment="Left" VerticalContentAlignment="Stretch" Padding="1,0" BorderBrush="{x:Null}" VerticalAlignment="Top" >
                         <custom:SVGButton.ToolTip>
@@ -173,7 +209,8 @@ d="m11.633 12.191 0.45 -0.447c2.081 0.069 2.114 -0.005 2.206 -0.219l0.572 -1.392
             <StatusBarItem Grid.Column="3"/>
         </StatusBar>
         <DockPanel Margin="2,0,2,0" DockPanel.Dock="Left" x:Name="dockPanel_treeViews" Visibility="Visible">
-            <Grid DockPanel.Dock="Left" Width="Auto"  ><!--main tree -->
+            <Grid DockPanel.Dock="Left" Width="Auto"  >
+                <!--main tree -->
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="3*" />
@@ -185,7 +222,7 @@ d="m11.633 12.191 0.45 -0.447c2.081 0.069 2.114 -0.005 2.206 -0.219l0.572 -1.392
                 <Border  Style="{DynamicResource BorderTitleStyle}">
                     <Label Content="Main Tree:" Grid.Row="0" FontFamily="Segoe UI Black" />
                 </Border>
-                
+
                 <TreeView  Grid.Row="1"  x:Name="treeView_Nodes"  Margin="0" BorderBrush="{x:Null}" Background="#FFE3FDD4" 
                            VirtualizingStackPanel.IsVirtualizing="True" VirtualizingStackPanel.VirtualizationMode="Recycling">
                     <TreeView.ItemContainerStyle>
@@ -217,7 +254,8 @@ d="m11.633 12.191 0.45 -0.447c2.081 0.069 2.114 -0.005 2.206 -0.219l0.572 -1.392
                 </TreeView>
 
             </Grid>
-            <Grid DockPanel.Dock="Left" Width="Auto"  Margin="1,0,0,0" Name="gridRef" Visibility="Collapsed"><!--ref tree search tree-->
+            <Grid DockPanel.Dock="Left" Width="Auto"  Margin="1,0,0,0" Name="gridRef" Visibility="Collapsed">
+                <!--ref tree search tree-->
                 <Grid.RowDefinitions>
                     <RowDefinition Height="14" />
                     <RowDefinition Height="16"/>
@@ -228,7 +266,7 @@ d="m11.633 12.191 0.45 -0.447c2.081 0.069 2.114 -0.005 2.206 -0.219l0.572 -1.392
                 <Border Grid.RowSpan="2" Grid.Row="0" Style="{DynamicResource BorderTitleStyle}">
                     <Label Content="Ref Tree:"  FontFamily="Segoe UI Black"/>
                 </Border>
-                
+
                 <TreeView  x:Name="treeView_Ref" Grid.Row="2" Margin="0" BorderBrush="{x:Null}" Background="#FFE3FDD4" 
                            VirtualizingStackPanel.IsVirtualizing="True" VirtualizingStackPanel.VirtualizationMode="Recycling">
                     <TreeView.ItemContainerStyle>
@@ -257,7 +295,7 @@ d="m11.633 12.191 0.45 -0.447c2.081 0.069 2.114 -0.005 2.206 -0.219l0.572 -1.392
                         </HierarchicalDataTemplate>
                     </TreeView.ItemTemplate>
                 </TreeView>
-                
+
                 <Border Grid.Row="3" Style="{DynamicResource BorderTitleStyle}">
                     <Label Content="Search Tree:"   FontFamily="Segoe UI Black"/>
                 </Border>
@@ -287,15 +325,15 @@ d="m11.633 12.191 0.45 -0.447c2.081 0.069 2.114 -0.005 2.206 -0.219l0.572 -1.392
                     <TreeView.ItemTemplate>
                         <HierarchicalDataTemplate  ItemsSource="{Binding Path=Childrens}">
                             <HeaderedContentControl Header="{Binding Path=TagValue}" Focusable="False" ToolTip="{Binding Label}" >
-                              
-                                   
-                                    
-                             
+
+
+
+
                             </HeaderedContentControl>
                         </HierarchicalDataTemplate>
                     </TreeView.ItemTemplate>
                 </TreeView>
-           
+
             </Grid>
         </DockPanel>
         <Grid DockPanel.Dock="Bottom" Height="{Binding ConsoleExpanded, Converter={StaticResource BoolHeightConverter}}" VerticalAlignment="Bottom"  Margin="2,2,2,0"  Name="grid_consoles">
@@ -333,21 +371,21 @@ d="m11.633 12.191 0.45 -0.447c2.081 0.069 2.114 -0.005 2.206 -0.219l0.572 -1.392
                 <TabItem Header="Xml Viewer" Style="{DynamicResource TabItemStyle}">
                     <Grid>
                         <!--<ScrollViewer  VerticalScrollBarVisibility="Auto" Template="{DynamicResource ScrollViewerControlTemplate}">-->
-                            <TextBox TextWrapping="Wrap" AcceptsReturn="True" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" x:Name="txt_xmlViewer"/>
+                        <TextBox TextWrapping="Wrap" AcceptsReturn="True" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" x:Name="txt_xmlViewer"/>
                         <!--</ScrollViewer>-->
                     </Grid>
                 </TabItem>
                 <TabItem Header="Console" Style="{DynamicResource TabItemStyle}">
                     <Grid >
                         <!--<ScrollViewer  VerticalScrollBarVisibility="Auto"  Template="{DynamicResource ScrollViewerControlTemplate}">-->
-                            <RichTextBox ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto"  x:Name="txt_consoleFull" />
+                        <RichTextBox ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto"  x:Name="txt_consoleFull" />
                         <!--</ScrollViewer>-->
                     </Grid>
                 </TabItem>
                 <TabItem Header="Corel EventViewer" Visibility="{Binding InCorel,Converter={StaticResource BoolVisibilityConverter}}" Style="{DynamicResource TabItemStyle}">
                     <Grid>
                         <!--<ScrollViewer  VerticalScrollBarVisibility="Auto">-->
-                            <TextBox TextWrapping="Wrap" AcceptsReturn="True" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" x:Name="txt_CorelEventViewer" />
+                        <TextBox TextWrapping="Wrap" AcceptsReturn="True" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" x:Name="txt_CorelEventViewer" />
                         <!--</ScrollViewer>-->
                     </Grid>
                 </TabItem>
@@ -355,7 +393,8 @@ d="m11.633 12.191 0.45 -0.447c2.081 0.069 2.114 -0.005 2.206 -0.219l0.572 -1.392
             </TabControl>
         </Grid>
 
-        <ScrollViewer DockPanel.Dock="Top" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="0,2,2,0" Background="#FFE3FDD4" Padding="0"><!-- Tabs, details,search,xsl-->
+        <ScrollViewer DockPanel.Dock="Top" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="0,2,2,0" Background="#FFE3FDD4" Padding="0">
+            <!-- Tabs, details,search,xsl-->
             <StackPanel>
                 <Border Style="{DynamicResource BorderTitleStyle}">
                     <Label x:Name="lba_tagName" FontSize="14" FontWeight="Bold" Content="{Binding CurrentBasicData.TagName}">

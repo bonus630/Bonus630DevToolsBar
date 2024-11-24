@@ -141,6 +141,8 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
         public BaseDataCommand GetIUnknownTypesCommand { get; protected set; }
         public BaseDataCommand RemoveMeCommand { get; protected set; }
         public RoutedCommand<Tuple<SolidColorBrush, IBasicData>> MarkCommand { get; protected set; }
+        public SimpleCommand DettachCommand { get; protected set; }
+        public SimpleCommand AttachCommand { get; protected set; }
         public BaseDataCommand UnMarkCommand { get; protected set; }
 
 
@@ -167,6 +169,8 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
             GetDockersGuidCommand = new BaseDataCommand(GetDockersGuidExec, IsDockers);
             RemoveMeCommand = new BaseDataCommand(RemoveMeExec, IsSearchData);
             MarkCommand = new RoutedCommand<Tuple<SolidColorBrush, IBasicData>>(MarkColor, IsUnMarked);
+            DettachCommand = new SimpleCommand(Dettach);
+            AttachCommand = new SimpleCommand(Attach);
             UnMarkCommand = new BaseDataCommand(UnMark, IsMarked);
             HighLightCommand = new SimpleCommand(showHighLightItem);
             LayoutCommand = new BaseDataCommand(layoutAdorms, IsComplexLayout);
@@ -516,6 +520,23 @@ namespace br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels
         private void expandConsole()
         {
             this.ConsoleExpanded = !this.ConsoleExpanded;
+        }
+
+        private void Attach()
+        {
+            Core.RunCommand("AttachDisattachCorelDRW " + Core.CorelLastVersion);
+        }
+        private bool CanAttach(object o)
+        {
+            return Core.CorelLastVersion > 0;
+        }
+        private void Dettach()
+        {
+            Core.RunCommand("AttachDisattachCorelDRW " + Core.CorelLastVersion);
+        }
+        private bool CanDettach(object o)
+        {
+            return InCorel;
         }
     }
 

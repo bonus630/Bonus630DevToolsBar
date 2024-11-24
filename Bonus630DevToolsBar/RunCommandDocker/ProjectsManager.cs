@@ -52,6 +52,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         public BindingCommand<object> CopyReturnsValueCommand { get; set; }
         public SimpleCommand SetShapeRangeToValueCommand { get; set; }
         public SimpleCommand CreateSelectionShapeRangeCommand { get; set; }
+       
 
         private bool myPopupIsOpen;
 
@@ -292,6 +293,9 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             //Can pass the command to value and create the func in command runtime?
             Argument argument = GetArgument(command);
             if (argument != null)
+            {
+                //if (!argument.ArgumentType.Equals(typeof(Corel.Interop.VGCore.ShapeRange)))
+                //    argument.SetIncompatibleArgumentType();
                 argument.Value = new FuncToParam()
                 {
                     Name = command.Name,
@@ -303,7 +307,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                         return command.Returns;
                     })
                 };
-
+            }
         }
         private void StopCommandAsync(Command command)
         {
@@ -497,13 +501,16 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             {
                 Argument argument = this.SelectedCommand.Items.FirstOrDefault(r => r.IsSelectedBase);
                 if (argument != null)
+                {
+                    //if (!argument.ArgumentType.Equals(typeof(Corel.Interop.VGCore.ShapeRange)))
+                    //    argument.SetIncompatibleArgumentType();
                     argument.Value = new FuncToParam()
                     {
                         Name = "GetShapes",
                         FullPath = "br.com.Bonus630DevToolsBar.RunCommandDocker.GetShapes",
                         MyFunc = new Func<Command, object>(shapeRangeManager.GetShapes)
                     };
-
+                }
 
             }
         }
