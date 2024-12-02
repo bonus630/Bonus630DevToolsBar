@@ -1,17 +1,11 @@
-﻿using br.com.Bonus630DevToolsBar.Folders;
-using Microsoft.Build.Evaluation;
-using Microsoft.Win32;
-using System;
-using System.CodeDom;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Data.SqlTypes;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -172,6 +166,11 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             AssemblyDirectory = Properties.Settings.Default.FolderPath;
             this.proxyManager = proxyManager;
             VSDetection();
+            StartCommands();
+            CheckFolder(assemblyDirectory);
+        }
+        private void StartCommands()
+        {
             AddModuleCommand = new BindingCommand<Project>(AddModule, CanAddModule);
             RemoveModuleCommand = new BindingCommand<Module>(RemoveModule, CanRemoveModule);
             ExecuteCommand = new BindingCommand<Command>(RunCommandAsync);
@@ -189,9 +188,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             SetCommandToValueCommand = new BindingCommand<Command>(SetCommandReturnArgumentValue, CanRunSetCommandReturnArgVal);
             SetShapeRangeToValueCommand = new SimpleCommand(SetShapeRangeArgumentValue);
             CreateSelectionShapeRangeCommand = new SimpleCommand(CreateSelectionShapeRange);
-            CheckFolder(assemblyDirectory);
         }
-
         private void UnloadProject(Project project)
         {
             try

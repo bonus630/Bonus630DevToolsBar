@@ -15,9 +15,7 @@ using Corel.Interop.VGCore;
 using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Security.Cryptography;
-using System.Drawing.IconLib;
-//using System.Security.Cryptography;
+
 
 
 
@@ -207,7 +205,8 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
             string dest = string.Format("{0}{1}.ico", this.corelApp.GMSManager.UserGMSPath, guid);
             if (!fi.Extension.Equals(".ico"))
             {
-                sourceFilePath = this.ContertToIcon(sourceFilePath);
+                var ic = new CustomCommandBarCreator.Models.IconCreator();
+                sourceFilePath = ic.ContertToIcon(sourceFilePath);
             }
             try
             {
@@ -220,53 +219,53 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
             catch { }
             return null;
         }
-        private string ContertToIcon(string imagePath)
-        {
-            string iconPath = Path.GetTempFileName();
-            iconPath = iconPath.Replace(".tmp", ".ico");
-            MultiIcon mIcon = new MultiIcon();
-            SingleIcon sIcon = mIcon.Add(Path.GetFileName(imagePath));
-            System.Drawing.Image original = System.Drawing.Bitmap.FromFile(imagePath);
-            int size = 16;
-            if (original.Width > original.Height)
-                size = RoundDownToNearest(original.Width);
-            else
-                size = RoundDownToNearest(original.Height);
-            System.Drawing.Bitmap bitmap16 = new System.Drawing.Bitmap(original, size, size);
+        //private string ContertToIcon(string imagePath)
+        //{
+        //    string iconPath = Path.GetTempFileName();
+        //    iconPath = iconPath.Replace(".tmp", ".ico");
+        //    MultiIcon mIcon = new MultiIcon();
+        //    SingleIcon sIcon = mIcon.Add(Path.GetFileName(imagePath));
+        //    System.Drawing.Image original = System.Drawing.Bitmap.FromFile(imagePath);
+        //    int size = 16;
+        //    if (original.Width > original.Height)
+        //        size = RoundDownToNearest(original.Width);
+        //    else
+        //        size = RoundDownToNearest(original.Height);
+        //    System.Drawing.Bitmap bitmap16 = new System.Drawing.Bitmap(original, size, size);
 
-            sIcon.Add(bitmap16);
-            if (size == 256)
-                sIcon[0].IconImageFormat = IconImageFormat.PNG;
-            mIcon.SelectedIndex = 0;
-            mIcon.Save(iconPath, MultiIconFormat.ICO);
-            //using (Bitmap bitmap = new Bitmap(imagePath))
-            //{
-            //    Icon icon = Icon.FromHandle(bitmap.GetHicon());
-            //    using (System.IO.FileStream stream = new System.IO.FileStream(iconPath, System.IO.FileMode.Create,FileAccess.Write,FileShare.Write))
-            //    {
-            //        icon.Save(stream);
-            //    }
-            //}
-            return iconPath;
-        }
-        int RoundDownToNearest(int number)
-        {
-            int[] values = { 16, 32, 48, 64, 128, 256 };
+        //    sIcon.Add(bitmap16);
+        //    if (size == 256)
+        //        sIcon[0].IconImageFormat = IconImageFormat.PNG;
+        //    mIcon.SelectedIndex = 0;
+        //    mIcon.Save(iconPath, MultiIconFormat.ICO);
+        //    //using (Bitmap bitmap = new Bitmap(imagePath))
+        //    //{
+        //    //    Icon icon = Icon.FromHandle(bitmap.GetHicon());
+        //    //    using (System.IO.FileStream stream = new System.IO.FileStream(iconPath, System.IO.FileMode.Create,FileAccess.Write,FileShare.Write))
+        //    //    {
+        //    //        icon.Save(stream);
+        //    //    }
+        //    //}
+        //    return iconPath;
+        //}
+        //int RoundDownToNearest(int number)
+        //{
+        //    int[] values = { 16, 32, 48, 64, 128, 256 };
 
-            int closest = values[0];
-            foreach (int val in values)
-            {
-                if (val <= number)
-                {
-                    closest = val;
-                }
-                else
-                {
-                    break;
-                }
-            }
-            return closest;
-        }
+        //    int closest = values[0];
+        //    foreach (int val in values)
+        //    {
+        //        if (val <= number)
+        //        {
+        //            closest = val;
+        //        }
+        //        else
+        //        {
+        //            break;
+        //        }
+        //    }
+        //    return closest;
+        //}
 
     
         private void PrepareModifyWorkspace()

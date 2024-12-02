@@ -105,6 +105,20 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
             get { return isOpened; }
             set { isOpened = value; OnPropertyChanged(); }
         }
+        private bool isPinned = false;
+
+        public bool IsPinned
+        {
+            get { return isPinned; }
+            set { isPinned = value; OnPropertyChanged(); }
+        }
+        private int pinned = -1;
+
+        public int Pinned
+        {
+            get { return pinned; }
+            set { pinned = value; OnPropertyChanged(); }
+        }
         public void SetAbsName()
         {
             //index = 0,name = -1,thumb = 1

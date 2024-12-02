@@ -15,8 +15,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>br.com.Bonus630DevToolsBar</RootNamespace>
     <AssemblyName>Bonus630DevToolsBar</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>
@@ -201,6 +202,10 @@
     <Win32Resource>$(ProjectDir)resources.rct</Win32Resource>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CDRCommandBarBuilder, Version=2.4.0.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\CDRCommandBarBuilder.exe</HintPath>
+    </Reference>
     <Reference Include="IconLib">
       <HintPath>.\IconLib.dll</HintPath>
     </Reference>
@@ -648,7 +653,6 @@
     <Content Include="DrawUIExplorer.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Resource Include="GMSDragger\BANNERQUAD.jpg" />
     <Content Include="GuidGen.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

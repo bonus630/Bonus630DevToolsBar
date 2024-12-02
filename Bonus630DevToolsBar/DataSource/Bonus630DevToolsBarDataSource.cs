@@ -306,13 +306,10 @@ namespace br.com.Bonus630DevToolsBar.DataSource
         {
             //svg não funciona
             System.Windows.Forms.OpenFileDialog of = new System.Windows.Forms.OpenFileDialog();
-#if X7
-            of.Filter = "ico file (*.ico)|*.ico";
-            of.Title = "Select a ico file";
-#else
+
             of.Filter = "Image files (*.bmp, *.jpg, *.ico,*.png,*.gif)|*.bmp;*.jpg;*.ico;*.png;*.gif";
             of.Title = "Select a image file";
-#endif
+
             of.Multiselect = false;
             if (of.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
@@ -321,7 +318,27 @@ namespace br.com.Bonus630DevToolsBar.DataSource
                 foreach (Corel.Interop.VGCore.Control item in commandBar.Controls)
                 {
                     if (item.ID.Equals("657042cb-3594-43a1-80bf-c8a27fd43146"))
-                        item.SetIcon2(of.FileName);
+                    {
+                       //item.SetIcon2(of.FileName);return;
+                        var ic = new CustomCommandBarCreator.Models.IconCreator();
+                        string icon = string.Empty;
+#if X7
+                        if (Path.GetExtension(of.FileName).ToLower().Equals(".ico"))
+                            icon = ic.GetImageFromIcon(of.FileName);
+                        else
+                            icon = of.FileName;
+                        icon = ic.ContertToJpg128(icon);
+#else
+                        if (Path.GetExtension(of.FileName).ToLower().Equals(".ico"))
+                            icon = ic.RewriteIcon(of.FileName);
+                        else
+                            icon = ic.ContertToIcon(of.FileName);
+#endif
+                        if(!string.IsNullOrEmpty(icon))
+                            item.SetIcon2(icon);
+                        break;
+
+                    }
                 }
             }
         }

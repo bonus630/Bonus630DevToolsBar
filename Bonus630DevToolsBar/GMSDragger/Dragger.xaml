@@ -6,7 +6,7 @@
                 xmlns:local="clr-namespace:br.com.Bonus630DevToolsBar.GMSDragger"
             mc:Ignorable="d" 
             AllowDrop="True" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" MaxHeight="48" MaxWidth="48" MinWidth="20" MinHeight="20" Width="20" Height="20" 
-        Background="{DynamicResource ControlUI.Button.Static.Background}" Padding="1" BorderThickness="0" Click="Button_Click" >
+        Background="{DynamicResource ControlUI.Button.Static.Background}" Padding="1" BorderThickness="0" BorderBrush="Red" Click="Button_Click" >
     <Button.Resources>
         <ResourceDictionary>
         <ResourceDictionary.MergedDictionaries>

@@ -23,19 +23,19 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
 
         {
 
-            this.CreateTable("CREATE TABLE IF NOT EXISTS files(id INTEGER PRIMARY KEY,_index INTEGER,count INTEGER,autoload INTEGER,name Varchar(50),path Varchar(256),time INTEGER);");
+            this.CreateTable("CREATE TABLE IF NOT EXISTS files(id INTEGER PRIMARY KEY,_index INTEGER,count INTEGER,autoload INTEGER,name Varchar(50),path Varchar(256),time INTEGER,pinned INTEGER);");
         }
 
         // int openTimes, long openedTime,
-        public RecentFileViewModel InsertData(int index, string name, string fullName, bool autoload = false, int openTimes = 1, long openedTime = 0)
+        public RecentFileViewModel InsertData(int index, string name, string fullName, bool autoload = false, int openTimes = 1, long openedTime = 0,int pinned = -1)
         {
             try
             {
                 int id = GetLastId() + 1;
                 using (SQLiteCommand command = CreateConnection().CreateCommand())
                 {
-                    command.CommandText = "INSERT INTO files(id,_index,count,autoload,name,path,time) " +
-                        "VALUES (:id,:index,:count,:autoload,:name,:path,:time);";
+                    command.CommandText = "INSERT INTO files(id,_index,count,autoload,name,path,time,pinned) " +
+                        "VALUES (:id,:index,:count,:autoload,:name,:path,:time,:pinned);";
                     command.Parameters.AddWithValue(":id", id);
                     command.Parameters.AddWithValue(":name", name);
                     command.Parameters.AddWithValue(":index", index);
@@ -43,6 +43,7 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
                     command.Parameters.AddWithValue(":path", fullName);
                     command.Parameters.AddWithValue(":time", openedTime);
                     command.Parameters.AddWithValue(":autoload", autoload ? 1 : 0);
+                    command.Parameters.AddWithValue(":pinned", pinned);
 
                     // command.Parameters.AddWithValue(":lastDate", DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss"));
 
@@ -66,13 +67,11 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
                 string condition = string.Format(" LIMIT {0} OFFSET {1} ",limit,offset);
                 using (SQLiteCommand command = CreateConnection().CreateCommand())
                 {
-                    command.CommandText = string.Format("SELECT * FROM files ORDER BY time DESC{0};", condition);
-
+                    command.CommandText = string.Format("SELECT * FROM files ORDER BY pinned DESC,time DESC{0};", condition);
                     using (SQLiteDataReader dataReader = command.ExecuteReader())
                     {
                         while (dataReader.Read())
                         {
-
                             RecentFileViewModel k = new RecentFileViewModel(dataReader.GetInt32(0));
                             k.Index = dataReader.GetInt32(1);
                             k.OpenTimes = dataReader.GetInt32(2);
@@ -80,6 +79,9 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
                             k.Name = dataReader.GetString(4);
                             k.FullName = dataReader.GetString(5);
                             k.OpenedTime = dataReader.GetInt64(6);
+                            k.Pinned = dataReader.GetInt32(7);
+                            if (k.Pinned > -1)
+                                k.IsPinned = true;
                             k.SetAbsName();
                             datas.Add(k);
                         }
@@ -92,13 +94,13 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
         }
 
         // bool autoload = false, int openTimes = 1, long openedTime = 0
-        public void UpdateFile(int id, int index, string name, string fullName, int openTimes = 1, long openedTime = 0, bool autoload = false)
+        public void UpdateFile(int id, int index, string name, string fullName, int openTimes = 1, long openedTime = 0, bool autoload = false,int pinned = -1)
         {
             try
             {
                 using (SQLiteCommand command = CreateConnection().CreateCommand())
                 {
-                    command.CommandText = "UPDATE files SET _index=:index,count=:count,time=:time,autoload=:autoload,name=:name,path=:path WHERE id=:id";
+                    command.CommandText = "UPDATE files SET _index=:index,count=:count,time=:time,autoload=:autoload,name=:name,path=:path,pinned=:pinned WHERE id=:id";
 
                     command.Parameters.AddWithValue(":count", openTimes);
                     command.Parameters.AddWithValue(":index", index);
@@ -106,7 +108,7 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
                     command.Parameters.AddWithValue(":id", id);
                     command.Parameters.AddWithValue(":path", fullName);
                     command.Parameters.AddWithValue(":name", name);
-
+                    command.Parameters.AddWithValue(":pinned", pinned);
                     //command.Parameters.AddWithValue(":id", id);
                     command.Parameters.AddWithValue(":autoload", autoload ? 1 : 0);
                     command.ExecuteNonQuery();
@@ -127,7 +129,19 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
             catch { }
             return -1;
         }
-
+        public int GetMaxPinned()
+        {
+            try
+            {
+                using (SQLiteCommand command = CreateConnection().CreateCommand())
+                {
+                    command.CommandText = "SELECT MAX(pinned) FROM files;";
+                    return Convert.ToInt32(command.ExecuteScalar());
+                }
+            }
+            catch { }
+            return -1;
+        }
         //public void InsertOrIncrementCount(string name, string path, int index, long time)
         //{
 

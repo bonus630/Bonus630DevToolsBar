@@ -4,18 +4,10 @@ using br.com.Bonus630DevToolsBar.DrawUIExplorer.ViewModels;
 using br.com.Bonus630DevToolsBar.RunCommandDocker.Styles;
 using Microsoft.Win32;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-//using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 

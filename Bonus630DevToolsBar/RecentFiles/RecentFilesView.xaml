@@ -160,7 +160,7 @@
     </UserControl.Resources>
     <DockPanel x:Name="dockPanel_content" LastChildFill="True" SizeChanged="DockPanel_SizeChanged">
 
-        <CheckBox x:Name="ck_autoLoad"  ToolTip="Auto Load Files" 
+        <CheckBox x:Name="ck_autoLoad"  ToolTip="Auto Open Files" 
                   Click="CheckBox_Click" DockPanel.Dock="Left">
             <CheckBox.ContextMenu>
                 <ContextMenu Background="{DynamicResource Button.Static.Background}">
@@ -189,7 +189,7 @@
                     BorderBrush="{DynamicResource Button.Static.Border}" SnapsToDevicePixels="true">
                 <Grid Background="Transparent">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="256" />
+                        <RowDefinition  />
                         <RowDefinition />
                     </Grid.RowDefinitions>
                     <Image Grid.Row="0"  Width="256" Height="256" Source="{Binding Thumb}" Visibility="{Binding IsOpened,Converter={StaticResource InvertBoolVisibilityConverter}}">
@@ -257,17 +257,27 @@
                             </Button.ToolTip>-->
                         <Button.ContextMenu>
                             <ContextMenu >
+                                <MenuItem Header="Pin" Click="MenuItem_Click_Pin" Tag="{Binding ID}" ToolTip="Pin here!" Visibility="{Binding IsPinned,Converter={StaticResource InvertBoolVisibilityConverter}}">
+                                    <MenuItem.Icon>
+                                        <Image Style="{StaticResource PinImage}"/>
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="Unpin"  Click="MenuItem_Click_UnPin" Tag="{Binding ID}" ToolTip="UnPin!" Visibility="{Binding IsPinned,Converter={StaticResource BooleanToVisibilityConverter}}">
+                                    <MenuItem.Icon>
+                                        <Image Style="{DynamicResource PinImage}"/>
+                                    </MenuItem.Icon>
+                                </MenuItem>
                                 <MenuItem Header="Remove" Click="MenuItem_Click_RemoveFileData" Tag="{Binding ID}" ToolTip="Remove from list, file is not deleted">
                                     <MenuItem.Icon>
                                         <Image Style="{DynamicResource ClearConsoleButtonImg}" />
                                     </MenuItem.Icon>
                                 </MenuItem>
-                                <MenuItem Header="Add to Auto Load" Click="MenuItem_Click_AddToAutoLoad" Tag="{Binding ID}"  Visibility="{Binding AutoLoad,Converter={StaticResource InvertBoolVisibilityConverter}}" >
+                                <MenuItem Header="Add to Auto Open" Click="MenuItem_Click_AddToAutoLoad" Tag="{Binding ID}"  Visibility="{Binding AutoLoad,Converter={StaticResource InvertBoolVisibilityConverter}}" >
                                     <MenuItem.Icon>
                                         <Image Style="{DynamicResource AddShapeRangeImage}" />
                                     </MenuItem.Icon>
                                 </MenuItem>
-                                <MenuItem Header="Remove from Auto Load" Click="MenuItem_Click_RemoveFromAutoLoad" Tag="{Binding ID}" Visibility="{Binding AutoLoad,Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <MenuItem Header="Remove from Auto Open" Click="MenuItem_Click_RemoveFromAutoLoad" Tag="{Binding ID}" Visibility="{Binding AutoLoad,Converter={StaticResource BooleanToVisibilityConverter}}">
                                     <MenuItem.Icon>
                                         <Image Style="{DynamicResource RemoveShapeRangeImage}" />
                                     </MenuItem.Icon>

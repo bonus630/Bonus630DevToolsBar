@@ -17,6 +17,8 @@ using System.Windows.Documents;
 using c = Corel.Interop.VGCore;
 
 using System.Runtime.InteropServices;
+using System.Windows.Input;
+using System.Drawing;
 
 
 
@@ -32,6 +34,7 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
         string gmsPath = "";
         // List<string> resultList = new List<string>();
         public readonly string VBAEditorGuid = "28e16db6-6339-440d-af0d-f58ac27c115d";
+
 
 
 
@@ -89,10 +92,17 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
             //teste remover
             // InstallThis(new string[] { @"C:\Users\bonus\OneDrive\Ambiente de Trabalho\Power Resize 1-03 2022.rar" });
         }
-
+       
         protected override void OnDragOver(DragEventArgs e)
         {
             base.OnDragEnter(e);
+            
+        }
+        protected override void OnDragLeave(DragEventArgs e)
+        {
+            base.OnDragLeave(e);
+    
+            this.BorderThickness = new Thickness(0);
         }
         protected override void OnDrop(DragEventArgs e)
         {
@@ -126,7 +136,15 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
         protected override void OnDragEnter(DragEventArgs drgevent)
         {
             if (drgevent.Data.GetDataPresent(DataFormats.FileDrop))
-                drgevent.Effects = DragDropEffects.Copy;
+            {
+               // drgevent.Effects = DragDropEffects.Copy;
+
+                if(drgevent.KeyStates == (DragDropKeyStates.LeftMouseButton | DragDropKeyStates.ShiftKey | DragDropKeyStates.ControlKey))
+                {
+                   // this.Cursor = Cursors.Wait;
+                    this.BorderThickness = new Thickness(2);
+                }
+            }
             base.OnDragEnter(drgevent);
         }
         private void processFiles(string[] files, bool remove = false)

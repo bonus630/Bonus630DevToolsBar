@@ -1316,10 +1316,10 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
         private async void btn_previewIcon_Click(object sender, RoutedEventArgs e)
         {
 
-#if X7
-    System.Windows.Forms.MessageBox.Show("This function is available on X8 or higher");
-    return;
-#endif
+//#if X7
+//    System.Windows.Forms.MessageBox.Show("This function is available on X8 or higher");
+//    return;
+//#endif
             try
             {
                 string path = string.Format("{0}bonus630\\IconCreator\\{1}.ico", Path.GetTempPath(), Guid.NewGuid());
@@ -1328,6 +1328,15 @@ namespace br.com.Bonus630DevToolsBar.IconCreatorHelper
                 {
                     ExportToIco(path);
 
+#if X7
+                    if (resolutions.Contains(16))
+                        path = string.Format("{0}\\16.png", ExportFolder);
+                    else
+                    {
+                        System.Windows.Forms.MessageBox.Show("Please draw a 16x16 Resolution and try again!");
+                        return;
+                    }
+#endif
                     await IconIsReadyAsync(path);
                     await SetIconAsync(path);
                 }

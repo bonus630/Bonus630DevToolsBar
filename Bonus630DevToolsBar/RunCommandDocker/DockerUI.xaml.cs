@@ -52,10 +52,10 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             this.Loaded += DockerUI_Loaded;
 
             shapeRangeManager = new ShapeRangeManager(this.corelApp);
-
+        
             AppDomain.CurrentDomain.AssemblyLoad += LoadDomain_AssemblyLoad;
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
-
+             
         }
 
         private void DockerUI_Loaded(object sender, RoutedEventArgs e)
@@ -91,8 +91,25 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             if(asm==null && args.Name.Contains("System.Runtime.CompilerServices.Unsafe"))
                 asm = LoadAssemblyInBarFolder(name);
             if (asm == null)
-                 asm = Assembly.LoadFrom(Name);
-             
+            {
+                try
+                {
+                   
+                    asm = Assembly.LoadFrom(name);
+
+
+
+                }
+                catch(System.IO.FileNotFoundException ex)
+                {
+
+                }
+                catch { }
+            }
+            //if (asm == null)
+            //    asm = LoadAssemblyNet(args.Name);
+            //if (asm == null)
+            //    asm = LoadAssemblyFromAssembliesFolder(args.Name);
             //if (asm == null)
             //    asm = LoadAssemblyInBarFolder(name);   
             //if (asm == null)
@@ -136,6 +153,42 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             {
                 if (files[i].Contains(name))
                 {
+                    return Assembly.LoadFile(files[i]);
+                }
+            }
+
+            return null;
+
+        }   
+        private Assembly LoadAssemblyNet(string name)
+        {
+            string windir = System.Environment.SystemDirectory.Remove(System.Environment.SystemDirectory.LastIndexOf("\\"));
+            string netDir = string.Format("{0}\\Microsoft.NET\\Framework\\v{1}.{2}.{3}", windir, System.Environment.Version.Major, System.Environment.Version.MajorRevision, System.Environment.Version.Build);
+            //string[] files = Directory.GetFiles(basePath);
+            //name = name.Split(',')[0];
+            //for (int i = 0; i < files.Length; i++)
+            //{
+            //    if (files[i].Contains(name))
+            //    {
+            //        return Assembly.LoadFile(files[i]);
+            //    }
+            //}
+
+            return null;
+
+        }
+        //pq precisamos fazer isso agora? mudamos algo na ordem de carregamento?
+        private Assembly LoadAssemblyFromAssembliesFolder(string name)
+        {
+            string basePath = this.projectsManager.AssemblyDirectory;
+            string[] files = Directory.GetFiles(basePath);
+            name = name.Split(',')[0];
+            for (int i = 0; i < files.Length; i++)
+            {
+                if (files[i].Contains(name))
+                {
+                  // var d = AppDomain.CreateDomain("LoadDomain");
+                   
                     return Assembly.LoadFile(files[i]);
                 }
             }

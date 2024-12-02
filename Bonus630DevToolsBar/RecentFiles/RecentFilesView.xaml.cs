@@ -107,7 +107,7 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
             this.corelApp.DocumentOpen += CorelApp_DocumentOpen;
             this.corelApp.DocumentClose += CorelApp_DocumentClose;
             this.corelApp.DocumentAfterSave += CorelApp_DocumentAfterSave;
-            Load();
+        //    Load();
 
         }
 
@@ -273,6 +273,14 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
         {
             Items.Width = 200;
         }
+        private void MenuItem_Click_Pin(object sender, RoutedEventArgs e)
+        {
+            UpdatePinned((int)(sender as MenuItem).Tag, true);
+        }
+        private void MenuItem_Click_UnPin(object sender, RoutedEventArgs e)
+        {
+            UpdatePinned((int)(sender as MenuItem).Tag, false);
+        }
         private void MenuItem_Click_RemoveFileData(object sender, RoutedEventArgs e)
         {
             int ID = (int)(sender as MenuItem).Tag;
@@ -294,8 +302,21 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
             if (r != null)
             {
                 r.AutoLoad = autoLoad;
-
-                recentFileModel.UpdateFile(r.ID, r.Index, r.Name, r.FullName, r.OpenTimes, r.OpenedTime, autoLoad);
+                recentFileModel.UpdateFile(r.ID, r.Index, r.Name, r.FullName, r.OpenTimes, r.OpenedTime, autoLoad,r.Pinned);
+            }
+        }
+        private void UpdatePinned(int ID, bool isPinned)
+        {
+            var r = dataContext.GetItem(ID);
+            //var r = dataContext[index];
+            if (r != null)
+            {
+                int pinned = -1;
+                if(isPinned)
+                     pinned = recentFileModel.GetMaxPinned()+1;
+                r.IsPinned = isPinned;
+                r.Pinned = pinned;
+                recentFileModel.UpdateFile(r.ID, r.Index, r.Name, r.FullName, r.OpenTimes, r.OpenedTime, r.AutoLoad, pinned);
             }
         }
         private void Button_MouseEnter(object sender, MouseEventArgs e)
@@ -442,7 +463,7 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
         private void DockPanel_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             
-            if (!loaded)
+            if (!loaded || e.PreviousSize.Width == 0)
                 return;
             ushort itens = (ushort)((e.NewSize.Width - 78) / 28);
             if (itens != 0 && itens != MaxPerPage)
@@ -461,6 +482,8 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
                 Load();
             }
         }
+
+     
     }
 
 }
