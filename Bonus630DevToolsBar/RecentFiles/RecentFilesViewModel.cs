@@ -47,7 +47,10 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
         public int Count { get { return files.Count; } }
 
         public RecentFileViewModel this[int i]
-        { get { return files[i]; } set { Files[i] = value; OnPropertyChanged("Files"); } }
+        { get { 
+                return files[i]; } 
+            set { Files[i] = value; 
+                OnPropertyChanged("Files"); } }
         public RecentFileViewModel this[string fullName]
         {
             get

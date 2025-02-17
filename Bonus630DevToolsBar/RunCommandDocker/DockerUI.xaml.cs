@@ -41,8 +41,8 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
 
                 proxyManager = new ProxyManager(app, System.IO.Path.Combine((app as corel.Application).AddonPath, "Bonus630DevToolsBar"));
                 this.corelApp = app as corel.Application;
-                UndoCommand = new SimpleCommand(() => { if (this.corelApp.ActiveDocument != null) this.corelApp.ActiveDocument.Undo(); }); 
-                SearchCommand = new SimpleCommand(OpenSearch); 
+                UndoCommand = new SimpleCommand(() => { if (this.corelApp.ActiveDocument != null) this.corelApp.ActiveDocument.Undo(); });
+                SearchCommand = new SimpleCommand(OpenSearch);
                 stylesController = new Styles.StylesController(this.Resources, this.corelApp);
             }
             catch
@@ -52,10 +52,10 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             this.Loaded += DockerUI_Loaded;
 
             shapeRangeManager = new ShapeRangeManager(this.corelApp);
-        
+
             AppDomain.CurrentDomain.AssemblyLoad += LoadDomain_AssemblyLoad;
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
-             
+
         }
 
         private void DockerUI_Loaded(object sender, RoutedEventArgs e)
@@ -88,19 +88,19 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             asm = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(r => string.Equals(r.FullName.Split(',')[0], name.Split(',')[0]));
             if (args.Name.Contains(".resources"))
                 asm = LoadResourceAssembly(asm);
-            if(asm==null && args.Name.Contains("System.Runtime.CompilerServices.Unsafe"))
+            if (asm == null && args.Name.Contains("System.Runtime.CompilerServices.Unsafe"))
                 asm = LoadAssemblyInBarFolder(name);
             if (asm == null)
             {
                 try
                 {
-                   
+
                     asm = Assembly.LoadFrom(name);
 
 
 
                 }
-                catch(System.IO.FileNotFoundException ex)
+                catch (System.IO.FileNotFoundException ex)
                 {
 
                 }
@@ -115,7 +115,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             //if (asm == null)
             //    asm = LoadFileFromAssembliesInAddons(name);
             return asm;
-        
+
         }
         private Assembly LoadResourceAssembly(Assembly executingAsm)
         {
@@ -159,7 +159,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
 
             return null;
 
-        }   
+        }
         private Assembly LoadAssemblyNet(string name)
         {
             string windir = System.Environment.SystemDirectory.Remove(System.Environment.SystemDirectory.LastIndexOf("\\"));
@@ -187,8 +187,8 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             {
                 if (files[i].Contains(name))
                 {
-                  // var d = AppDomain.CreateDomain("LoadDomain");
-                   
+                    // var d = AppDomain.CreateDomain("LoadDomain");
+
                     return Assembly.LoadFile(files[i]);
                 }
             }
@@ -233,7 +233,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             }
             catch (Exception ex)
             {
-                
+
             }
             return null;
 
@@ -672,12 +672,12 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         private void textBoxSearch_PreviewKeyUp(object sender, System.Windows.Input.KeyEventArgs e)
         {
             if (e.Key == System.Windows.Input.Key.Escape)
-                 buttonClose_Click(null, null);
-            if(e.Key == System.Windows.Input.Key.Down)
+                buttonClose_Click(null, null);
+            if (e.Key == System.Windows.Input.Key.Down)
                 projectsManager.CommandSearch.Navegate(1);
-            if(e.Key == System.Windows.Input.Key.Up)
+            if (e.Key == System.Windows.Input.Key.Up)
                 projectsManager.CommandSearch.Navegate(-1);
-           
+
 
 
         }
@@ -723,8 +723,37 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         {
             if (e.Key == System.Windows.Input.Key.LeftCtrl)
                 control = false;
-            //if (control && e.Key == System.Windows.Input.Key.F)
-            //    OpenSearch();
+            string keyChar = e.Key.ToString();
+            if (keyChar.Length == 1 && (char.IsLetter(keyChar[0]) || keyChar[0] == '_'))
+            {
+                if (projectsManager.CommandSearch == null)
+                    projectsManager.PrepareSearch();
+                if (!string.IsNullOrEmpty(keyChar) && projectsManager.CommandSearch.searchTerm != keyChar)
+                {
+                    object selectedItem = (sender as TreeView).SelectedItem;
+                    Module module = null;
+                    if (selectedItem.GetType() == typeof(Module))
+                        module = (Module)selectedItem;
+                    if (selectedItem.GetType() == typeof(Command))
+                        module = (selectedItem as Command).Parent;
+                    if (module != null)
+                    {
+                        projectsManager.CommandSearch.Search(keyChar, module);
+                        return;
+                    }
+                    projectsManager.CommandSearch.Search(keyChar, true);
+
+                }
+                else
+                {
+                    projectsManager.CommandSearch.Navegate(1);
+                }
+                //TreeViewItem tvi = (sender as TreeView).SelectedItem as TreeViewItem;
+                //Dispatcher.InvokeAsync(() =>
+                //{
+                //    tvi.BringIntoView();
+                //},System.Windows.Threading.DispatcherPriority.Background);
+            }
         }
 
         private void checkBoxWholeWord_Click(object sender, RoutedEventArgs e)
@@ -854,6 +883,6 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                 btn_createModule_Click(null, null);
         }
 
-       
+
     }
 }

@@ -25,23 +25,27 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
 
         private int currentIndex = 0;
 
-        //public int CurrentIndex
-        //{
-        //    get { return currentIndex; }
-        //    set { currentIndex =  value;
-        //        OnPropertyChanged("CurrentIndex");
-        //    }
-        //}
+        public int CurrentIndex
+        {
+            get { return currentIndex; }
+            set
+            {
+                currentIndex = value;
+                OnPropertyChanged("CurrentIndex");
+            }
+        }
 
         private int foundedsCount;
 
-        //public int FoundedsCount
-        //{
-        //    get { return foundedsCount; }
-        //    set { foundedsCount = value;
-        //        OnPropertyChanged("FoundedsCount");
-        //    }
-        //}
+        public int FoundedsCount
+        {
+            get { return foundedsCount; }
+            set
+            {
+                foundedsCount = value;
+                OnPropertyChanged("FoundedsCount");
+            }
+        }
 
         private string currentAndFounds;
 
@@ -140,6 +144,25 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
 
             }
          
+        }
+        public void Search(string searchTerm,Module module)
+        {
+            if (searchTerm != this.searchTerm )
+            {
+                this.searchTerm = searchTerm;
+                commandsSearchCache.Clear();
+                for (int i = 0; i < projects.Count; i++)
+                {
+                        var items = FindItem(module, searchTerm);
+                        commandsSearchCache.AddRange(items);
+                }
+                currentIndex = 0;
+                changeCurrentAndFounds(currentIndex, commandsSearchCache.Count);
+                if (commandsSearchCache.Count > 0)
+                    activeItem();
+
+            }
+
         }
         public void Navegate(int next)
         {

@@ -50,7 +50,7 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
                 dataContext = new RecentFilesViewModel();
 
                 ck_autoLoad.IsChecked = Properties.Settings.Default.AutoLoad;
-         
+
 
 
             }
@@ -107,7 +107,7 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
             this.corelApp.DocumentOpen += CorelApp_DocumentOpen;
             this.corelApp.DocumentClose += CorelApp_DocumentClose;
             this.corelApp.DocumentAfterSave += CorelApp_DocumentAfterSave;
-        //    Load();
+            //    Load();
 
         }
 
@@ -120,7 +120,7 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
             {
                 int index = dataContext.Count;
                 file = recentFileModel.InsertData(index, name, fullName, false, 1, DateTime.Now.Ticks);
-                
+                file.SetAbsName();
                 dataContext.Add(file);
             }
             else
@@ -195,8 +195,8 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
         }
         private void LoadThumbThread(int id)
         {
-            var file = dataContext[id];
-            if (file.Thumb == null)
+            var file = dataContext.GetItem(id);
+            if (file != null && file.Thumb == null)
             {
                 Thread loadThumbThread = new Thread(new ParameterizedThreadStart(LoadThumbs));
                 loadThumbThread.IsBackground = true;
@@ -205,9 +205,13 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
         }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            string file = (sender as Button).Tag.ToString();
-            if (!DocumentIsOpened(file))
-                this.corelApp.OpenDocument(file);
+            try
+            {
+                string file = (sender as Button).Tag.ToString();
+                if (!DocumentIsOpened(file))
+                    this.corelApp.OpenDocument(file);
+            }
+            catch { }
         }
 
         private void CheckBox_Click(object sender, RoutedEventArgs e)
@@ -222,7 +226,7 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
         {
             Debug.WriteLine((Test++));
             var s = this.corelApp.CreateStructOpenOptions();
-            
+
             for (int i = 0; i < dataContext.Count; i++)
             {
                 if (dataContext[i].AutoLoad)
@@ -231,7 +235,7 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
                     {
                         Debug.WriteLine("Open - " + dataContext[i].Name);
                         if (!DocumentIsOpened(dataContext[i].FullName))
-                            this.corelApp.OpenDocumentEx(dataContext[i].FullName,s);
+                            this.corelApp.OpenDocumentEx(dataContext[i].FullName, s);
                     }
                     catch (Exception e)
                     {
@@ -302,7 +306,7 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
             if (r != null)
             {
                 r.AutoLoad = autoLoad;
-                recentFileModel.UpdateFile(r.ID, r.Index, r.Name, r.FullName, r.OpenTimes, r.OpenedTime, autoLoad,r.Pinned);
+                recentFileModel.UpdateFile(r.ID, r.Index, r.Name, r.FullName, r.OpenTimes, r.OpenedTime, autoLoad, r.Pinned);
             }
         }
         private void UpdatePinned(int ID, bool isPinned)
@@ -312,8 +316,8 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
             if (r != null)
             {
                 int pinned = -1;
-                if(isPinned)
-                     pinned = recentFileModel.GetMaxPinned()+1;
+                if (isPinned)
+                    pinned = recentFileModel.GetMaxPinned() + 1;
                 r.IsPinned = isPinned;
                 r.Pinned = pinned;
                 recentFileModel.UpdateFile(r.ID, r.Index, r.Name, r.FullName, r.OpenTimes, r.OpenedTime, r.AutoLoad, pinned);
@@ -456,22 +460,26 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
         private void SetPageButtonsVisibility()
         {
             dataContext.CanDecrease = CurrentPage > 0;
-            dataContext.CanIncrease = CurrentPage * MaxPerPage < TotalRows && MaxPerPage < TotalRows;
+            dataContext.CanIncrease = CurrentPage * MaxPerPage < (TotalRows- MaxPerPage) && MaxPerPage < TotalRows;
 
         }
 
         private void DockPanel_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            
+
             if (!loaded || e.PreviousSize.Width == 0)
                 return;
             ushort itens = (ushort)((e.NewSize.Width - 78) / 28);
-            if (itens != 0 && itens != MaxPerPage)
+            if (itens != 0 && itens != MaxPerPage && CurrentPage > 0)
             {
-                if (itens > (CurrentPage + 1) * MaxPerPage)
-                    SetPage(CurrentPage--);
-                else
-                    SetPage(CurrentPage++);
+                int total = CurrentPage  * MaxPerPage;
+                //if (itens > (CurrentPage + 1) * MaxPerPage)
+                //    SetPage(CurrentPage--);
+                //else
+                //{
+                    SetPage((ushort)(total / itens ));
+                //}
+                
                 MaxPerPage = itens;
                 Load();
             }
@@ -483,7 +491,7 @@ namespace br.com.Bonus630DevToolsBar.RecentFiles
             }
         }
 
-     
+
     }
 
 }

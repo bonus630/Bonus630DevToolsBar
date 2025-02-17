@@ -65,7 +65,7 @@ namespace br.com.Bonus630DevToolsBar.GMSDragger
                 this.Unloaded += (a,b) =>
                 {
                     Debug.WriteLine("unload");
-                    System.Windows.Forms.MessageBox.Show("Unloaded");
+                   // System.Windows.Forms.MessageBox.Show("Unloaded");
                 };
                 
 

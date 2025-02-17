@@ -183,7 +183,7 @@ namespace br.com.Bonus630DevToolsBar.CustomControls
         {
             double.TryParse(Text.Replace(toReplaceSymbol, regionSymbol), out _value);
             Value = _value;
-
+           
             if (prevValue == Value && textChangedByValue)
             {
                 textChangedByValue = false;

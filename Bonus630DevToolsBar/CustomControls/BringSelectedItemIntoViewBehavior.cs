@@ -51,11 +51,16 @@ namespace br.com.Bonus630DevToolsBar.CustomControls
             treeViewItem.Selected -= TreeViewItemOnSelected;
         }
 
-        private static void TreeViewItemOnSelected(object sender, RoutedEventArgs routedEventArgs)
+        private static async void TreeViewItemOnSelected(object sender, RoutedEventArgs routedEventArgs)
         {
             var treeViewItem = sender as TreeViewItem;
-            if(treeViewItem!=null)
+            if (treeViewItem != null)
+            {
+                // Atrasando a chamada do BringIntoView para garantir que o layout tenha sido atualizado
+                await Task.Delay(15); // Aguarda o próximo ciclo de layout
                 treeViewItem.BringIntoView();
+            }
         }
     }
+
 }

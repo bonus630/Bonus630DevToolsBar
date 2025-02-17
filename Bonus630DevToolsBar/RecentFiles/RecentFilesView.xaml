@@ -153,15 +153,20 @@
             </Style>
             <Style TargetType="Popup" x:Key="PreviewPopupStyle">
                 <Setter Property="AllowsTransparency" Value="True" />
-
-
             </Style>
         </ResourceDictionary>
     </UserControl.Resources>
     <DockPanel x:Name="dockPanel_content" LastChildFill="True" SizeChanged="DockPanel_SizeChanged">
 
-        <CheckBox x:Name="ck_autoLoad"  ToolTip="Auto Open Files" 
-                  Click="CheckBox_Click" DockPanel.Dock="Left">
+        <CheckBox x:Name="ck_autoLoad" Click="CheckBox_Click" DockPanel.Dock="Left">
+            <CheckBox.ToolTip>
+                <ToolTip DataContext="{Binding Path=PlacementTarget,RelativeSource={x:Static RelativeSource.Self}}">
+                    <StackPanel>
+                        <Label Content="Auto Open On!" Foreground="Green" Visibility="{Binding IsChecked,Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                        <Label Content="Auto Open Off!" Foreground="Red" Visibility="{Binding IsChecked,Converter={StaticResource InvertBoolVisibilityConverter}}" />
+                    </StackPanel>
+                </ToolTip>
+            </CheckBox.ToolTip>
             <CheckBox.ContextMenu>
                 <ContextMenu Background="{DynamicResource Button.Static.Background}">
                     <MenuItem Style="{StaticResource CheckableMenuItemStyle}" Header="Use Index" Name="menu_index" Click="menu_index_Click" IsChecked="True"/>
@@ -205,15 +210,22 @@
                         </Image.Clip>
                     </Image>
                     <StackPanel Grid.Row="1" Margin="2,4,2,4" Background="Transparent">
-                            <Label Grid.Column="0" Content="{Binding FullName}" ToolTip="{Binding FullName}" FontSize="9"/>
-                            <Label Content="File is Opened!" Visibility="{Binding IsOpened,Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                            <StackPanel Orientation="Horizontal">
-                                <Ellipse Fill="Green" Width="6" Height="6" VerticalAlignment="Center" Visibility="{Binding AutoLoad,Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                                <Label Content="{Binding Name,FallbackValue=Nome do arquivo.cdr}" ToolTip="{Binding FullName}" FontWeight="Bold" />
-                                <Label Content="{Binding Version,FallbackValue=0}" FontWeight="Bold" />
-                            </StackPanel>
-                        </StackPanel>
-                    </Grid>
+                        <Label Grid.Column="0" Content="{Binding FullName}" ToolTip="{Binding FullName}" FontSize="9"/>
+                        <Label Content="File is Opened!" Visibility="{Binding IsOpened,Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="6" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="18" />
+                                <ColumnDefinition Width="26" />
+                            </Grid.ColumnDefinitions>
+                            <Ellipse Grid.Column="0" Fill="Green" Width="6" Height="6" VerticalAlignment="Center" Visibility="{Binding AutoLoad,Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                            <Label Grid.Column="1"  Content="{Binding Name,FallbackValue=Nome do arquivo.cdr}" ToolTip="{Binding FullName}" FontWeight="Bold" />
+                            <Label Grid.Column="2"  Content="Vr:" VerticalAlignment="Center" Padding="0" FontWeight="Bold" />
+                            <Label Grid.Column="3"  Content="{Binding Version,FallbackValue=0}" FontWeight="Bold" />
+                        </Grid>
+                    </StackPanel>
+                </Grid>
             </Border>
         </Popup>
         <ItemsControl x:Name="Items"  VerticalAlignment="Stretch" Margin="6,0,0,0"  ItemsSource="{Binding Files}" Height="20" Width="960">

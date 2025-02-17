@@ -53,7 +53,7 @@
         </Setter>
     </Style>
     <Style x:Key="TreeViewItemCustomStyle" TargetType="{x:Type TreeViewItem}">
-        <Setter Property="KeyboardNavigation.TabNavigation" Value="Continue"/>
+        <Setter Property="KeyboardNavigation.TabNavigation" Value="Local"/>
         <!--<Setter Property="IsTextSearchCaseSensitive" Value="False" />
         <Setter Property="IsTextSearchEnabled" Value="True" />
         <Setter Property="TextSearch.Text" Value="Name" />-->
@@ -106,7 +106,7 @@
             </Setter.Value>
         </Setter>
         <Style.Triggers>
-            <Trigger Property="VirtualizingPanel.IsVirtualizing" Value="true">
+            <Trigger Property="VirtualizingPanel.IsVirtualizing" Value="False">
                 <Setter Property="ItemsPanel">
                     <Setter.Value>
                         <ItemsPanelTemplate>
