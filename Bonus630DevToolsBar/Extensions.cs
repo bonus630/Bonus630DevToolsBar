@@ -41,6 +41,8 @@ namespace Bonus630DevToolsBar
             app.EventsEnabled = true;
             app.Refresh();
         }
+        
+
        
     }
 }

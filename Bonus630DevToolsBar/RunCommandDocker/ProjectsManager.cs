@@ -394,8 +394,11 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                 startInfo.Arguments = "-latest -property installationPath";
 
                 process.StartInfo = startInfo;
-                process.Start();
-
+                try
+                {
+                    process.Start();
+                }
+                catch (Exception ex) { vsFounded = false; return; }
                 string vsInstallationPath = process.StandardOutput.ReadToEnd().Trim();
 
                 process.WaitForExit();
