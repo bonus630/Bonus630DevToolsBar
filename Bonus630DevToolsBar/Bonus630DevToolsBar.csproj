@@ -197,7 +197,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)' == '2025 Debug|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == '2025 Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -346,6 +346,8 @@
     <Compile Include="PrintScreen\Cropper.Designer.cs">
       <DependentUpon>Cropper.cs</DependentUpon>
     </Compile>
+    <Compile Include="RunCommandDocker\AssemblyInspectionException.cs" />
+    <Compile Include="RunCommandDocker\SimpleObject.cs" />
     <Compile Include="WorkspaceObjectTranporter.cs" />
     <Compile Include="XMLManager.cs" />
     <Compile Include="Properties\Resources.Designer.cs">

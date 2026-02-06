@@ -108,28 +108,43 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         public Tuple<string, string, string>[] GetTypesNames()
         {
             Tuple<string, string, string>[] typesNames = { };
-
-            for (int i = 0; i < AssemblyTypes.Length; i++)
+            try
             {
-                //Signature.Arguments
-                Type type = AssemblyTypes[i];
-                if (CheckTypeIsQualifedAttributeCDR(type))
+                for (int i = 0; i < AssemblyTypes.Length; i++)
                 {
-                    if (type.IsClass)
+                    //Signature.Arguments
+                    Type type = AssemblyTypes[i];
+                    if (CheckTypeIsQualifedAttributeCDR(type))
                     {
-                        if (CheckParametizedCtor(type))
+                        if (type.IsClass)
                         {
-                            Array.Resize(ref typesNames, typesNames.Length + 1);
-                            object modulePathObj = GetCustomAttributeValue(type.GetCustomAttributesData(), AuxAttributesFlagsModulePath);
-                            string modulePath = "";
-                            if (modulePathObj != null)
-                                modulePath = modulePathObj.ToString();
-                            typesNames[typesNames.Length - 1] = new Tuple<string, string, string>(type.Name, type.FullName, modulePath);
+                            if (CheckParametizedCtor(type))
+                            {
+                                Array.Resize(ref typesNames, typesNames.Length + 1);
+                                object modulePathObj = GetCustomAttributeValue(type.GetCustomAttributesData(), AuxAttributesFlagsModulePath);
+                                string modulePath = "";
+                                if (modulePathObj != null)
+                                    modulePath = modulePathObj.ToString();
+                                typesNames[typesNames.Length - 1] = new Tuple<string, string, string>(type.Name, type.FullName, modulePath);
+                            }
                         }
-                    }
 
+                    }
                 }
             }
+            catch (ReflectionTypeLoadException ex)
+            {
+                throw new AssemblyInspectionException(
+                    "Falha ao carregar tipos do assembly.",
+                    ex,
+                    ex.LoaderExceptions
+                );
+            }
+            catch (Exception)
+            {
+                throw; // stack intacto
+            }
+
             return typesNames;
         }
         public bool CheckParametizedCtor(Type type)
@@ -149,18 +164,47 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         {
             //todo
             string[] methods = { };
-            Type type = AssemblyTypes.FirstOrDefault(r => r.FullName.Equals(typeFullName));
-            MemberInfo[] members = type.GetMembers();
-            for (int i = 0; i < members.Length; i++)
+            try
             {
-                MemberInfo member = members[i];
-                if (member.MemberType.Equals(MemberTypes.Method) && CheckMethodIsQualifedAttributeCDR(member))
+                Type type = AssemblyTypes.FirstOrDefault(r => r.FullName.Equals(typeFullName));
+                MemberInfo[] members = type.GetMembers();
+                for (int i = 0; i < members.Length; i++)
                 {
-                    Array.Resize(ref methods, methods.Length + 1);
-                    methods[methods.Length - 1] = member.Name;
+                    MemberInfo member = members[i];
+                    if (member.MemberType.Equals(MemberTypes.Method) && CheckMethodIsQualifedAttributeCDR(member))
+                    {
+                        Array.Resize(ref methods, methods.Length + 1);
+                        methods[methods.Length - 1] = member.Name;
+                    }
                 }
             }
+            catch (ReflectionTypeLoadException ex)
+            {
+                throw new AssemblyInspectionException(
+                    "Falha ao carregar tipos do assembly.",
+                    ex,
+                    ex.LoaderExceptions
+                );
+            }
+            catch (Exception)
+            {
+                throw; // stack intacto
+            }
             return methods;
+        }
+        public bool check(MethodInfo method)
+        {
+            var declaringAsm = method.DeclaringType.Assembly;
+            var returnType = method.ReturnType;
+
+            var referenced = declaringAsm
+                .GetReferencedAssemblies();
+
+            var returnAsmName = returnType.Assembly.GetName();
+
+            bool found = referenced.Any(r =>
+                AssemblyName.ReferenceMatchesDefinition(r, returnAsmName));
+            return found;
         }
         public object[] GetArguments(Command command)
         {
@@ -171,14 +215,18 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             //type.GetMethods().FirstOrDefault(r=>r.Name.Equals(command.Name));
             //.GetMembers().FirstOrDefault(u => u.Name.Equals(command.Name));
             //Aqui temos o mesmo problema dos argumentos com tipo customizado, vamos tratar a excesão
-            try
-            {
+           // try
+           // {
+                if (check(methodInfo))
+                   // throw new Exception(string.Format("The return type {0}, in method {1}, it cannot be resolved.", methodInfo.ReturnType.Name, methodInfo.Name));
                 command.ReturnsType = methodInfo.ReturnType;
-            }
-            catch (ArgumentException e)
-            {
+            else
+                // }
+                // catch (ArgumentException e)
+                // {
+                
                 command.ReturnsType = typeof(object);
-            }
+           // }
             ParameterInfo[] parameters = methodInfo.GetParameters();
             if (parameters == null)
                 return null;
@@ -228,11 +276,11 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             {
                 return ActionRunCommand.Invoke();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
 
                 throw new AggregateException(e.InnerException);
-              
+
             }
             return null;
         }

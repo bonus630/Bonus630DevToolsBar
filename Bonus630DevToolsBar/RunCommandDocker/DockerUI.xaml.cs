@@ -69,6 +69,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
             this.DataContext = projectsManager;
             projectsManager.RequestNewModuleEvent += (path) => { popup_newProject.IsOpen = true; lba_projPath.Content = path; txt_moduleName.Focus(); };
             projectsManager.RequestRemoveModule += (proj, module) => { RemoveModule(proj, module); };
+            projectsManager.ErroReceived += Pc_ErroReceived;
             txt_projectName.TextChanged += (s, ev) => ChangeProjectDirectory();
             cb_projectType.SelectionChanged += (s, ev) => ChangeProjectDirectory();
         }

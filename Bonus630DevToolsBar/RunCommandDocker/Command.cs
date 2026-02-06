@@ -1,15 +1,11 @@
-﻿
-using Microsoft.Win32;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Threading;
-using System.Windows.Documents;
-using System.Windows.Threading;
 
 namespace br.com.Bonus630DevToolsBar.RunCommandDocker
 {
@@ -585,6 +581,10 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                     try
                     {
                         arguments.ArgumentType = (range[i] as Argument).ArgumentType;
+                    }
+                    catch(FileNotFoundException fnfe)
+                    {
+                        arguments.ArgumentType = typeof(object);
                     }
                     catch(ArgumentException e)
                     {

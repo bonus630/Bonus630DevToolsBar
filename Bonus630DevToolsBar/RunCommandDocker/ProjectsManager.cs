@@ -17,7 +17,8 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
     {
         public event PropertyChangedEventHandler PropertyChanged;
         public event Action<string> RequestNewModuleEvent;
-        public event Action<string,string> RequestRemoveModule;
+        public event Action<string, string> RequestRemoveModule;
+        public event Action<string> ErroReceived;
         protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
             if (PropertyChanged != null)
@@ -46,7 +47,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         public BindingCommand<object> CopyReturnsValueCommand { get; set; }
         public SimpleCommand SetShapeRangeToValueCommand { get; set; }
         public SimpleCommand CreateSelectionShapeRangeCommand { get; set; }
-       
+
 
         private bool myPopupIsOpen;
 
@@ -358,8 +359,8 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         {
             //Por enquanto vamos fazer assim
             if (RequestRemoveModule != null)
-                RequestRemoveModule(module.Parent.ProjFilePath,module.Name);
-        
+                RequestRemoveModule(module.Parent.ProjFilePath, module.Name);
+
         }
         private bool CanRemoveModule(Module module)
         {
@@ -379,7 +380,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
 
         private void VSDetection()
         {
-            
+
             Task.Run(() =>
             {
 
@@ -437,17 +438,17 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
 
             startInfo.Arguments = string.Format("\"{0}\" /command \"Edit.openfile {1}\"", proj, file);
             //startInfo.Arguments = string.Format("\"Edit.openfile {1}\"", proj, file, method); 
-             //startInfo.Arguments = string.Format("\"{0}\" /Command Edit.OpenFile \"{1}\" /command Edit.GoTo {2}", proj, file, method);*
-             // startInfo.Arguments = string.Format("\"{0}\" /edit \" {1}:20\"", proj, file, method);*
-             //startInfo.Arguments = string.Format("\"{0}\" /Command Edit.OpenFile \"{1}\" /command Edit.GoToDefinition {2}", proj, file, method);*
-             //startInfo.Arguments = string.Format("\"{0}\"  Edit.OpenFile \"{1}\" /command Edit.GoToDefinition {2}", proj, file, method);*
-             //startInfo.Arguments = string.Format("\"{0}\"  /command Edit.GoToDefinition mais1.{2}", proj, file, method);*
-             //startInfo.Arguments = string.Format("\"{0}\" /Edit \"{1}\" /command Edit.GoToDefinition {2}",proj, file, method);
-             //startInfo.Arguments = string.Format("\"{0}\" /Edit \"{1}\" /command Edit.GoToDefinition {2}",proj, file, method);
+            //startInfo.Arguments = string.Format("\"{0}\" /Command Edit.OpenFile \"{1}\" /command Edit.GoTo {2}", proj, file, method);*
+            // startInfo.Arguments = string.Format("\"{0}\" /edit \" {1}:20\"", proj, file, method);*
+            //startInfo.Arguments = string.Format("\"{0}\" /Command Edit.OpenFile \"{1}\" /command Edit.GoToDefinition {2}", proj, file, method);*
+            //startInfo.Arguments = string.Format("\"{0}\"  Edit.OpenFile \"{1}\" /command Edit.GoToDefinition {2}", proj, file, method);*
+            //startInfo.Arguments = string.Format("\"{0}\"  /command Edit.GoToDefinition mais1.{2}", proj, file, method);*
+            //startInfo.Arguments = string.Format("\"{0}\" /Edit \"{1}\" /command Edit.GoToDefinition {2}",proj, file, method);
+            //startInfo.Arguments = string.Format("\"{0}\" /Edit \"{1}\" /command Edit.GoToDefinition {2}",proj, file, method);
 
-             process.StartInfo = startInfo;
+            process.StartInfo = startInfo;
             process.Start();
-            
+
         }
 
         private void EditModule(Module module)
@@ -714,9 +715,16 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                 project.AddAndCheckRange(tempList);
 
             }
-            catch (Exception e)
+            catch (AssemblyInspectionException)
             {
-                Debug.WriteLine(e.ToString());
+                throw; // já está rica
+            }
+            catch (Exception ex)
+            {
+                throw new AssemblyInspectionException(
+                    "Erro ao processar módulos.",
+                    ex
+                );
             }
             finally
             {
@@ -833,9 +841,38 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
                 //}
                 if (project.Loaded)
                 {
-                    this.TryMapSource("", project);
-                    SetModulesCommands(project);
-                    LoadPinnedCommands();
+                    try
+                    {
+                        this.TryMapSource("", project);
+                        SetModulesCommands(project);
+                        LoadPinnedCommands();
+                    }
+                    catch (AssemblyInspectionException ex)
+                    {
+                        var sb = new System.Text.StringBuilder();
+
+                        sb.AppendLine(ex.Message);
+
+                        if (ex.LoaderExceptions.Any())
+                        {
+                            sb.AppendLine();
+                            sb.AppendLine("Dependências não encontradas:");
+
+                            foreach (var le in ex.LoaderExceptions)
+                            {
+                                sb.AppendLine($"- {le.Message}");
+
+                                if (le is FileNotFoundException fnf)
+                                    sb.AppendLine($"  DLL: {fnf.FileName}");
+                            }
+                        }
+
+                        OnErroReceived(sb.ToString());
+                    }
+                    catch (Exception ex)
+                    {
+                        OnErroReceived("Erro inesperado:\n" + ex.Message);
+                    }
                 }
             }));
         }
@@ -887,6 +924,11 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
         internal void CloseSearch()
         {
             this.CommandSearch = null;
+        }
+        private void OnErroReceived(string msg)
+        {
+            if (ErroReceived != null)
+                ErroReceived(msg);
         }
     }
 }
