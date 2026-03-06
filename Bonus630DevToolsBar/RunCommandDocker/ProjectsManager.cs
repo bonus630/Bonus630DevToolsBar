@@ -860,10 +860,10 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
 
                             foreach (var le in ex.LoaderExceptions)
                             {
-                                sb.AppendLine($"- {le.Message}");
+                                sb.AppendLine(string.Format("- {0}", le.Message));
 
-                                if (le is FileNotFoundException fnf)
-                                    sb.AppendLine($"  DLL: {fnf.FileName}");
+                                //if (le is FileNotFoundException fnf)
+                                //    sb.AppendLine($"  DLL: {fnf.FileName}");
                             }
                         }
 

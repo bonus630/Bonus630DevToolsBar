@@ -113,6 +113,12 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker.Styles
 #if !X7
                 result = corelApp.GetApplicationPreferenceValue("WindowScheme", "Colors").ToString();
 #endif
+#if X17
+                if (result.Equals("Scheme_12_ModernUIDark"))
+                    result = "DarkGrey";
+                if (result.Equals("Scheme_11_ModernUI"))
+                    result = "LightestGrey";        
+#endif
 
                 if (!result.Equals(currentTheme))
                 {

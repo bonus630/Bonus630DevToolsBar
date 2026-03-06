@@ -6,7 +6,7 @@ namespace br.com.Bonus630DevToolsBar.RunCommandDocker
 {
     public class AssemblyInspectionException : Exception
     {
-        public IReadOnlyList<Exception> LoaderExceptions { get; }
+        public IReadOnlyList<Exception> LoaderExceptions { get; private set; }
 
         public AssemblyInspectionException(
             string message,
