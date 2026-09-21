@@ -1,9 +1,7 @@
 <Project DefaultTargets = "Compile" xmlns = "http://schemas.microsoft.com/developer/msbuild/2003">
 	<Choose>
-
 		<When Condition="'$(Configuration)' == 'X7 Release' or '$(Configuration)' == 'X7 Debug'">
 			<PropertyGroup>
-
 				<CurrentCorelPath>D:\Program Files\Corel\CorelDRAW Graphics Suite X7\Programs64\</CurrentCorelPath>
 				<CurrentCorelAbr>X7</CurrentCorelAbr>
 				<CurrentCorelDebugConst>X7</CurrentCorelDebugConst>
@@ -11,7 +9,6 @@
 		</When>
 		<When Condition="'$(Configuration)' == 'X8 Release' or '$(Configuration)' == 'X8 Debug'">
 			<PropertyGroup>
-
 				<CurrentCorelPath>c:\program files\corel\coreldraw graphics suite x8\programs64\</CurrentCorelPath>
 				<CurrentCorelAbr>X8</CurrentCorelAbr>
 				<CurrentCorelDebugConst>X8</CurrentCorelDebugConst>
@@ -19,7 +16,6 @@
 		</When>
 		<When Condition="'$(Configuration)' == '2017 Release' or '$(Configuration)' == '2017 Debug'">
 			<PropertyGroup>
-
 				<CurrentCorelPath></CurrentCorelPath>
 				<CurrentCorelAbr>2017</CurrentCorelAbr>
 				<CurrentCorelDebugConst>X9</CurrentCorelDebugConst>
@@ -27,7 +23,6 @@
 		</When>
 		<When Condition="'$(Configuration)' == '2018 Release' or '$(Configuration)' == '2018 Debug'">
 			<PropertyGroup>
-
 				<CurrentCorelPath></CurrentCorelPath>
 				<CurrentCorelAbr>2018</CurrentCorelAbr>
 				<CurrentCorelDebugConst>X10</CurrentCorelDebugConst>
@@ -35,7 +30,6 @@
 		</When>
 		<When Condition="'$(Configuration)' == '2019 Release' or '$(Configuration)' == '2019 Debug'">
 			<PropertyGroup>
-
 				<CurrentCorelPath>D:\Program Files\Corel\CorelDRAW Graphics Suite 2019\Programs64\</CurrentCorelPath>
 				<CurrentCorelAbr>2019</CurrentCorelAbr>
 				<CurrentCorelDebugConst>X11</CurrentCorelDebugConst>
@@ -43,7 +37,6 @@
 		</When>
 		<When Condition="'$(Configuration)' == '2020 Release' or '$(Configuration)' == '2020 Debug'">
 			<PropertyGroup>
-
 				<CurrentCorelPath></CurrentCorelPath>
 				<CurrentCorelAbr>2020</CurrentCorelAbr>
 				<CurrentCorelDebugConst>X12</CurrentCorelDebugConst>
@@ -51,7 +44,6 @@
 		</When>
 		<When Condition="'$(Configuration)' == '2021 Release' or '$(Configuration)' == '2021 Debug'">
 			<PropertyGroup>
-
 				<CurrentCorelPath></CurrentCorelPath>
 				<CurrentCorelAbr>2021</CurrentCorelAbr>
 				<CurrentCorelDebugConst>X13</CurrentCorelDebugConst>
@@ -59,7 +51,6 @@
 		</When>
 		<When Condition="'$(Configuration)' == '2022 Release' or '$(Configuration)' == '2022 Debug'">
 			<PropertyGroup>
-
 				<CurrentCorelPath>D:\Program Files\Corel\CorelDRAW Graphics Suite 2022\Programs64\</CurrentCorelPath>
 				<CurrentCorelAbr>2022</CurrentCorelAbr>
 				<CurrentCorelDebugConst>X14</CurrentCorelDebugConst>
@@ -67,10 +58,16 @@
 		</When>
 		<When Condition="'$(Configuration)' == '2024 Release' or '$(Configuration)' == '2024 Debug'">
 			<PropertyGroup>
-
 				<CurrentCorelPath>C:\Program Files\Corel\CorelDRAW Graphics Suite\25\Programs64\</CurrentCorelPath>
 				<CurrentCorelAbr>25</CurrentCorelAbr>
 				<CurrentCorelDebugConst>X15</CurrentCorelDebugConst>
+			</PropertyGroup>
+		</When>
+		<When Condition="'$(Configuration)' == '2026 Release' or '$(Configuration)' == '2026 Debug'">
+			<PropertyGroup>
+				<CurrentCorelPath>D:\Program Files\Corel\CorelDRAW Graphics Suite\27\Programs64\</CurrentCorelPath>
+				<CurrentCorelAbr>27</CurrentCorelAbr>
+				<CurrentCorelDebugConst>X17</CurrentCorelDebugConst>
 			</PropertyGroup>
 		</When>
 	</Choose>
@@ -83,7 +80,7 @@
 		<Exec Condition="Exists('$(TargetDir)$(TargetName).CorelAddon')" Command='del "$(TargetDir)$(TargetName).CorelAddon"' />
 		<Exec Command='rename "$(TargetPath)" "$(TargetName).CorelAddon"'/>
 	</Target>-->
-	
+
 	<Target Name="CopyFiles" AfterTargets="Build">
 		<Message Text="CopyFiles" />
 		<Message Text="$(CurrentCorelPath)" />
